@@ -1,0 +1,168 @@
+﻿[setup]
+name = english
+name_translated = English
+language_code = EN
+created_by = Someone Else
+created_date = 03-12-2007
+icon = tc_en.png
+[/setup]
+#
+#
+#	** Base translation file for TileCutter **
+#	
+#
+#	File Encoding: UTF-8
+#
+#	Produced using TileCutterTranslator version 0.2 for TileCutter version 0.5
+#	On (03-June-2008)
+#
+#	* Translation keys are provided, translation string should be on the line below
+#	* Entries with tt before them are tooltips (usually)
+#	* Where "&" appears in a string, the next character will be a control character,
+#	  "%i" indicates a number goes here, "%s" indicates a program-generated string goes here
+#	  these are required!! The key should give an indication of how they work...
+#
+#	"#" indicates line is a comment, you can escape it with "\" in case of lines starting with "#"
+#
+#
+Season
+
+Summer
+English\nblah
+tt_seasons_select_summer
+
+Winter
+
+tt_seasons_select_winter
+
+Enable Winter
+
+tt_seasons_enable_winter
+
+Image
+English
+BackImage
+
+tt_images_select_back
+
+FrontImage
+English
+tt_images_select_front
+
+Enable FrontImage
+
+tt_images_enable_front
+
+Direction Facing
+
+South
+English
+tt_facing_select_south
+
+East
+
+tt_facing_select_east
+
+North
+English
+tt_facing_select_north
+
+West
+
+tt_facing_select_west
+
+Number\nof views:
+
+tt_facing_enable_select
+
+Dimensions
+
+Paksize
+
+tt_dims_paksize_select
+
+Z dimension
+English
+tt_dims_z_select
+
+X dimension
+
+tt_dims_x_select
+
+Y dimension
+
+tt_dims_y_select
+
+Offset/Mask
+English
+tt_offset_button_up
+
+tt_offset_button_left
+
+offset_button_reset
+
+tt_offset_button_right
+
+tt_offset_button_down
+
+Fine
+English
+tt_offset_selector
+
+Source image location:
+
+ttinputpath
+
+Browse...
+
+ttbrowseinputfile
+
+ttreloadinputfile
+
+ttsamefileforall
+
+Output Dat or Pak File Location:
+English
+tt_output_dat_file_location
+
+tt_browse_output_dat_file_location
+
+Path from .dat to .png:
+
+tt_output_image_location
+
+tt_browse_output_image_location
+
+Choose a location to output .dat/.pak to
+
+Choose a file to save to...
+
+Cut
+English
+Export
+
+tt_menu_file_new
+
+tt_menu_file_open
+
+tt_menu_file_save
+
+tt_menu_file_saveas
+
+tt_menu_file_cut
+
+tt_menu_file_export
+
+tt_menu_file_exit
+
+tt_menu_tools_dat
+
+tt_menu_tools_smoke
+
+tt_menu_tools_prefs
+
+tt_menu_help_help
+
+tt_menu_help_about
+
+#End of File - Total of 70 strings
