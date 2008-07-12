@@ -1,3 +1,4 @@
+# coding: UTF-8
 #
 # TileCutter, version 0.5 (rewrite)
 #

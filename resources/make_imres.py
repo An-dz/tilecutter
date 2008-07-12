@@ -1,3 +1,5 @@
+# coding: UTF-8
+
 # TileCutter images resource compiler script
 #
 # Uses wx:img2py to compile a python script with all the image resources used by TileCutter

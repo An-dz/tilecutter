@@ -1,3 +1,5 @@
+# coding: UTF-8
+
 # TileCutter translation string finder
 # Version 0.2 for TileCutter v.0.5
 
