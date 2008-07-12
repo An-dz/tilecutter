@@ -12,8 +12,8 @@ East = 1
 North = 2
 West = 3
 
-DEFAULT_IMPATH = "C:\\Documents and Settings\\Timothy Baldock\\My Documents\\Programming\\TileCutter\\v.0.5\\dino.png"
-DEFAULT_IMPATH = "C:\\Documents and Settings\\Timothy Baldock\\My Documents\\Programming\\TileCutter\\v.0.5\\nukeplant.png"
+DEFAULT_IMPATH = "dino.png"
+DEFAULT_IMPATH = "nukeplant.png"
 VALID_IMAGE_EXTENSIONS = [".png"]
 OFFSET_NEGATIVE_ALLOWED = True
 
@@ -49,7 +49,8 @@ class ProjectImage:
             self.value_image = wx.EmptyImage(1,1)
             self.value_bitmap = wx.BitmapFromImage(self.value_image)
         else:
-            self.value_image = wx.Image(self.value_path, wx.BITMAP_TYPE_ANY)
+            self.value_image = wx.EmptyImage(1,1)
+            self.value_image.LoadFile(self.value_path, wx.BITMAP_TYPE_ANY)
             self.value_bitmap = wx.BitmapFromImage(self.value_image)
     def lastpath(self, path=None):
         """Set or return the non-valid path set for this image"""

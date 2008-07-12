@@ -107,6 +107,9 @@ PROJECT_FILE_EXTENSION = ".tcp"
 ### SB_WIDTH may be different on other platforms...
 ##SCROLLBAR_WIDTH = 16
 VALID_IMAGE_EXTENSIONS = tcproject.VALID_IMAGE_EXTENSIONS
+MAIN_WINDOW_SIZE=(800,500)
+MAIN_WINDOW_MINSIZE=(800,500)
+MAIN_WINDOW_POSITION=(200,100)
 
 # Static variables
 South   = 0
@@ -1319,12 +1322,12 @@ class translationDialog(wx.Dialog):
 
 class MainWindow(wx.Frame):
     """Main frame window inside which all else is put"""
-    def __init__(self,parent,id,title, windowsize=(800,600)):
-        wx.Frame.__init__(self,parent,wx.ID_ANY, title, (200,100), windowsize,
+    def __init__(self,parent,id,title, windowsize, windowposition, windowminsize):
+        wx.Frame.__init__(self,parent,wx.ID_ANY, title, windowposition, windowsize,
                                         style=wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL
                                         )
         # Init stuff
-        self.SetMinSize(windowsize)
+        self.SetMinSize(windowminsize)
 
         # Set the program's icon
         self.icons = wx.IconBundle()
@@ -1627,7 +1630,7 @@ class MyApp(wx.App):
     def MainWindow(self):
         """Create main window after intialising project and debugging etc."""
         # Create and show main frame
-        self.frame = MainWindow(None, wx.ID_ANY, "TileCutter", (800,600))
+        self.frame = MainWindow(None, wx.ID_ANY, "TileCutter", MAIN_WINDOW_SIZE, MAIN_WINDOW_POSITION, MAIN_WINDOW_MINSIZE)
         self.SetTopWindow(self.frame)
         self.frame.Bind(wx.EVT_CLOSE, self.OnQuit)
         self.frame.debug = self.debug
