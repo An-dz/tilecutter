@@ -13,7 +13,7 @@ class Codec(codecs.Codec):
 class StreamWriter(Codec, codecs.StreamWriter): pass
 class StreamReader(Codec, codecs.StreamWriter): pass
 
-def getregentry(dec):
+def getregentry(dec=None):
     return (Codec().encode,Codec().decode,StreamReader,StreamWriter)
 
 codecs.register(getregentry)
