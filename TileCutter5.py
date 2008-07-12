@@ -109,7 +109,7 @@ PROJECT_FILE_EXTENSION = ".tcp"
 VALID_IMAGE_EXTENSIONS = tcproject.VALID_IMAGE_EXTENSIONS
 MAIN_WINDOW_SIZE=(800,500)
 MAIN_WINDOW_MINSIZE=(800,500)
-MAIN_WINDOW_POSITION=(200,100)
+MAIN_WINDOW_POSITION=(100,50)
 
 # Static variables
 South   = 0
@@ -365,7 +365,6 @@ class ImageWindow(wx.ScrolledWindow, fileTextBoxControls):
     # Device Context events and methods
     def OnPaint(self, e):
         """Event handler for scrolled window repaint requests"""
-        debug("blah")
         if self.IsDoubleBuffered():
             wx.PaintDC(self)
         else:
