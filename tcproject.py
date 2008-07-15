@@ -88,9 +88,9 @@ class ProjectFrame:
         self.images.append(ProjectImage(1))
     def __getitem__(self, key):
         return self.images[key]
-    def setBackPath(self, path):
-        self.backpath = path
-        # And then check to see if the path exists, if so load the image into the cache
+##    def setBackPath(self, path):
+##        self.backpath = path
+##        # And then check to see if the path exists, if so load the image into the cache
 
 class ProjectFrameset:
     """Contains a sequence of ProjectFrame objects for each animation frame of this direction/season combination"""
