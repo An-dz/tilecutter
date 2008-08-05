@@ -337,7 +337,6 @@ class ActiveImage:
         self.UpdateImage()      # And set the image this refers to
     def UpdateImage(self):
         self.image = self.parent.images[self.direction][self.season][self.frame][self.layer]
-##        debug(str(self.image))
 
 class ProjectDims:
     """Dimensions of the project, X, Y, Z, paksize, also whether winter/frontimage are enabled

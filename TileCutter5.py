@@ -100,8 +100,8 @@ import u_newlines, w_newlines
 debug_on = True
 
 VERSION_NUMBER = "0.5a"
-##TRANSPARENT = (231,255,255)
 TRANSPARENT = (0,0,0)
+##TRANSPARENT = (231,255,255)
 DEFAULT_PAKSIZE = "64"
 PROJECT_FILE_EXTENSION = ".tcp"
 ### SB_WIDTH may be different on other platforms...
