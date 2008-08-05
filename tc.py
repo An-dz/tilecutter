@@ -1,12 +1,12 @@
 # TC Backend functions
 
 # Hack to make PIL work with py2exe
-import Image
-import PngImagePlugin
-import JpegImagePlugin
-import GifImagePlugin
-import BmpImagePlugin
-Image._initialized=2
+##import Image
+##import PngImagePlugin
+##import JpegImagePlugin
+##import GifImagePlugin
+##import BmpImagePlugin
+##Image._initialized=2
 
 import wx
 ##import wx.lib.masked as masked
