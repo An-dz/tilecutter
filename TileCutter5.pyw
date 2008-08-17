@@ -11,17 +11,17 @@
 # Text entry boxes visible position at end, or cursor, rather than beginning
 # Padding/general layout optimisation
 # -> Layout optimisation for mac
-# Cutting mask display based on dimensions
-# Make .dat and input images relative to save location path
-# Speed optimisations - switching views seems really sluggish!
+# Cutting mask display based on dimensions                                              - DONE
+# Make .dat and input images relative to save location path                             
+# Speed optimisations - switching views seems really sluggish!                          
 # Optimise code for generating lists in comboboxes (translation seems to be slowing this)
 
 # Finish output file boxes, switching them to use the new set of functions              - DONE
-# Do the project save/load/new etc. and management functionality (using pickle & hash)
-# Program settings, load from a config file (using configparser)
-# Dialog to set program options
-# Implement use of special menu IDs to make menus work properly on, e.g., mac osx
-# Produce frames picker control
+# Do the project save/load/new etc. and management functionality (using pickle & hash)  
+# Program settings, load from a config file (using configparser)                        
+# Dialog to set program options                                                         
+# Implement use of special menu IDs to make menus work properly on, e.g., mac osx       
+# Produce frames picker control                                                         
 # Offset/Mask control - internal functions, click modifies model & triggers redrawing   - DONE
 # Dims control - click modifies model & triggers redrawing                              - DONE
 # Direction/Season/Dims - trigger redrawing                                             - DONE
