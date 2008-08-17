@@ -1,7 +1,6 @@
 # coding: UTF-8
 
 import os, sys
-
 import wx
 
 # TileCutter Project module
@@ -39,10 +38,18 @@ class ProjectImage:
         self.offset = [0,0]
     def image(self):
         """Return a wxImage representation of the cached image"""
+        if self.value_image == None:
+            self.reloadImage()
         return self.value_image
     def bitmap(self):
         """Return a wxBitmap representation of the cached image"""
+        if self.value_bitmap == None:
+            self.reloadImage()
         return self.value_bitmap
+    def delImage(self):
+        """Delete stored images, to enable pickling"""
+        self.value_image = None
+        self.value_bitmap = None
     def reloadImage(self):
         """Refresh the cached image"""
         if self.value_path == "":
@@ -88,9 +95,8 @@ class ProjectFrame:
         self.images.append(ProjectImage(1))
     def __getitem__(self, key):
         return self.images[key]
-##    def setBackPath(self, path):
-##        self.backpath = path
-##        # And then check to see if the path exists, if so load the image into the cache
+    def __len__(self):
+        return len(self.images)
 
 class ProjectFrameset:
     """Contains a sequence of ProjectFrame objects for each animation frame of this direction/season combination"""
@@ -128,6 +134,14 @@ class Project:
         self.active = ActiveImage(self)
     def __getitem__(self, key):
         return self.images[key]
+
+    def delImages(self):
+        """Delete all image data representations, ready for pickling"""
+        for d in range(len(self.images)):
+            for s in range(len(self.images[d])):
+                for f in range(len(self.images[d][s])):
+                    for i in range(len(self.images[d][s][f])):
+                        self.images[d][s][f][i].delImage()
 
     def offset(self, x=None, y=None):
         """Increases/decreases the offset for the active image, if set to 0 that offset dimension is reset"""
@@ -309,7 +323,7 @@ class ProjectFile:
         # Location of .dat/.pak file output, can be either a relative path (relative to save location)
         # or an absolute path. Default is relative path, same as save location (which defaults to home directory)
         self.datfile_location = self.save_location + os.path.sep + "output.dat"
-##        self.datfile_location = ""
+
         # Location of .png file output (relative to .dat file output), default is "images/output.png"
         self.pngfile_location = "images" + os.path.sep + "output.png"
 

@@ -6,6 +6,8 @@
 # Todo:
 
 # BUG - Set active image to new image, then edit textbox to make path invalid, then edit it back to the original -> highlighting fails
+# BUG - Season select does not set to summer when enable winter is unchecked
+
 
 # Find some way to eliminate flickering on translation update/initial load
 # Text entry boxes visible position at end, or cursor, rather than beginning
@@ -90,7 +92,7 @@ import wx
 ##import wx.lib.scrolledpanel as scrolled
 ##import wx.lib.hyperlink as hl
 
-import sys, os, ConfigParser, StringIO, re, codecs
+import sys, os, ConfigParser, StringIO, re, codecs, pickle
 
 import tc, tcproject, imres, translator
 # Custom platform codecs
@@ -129,7 +131,6 @@ choicelist_views_int = [1,2,4]
 choicelist_dims_int = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
 choicelist_dims_z_int = [1,2,3,4]
 # Need some kind of auto-generation function for the translator, to produce a range of numbers (0-64, then in 16 increments to 240)
-##choicelist_paksize = ["16","32","48","64","80","96","112","128","144","160","176","192","208","224","240"]
 ##choicelist_paksize = [gt("16"),gt("32"),gt("48"),gt("64"),gt("80"),gt("96"),gt("112"),gt("128"),gt("144"),gt("160"),gt("176"),gt("192"),gt("208"),gt("224"),gt("240")]
 ##choicelist_views = ["1","2","4"]
 ##choicelist_dims = ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16"]
@@ -1528,15 +1529,35 @@ class menuObject:
     # Menu event functions
     def OnNewProject(self,e):
         debug("Menu-File-> New Project")
-        return 1
+        # Check if current project has been changed since last save
+        continue_new_project = False
+        if app.CheckProjectChanged(activeproject, activehash):
+            # If so, pop up a confirmation dialog offering the chance to save the file
+            continue_new_project = True
+        if continue_new_project:
+            # If we should continue (e.g. user hasn't cancelled on confirmation or save dialog)
+            app.NewProject(activeproject, activehash)
+            self.parent.update()
+            return 1
+        else:
+            return 0
     def OnOpenProject(self,e):
         debug("Menu-File-> Open Project")
-        return 1
-    def OnCloseProject(self,e):
-        debug("Menu-File-> Close Project")
-        return 1
+        # Check if current project has been changed since last save
+        continue_new_project = True
+        if app.CheckProjectChanged(activeproject, activehash):
+            # If so, pop up a confirmation dialog offering the chance to save the file
+            continue_new_project = True
+        if continue_new_project:
+            # If we should continue (e.g. user hasn't cancelled on confirmation or save dialog)
+            app.LoadProject(activeproject, activehash, "blah.txt")
+            self.parent.update()
+            return 1
+        else:
+            return 0
     def OnSaveProject(self,e):
         debug("Menu-File-> Save Project")
+        app.SaveProject(activeproject, "blah.txt")
         return 1
     def OnSaveProjectAs(self,e):
         debug("Menu-File-> Save Project As...")
@@ -1595,7 +1616,7 @@ class DebugFrame(wx.Frame):
     def out(self,line):
         if debug_on:
             self.count += 1
-            t = "[" + str(self.count) + "] " + line + "\n"
+            t = "[%s] %s\n" % (self.count, line)
             self.text = self.text + t
             self.textbox.SetValue(self.text)
             self.textbox.ShowPosition(len(self.text))
@@ -1616,6 +1637,63 @@ class MyApp(wx.App):
 
         return True
 
+    def CheckProjectChanged(self, project, projecthash):
+        """Check if the active project has been changed since it was saved last,
+           returns True if it's changed"""
+        debug(str(project))
+        if self.PickleProject(project) == projecthash:
+            debug("Check Project for changes - Project Unchanged")
+            return False
+        else:
+            debug("Check Project for changes - Project Changed")
+            return True
+
+    def SaveProject(self, project, file):
+        """Save a project to the file location specified"""
+        debug("Saving project to: %s" % file)
+
+        pickle_string = self.PickleProject(project, 0)
+
+        output = open(file, "wb")
+        activehash = pickle_string
+        output.write(pickle_string)
+        output.close()
+        debug("Save project success")
+
+    def NewProject(self, project, projhash):
+        """Replace a project with a new one"""
+        # Call init on the project, this will reset it to its defaults
+        project.__init__()
+        projhash = self.PickleProject(project)
+        debug("Active project reset to defaults (New project)")
+
+    def LoadProject(self, project, projecthash, file):
+        """Load project from file, replacing the current activeproject"""
+        project = self.UnPickleProject(file)
+        del(projects["default"])
+        debug(str(projects))
+        projects["default"] = project
+        projecthash = self.PickleProject(project)
+        debug("Loaded project from: %s" % file)
+        debug(activeproject.paksize())
+        debug(project.paksize())
+
+    def PickleProject(self, project, picklemode = 0):
+        """Pickle a project, returns a pickled string"""
+        project.delImages()
+        outstring = StringIO.StringIO()
+        pickle.dump(project, outstring, picklemode)
+        pickle_string = outstring.getvalue()
+        outstring.close()
+        debug("PickleProject, object type: %s pickle type: %s" % (str(project), picklemode))
+        return pickle_string
+
+    def UnPickleProject(self, filename):
+        """Unpickle a project from file, returning a tcproject object"""
+        file = open(filename, "rb")
+        project = pickle.load(file)
+        return project
+
     def ReloadWindow(self):
         """Reload the main window, e.g. to effect a translation change, does not affect debugging window"""
 
@@ -1625,13 +1703,6 @@ class MyApp(wx.App):
         self.frame = MainWindow(None, wx.ID_ANY, "TileCutter", MAIN_WINDOW_SIZE, MAIN_WINDOW_POSITION, MAIN_WINDOW_MINSIZE)
         self.SetTopWindow(self.frame)
         self.frame.Bind(wx.EVT_CLOSE, self.OnQuit)
-        self.frame.debug = self.debug
-
-        # Bind the debugging output for the active project functions to the same debug output
-        activeproject.debug = self.debug
-        # Produce aliases to activeproject at different levels
-        self.activeproject = activeproject
-        self.frame.activeproject = activeproject
 
     def OnQuit(self, e):
         """Close the debugging window and quit the application on a quit event in the main window
@@ -1649,12 +1720,25 @@ if __name__ == '__main__':
     # Create the translation manager
     tctranslator = translator.Translator()
 ##    sys.stderr = open("error.txt","w")
+
     # Create a default active project
     projects = {}
-    p = {"default": tcproject.Project()}
-    projects.update(p)
+    projects["default"] = tcproject.Project()
     activeproject = projects["default"]
-    activeproject.activeImage()
+    # Active hash is regenerated each time the project is saved, if the activeproject's current hash
+    # differs from the saved one, then we know the project has been changed since last change and so
+    # needs to be saved on new project/quit/load etc.
+    activehash = app.PickleProject(activeproject)
+
+    # Single project implementation
+    # Only one project in the dict at a time, prompt on new project to save etc.
+    # New project -> If default changed, prompt to save, then create a new tcproject object and init frame
+    # Load project -> prompt save, prompt to load, load in project and init frame
+    # Need to write save/load routine, using pickle for data persistence
+    # Higher level function to set activeproject, so can abstract for multi-project implementation
+
+
+
     # Create the main application window
     app.MainWindow()
     display = app.frame.display
