@@ -12,16 +12,16 @@
 # Padding/general layout optimisation
 # -> Layout optimisation for mac
 # Cutting mask display based on dimensions                                              - DONE
-# Make .dat and input images relative to save location path                             
-# Speed optimisations - switching views seems really sluggish!                          
+# Make .dat and input images relative to save location path
+# Speed optimisations - switching views seems really sluggish!
 # Optimise code for generating lists in comboboxes (translation seems to be slowing this)
 
 # Finish output file boxes, switching them to use the new set of functions              - DONE
-# Do the project save/load/new etc. and management functionality (using pickle & hash)  
-# Program settings, load from a config file (using configparser)                        
-# Dialog to set program options                                                         
-# Implement use of special menu IDs to make menus work properly on, e.g., mac osx       
-# Produce frames picker control                                                         
+# Do the project save/load/new etc. and management functionality (using pickle & hash)
+# Program settings, load from a config file (using configparser)
+# Dialog to set program options
+# Implement use of special menu IDs to make menus work properly on, e.g., mac osx
+# Produce frames picker control
 # Offset/Mask control - internal functions, click modifies model & triggers redrawing   - DONE
 # Dims control - click modifies model & triggers redrawing                              - DONE
 # Direction/Season/Dims - trigger redrawing                                             - DONE
@@ -78,12 +78,12 @@
 # Start to build project management/switching and save/load functions
 
 # Hack to make PIL work with py2exe
-import Image
-import PngImagePlugin
-import JpegImagePlugin
-import GifImagePlugin
-import BmpImagePlugin
-Image._initialized=2
+##import Image
+##import PngImagePlugin
+##import JpegImagePlugin
+##import GifImagePlugin
+##import BmpImagePlugin
+##Image._initialized=2
 
 import wx
 ##import wx.lib.masked as masked
@@ -1403,13 +1403,6 @@ class MainWindow(wx.Frame):
         self.panel.SetSizer(self.s_panel)
         self.panel.SetAutoLayout(1)
         self.panel.Layout()
-
-        # misc testing stuff
-        im = Image.open("dino.png")
-        outimage = wx.EmptyImage(im.size[0], im.size[1])
-        outimage.SetData(im.convert("RGB").tostring())
-        outimage = outimage.ConvertToBitmap()
-        self.display.bmp = outimage
 
         self.translate()
 
