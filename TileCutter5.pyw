@@ -386,19 +386,19 @@ class ImageWindow(wx.ScrolledWindow, fileTextBoxControls):
     def update(self):
         """Set the values of the controls in this group to the values in the model"""
         # Setting these values should also cause text highlighting to occur
-        if self.impath_entry_box.GetValue() != activeproject.activeImage().path() and self.impath_entry_box.GetValue() != activeproject.activeImage().lastpath():
-            self.impath_entry_box.SetValue(activeproject.activeImage().path())
+        if self.impath_entry_box.GetValue() != app.activeproject.activeImage().path() and self.impath_entry_box.GetValue() != app.activeproject.activeImage().lastpath():
+            self.impath_entry_box.SetValue(app.activeproject.activeImage().path())
         # And then redraw the active image in the window, with mask etc.
-        bitmap = activeproject.activeImage().bitmap()
+        bitmap = app.activeproject.activeImage().bitmap()
 
         # Setup image properties for mask generation
-        x = activeproject.x()
-        y = activeproject.y()
-        z = activeproject.z()
-        p = activeproject.paksize()
+        x = app.activeproject.x()
+        y = app.activeproject.y()
+        z = app.activeproject.z()
+        p = app.activeproject.paksize()
         p2 = p/2
         p4 = p/4
-        mask_offset_x, mask_offset_y = activeproject.offset()
+        mask_offset_x, mask_offset_y = app.activeproject.offset()
         mask_width = (x + y) * p2
         mask_height = (x + y) * p4 + p2 + (z - 1) * p
         mask_width_off = mask_width + abs(mask_offset_x)
@@ -500,7 +500,7 @@ class ImageWindow(wx.ScrolledWindow, fileTextBoxControls):
     def OnTextChange(self,e):
         """When text changes in the entry box"""
         # If text has actually changed (i.e. it's different to that set in the image's info)
-        if self.impath_entry_box.GetValue() != activeproject.activeImage().path() and self.impath_entry_box.GetValue() != activeproject.activeImage().lastpath():
+        if self.impath_entry_box.GetValue() != app.activeproject.activeImage().path() and self.impath_entry_box.GetValue() != app.activeproject.activeImage().lastpath():
             debug("Text changed in image path box, new text: " + self.impath_entry_box.GetValue())
             # Check whether the entered path exists or not, if it does update the value in the activeproject (which will cause
             # that new image to be loaded & displayed) if not don't set this value
@@ -509,7 +509,7 @@ class ImageWindow(wx.ScrolledWindow, fileTextBoxControls):
                 debug("...new text is a valid file")
                 self.impath_entry_icon.SetBitmap(wx.ArtProvider.GetBitmap(wx.ART_TICK_MARK))
                 # Update the active image with the new path
-                activeproject.activeImage().path(self.impath_entry_box.GetValue())
+                app.activeproject.activeImage().path(self.impath_entry_box.GetValue())
                 # Then redraw the image
                 self.update()
             else:
@@ -519,15 +519,15 @@ class ImageWindow(wx.ScrolledWindow, fileTextBoxControls):
                 # Highlight text function only needed if it isn't a valid file, obviously
                 self.highlightText(self.impath_entry_box, self.impath_entry_box.GetValue())
             # Update the last path
-            activeproject.activeImage().lastpath(self.impath_entry_box.GetValue())
+            app.activeproject.activeImage().lastpath(self.impath_entry_box.GetValue())
     def OnBrowseSource(self,e):
         """When browse source button clicked"""
-        value = self.filePickerDialog(activeproject.activeImage().path(), "", gt("Choose a source image for this view:"),
+        value = self.filePickerDialog(app.activeproject.activeImage().path(), "", gt("Choose a source image for this view:"),
                                       "PNG files (*.png)|*.png", wx.FD_OPEN|wx.FD_FILE_MUST_EXIST)
         self.impath_entry_box.SetValue(value)
     def OnReloadImage(self,e):
         """When reload image button clicked"""
-        activeproject.activeImage().reloadImage()
+        app.activeproject.activeImage().reloadImage()
         self.update()
     def OnLoadImageForAll(self,e):
         """When "load same image for all" button is clicked"""
@@ -643,12 +643,12 @@ class seasonControl(wx.StaticBox):
 
     def update(self):
         """Set the values of the controls in this group to the values in the model"""
-        if activeproject.winter() == 0:  # Turn winter image off
+        if app.activeproject.winter() == 0:  # Turn winter image off
             self.seasons_enable_winter.SetValue(0)
             # If currently have winter image selected, switch to summer image
             if self.seasons_select_summer.GetValue() == True:
                 # Update model
-                activeproject.activeImage(season=Summer)
+                app.activeproject.activeImage(season=Summer)
                 self.seasons_select_summer.SetValue(1)
                 # As active season changed, need to redraw display
                 display.update()
@@ -661,18 +661,18 @@ class seasonControl(wx.StaticBox):
 
     def OnToggle(self,e):
         """Toggling between summer and winter imagesf"""
-        activeproject.winter(self.seasons_enable_winter.GetValue())
+        app.activeproject.winter(self.seasons_enable_winter.GetValue())
         self.update()
     def OnSummer(self,e):
         """Toggle Summer image"""
         # Set active image to Summer
-        activeproject.activeImage(season=Summer)
+        app.activeproject.activeImage(season=Summer)
         # Redraw active image
         display.update()
     def OnWinter(self,e):
         """Toggle Winter image"""
         # Set active image to Winter
-        activeproject.activeImage(season=Winter)
+        app.activeproject.activeImage(season=Winter)
         # Redraw active image
         display.update()
 
@@ -716,12 +716,12 @@ class imageControl(wx.StaticBox):
 
     def update(self):
         """Set the values of the controls in this group to the values in the model"""
-        if activeproject.frontimage() == 0:  # Turn frontimage off
+        if app.activeproject.frontimage() == 0:  # Turn frontimage off
             self.images_enable_front.SetValue(0)
             # If currently have frontimage selected, switch to backimage
             if self.images_select_front.GetValue() == True:
                 # Update model
-                activeproject.activeImage(layer=Back)
+                app.activeproject.activeImage(layer=Back)
                 self.images_select_back.SetValue(1)
                 # As active layer changed, need to redraw display
                 display.update()
@@ -734,18 +734,18 @@ class imageControl(wx.StaticBox):
 
     def OnToggle(self,e):
         """Toggling frontimage on and off"""
-        activeproject.frontimage(self.images_enable_front.GetValue())
+        app.activeproject.frontimage(self.images_enable_front.GetValue())
         self.update()
     def OnBackImage(self,e):
         """Toggle BackImage on"""
         # Set active image to Back
-        activeproject.activeImage(layer=Back)
+        app.activeproject.activeImage(layer=Back)
         # Redraw active image
         display.update()
     def OnFrontImage(self,e):
         """Toggle FrontImage on"""
         # Set active image to Front
-        activeproject.activeImage(layer=Front)
+        app.activeproject.activeImage(layer=Front)
         # Redraw active image
         display.update()
 
@@ -813,12 +813,12 @@ class facingControl(wx.StaticBox):
         for i in self.choicelist_views:
             self.facing_enable_select.Append(i)
         # And set value to value in the project
-        self.facing_enable_select.SetStringSelection(self.choicelist_views[choicelist_views_int.index(activeproject.views())])
+        self.facing_enable_select.SetStringSelection(self.choicelist_views[choicelist_views_int.index(app.activeproject.views())])
 
     def update(self):
         """Set the values of the controls in this group to the values in the model"""
         # Set value of the toggle control (to set number of directions)
-        if activeproject.views() == 1:
+        if app.activeproject.views() == 1:
             self.facing_enable_select.SetValue(self.choicelist_views[0])
             # Update controls
             self.facing_select_south.Enable()
@@ -828,10 +828,10 @@ class facingControl(wx.StaticBox):
             if self.facing_select_east.GetValue() == True or self.facing_select_north.GetValue() == True or self.facing_select_west.GetValue() == True:
                 self.facing_select_south.SetValue(1)
                 # Modify active image to only available option
-                activeproject.activeImage(direction=South)
+                app.activeproject.activeImage(direction=South)
                 # Redraw active image
                 display.update()
-        elif activeproject.views() == 2:
+        elif app.activeproject.views() == 2:
             self.facing_enable_select.SetValue(self.choicelist_views[1])
             self.facing_select_south.Enable()
             self.facing_select_east.Enable()
@@ -840,7 +840,7 @@ class facingControl(wx.StaticBox):
             if self.facing_select_north.GetValue() == True or self.facing_select_west.GetValue() == True:
                 self.facing_select_east.SetValue(1)
                 # Modify active image to available option
-                activeproject.activeImage(direction=East)
+                app.activeproject.activeImage(direction=East)
                 # Redraw active image
                 display.update()
         else:
@@ -850,34 +850,34 @@ class facingControl(wx.StaticBox):
             self.facing_select_north.Enable()
             self.facing_select_west.Enable()
         # Update the combobox
-        self.facing_enable_select.SetStringSelection(self.choicelist_views[choicelist_views_int.index(activeproject.views())])
+        self.facing_enable_select.SetStringSelection(self.choicelist_views[choicelist_views_int.index(app.activeproject.views())])
 
     def OnToggle(self,e):
         """Changing the value in the selection box"""
-        activeproject.views(choicelist_views_int[self.choicelist_views.index(self.facing_enable_select.GetValue())])
+        app.activeproject.views(choicelist_views_int[self.choicelist_views.index(self.facing_enable_select.GetValue())])
         self.update()
     def OnSouth(self,e):
         """Toggle South direction"""
         # Set active image to South
-        activeproject.activeImage(direction=South)
+        app.activeproject.activeImage(direction=South)
         # Redraw active image
         display.update()
     def OnEast(self,e):
         """Toggle East direction"""
         # Set active image to East
-        activeproject.activeImage(direction=East)
+        app.activeproject.activeImage(direction=East)
         # Redraw active image
         display.update()
     def OnNorth(self,e):
         """Toggle North direction"""
         # Set active image to North
-        activeproject.activeImage(direction=North)
+        app.activeproject.activeImage(direction=North)
         # Redraw active image
         display.update()
     def OnWest(self,e):
         """Toggle West direction"""
         # Set active image to West
-        activeproject.activeImage(direction=West)
+        app.activeproject.activeImage(direction=West)
         # Redraw active image
         display.update()
 
@@ -934,14 +934,14 @@ class dimsControl(wx.StaticBox):
         for i in self.choicelist_packsize:
             self.dims_p_select.Append(i)
         # And set value to value in the project
-        self.dims_p_select.SetStringSelection(self.choicelist_packsize[choicelist_paksize_int.index(activeproject.paksize())])
+        self.dims_p_select.SetStringSelection(self.choicelist_packsize[choicelist_paksize_int.index(app.activeproject.paksize())])
         # Translate the choicelist values for z dims
         self.choicelist_dims_z = translateIntArray(choicelist_dims_z_int)
         self.dims_z_select.Clear()
         for i in self.choicelist_dims_z:
             self.dims_z_select.Append(i)
         # And set value to value in the project
-        self.dims_z_select.SetStringSelection(self.choicelist_dims_z[choicelist_dims_z_int.index(activeproject.z())])
+        self.dims_z_select.SetStringSelection(self.choicelist_dims_z[choicelist_dims_z_int.index(app.activeproject.z())])
         # Translate the choicelist values for x and y dims
         self.choicelist_dims = translateIntArray(choicelist_dims_int)
         self.dims_x_select.Clear()
@@ -950,31 +950,31 @@ class dimsControl(wx.StaticBox):
             self.dims_x_select.Append(i)
             self.dims_y_select.Append(i)
         # And set value to value in the project
-        self.dims_x_select.SetStringSelection(self.choicelist_dims[choicelist_dims_int.index(activeproject.x())])
-        self.dims_y_select.SetStringSelection(self.choicelist_dims[choicelist_dims_int.index(activeproject.y())])
+        self.dims_x_select.SetStringSelection(self.choicelist_dims[choicelist_dims_int.index(app.activeproject.x())])
+        self.dims_y_select.SetStringSelection(self.choicelist_dims[choicelist_dims_int.index(app.activeproject.y())])
 
     def update(self):
         """Set the values of the controls in this group to the values in the model"""
-        self.dims_p_select.SetStringSelection(self.choicelist_packsize[choicelist_paksize_int.index(activeproject.paksize())])
-        self.dims_z_select.SetStringSelection(self.choicelist_dims_z[choicelist_dims_z_int.index(activeproject.z())])
-        self.dims_x_select.SetStringSelection(self.choicelist_dims[choicelist_dims_int.index(activeproject.x())])
-        self.dims_y_select.SetStringSelection(self.choicelist_dims[choicelist_dims_int.index(activeproject.y())])
+        self.dims_p_select.SetStringSelection(self.choicelist_packsize[choicelist_paksize_int.index(app.activeproject.paksize())])
+        self.dims_z_select.SetStringSelection(self.choicelist_dims_z[choicelist_dims_z_int.index(app.activeproject.z())])
+        self.dims_x_select.SetStringSelection(self.choicelist_dims[choicelist_dims_int.index(app.activeproject.x())])
+        self.dims_y_select.SetStringSelection(self.choicelist_dims[choicelist_dims_int.index(app.activeproject.y())])
 
     def OnPaksizeSelect(self,e):
         """Change value of the paksize"""
-        activeproject.paksize(choicelist_paksize_int[self.choicelist_packsize.index(self.dims_p_select.GetValue())])
+        app.activeproject.paksize(choicelist_paksize_int[self.choicelist_packsize.index(self.dims_p_select.GetValue())])
         display.update()
     def OnZdimsSelect(self,e):
         """Change value of the Z dims"""
-        activeproject.z(choicelist_dims_z_int[self.choicelist_dims_z.index(self.dims_z_select.GetValue())])
+        app.activeproject.z(choicelist_dims_z_int[self.choicelist_dims_z.index(self.dims_z_select.GetValue())])
         display.update()
     def OnXdimsSelect(self,e):
         """Change value of the X dims"""
-        activeproject.x(choicelist_dims_int[self.choicelist_dims.index(self.dims_x_select.GetValue())])
+        app.activeproject.x(choicelist_dims_int[self.choicelist_dims.index(self.dims_x_select.GetValue())])
         display.update()
     def OnYdimsSelect(self,e):
         """Change value of the Y dims"""
-        activeproject.y(choicelist_dims_int[self.choicelist_dims.index(self.dims_y_select.GetValue())])
+        app.activeproject.y(choicelist_dims_int[self.choicelist_dims.index(self.dims_y_select.GetValue())])
         display.update()
 
 class offsetControl(wx.StaticBox):
@@ -1044,38 +1044,38 @@ class offsetControl(wx.StaticBox):
     def OnUp(self,e):
         """Move mask up"""
         if self.offset_selector.GetValue():
-            r = activeproject.offset(y=1)
+            r = app.activeproject.offset(y=1)
         else:
-            r = activeproject.offset(y=activeproject.paksize())
+            r = app.activeproject.offset(y=app.activeproject.paksize())
         if r == 1:
             display.update()
     def OnLeft(self,e):
         """Move mask left"""
         if self.offset_selector.GetValue():
-            r = activeproject.offset(x=-1)
+            r = app.activeproject.offset(x=-1)
         else:
-            r = activeproject.offset(x=-activeproject.paksize())
+            r = app.activeproject.offset(x=-app.activeproject.paksize())
         if r == 1:
             display.update()
     def OnCenter(self,e):
         """Reset mask position"""
-        r = activeproject.offset(x=0, y=0)
+        r = app.activeproject.offset(x=0, y=0)
         if r == 1:
             display.update()
     def OnRight(self,e):
         """Move mask right"""
         if self.offset_selector.GetValue():
-            r = activeproject.offset(x=1)
+            r = app.activeproject.offset(x=1)
         else:
-            r = activeproject.offset(x=activeproject.paksize())
+            r = app.activeproject.offset(x=app.activeproject.paksize())
         if r == 1:
             display.update()
     def OnDown(self,e):
         """Move mask down"""
         if self.offset_selector.GetValue():
-            r = activeproject.offset(y=-1)
+            r = app.activeproject.offset(y=-1)
         else:
-            r = activeproject.offset(y=-activeproject.paksize())
+            r = app.activeproject.offset(y=-app.activeproject.paksize())
         if r == 1:
             display.update()
 
@@ -1131,35 +1131,35 @@ class fileControls(fileTextBoxControls):
     def update(self):
         """Set the values of the controls in this group to the values in the model"""
         # Setting these values should also cause text highlighting to occur
-        self.dat_outpath_box.SetValue(activeproject.datfile())
-        self.im_outpath_box.SetValue(activeproject.pngfile())
-        self.highlightText(self.dat_outpath_box, activeproject.datfile())
-        self.highlightText(self.im_outpath_box, activeproject.pngfile(), activeproject.datfile())
+        self.dat_outpath_box.SetValue(app.activeproject.datfile())
+        self.im_outpath_box.SetValue(app.activeproject.pngfile())
+        self.highlightText(self.dat_outpath_box, app.activeproject.datfile())
+        self.highlightText(self.im_outpath_box, app.activeproject.pngfile(), app.activeproject.datfile())
 
     def OnTextChangeDat(self,e):
         """When the text in the .dat/.pak output file entry box changes"""
-        if activeproject.datfile() != self.dat_outpath_box.GetValue():
-            activeproject.datfile(self.dat_outpath_box.GetValue())
-            debug("Text changed in DAT entry box, new text: " + str(activeproject.datfile()))
-            self.highlightText(self.dat_outpath_box, activeproject.datfile())
-            self.highlightText(self.im_outpath_box, activeproject.pngfile(), activeproject.datfile())
+        if app.activeproject.datfile() != self.dat_outpath_box.GetValue():
+            app.activeproject.datfile(self.dat_outpath_box.GetValue())
+            debug("Text changed in DAT entry box, new text: " + str(app.activeproject.datfile()))
+            self.highlightText(self.dat_outpath_box, app.activeproject.datfile())
+            self.highlightText(self.im_outpath_box, app.activeproject.pngfile(), app.activeproject.datfile())
     def OnTextChangePng(self,e):
         """When the text in the .png output file entry box changes"""
-        if activeproject.pngfile() != self.im_outpath_box.GetValue():
-            activeproject.pngfile(self.im_outpath_box.GetValue())
-            debug("Text changed in PNG entry box, new text: " + str(activeproject.pngfile()))
-            self.highlightText(self.dat_outpath_box, activeproject.datfile())
-            self.highlightText(self.im_outpath_box, activeproject.pngfile(), activeproject.datfile())
+        if app.activeproject.pngfile() != self.im_outpath_box.GetValue():
+            app.activeproject.pngfile(self.im_outpath_box.GetValue())
+            debug("Text changed in PNG entry box, new text: " + str(app.activeproject.pngfile()))
+            self.highlightText(self.dat_outpath_box, app.activeproject.datfile())
+            self.highlightText(self.im_outpath_box, app.activeproject.pngfile(), app.activeproject.datfile())
 
     def OnBrowseDat(self,e):
         """Opens a file save as dialog for the dat/pak output file"""
-        value = self.filePickerDialog(activeproject.datfile(), "", gt("Choose a location to output .dat/.pak to"),
+        value = self.filePickerDialog(app.activeproject.datfile(), "", gt("Choose a location to output .dat/.pak to"),
                                       "DAT/PAK files (*.dat)|*.dat|(*.pak)|*.pak", wx.FD_SAVE|wx.OVERWRITE_PROMPT)
         self.dat_outpath_box.SetValue(value)
 
     def OnBrowsePng(self,e):
         """Opens a file save as dialog for the png output file"""
-        value = self.filePickerDialog(activeproject.pngfile(), activeproject.datfile(), gt("Choose a file to save to..."),
+        value = self.filePickerDialog(app.activeproject.pngfile(), app.activeproject.datfile(), gt("Choose a file to save to..."),
                                       "PNG files (*.png)|*.png", wx.FD_SAVE|wx.OVERWRITE_PROMPT)
         self.im_outpath_box.SetValue(value)
 
@@ -1531,12 +1531,12 @@ class menuObject:
         debug("Menu-File-> New Project")
         # Check if current project has been changed since last save
         continue_new_project = False
-        if app.CheckProjectChanged(activeproject, activehash):
+        if app.CheckProjectChanged(app.activeproject, app.activepickle):
             # If so, pop up a confirmation dialog offering the chance to save the file
             continue_new_project = True
         if continue_new_project:
             # If we should continue (e.g. user hasn't cancelled on confirmation or save dialog)
-            app.NewProject(activeproject, activehash)
+            app.NewProject(app.activeproject, app.activepickle)
             self.parent.update()
             return 1
         else:
@@ -1545,25 +1545,27 @@ class menuObject:
         debug("Menu-File-> Open Project")
         # Check if current project has been changed since last save
         continue_new_project = True
-        if app.CheckProjectChanged(activeproject, activehash):
+        if app.CheckProjectChanged(app.activeproject, app.activepickle):
             # If so, pop up a confirmation dialog offering the chance to save the file
             continue_new_project = True
         if continue_new_project:
             # If we should continue (e.g. user hasn't cancelled on confirmation or save dialog)
-            app.LoadProject(activeproject, activehash, "blah.txt")
+            app.LoadProject("blah.txt")
             self.parent.update()
             return 1
         else:
             return 0
     def OnSaveProject(self,e):
         debug("Menu-File-> Save Project")
-        app.SaveProject(activeproject, "blah.txt")
+        app.SaveProject(app.activeproject, "blah.txt")
         return 1
     def OnSaveProjectAs(self,e):
         debug("Menu-File-> Save Project As...")
         return 1
     def OnCutProject(self,e):
         debug("Menu-File-> Cut Project")
+        self.parent.update()
+        debug(app.activeproject.paksize())
         return 1
     def OnExportProject(self,e):
         debug("Menu-File-> Export Project")
@@ -1634,7 +1636,6 @@ class MyApp(wx.App):
         self.debug = DebugFrame(None, wx.ID_ANY, "Debugging")
         if debug_on:
             self.debug.Show(1)
-
         return True
 
     def CheckProjectChanged(self, project, projecthash):
@@ -1655,7 +1656,7 @@ class MyApp(wx.App):
         pickle_string = self.PickleProject(project, 0)
 
         output = open(file, "wb")
-        activehash = pickle_string
+        app.activepickle = pickle_string
         output.write(pickle_string)
         output.close()
         debug("Save project success")
@@ -1667,16 +1668,12 @@ class MyApp(wx.App):
         projhash = self.PickleProject(project)
         debug("Active project reset to defaults (New project)")
 
-    def LoadProject(self, project, projecthash, file):
+    def LoadProject(self, file):
         """Load project from file, replacing the current activeproject"""
-        project = self.UnPickleProject(file)
-        del(projects["default"])
-        debug(str(projects))
-        projects["default"] = project
-        projecthash = self.PickleProject(project)
+        app.activeproject = self.UnPickleProject(file)
+        app.activepickle = self.PickleProject(app.activeproject)
         debug("Loaded project from: %s" % file)
-        debug(activeproject.paksize())
-        debug(project.paksize())
+        debug(app.activeproject.paksize())
 
     def PickleProject(self, project, picklemode = 0):
         """Pickle a project, returns a pickled string"""
@@ -1699,10 +1696,28 @@ class MyApp(wx.App):
 
     def MainWindow(self):
         """Create main window after intialising project and debugging etc."""
+
+        # Create a default active project
+        self.projects = {}
+        self.projects["default"] = tcproject.Project()
+        self.activeproject = self.projects["default"]
+        # Active hash is regenerated each time the project is saved, if the activeproject's current hash
+        # differs from the saved one, then we know the project has been changed since last change and so
+        # needs to be saved on new project/quit/load etc.
+        self.activepickle = app.PickleProject(app.activeproject)
+
+        # Single project implementation
+        # Only one project in the dict at a time, prompt on new project to save etc.
+        # New project -> If default changed, prompt to save, then create a new tcproject object and init frame
+        # Load project -> prompt save, prompt to load, load in project and init frame
+        # Need to write save/load routine, using pickle for data persistence
+        # Higher level function to set activeproject, so can abstract for multi-project implementation
+
         # Create and show main frame
         self.frame = MainWindow(None, wx.ID_ANY, "TileCutter", MAIN_WINDOW_SIZE, MAIN_WINDOW_POSITION, MAIN_WINDOW_MINSIZE)
         self.SetTopWindow(self.frame)
         self.frame.Bind(wx.EVT_CLOSE, self.OnQuit)
+
 
     def OnQuit(self, e):
         """Close the debugging window and quit the application on a quit event in the main window
@@ -1720,24 +1735,6 @@ if __name__ == '__main__':
     # Create the translation manager
     tctranslator = translator.Translator()
 ##    sys.stderr = open("error.txt","w")
-
-    # Create a default active project
-    projects = {}
-    projects["default"] = tcproject.Project()
-    activeproject = projects["default"]
-    # Active hash is regenerated each time the project is saved, if the activeproject's current hash
-    # differs from the saved one, then we know the project has been changed since last change and so
-    # needs to be saved on new project/quit/load etc.
-    activehash = app.PickleProject(activeproject)
-
-    # Single project implementation
-    # Only one project in the dict at a time, prompt on new project to save etc.
-    # New project -> If default changed, prompt to save, then create a new tcproject object and init frame
-    # Load project -> prompt save, prompt to load, load in project and init frame
-    # Need to write save/load routine, using pickle for data persistence
-    # Higher level function to set activeproject, so can abstract for multi-project implementation
-
-
 
     # Create the main application window
     app.MainWindow()
