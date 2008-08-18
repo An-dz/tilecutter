@@ -9,21 +9,23 @@
 # BUG - Season select does not set to summer when enable winter is unchecked
 
 
-# Find some way to eliminate flickering on translation update/initial load
-# Text entry boxes visible position at end, or cursor, rather than beginning
-# Padding/general layout optimisation
-# -> Layout optimisation for mac
+# Find some way to eliminate flickering on translation update/initial load              
+# Text entry boxes visible position at end, or cursor, rather than beginning            
+# Padding/general layout optimisation                                                   
+# -> Layout optimisation for mac                                                        
 # Cutting mask display based on dimensions                                              - DONE
-# Make .dat and input images relative to save location path
-# Speed optimisations - switching views seems really sluggish!
-# Optimise code for generating lists in comboboxes (translation seems to be slowing this)
+# Make .dat and input images relative to save location path                             
+# Speed optimisations - switching views seems really sluggish!                          
+# Optimise code for generating lists in comboboxes (translation slowing this?)          
 
 # Finish output file boxes, switching them to use the new set of functions              - DONE
-# Do the project save/load/new etc. and management functionality (using pickle & hash)
-# Program settings, load from a config file (using configparser)
-# Dialog to set program options
-# Implement use of special menu IDs to make menus work properly on, e.g., mac osx
-# Produce frames picker control
+# Do the project save/load/new etc. and management functionality (using pickle & hash)  
+#   Multi-project system for later versions                                             - POSTPONE 0.7
+
+# Program settings, load from a config file (using configparser)                        
+# Dialog to set program options                                                         
+# Implement use of special menu IDs to make menus work properly on, e.g., mac osx       
+# Produce frames picker control                                                         - POSTPONE 0.6
 # Offset/Mask control - internal functions, click modifies model & triggers redrawing   - DONE
 # Dims control - click modifies model & triggers redrawing                              - DONE
 # Direction/Season/Dims - trigger redrawing                                             - DONE
@@ -39,11 +41,11 @@
 # -> File must exist                                                                    - DONE
 # -> Implement modal dialog for browse                                                  - DONE
 # -> Allow text entry, highlight in red if file does not exist??                        - DONE (Needs icons for tick/cross)
-# -> Implement modal confirmation dialog for "open same file for all" button
-# "Warning, this will set all views in the project to use the current image, proceed?"
+# -> Implement modal confirmation dialog for "open same file for all" button            
+# "Warning, this will set all views in the project to use the current image, proceed?"  
 # -> Function to reload the current view's image                                        - DONE
 
-# Move the UI classes, app etc. into a module, to enhance loading speed
+# Move UI classes into a module to enhance loading speed
 
 # Needs much better error handling, add try/except clauses in critical places
 # Could also encase entire script in an exception catcher, which can display exception 
@@ -55,37 +57,31 @@
 # Need higher detail icons for the mac version                                          - DONE (Test icon display in OSX)
 
 # About dialog                                                                          - DONE
-# Make py2exe, look into producing smaller packages     - Also py2app
-# Look into producing more mac-native package
-# Mac drag + drop support
-# Linux just the script
+# Make py2exe, look into producing smaller packages     - Also py2app                   
+#   Import only bits of wx needed, to reduce py2exe package?                            
+# Look into producing more mac-native package                                           
+# Mac drag + drop support                                                               
+# Linux just the script                                                                 
 # Test with Linux, Mac OSX, Windows (xp), try and have the same code across all platforms!
-# Produce help documentation
-# -> Quick start guide (interface should be fairly self-explanatory though)
+# Produce help documentation                                                            
+# -> Quick start guide (interface should be fairly self-explanatory though)             
 
 
 
 # Aims v.0.5
-
 # Rewrite core cutting engine and output engine
 # Produce minimal testing UI
 #   - Set X/Y/Z dims, X/Y offsets, facing/season
 #   - Determine output .png, .dat etc.
 # Debugging system with nice output
+# Translation function implemented
+# Project save/load functions
 
 # Aims v.0.6
-
 # Extend UI, include dat editor
-# Translation function implemented
-# Start to build project management/switching and save/load functions
 
-# Hack to make PIL work with py2exe
-##import Image
-##import PngImagePlugin
-##import JpegImagePlugin
-##import GifImagePlugin
-##import BmpImagePlugin
-##Image._initialized=2
+# Aims v.0.7
+# Multi-project support
 
 import wx
 ##import wx.lib.masked as masked
@@ -531,74 +527,6 @@ class ImageWindow(wx.ScrolledWindow, fileTextBoxControls):
         self.update()
     def OnLoadImageForAll(self,e):
         """When "load same image for all" button is clicked"""
-
-    # Old extended display methods
-##    def OnLeftDown(self, e):
-##        """Called when the left mouse button is pressed"""
-##        self.pos = self.CalcUnscrolledPosition(e.GetPosition())
-##        app.debug_frame.WriteLine("DC: MouseLeftClick: %s"%str(self.pos))
-##        # If the mouse is within the region of the cutting mask
-##        # then check to see if it's
-##        #if self.realpos 
-##
-##    def OnMotion(self, e):
-##        """Called when the mouse moves over the DC"""
-##        self.pos = self.CalcUnscrolledPosition(e.GetPosition())
-##        #app.debug_frame.WriteLine("DC: MouseMoveTo: %s"%str(self.pos))
-##        # Check if the mouse is within the base of the cutting mask
-##        offset_x = self.active.frame[self.active.activeimage[0]].direction[self.active.activeimage[1]].image[self.active.activeimage[2]].offset_x
-##        offset_y = self.active.frame[self.active.activeimage[0]].direction[self.active.activeimage[1]].image[self.active.activeimage[2]].offset_y
-##        self.lastisopos = self.isopos
-##        self.isopos = self.ScreenToIso(self.pos, (offset_x,offset_y))
-##        if self.isopos != self.lastisopos:
-##            app.debug_frame.WriteLine("DC: MouseMoveTo: %s, ISO: %s"%(str(self.pos),str(self.isopos)))
-##            if self.isopos == (-1,-1):
-##                self.active.temp.draw_iso = 0
-##                self.active.temp.iso_pos = self.isopos
-##                self.GetGrandParent().GetParent().DrawImage()       # Needs alteration
-##            else:
-##                self.active.temp.draw_iso = 1
-##                self.active.temp.iso_pos = self.isopos
-##                self.GetGrandParent().GetParent().DrawImage()       # Needs alteration
-##
-##    def ScreenToIso(self, wxy=(0,0), offset=(0,0)):
-##        """Convert screen coordinates to Iso world coordinates
-##        returns tuple of iso coords"""
-##        offx, offy = offset
-##        if offx < 0:
-##            offx = 0
-##        if offy < 0:
-##            offy = 0
-##
-##        p = self.active.info.paksize
-##
-##        # If east/west reverse dims
-##        if self.active.activeimage[1] in [0,2]:
-##            xdims = self.active.info.xdims
-##            ydims = self.active.info.ydims
-##        else:
-##            ydims = self.active.info.xdims
-##            xdims = self.active.info.ydims
-##
-##        TileRatio = 2
-##        wx, wy = wxy
-##
-##        widthx = xdims * (p/2)
-##
-##        dx = wx - widthx - offx
-##        dy = wy - ((self.active.info.zdims-1) * p) - offy - p/2
-##
-##        x = int((dy - dx / TileRatio) * (TileRatio / 2) / (p/2))
-##        y = int((dy + dx / TileRatio) * (TileRatio / 2) / (p/2))
-##        if x < 0 or y < 0:
-##            return (-1,-1)
-##        if x == 0 and y == 0:
-##            return (x,y)
-##        if x >= (xdims) or y >= (ydims):
-##            return (-1,-1)
-##        
-##        return (x,y)
-
 
 
 
@@ -1433,7 +1361,7 @@ class MainWindow(wx.Frame):
         self.control_dims.update()
         self.control_offset.update()
         self.control_iopaths.update()
-##        self.display.update()
+        self.display.update()
 
 class menuObject:
     """Class containing the main program menu"""
@@ -1531,12 +1459,12 @@ class menuObject:
         debug("Menu-File-> New Project")
         # Check if current project has been changed since last save
         continue_new_project = False
-        if app.CheckProjectChanged(app.activeproject, app.activepickle):
+        if app.CheckProjectChanged():
             # If so, pop up a confirmation dialog offering the chance to save the file
             continue_new_project = True
         if continue_new_project:
             # If we should continue (e.g. user hasn't cancelled on confirmation or save dialog)
-            app.NewProject(app.activeproject, app.activepickle)
+            app.NewProject()
             self.parent.update()
             return 1
         else:
@@ -1545,7 +1473,7 @@ class menuObject:
         debug("Menu-File-> Open Project")
         # Check if current project has been changed since last save
         continue_new_project = True
-        if app.CheckProjectChanged(app.activeproject, app.activepickle):
+        if app.CheckProjectChanged():
             # If so, pop up a confirmation dialog offering the chance to save the file
             continue_new_project = True
         if continue_new_project:
@@ -1638,11 +1566,10 @@ class MyApp(wx.App):
             self.debug.Show(1)
         return True
 
-    def CheckProjectChanged(self, project, projecthash):
+    def CheckProjectChanged(self):
         """Check if the active project has been changed since it was saved last,
            returns True if it's changed"""
-        debug(str(project))
-        if self.PickleProject(project) == projecthash:
+        if self.PickleProject(app.activeproject) == app.activepickle:
             debug("Check Project for changes - Project Unchanged")
             return False
         else:
@@ -1661,11 +1588,11 @@ class MyApp(wx.App):
         output.close()
         debug("Save project success")
 
-    def NewProject(self, project, projhash):
+    def NewProject(self):
         """Replace a project with a new one"""
         # Call init on the project, this will reset it to its defaults
-        project.__init__()
-        projhash = self.PickleProject(project)
+        app.activeproject = tcproject.Project()
+        app.activepickle = self.PickleProject(app.activeproject)
         debug("Active project reset to defaults (New project)")
 
     def LoadProject(self, file):
