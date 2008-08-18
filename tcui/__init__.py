@@ -4,9 +4,10 @@
 #
 
 # Import all child controls
-import facingControl
+import facingControl, translationDialog
 
-facingControl = facingControl.facingControl
+facingControl       = facingControl.facingControl
+translationDialog   = translationDialog.translationDialog
 
 # Set value of * in import
-__all__ = ["facingControl"]
+__all__ = ["facingControl", "translationDialog"]
