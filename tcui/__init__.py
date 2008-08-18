@@ -4,11 +4,12 @@
 #
 
 # Import all child controls
-import facingControl, seasonControl, translationDialog
+import facingControl, seasonControl, dimsControl, translationDialog
 
 facingControl       = facingControl.facingControl
 seasonControl       = seasonControl.seasonControl
+dimsControl         = dimsControl.dimsControl
 translationDialog   = translationDialog.translationDialog
 
 # Set value of * in import
-__all__ = ["facingControl", "seasonControl", "translationDialog"]
+__all__ = ["facingControl", "seasonControl", "dimsControl", "translationDialog"]
