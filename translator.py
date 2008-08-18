@@ -18,38 +18,47 @@ DEFAULT_LANGFILE_ENCODING = "utf-8"
 
 class Translator:
     """Contains all available translations as well as the active translation"""
+    language_list = None
     def __init__(self):
         """Load translation files"""
-        # Obtain directory listing of available languages
-        list = os.listdir(PATH_TO_TRANSLATIONS)
-        language_file_list = []
-        for i in list:
-            split = os.path.splitext(i)
-            if split[1] == TRANSLATION_FILE_EXTENSION:
-                language_file_list.append(PATH_TO_TRANSLATIONS + os.path.sep + i)
-        # Next produce a translation object for each file in language_file_list
-        self.language_list = []
-        self.language_names_list = []
-        self.language_longnames_list = []
-        for i in range(len(language_file_list)):
-            self.language_list.append(translation(language_file_list[i]))
-            self.language_names_list.append(self.language_list[i].name())
-            self.language_longnames_list.append(self.language_list[i].longname())
-        # Make dicts
-        self.longnametoname = self.arraysToDict(self.language_longnames_list, self.language_names_list)
-        self.nametotranslation = self.arraysToDict(self.language_names_list, self.language_list)
+        if Translator.language_list is None:
+            # Obtain directory listing of available languages
+            list = os.listdir(PATH_TO_TRANSLATIONS)
+            language_file_list = []
+            for i in list:
+                split = os.path.splitext(i)
+                if split[1] == TRANSLATION_FILE_EXTENSION:
+                    language_file_list.append(PATH_TO_TRANSLATIONS + os.path.sep + i)
+            # Next produce a translation object for each file in language_file_list
+            Translator.language_list = []
+            Translator.language_names_list = []
+            Translator.language_longnames_list = []
+            for i in range(len(language_file_list)):
+                Translator.language_list.append(translation(language_file_list[i]))
+                Translator.language_names_list.append(Translator.language_list[i].name())
+                Translator.language_longnames_list.append(Translator.language_list[i].longname())
+            # Make dicts
+            Translator.longnametoname = self.arraysToDict(Translator.language_longnames_list, Translator.language_names_list)
+            Translator.nametotranslation = self.arraysToDict(Translator.language_names_list, Translator.language_list)
 
-        # Should obtain this from the program settings object, similarly, when setting translation need to update program setting
-        self.setActiveTranslation("base_translation")
-##        debug.out(str(self.nametotranslation))
+            # Should obtain this from the program settings object, similarly, when setting translation need to update program setting
+            self.setActiveTranslation("base_translation")
+
     def gt(self, text):
         """Return translated version of a string"""
         text = unicode(text)
         try:
-            return self.active.translation[text]
+            return Translator.active.translation[text]
         except KeyError:
             # If there is no translation for this item use the default program string
             return text
+
+    def translateIntArray(self, intlist):
+        """Takes an array of int values and translates them"""
+        stringlist = []
+        for i in intlist:
+            stringlist.append(self.gt(str(i)))
+        return stringlist
 
     def arraysToDict(self, keys, values):
         """Convert two arrays into a dict (assuming keys[x] relates to values[x])"""
@@ -60,10 +69,10 @@ class Translator:
         return newdict
     def longnameToName(self, longname):
         """Converts a long translation name to the short version"""
-        return self.longnametoname[longname]
+        return Translator.longnametoname[longname]
     def setActiveTranslation(self, name):
         """Set which translation should be used"""
-        self.active = self.nametotranslation[name]
+        Translator.active = Translator.nametotranslation[name]
 
 class translation:
     """An individual translation file object"""

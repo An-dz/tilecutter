@@ -90,7 +90,13 @@ import wx
 
 import sys, os, ConfigParser, StringIO, re, codecs, pickle
 
-import tc, tcproject, imres, translator
+import tcui.facingControl as facingControl
+
+import tc, tcproject, imres
+
+# Imports and initialises Translator module, static module (only one can exist)
+import translator
+
 # Custom platform codecs
 import u_newlines, w_newlines
 
@@ -135,7 +141,7 @@ choicelist_dims_z_int = [1,2,3,4]
 # Translation function, simply calls tctranslator object's gt method
 def gt(text):
     """Get text, return translation of string"""
-    return tctranslator.gt(text)
+    return app.tctranslator.gt(text)
 
 def gsc(text, default=None):
     """Return the keyboard shortcut associated with a menu item"""
@@ -143,12 +149,6 @@ def gsc(text, default=None):
     if default != None:
         return "\t" + default
 
-def translateIntArray(intlist):
-    """Takes an array of int values and translates them"""
-    stringlist = []
-    for i in intlist:
-        stringlist.append(gt(str(i)))
-    return stringlist
 
 class fileTextBoxControls:
     """Methods for text boxes displaying URLs"""
@@ -677,137 +677,6 @@ class imageControl(wx.StaticBox):
         # Redraw active image
         display.update()
 
-class facingControl(wx.StaticBox):
-    """Box containing direction facing controls"""
-    def __init__(self,parent,parent_sizer):
-        wx.StaticBox.__init__(self,parent,wx.ID_ANY,gt("Direction Facing"))
-            # Setup sizers
-        self.s_facing = wx.StaticBoxSizer(self, wx.HORIZONTAL)
-        self.s_facing_flex = wx.FlexGridSizer(0,2,0,0)
-        self.s_facing_flex.AddGrowableCol(1)
-        self.s_facing_right = wx.BoxSizer(wx.VERTICAL)
-        self.s_facing_1 = wx.BoxSizer(wx.HORIZONTAL)
-            # Add items
-        self.facing_select_south_im = wx.StaticBitmap(parent, wx.ID_ANY, imres.catalog["ImageSouth"].getBitmap())
-        self.facing_select_south = wx.RadioButton(parent, wx.ID_ANY, "", (-1,-1), (-1,-1), wx.RB_GROUP)
-        self.facing_select_east_im = wx.StaticBitmap(parent, wx.ID_ANY, imres.catalog["ImageEast"].getBitmap())
-        self.facing_select_east = wx.RadioButton(parent, wx.ID_ANY, "", (-1,-1), (-1,-1))
-        self.facing_select_north_im = wx.StaticBitmap(parent, wx.ID_ANY, imres.catalog["ImageNorth"].getBitmap())
-        self.facing_select_north = wx.RadioButton(parent, wx.ID_ANY, "", (-1,-1), (-1,-1))
-        self.facing_select_west_im = wx.StaticBitmap(parent, wx.ID_ANY, imres.catalog["ImageWest"].getBitmap())
-        self.facing_select_west = wx.RadioButton(parent, wx.ID_ANY, "", (-1,-1), (-1,-1))
-        self.facing_enable_label = wx.StaticText(parent, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
-        self.facing_enable_select = wx.ComboBox(parent, wx.ID_ANY, "", (-1, -1), (54, -1), "", wx.CB_READONLY|wx.ALIGN_CENTER_VERTICAL)
-            # Add to sizers
-        self.s_facing_flex.Add(self.facing_select_south_im, 0, wx.ALIGN_LEFT|wx.RIGHT|wx.LEFT, 2)
-        self.s_facing_flex.Add(self.facing_select_south, 0, wx.ALIGN_LEFT|wx.RIGHT, 0)
-        self.s_facing_flex.Add(self.facing_select_east_im, 0, wx.ALIGN_LEFT|wx.RIGHT|wx.LEFT, 2)
-        self.s_facing_flex.Add(self.facing_select_east, 0, wx.ALIGN_LEFT|wx.RIGHT, 0)
-        self.s_facing_flex.Add(self.facing_select_north_im, 0, wx.ALIGN_LEFT|wx.RIGHT|wx.LEFT, 2)
-        self.s_facing_flex.Add(self.facing_select_north, 0, wx.ALIGN_LEFT|wx.RIGHT, 0)
-        self.s_facing_flex.Add(self.facing_select_west_im, 0, wx.ALIGN_LEFT|wx.RIGHT|wx.LEFT, 2)
-        self.s_facing_flex.Add(self.facing_select_west, 0, wx.ALIGN_LEFT|wx.RIGHT, 0)
-
-        self.s_facing_right.Add(self.facing_enable_label, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.RIGHT, 0)
-        self.s_facing_right.Add(self.facing_enable_select, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.RIGHT, 0)
-        self.s_facing_1.Add(self.s_facing_flex, 0, wx.RIGHT, 0)
-        self.s_facing_1.Add(self.s_facing_right, 1, wx.ALIGN_CENTER_HORIZONTAL, 0)
-        self.s_facing.Add(self.s_facing_1, 1, wx.RIGHT, 0)
-            # Bind events
-        self.facing_enable_select.Bind(wx.EVT_COMBOBOX, self.OnToggle, self.facing_enable_select)
-        self.facing_select_south.Bind(wx.EVT_RADIOBUTTON, self.OnSouth, self.facing_select_south)
-        self.facing_select_east.Bind(wx.EVT_RADIOBUTTON, self.OnEast, self.facing_select_east)
-        self.facing_select_north.Bind(wx.EVT_RADIOBUTTON, self.OnNorth, self.facing_select_north)
-        self.facing_select_west.Bind(wx.EVT_RADIOBUTTON, self.OnWest, self.facing_select_west)
-
-            # Add element to its parent sizer
-        parent_sizer.Add(self.s_facing, 0, wx.EXPAND, 0)
-
-    def translate(self):
-        """Update the text of all controls to reflect a new translation"""
-        self.facing_select_south.SetLabel(gt("South"))
-        self.facing_select_south.SetToolTipString(gt("tt_facing_select_south"))
-        self.facing_select_east.SetLabel(gt("East"))
-        self.facing_select_east.SetToolTipString(gt("tt_facing_select_east"))
-        self.facing_select_north.SetLabel(gt("North"))
-        self.facing_select_north.SetToolTipString(gt("tt_facing_select_north"))
-        self.facing_select_west.SetLabel(gt("West"))
-        self.facing_select_west.SetToolTipString(gt("tt_facing_select_west"))
-        self.facing_enable_label.SetLabel(gt("Number\nof views:"))
-        self.facing_enable_select.SetToolTipString(gt("tt_facing_enable_select"))
-        # Translate the choicelist values for paksize
-        self.choicelist_views = translateIntArray(choicelist_views_int)
-        self.facing_enable_select.Clear()
-        for i in self.choicelist_views:
-            self.facing_enable_select.Append(i)
-        # And set value to value in the project
-        self.facing_enable_select.SetStringSelection(self.choicelist_views[choicelist_views_int.index(app.activeproject.views())])
-
-    def update(self):
-        """Set the values of the controls in this group to the values in the model"""
-        # Set value of the toggle control (to set number of directions)
-        if app.activeproject.views() == 1:
-            self.facing_enable_select.SetValue(self.choicelist_views[0])
-            # Update controls
-            self.facing_select_south.Enable()
-            self.facing_select_east.Disable()
-            self.facing_select_north.Disable()
-            self.facing_select_west.Disable()
-            if self.facing_select_east.GetValue() == True or self.facing_select_north.GetValue() == True or self.facing_select_west.GetValue() == True:
-                self.facing_select_south.SetValue(1)
-                # Modify active image to only available option
-                app.activeproject.activeImage(direction=South)
-                # Redraw active image
-                display.update()
-        elif app.activeproject.views() == 2:
-            self.facing_enable_select.SetValue(self.choicelist_views[1])
-            self.facing_select_south.Enable()
-            self.facing_select_east.Enable()
-            self.facing_select_north.Disable()
-            self.facing_select_west.Disable()
-            if self.facing_select_north.GetValue() == True or self.facing_select_west.GetValue() == True:
-                self.facing_select_east.SetValue(1)
-                # Modify active image to available option
-                app.activeproject.activeImage(direction=East)
-                # Redraw active image
-                display.update()
-        else:
-            self.facing_enable_select.SetValue(self.choicelist_views[2])
-            self.facing_select_south.Enable()
-            self.facing_select_east.Enable()
-            self.facing_select_north.Enable()
-            self.facing_select_west.Enable()
-        # Update the combobox
-        self.facing_enable_select.SetStringSelection(self.choicelist_views[choicelist_views_int.index(app.activeproject.views())])
-
-    def OnToggle(self,e):
-        """Changing the value in the selection box"""
-        app.activeproject.views(choicelist_views_int[self.choicelist_views.index(self.facing_enable_select.GetValue())])
-        self.update()
-    def OnSouth(self,e):
-        """Toggle South direction"""
-        # Set active image to South
-        app.activeproject.activeImage(direction=South)
-        # Redraw active image
-        display.update()
-    def OnEast(self,e):
-        """Toggle East direction"""
-        # Set active image to East
-        app.activeproject.activeImage(direction=East)
-        # Redraw active image
-        display.update()
-    def OnNorth(self,e):
-        """Toggle North direction"""
-        # Set active image to North
-        app.activeproject.activeImage(direction=North)
-        # Redraw active image
-        display.update()
-    def OnWest(self,e):
-        """Toggle West direction"""
-        # Set active image to West
-        app.activeproject.activeImage(direction=West)
-        # Redraw active image
-        display.update()
 
 class dimsControl(wx.StaticBox):
     """Box containing dimensions controls"""
@@ -857,21 +726,21 @@ class dimsControl(wx.StaticBox):
         # To allow for translation of values in combobox controls, master list is int list, translated list is generated
         #   on the fly from the master list, these lists then index each other to determine the values to set
         # Translate the choicelist values for paksize
-        self.choicelist_packsize = translateIntArray(choicelist_paksize_int)
+        self.choicelist_packsize = app.tctranslator.translateIntArray(choicelist_paksize_int)
         self.dims_p_select.Clear()
         for i in self.choicelist_packsize:
             self.dims_p_select.Append(i)
         # And set value to value in the project
         self.dims_p_select.SetStringSelection(self.choicelist_packsize[choicelist_paksize_int.index(app.activeproject.paksize())])
         # Translate the choicelist values for z dims
-        self.choicelist_dims_z = translateIntArray(choicelist_dims_z_int)
+        self.choicelist_dims_z = app.tctranslator.translateIntArray(choicelist_dims_z_int)
         self.dims_z_select.Clear()
         for i in self.choicelist_dims_z:
             self.dims_z_select.Append(i)
         # And set value to value in the project
         self.dims_z_select.SetStringSelection(self.choicelist_dims_z[choicelist_dims_z_int.index(app.activeproject.z())])
         # Translate the choicelist values for x and y dims
-        self.choicelist_dims = translateIntArray(choicelist_dims_int)
+        self.choicelist_dims = app.tctranslator.translateIntArray(choicelist_dims_int)
         self.dims_x_select.Clear()
         self.dims_y_select.Clear()
         for i in self.choicelist_dims:
@@ -1165,13 +1034,13 @@ class translationDialog(wx.Dialog):
         # Overall panel sizer
         self.s_panel = wx.BoxSizer(wx.VERTICAL)
         self.top_label = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
-        self.language_picker = wx.ComboBox(self, wx.ID_ANY, tctranslator.active.longname(), (-1, -1), (-1, -1), tctranslator.language_longnames_list, wx.CB_READONLY|wx.ALIGN_CENTER_VERTICAL)
+        self.language_picker = wx.ComboBox(self, wx.ID_ANY, app.tctranslator.active.longname(), (-1, -1), (-1, -1), app.tctranslator.language_longnames_list, wx.CB_READONLY|wx.ALIGN_CENTER_VERTICAL)
 
         # Within the static box
         self.dialog_box = wx.StaticBox(self, wx.ID_ANY, gt("Language Details:"))
         self.s_dialog_box = wx.StaticBoxSizer(self.dialog_box, wx.HORIZONTAL)
         # Bitmap flag display on the left
-        self.country_icon = wx.StaticBitmap(self, wx.ID_ANY, tctranslator.active.icon())
+        self.country_icon = wx.StaticBitmap(self, wx.ID_ANY, app.tctranslator.active.icon())
         # Three static texts on the right containing information within a vertical sizer
         self.s_dialog_box_right = wx.FlexGridSizer(0,2,0,0)
         self.s_dialog_box_right.AddGrowableCol(1)
@@ -1223,13 +1092,13 @@ class translationDialog(wx.Dialog):
         self.close_button.SetLabel(gt("Close"))
         # These values taken from the active translation
         self.label_name.SetLabel(gt("Language:"))
-        self.label_name_value.SetLabel(tctranslator.active.longname())
+        self.label_name_value.SetLabel(app.tctranslator.active.longname())
         self.label_createdby.SetLabel(gt("Created by:"))
-        self.label_createdby_value.SetLabel(tctranslator.active.created_by())
+        self.label_createdby_value.SetLabel(app.tctranslator.active.created_by())
         self.label_createdon.SetLabel(gt("Created on:"))
-        self.label_createdon_value.SetLabel(tctranslator.active.created_date())
+        self.label_createdon_value.SetLabel(app.tctranslator.active.created_date())
         # And finally change the image
-        self.country_icon.SetBitmap(tctranslator.active.icon())
+        self.country_icon.SetBitmap(app.tctranslator.active.icon())
         self.Layout()
         self.Refresh()
 
@@ -1242,7 +1111,7 @@ class translationDialog(wx.Dialog):
     def OnSelection(self,e):
         """When user changes the language selection"""
         # Set active translation to the one specified
-        tctranslator.setActiveTranslation(tctranslator.longnameToName(self.language_picker.GetValue()))
+        app.tctranslator.setActiveTranslation(app.tctranslator.longnameToName(self.language_picker.GetValue()))
         # Call own translate function
         self.translate()
         app.frame.translate()
@@ -1294,7 +1163,7 @@ class MainWindow(wx.Frame):
         # Image controls-------------------------------------------------------------------
         self.control_images = imageControl(self.panel, self.s_panel_controls)
         # Facing controls------------------------------------------------------------------
-        self.control_facing = facingControl(self.panel, self.s_panel_controls)
+        self.control_facing = facingControl(self.panel, app, self.s_panel_controls)
         # Dimension controls---------------------------------------------------------------
         self.control_dims = dimsControl(self.panel, self.s_panel_controls)
         # Offset/mask controls-------------------------------------------------------------
@@ -1351,7 +1220,7 @@ class MainWindow(wx.Frame):
         self.menubar.translate()
         # Finally re-do the window's layout
         self.panel.Layout()
-##        self.Update()
+##        self.update()
 
     def update(self):
         """Update frame and all its children to reflect values in the active project"""
@@ -1556,6 +1425,20 @@ class DebugFrame(wx.Frame):
 
 class MyApp(wx.App):
     """The main application, pre-window launch stuff should go here"""
+    # Static variables
+    South   = 0
+    East    = 1
+    North   = 2
+    West    = 3
+    Back    = 0
+    Front   = 1
+    Summer  = 0
+    Winter  = 1
+    choicelist_anim = choicelist_anim
+    choicelist_paksize_int = choicelist_paksize_int
+    choicelist_views_int = choicelist_views_int
+    choicelist_dims_int = choicelist_dims_int
+    choicelist_dims_z_int = choicelist_dims_z_int
     def OnInit(self):
         """Things to do immediately after the wx.App has been created"""
         # Load Program Options
@@ -1660,8 +1543,12 @@ if __name__ == '__main__':
     # Make debug global in all modules
     debug = tcproject.debug = tc.debug = translator.debug = app.debug
     # Create the translation manager
-    tctranslator = translator.Translator()
+    app.tctranslator = translator.Translator()
 ##    sys.stderr = open("error.txt","w")
+
+
+
+
 
     # Create the main application window
     app.MainWindow()

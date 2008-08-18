@@ -1,18 +1,6 @@
 # TC Backend functions
 
-# Hack to make PIL work with py2exe
-##import Image
-##import PngImagePlugin
-##import JpegImagePlugin
-##import GifImagePlugin
-##import BmpImagePlugin
-##Image._initialized=2
-
 import wx
-##import wx.lib.masked as masked
-##import wx.lib.scrolledpanel as scrolled
-##import wx.lib.hyperlink as hl
-
 import sys, os
 import pickle, copy
 
