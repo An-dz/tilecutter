@@ -826,7 +826,7 @@ class MainWindow(wx.Frame):
         # Dimension controls---------------------------------------------------------------
         self.control_dims       = tcui.dimsControl(self.panel, app, self.s_panel_controls)
         # Offset/mask controls-------------------------------------------------------------
-        self.control_offset     = offsetControl(self.panel, self.s_panel_controls)
+        self.control_offset     = tcui.offsetControl(self.panel, app, self.s_panel_controls)
 
         # Create Image display window and image path entry control, which adds itself to the sizer
         self.display = ImageWindow(self.panel, self.s_panel_imagewindow_container)

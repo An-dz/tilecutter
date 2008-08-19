@@ -3,6 +3,7 @@
 # TileCutter, User Interface Library
 #
 
+# Controls
 import seasonControl
 seasonControl       = seasonControl.seasonControl
 import imageControl
@@ -11,10 +12,14 @@ import facingControl
 facingControl       = facingControl.facingControl
 import dimsControl
 dimsControl         = dimsControl.dimsControl
+import offsetControl
+offsetControl       = offsetControl.offsetControl
 
 # Dialogs
 import translationDialog
 translationDialog   = translationDialog.translationDialog
+import aboutDialog
+aboutDialog         = aboutDialog.aboutDialog
 
 ### Set value of * in import
 ##__all__ = ["facingControl", "seasonControl", "dimsControl", "translationDialog"]
