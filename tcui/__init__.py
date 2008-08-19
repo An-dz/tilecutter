@@ -7,6 +7,10 @@
 import fileTextBox
 fileTextBox         = fileTextBox.fileTextBox
 
+# Menus
+import menuObject
+menuObject          = menuObject.menuObject
+
 # Controls
 import seasonControl
 seasonControl       = seasonControl.seasonControl
