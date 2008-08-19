@@ -3,6 +3,10 @@
 # TileCutter, User Interface Library
 #
 
+# Subclasses (depended upon by controls, must come first)
+import fileTextBox
+fileTextBox         = fileTextBox.fileTextBox
+
 # Controls
 import seasonControl
 seasonControl       = seasonControl.seasonControl
@@ -14,6 +18,8 @@ import dimsControl
 dimsControl         = dimsControl.dimsControl
 import offsetControl
 offsetControl       = offsetControl.offsetControl
+import twoFileControl
+twoFileControl      = twoFileControl.twoFileControl
 
 # Dialogs
 import translationDialog
