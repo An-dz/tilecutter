@@ -1,6 +1,6 @@
 # coding: UTF-8
 #
-# TileCutter, User Interface Module - translationDialog
+# TileCutter, User Interface Module - dimsControl
 #
 import wx, imres
 

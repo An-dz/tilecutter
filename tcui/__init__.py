@@ -3,13 +3,18 @@
 # TileCutter, User Interface Library
 #
 
-# Import all child controls
-import facingControl, seasonControl, dimsControl, translationDialog
-
-facingControl       = facingControl.facingControl
+import seasonControl
 seasonControl       = seasonControl.seasonControl
+import imageControl
+imageControl        = imageControl.imageControl
+import facingControl
+facingControl       = facingControl.facingControl
+import dimsControl
 dimsControl         = dimsControl.dimsControl
+
+# Dialogs
+import translationDialog
 translationDialog   = translationDialog.translationDialog
 
-# Set value of * in import
-__all__ = ["facingControl", "seasonControl", "dimsControl", "translationDialog"]
+### Set value of * in import
+##__all__ = ["facingControl", "seasonControl", "dimsControl", "translationDialog"]
