@@ -3,6 +3,8 @@
 import os, sys
 import wx
 
+from debug import DebugFrame as debug
+
 # TileCutter Project module
 
 # Static variables
@@ -65,7 +67,7 @@ class ProjectImage:
         # This may also be a valid file, but shouldn't be relied upon
         if path != None:
             self.value_lastpath = path
-            debug.out("Image lastpath set to \"%s\"" % str(path))
+            debug("Image lastpath set to \"%s\"" % str(path))
         else:
             return self.value_lastpath
     def path(self, path=None):
@@ -75,9 +77,9 @@ class ProjectImage:
             if (os.path.isfile(path) and os.path.splitext(path)[1] in VALID_IMAGE_EXTENSIONS) or path == "":
                 self.value_path = path
                 self.reloadImage()
-                debug.out("Image path set to \"%s\", new cached image loaded" % str(path))
+                debug("Image path set to \"%s\", new cached image loaded" % str(path))
             else:
-                debug.out("Attempt to set image path failed - Path \"%s\" invalid" % str(path))
+                debug("Attempt to set image path failed - Path \"%s\" invalid" % str(path))
                 return 1
             # Otherwise raise an error (path must be to a file that exists)
         else:
@@ -204,10 +206,10 @@ class Project:
         if set != None:
             if set in choicelist_dims_int:
                 self.dims.x = int(set)
-                debug.out("X dimension set to %i" % self.dims.x)
+                debug("X dimension set to %i" % self.dims.x)
                 return 0
             else:
-                debug.out("Attempt to set X dimension failed - Value (%s) outside of acceptable range" % str(set))
+                debug("Attempt to set X dimension failed - Value (%s) outside of acceptable range" % str(set))
                 return 1
         else:
             return self.dims.x
@@ -215,10 +217,10 @@ class Project:
         if set != None:
             if set in choicelist_dims_int:
                 self.dims.y = int(set)
-                debug.out("Y dimension set to %i" % self.dims.y)
+                debug("Y dimension set to %i" % self.dims.y)
                 return 0
             else:
-                debug.out("Attempt to set Y dimension failed - Value (%s) outside of acceptable range" % str(set))
+                debug("Attempt to set Y dimension failed - Value (%s) outside of acceptable range" % str(set))
                 return 1
         else:
             return self.dims.y
@@ -226,10 +228,10 @@ class Project:
         if set != None:
             if set in choicelist_dims_z_int:
                 self.dims.z = int(set)
-                debug.out("Z dimension set to %i" % self.dims.z)
+                debug("Z dimension set to %i" % self.dims.z)
                 return 0
             else:
-                debug.out("Attempt to set Z dimension failed - Value (%s) outside of acceptable range" % str(set))
+                debug("Attempt to set Z dimension failed - Value (%s) outside of acceptable range" % str(set))
                 return 1
         else:
             return self.dims.z
@@ -237,10 +239,10 @@ class Project:
         if set != None:
             if set in choicelist_paksize_int:
                 self.dims.paksize = int(set)
-                debug.out("Paksize set to %i" % self.dims.paksize)
+                debug("Paksize set to %i" % self.dims.paksize)
                 return 0
             else:
-                debug.out("Attempt to set Paksize failed - Value (%s) outside of acceptable range" % str(set))
+                debug("Attempt to set Paksize failed - Value (%s) outside of acceptable range" % str(set))
                 return 1
         else:
             return self.dims.paksize
@@ -248,14 +250,14 @@ class Project:
         if set != None:
             if set == 1 or set == True:
                 self.dims.winter = 1
-                debug.out("WinterViewEnable set to %i" % self.dims.winter)
+                debug("WinterViewEnable set to %i" % self.dims.winter)
                 return 0
             elif set == 0 or set == False:
                 self.dims.winter = 0
-                debug.out("WinterViewEnable set to %i" % self.dims.winter)
+                debug("WinterViewEnable set to %i" % self.dims.winter)
                 return 0
             else:
-                debug.out("Attempt to set WinterViewEnable failed - Value (%s) outside of acceptable range" % str(set))
+                debug("Attempt to set WinterViewEnable failed - Value (%s) outside of acceptable range" % str(set))
                 return 1
         else:
             return self.dims.winter
@@ -263,14 +265,14 @@ class Project:
         if set != None:
             if set == 1 or set == True:
                 self.dims.frontimage = 1
-                debug.out("FrontImageEnable set to %i" % self.dims.frontimage)
+                debug("FrontImageEnable set to %i" % self.dims.frontimage)
                 return 0
             elif set == 0 or set == False:
                 self.dims.frontimage = 0
-                debug.out("FrontImageEnable set to %i" % self.dims.frontimage)
+                debug("FrontImageEnable set to %i" % self.dims.frontimage)
                 return 0
             else:
-                debug.out("Attempt to set FrontImageEnable failed - Value (%s) outside of acceptable range" % str(set))
+                debug("Attempt to set FrontImageEnable failed - Value (%s) outside of acceptable range" % str(set))
                 return 1
         else:
             return self.dims.frontimage
@@ -278,10 +280,10 @@ class Project:
         if set != None:
             if set in choicelist_views_int:
                 self.dims.views = int(set)
-                debug.out("Views set to %i" % self.dims.views)
+                debug("Views set to %i" % self.dims.views)
                 return 0
             else:
-                debug.out("Attempt to set Views failed - Value (%s) outside of acceptable range" % str(set))
+                debug("Attempt to set Views failed - Value (%s) outside of acceptable range" % str(set))
                 return 1
         return self.dims.views
 
@@ -300,7 +302,7 @@ class Project:
             if set in [True, 1, False, 0]:
                 self.files.saved = set
             else:
-                debug.out("Attempt to set Saved status failed - Value (%s) outside of acceptable range" % str(set))
+                debug("Attempt to set Saved status failed - Value (%s) outside of acceptable range" % str(set))
         else:
             return self.files.saved
     # Inputting/extracting information from the project is done via methods of the project class, so we can change the underlying
@@ -335,7 +337,7 @@ class ProjectFile:
         # paths for quick and easy use)
         self.saved = False
 
-        debug.out("save_location: %s, datfile_location: %s, pngfile_location: %s" % (self.save_location,
+        debug("save_location: %s, datfile_location: %s, pngfile_location: %s" % (self.save_location,
                                                                                      self.datfile_location,
                                                                                      self.pngfile_location))
 

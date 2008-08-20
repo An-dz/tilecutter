@@ -11,6 +11,8 @@ import imres
 # Custom platform codecs
 import u_newlines, w_newlines
 
+from debug import DebugFrame as debug
+
 # Translation setup
 PATH_TO_TRANSLATIONS = "languages"
 TRANSLATION_FILE_EXTENSION = ".tab"

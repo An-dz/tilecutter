@@ -9,7 +9,7 @@
 # BUG - Season select does not set to summer when enable winter is unchecked
 
 
-# Move debug into own module, to allow it to be easily accessed by other modules        
+# Move debug into own module, to allow it to be easily accessed by other modules        - DONE
 #   (like imres is at the moment)
 
 # Find some way to eliminate flickering on translation update/initial load              
@@ -48,7 +48,7 @@
 # "Warning, this will set all views in the project to use the current image, proceed?"  
 # -> Function to reload the current view's image                                        - DONE
 
-# Move UI classes into a module to enhance loading speed
+# Move UI classes into a module to enhance loading speed        - MOSTLY DONE (JUST IMAGEWINDOW TO MOVE)
 
 # Needs much better error handling, add try/except clauses in critical places
 # Could also encase entire script in an exception catcher, which can display exception 
@@ -68,7 +68,6 @@
 # Test with Linux, Mac OSX, Windows (xp), try and have the same code across all platforms!
 # Produce help documentation                                                            
 # -> Quick start guide (interface should be fairly self-explanatory though)             
-
 
 
 # Aims v.0.5
@@ -92,16 +91,14 @@ import wx
 ##import wx.lib.hyperlink as hl
 
 import sys, os, ConfigParser, StringIO, re, codecs, pickle
-
 import tcui
-
 import tc, tcproject, imres
-
-# Imports and initialises Translator module, static module (only one can exist)
 import translator
 
 # Custom platform codecs
 import u_newlines, w_newlines
+
+from debug import DebugFrame as debug
 
 # Init variables
 debug_on = True
@@ -213,8 +210,6 @@ class ImageWindow(wx.ScrolledWindow, tcui.fileTextBox):
         self.lastpath = ""  # Stores the last path entered, to check for differences
         self.translate()    # Load the initial translation
 
-
-
     # Device Context events and methods
     def OnPaint(self, e):
         """Event handler for scrolled window repaint requests"""
@@ -222,7 +217,6 @@ class ImageWindow(wx.ScrolledWindow, tcui.fileTextBox):
             wx.PaintDC(self)
         else:
             wx.BufferedPaintDC(self, self.buffer, wx.BUFFER_VIRTUAL_AREA)
-
 
     def translate(self):
         """Update the text of all controls to reflect a new translation"""
@@ -232,7 +226,6 @@ class ImageWindow(wx.ScrolledWindow, tcui.fileTextBox):
         self.impath_entry_filebrowse.SetToolTipString(gt("ttbrowseinputfile"))
         self.impath_entry_reloadfile.SetToolTipString(gt("ttreloadinputfile"))
         self.impath_entry_sameforall.SetToolTipString(gt("ttsamefileforall"))
-
 
     # Update refreshes both textbox (if it's changed) and the device context
     def update(self):
@@ -495,34 +488,6 @@ class MainWindow(wx.Frame):
         self.control_iopaths.update()
         self.display.update()
 
-
-class DebugFrame(wx.Frame):
-    """Debugging output display, debug.out() (or just debug()) to output debugging text"""
-    def __init__(self, parent, id, title):
-        # Init text and counter
-        self.text = ""
-        self.count = 0
-        # Frame init
-        wx.Frame.__init__(self,parent,wx.ID_ANY, title, (0,0), (600,300), style=wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL)
-        self.panel = wx.Panel(self, wx.ID_ANY)
-        self.sizer = wx.BoxSizer(wx.VERTICAL)
-        self.textbox = wx.TextCtrl(self.panel, wx.ID_ANY, self.text, (-1,-1), (-1,-1), wx.TE_MULTILINE|wx.TE_READONLY)
-        self.sizer.Add(self.textbox, 1, wx.EXPAND|wx.ALIGN_CENTER_VERTICAL, 2)
-        #Layout sizers
-        self.panel.SetSizer(self.sizer)
-        self.panel.SetAutoLayout(1)
-        self.panel.Layout()
-    def out(self,line):
-        if debug_on:
-            self.count += 1
-            t = "[%s] %s\n" % (self.count, line)
-            self.text = self.text + t
-            self.textbox.SetValue(self.text)
-            self.textbox.ShowPosition(len(self.text))
-    def __call__(self,line):
-        if debug_on:
-            self.out(line)
-
 class MyApp(wx.App):
     """The main application, pre-window launch stuff should go here"""
     VERSION_NUMBER = VERSION_NUMBER
@@ -545,7 +510,13 @@ class MyApp(wx.App):
         # Load Program Options
 
         # Create and show debug window if debugging turned on
-        self.debug = DebugFrame(None, wx.ID_ANY, "Debugging")
+        
+        # Could improve debug window by only initialising the frame etc. if debugging is turned on,
+        # if it isn't then nothing gets created and calls to debug() simply log in the background
+        # Debug frame also needs a save/export control to save messages (and some way to redirect
+        # error output to the same frame)
+        
+        self.debug = debug(None, wx.ID_ANY, "Debugging", debug_on)
         if debug_on:
             self.debug.Show(1)
         return True
@@ -641,15 +612,9 @@ if __name__ == '__main__':
     start_directory = os.getcwd()
     # Create the application
     app = MyApp()
-    # Make debug global in all modules
-    debug = tcproject.debug = tc.debug = translator.debug = app.debug
     # Create the translation manager
     app.tctranslator = translator.Translator()
 ##    sys.stderr = open("error.txt","w")
-
-
-
-
 
     # Create the main application window
     app.MainWindow()

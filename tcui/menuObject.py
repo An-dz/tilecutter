@@ -6,8 +6,7 @@
 #
 import wx, imres, tcui
 
-def debug(text):
-    pass
+from debug import DebugFrame as debug
 
 class menuObject:
     """Class containing the main program menu"""

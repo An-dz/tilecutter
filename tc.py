@@ -4,6 +4,8 @@ import wx
 import sys, os
 import pickle, copy
 
+from debug import DebugFrame as debug
+
 def Export(self, export_dat=1, export_png=1):
     """Exports the cut png image and dat file"""
 
