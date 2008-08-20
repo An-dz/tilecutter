@@ -32,7 +32,7 @@ class imageControl(wx.StaticBox):
         self.images_select_back.Bind(wx.EVT_RADIOBUTTON, self.OnBackImage, self.images_select_back)
         self.images_select_front.Bind(wx.EVT_RADIOBUTTON, self.OnFrontImage, self.images_select_front)
             # Add element to its parent sizer
-        parent_sizer.Add(self.s_images, 0, wx.EXPAND, 0)
+        parent_sizer.Add(self.s_images, 0, wx.EXPAND|wx.LEFT|wx.RIGHT, 3)
 
     def translate(self):
         """Update the text of all controls to reflect a new translation"""

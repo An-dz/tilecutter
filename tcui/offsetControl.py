@@ -33,7 +33,7 @@ class offsetControl(wx.StaticBox):
         self.s_offset_flex.Add(wx.Size(1,1))
         self.s_offset.Add(self.s_offset_flex, 1, wx.ALIGN_CENTER_HORIZONTAL, 0)
             # Add element to its parent sizer
-        parent_sizer.Add(self.s_offset, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND, 0)
+        parent_sizer.Add(self.s_offset, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND|wx.LEFT|wx.RIGHT, 3)
             # Bind functions
         self.offset_button_up.Bind(wx.EVT_BUTTON, self.OnUp, self.offset_button_up)
         self.offset_button_left.Bind(wx.EVT_BUTTON, self.OnLeft, self.offset_button_left)

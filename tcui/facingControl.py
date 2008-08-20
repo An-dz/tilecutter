@@ -49,7 +49,7 @@ class facingControl(wx.StaticBox):
         self.facing_select_west.Bind(wx.EVT_RADIOBUTTON, self.OnWest, self.facing_select_west)
 
             # Add element to its parent sizer
-        parent_sizer.Add(self.s_facing, 0, wx.EXPAND, 0)
+        parent_sizer.Add(self.s_facing, 0, wx.EXPAND|wx.LEFT|wx.RIGHT, 3)
 
     def translate(self):
         """Update the text of all controls to reflect a new translation"""

@@ -33,7 +33,7 @@ class seasonControl(wx.StaticBox):
         self.seasons_select_winter.Bind(wx.EVT_RADIOBUTTON, self.OnWinter, self.seasons_select_winter)
 
             # Add element to its parent sizer
-        parent_sizer.Add(self.s_seasons, 0, wx.EXPAND, 0)
+        parent_sizer.Add(self.s_seasons, 0, wx.EXPAND|wx.LEFT|wx.RIGHT, 3)
 
     def translate(self):
         """Update the text of all controls to reflect a new translation"""

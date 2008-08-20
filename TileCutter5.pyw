@@ -447,7 +447,7 @@ class MainWindow(wx.Frame):
         # SIZERS
         # Add the remaining sizers to each other
         # Top panel, left side controls and right side image window added
-        self.s_panel_top.Add(self.s_panel_controls,0,wx.EXPAND, 0)
+        self.s_panel_top.Add(self.s_panel_controls,0,wx.EXPAND|wx.RIGHT, 1)
         self.s_panel_top.Add(self.s_panel_imagewindow_container,1,wx.EXPAND, 0)
         # Add bottom and top parts to overall panel 
         self.s_panel.Add(self.s_panel_top,1,wx.EXPAND, 0)
