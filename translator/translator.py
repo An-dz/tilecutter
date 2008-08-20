@@ -14,10 +14,9 @@ import w_newlines
 
 from debug import DebugFrame as debug
 
-# Translation setup
-PATH_TO_TRANSLATIONS = "languages"
-TRANSLATION_FILE_EXTENSION = ".tab"
-DEFAULT_LANGFILE_ENCODING = "utf-8"
+def gt(text):
+    lator = Translator()
+    return lator.gt(text)
 
 class Translator:
     """Contains all available translations as well as the active translation"""
@@ -50,7 +49,7 @@ class Translator:
 
             # Should obtain this from the program settings object, similarly, when setting translation need to update program setting
             self.setActiveTranslation("base_translation")
-
+            
     def gt(self, text):
         """Return translated version of a string"""
         text = unicode(text)

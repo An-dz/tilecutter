@@ -3,12 +3,10 @@
 # TileCutter, Translation module
 #
 
-# Import codecs
-import u_newlines
-import w_newlines
-
 # Import main translator functionality
 from translator import Translator as Translator
+
+from translator import gt as gt
 
 ### Set value of * in import
 ##__all__ = ["facingControl", "seasonControl", "dimsControl", "translationDialog"]

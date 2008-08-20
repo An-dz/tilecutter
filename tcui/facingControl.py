@@ -4,11 +4,15 @@
 #
 import wx, imres
 
+# Utility functions
+from translator import gt as gt
+from debug import DebugFrame as debug
+
 class facingControl(wx.StaticBox):
     """Box containing direction facing controls"""
-    def __init__(self,parent,app, parent_sizer):
+    def __init__(self, parent, app, parent_sizer):
         self.app = app
-        wx.StaticBox.__init__(self,parent,wx.ID_ANY,self.gt("Direction Facing"))
+        wx.StaticBox.__init__(self, parent, wx.ID_ANY, gt("Direction Facing"))
             # Setup sizers
         self.s_facing = wx.StaticBoxSizer(self, wx.HORIZONTAL)
         self.s_facing_flex = wx.FlexGridSizer(0,2,0,0)
@@ -53,16 +57,16 @@ class facingControl(wx.StaticBox):
 
     def translate(self):
         """Update the text of all controls to reflect a new translation"""
-        self.facing_select_south.SetLabel(self.gt("South"))
-        self.facing_select_south.SetToolTipString(self.gt("tt_facing_select_south"))
-        self.facing_select_east.SetLabel(self.gt("East"))
-        self.facing_select_east.SetToolTipString(self.gt("tt_facing_select_east"))
-        self.facing_select_north.SetLabel(self.gt("North"))
-        self.facing_select_north.SetToolTipString(self.gt("tt_facing_select_north"))
-        self.facing_select_west.SetLabel(self.gt("West"))
-        self.facing_select_west.SetToolTipString(self.gt("tt_facing_select_west"))
-        self.facing_enable_label.SetLabel(self.gt("Number\nof views:"))
-        self.facing_enable_select.SetToolTipString(self.gt("tt_facing_enable_select"))
+        self.facing_select_south.SetLabel(gt("South"))
+        self.facing_select_south.SetToolTipString(gt("tt_facing_select_south"))
+        self.facing_select_east.SetLabel(gt("East"))
+        self.facing_select_east.SetToolTipString(gt("tt_facing_select_east"))
+        self.facing_select_north.SetLabel(gt("North"))
+        self.facing_select_north.SetToolTipString(gt("tt_facing_select_north"))
+        self.facing_select_west.SetLabel(gt("West"))
+        self.facing_select_west.SetToolTipString(gt("tt_facing_select_west"))
+        self.facing_enable_label.SetLabel(gt("Number\nof views:"))
+        self.facing_enable_select.SetToolTipString(gt("tt_facing_enable_select"))
         # Translate the choicelist values for paksize
         self.choicelist_views = self.app.tctranslator.translateIntArray(self.app.choicelist_views_int)
         self.facing_enable_select.Clear()
@@ -107,8 +111,6 @@ class facingControl(wx.StaticBox):
             self.facing_select_west.Enable()
         # Update the combobox
         self.facing_enable_select.SetStringSelection(self.choicelist_views[self.app.choicelist_views_int.index(self.app.activeproject.views())])
-    def gt(self,text):
-        return self.app.tctranslator.gt(text)
 
     def OnToggle(self,e):
         """Changing the value in the selection box"""

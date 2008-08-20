@@ -4,11 +4,15 @@
 #
 import wx, imres
 
+# Utility functions
+from translator import gt as gt
+from debug import DebugFrame as debug
+
 class seasonControl(wx.StaticBox):
     """Box containing season alteration controls"""
     def __init__(self, parent, app, parent_sizer):
         self.app = app
-        wx.StaticBox.__init__(self, parent, wx.ID_ANY, self.gt("Season"))
+        wx.StaticBox.__init__(self, parent, wx.ID_ANY, gt("Season"))
             # Setup sizers
         self.s_seasons = wx.StaticBoxSizer(self, wx.VERTICAL)
         self.s_seasons_flex = wx.FlexGridSizer(0,2,0,0)
@@ -37,12 +41,12 @@ class seasonControl(wx.StaticBox):
 
     def translate(self):
         """Update the text of all controls to reflect a new translation"""
-        self.seasons_select_summer.SetLabel(self.gt("Summer"))
-        self.seasons_select_summer.SetToolTipString(self.gt("tt_seasons_select_summer"))
-        self.seasons_select_winter.SetLabel(self.gt("Winter"))
-        self.seasons_select_winter.SetToolTipString(self.gt("tt_seasons_select_winter"))
-        self.seasons_enable_winter.SetLabel(self.gt("Enable Winter"))
-        self.seasons_enable_winter.SetToolTipString(self.gt("tt_seasons_enable_winter"))
+        self.seasons_select_summer.SetLabel(gt("Summer"))
+        self.seasons_select_summer.SetToolTipString(gt("tt_seasons_select_summer"))
+        self.seasons_select_winter.SetLabel(gt("Winter"))
+        self.seasons_select_winter.SetToolTipString(gt("tt_seasons_select_winter"))
+        self.seasons_enable_winter.SetLabel(gt("Enable Winter"))
+        self.seasons_enable_winter.SetToolTipString(gt("tt_seasons_enable_winter"))
 
     def update(self):
         """Set the values of the controls in this group to the values in the model"""
@@ -61,8 +65,6 @@ class seasonControl(wx.StaticBox):
             self.seasons_enable_winter.SetValue(1)
             # User must select the winter image if they wish to view it, so just enable the control
             self.seasons_select_winter.Enable()
-    def gt(self,text):
-        return self.app.tctranslator.gt(text)
 
     def OnToggle(self,e):
         """Toggling between summer and winter imagesf"""

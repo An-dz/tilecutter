@@ -4,11 +4,15 @@
 #
 import wx, imres
 
+# Utility functions
+from translator import gt as gt
+from debug import DebugFrame as debug
+
 class dimsControl(wx.StaticBox):
     """Box containing dimensions controls"""
     def __init__(self, parent, app, parent_sizer):
         self.app = app
-        wx.StaticBox.__init__(self, parent, wx.ID_ANY, self.gt("Dimensions"))
+        wx.StaticBox.__init__(self, parent, wx.ID_ANY, gt("Dimensions"))
             # Setup sizers
         self.s_dims = wx.StaticBoxSizer(self, wx.VERTICAL)
         self.s_dims_flex = wx.FlexGridSizer(0,2,0,0)
@@ -42,14 +46,14 @@ class dimsControl(wx.StaticBox):
 
     def translate(self):
         """Update the text of all controls to reflect a new translation"""
-        self.dims_p_label.SetLabel(self.gt("Paksize"))
-        self.dims_p_select.SetToolTipString(self.gt("tt_dims_paksize_select"))
-        self.dims_z_label.SetLabel(self.gt("Z dimension"))
-        self.dims_z_select.SetToolTipString(self.gt("tt_dims_z_select"))
-        self.dims_x_label.SetLabel(self.gt("X dimension"))
-        self.dims_x_select.SetToolTipString(self.gt("tt_dims_x_select"))
-        self.dims_y_label.SetLabel(self.gt("Y dimension"))
-        self.dims_y_select.SetToolTipString(self.gt("tt_dims_y_select"))
+        self.dims_p_label.SetLabel(gt("Paksize"))
+        self.dims_p_select.SetToolTipString(gt("tt_dims_paksize_select"))
+        self.dims_z_label.SetLabel(gt("Z dimension"))
+        self.dims_z_select.SetToolTipString(gt("tt_dims_z_select"))
+        self.dims_x_label.SetLabel(gt("X dimension"))
+        self.dims_x_select.SetToolTipString(gt("tt_dims_x_select"))
+        self.dims_y_label.SetLabel(gt("Y dimension"))
+        self.dims_y_select.SetToolTipString(gt("tt_dims_y_select"))
         # To allow for translation of values in combobox controls, master list is int list, translated list is generated
         #   on the fly from the master list, these lists then index each other to determine the values to set
         # Translate the choicelist values for paksize
@@ -76,8 +80,6 @@ class dimsControl(wx.StaticBox):
         # And set value to value in the project
         self.dims_x_select.SetStringSelection(self.choicelist_dims[self.app.choicelist_dims_int.index(self.app.activeproject.x())])
         self.dims_y_select.SetStringSelection(self.choicelist_dims[self.app.choicelist_dims_int.index(self.app.activeproject.y())])
-    def gt(self,text):
-        return self.app.tctranslator.gt(text)
 
     def update(self):
         """Set the values of the controls in this group to the values in the model"""

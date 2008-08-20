@@ -4,11 +4,15 @@
 #
 import wx, imres
 
+# Utility functions
+from translator import gt as gt
+from debug import DebugFrame as debug
+
 class imageControl(wx.StaticBox):
     """Box containing Front/Back image controls"""
     def __init__(self, parent, app, parent_sizer):
         self.app = app
-        wx.StaticBox.__init__(self, parent, wx.ID_ANY, self.gt("Image"))
+        wx.StaticBox.__init__(self, parent, wx.ID_ANY, gt("Image"))
             # Setup sizers
         self.s_images = wx.StaticBoxSizer(self, wx.VERTICAL)
         self.s_images_flex = wx.FlexGridSizer(0,2,0,0)
@@ -36,14 +40,12 @@ class imageControl(wx.StaticBox):
 
     def translate(self):
         """Update the text of all controls to reflect a new translation"""
-        self.images_select_back.SetLabel(self.gt("BackImage"))
-        self.images_select_back.SetToolTipString(self.gt("tt_images_select_back"))
-        self.images_select_front.SetLabel(self.gt("FrontImage"))
-        self.images_select_front.SetToolTipString(self.gt("tt_images_select_front"))
-        self.images_enable_front.SetLabel(self.gt("Enable FrontImage"))
-        self.images_enable_front.SetToolTipString(self.gt("tt_images_enable_front"))
-    def gt(self, text):
-        return self.app.tctranslator.gt(text)
+        self.images_select_back.SetLabel(gt("BackImage"))
+        self.images_select_back.SetToolTipString(gt("tt_images_select_back"))
+        self.images_select_front.SetLabel(gt("FrontImage"))
+        self.images_select_front.SetToolTipString(gt("tt_images_select_front"))
+        self.images_enable_front.SetLabel(gt("Enable FrontImage"))
+        self.images_enable_front.SetToolTipString(gt("tt_images_enable_front"))
 
     def update(self):
         """Set the values of the controls in this group to the values in the model"""

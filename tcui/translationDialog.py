@@ -4,6 +4,10 @@
 #
 import wx, imres
 
+# Utility functions
+from translator import gt as gt
+from debug import DebugFrame as debug
+
 class translationDialog(wx.Dialog):
     """Dialog for choosing which translation to use"""
     def __init__(self,parent,app):
@@ -18,7 +22,7 @@ class translationDialog(wx.Dialog):
         self.language_picker = wx.ComboBox(self, wx.ID_ANY, self.app.tctranslator.active.longname(), (-1, -1), (-1, -1), self.app.tctranslator.language_longnames_list, wx.CB_READONLY|wx.ALIGN_CENTER_VERTICAL)
 
         # Within the static box
-        self.dialog_box = wx.StaticBox(self, wx.ID_ANY, self.gt("Language Details:"))
+        self.dialog_box = wx.StaticBox(self, wx.ID_ANY, gt("Language Details:"))
         self.s_dialog_box = wx.StaticBoxSizer(self.dialog_box, wx.HORIZONTAL)
         # Bitmap flag display on the left
         self.country_icon = wx.StaticBitmap(self, wx.ID_ANY, self.app.tctranslator.active.icon())
@@ -68,22 +72,20 @@ class translationDialog(wx.Dialog):
 
     def translate(self):
         """Update the text of all controls to reflect a new translation"""
-        self.SetLabel(self.gt("Language"))
-        self.top_label.SetLabel(self.gt("Select from the options below:"))
-        self.close_button.SetLabel(self.gt("Close"))
+        self.SetLabel(gt("Language"))
+        self.top_label.SetLabel(gt("Select from the options below:"))
+        self.close_button.SetLabel(gt("Close"))
         # These values taken from the active translation
-        self.label_name.SetLabel(self.gt("Language:"))
+        self.label_name.SetLabel(gt("Language:"))
         self.label_name_value.SetLabel(self.app.tctranslator.active.longname())
-        self.label_createdby.SetLabel(self.gt("Created by:"))
+        self.label_createdby.SetLabel(gt("Created by:"))
         self.label_createdby_value.SetLabel(self.app.tctranslator.active.created_by())
-        self.label_createdon.SetLabel(self.gt("Created on:"))
+        self.label_createdon.SetLabel(gt("Created on:"))
         self.label_createdon_value.SetLabel(self.app.tctranslator.active.created_date())
         # And finally change the image
         self.country_icon.SetBitmap(self.app.tctranslator.active.icon())
         self.Layout()
         self.Refresh()
-    def gt(self,text):
-        return self.app.tctranslator.gt(text)
 
     def update(self):
         """Set the values of the controls in this group to the values in the model"""

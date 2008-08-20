@@ -90,10 +90,11 @@ import wx
 ##import wx.lib.hyperlink as hl
 
 import sys, os, ConfigParser, StringIO, re, codecs, pickle
-import tcui
+import tcui, translator
 import tc, tcproject, imres
-import translator
 
+# Utility functions
+from translator import gt as gt
 from debug import DebugFrame as debug
 
 # Init variables
@@ -135,9 +136,9 @@ choicelist_dims_z_int = [1,2,3,4]
 ##choicelist_dims_z = ["1","2","3","4"]
 
 # Translation function, simply calls tctranslator object's gt method
-def gt(text):
-    """Get text, return translation of string"""
-    return app.tctranslator.gt(text)
+##def gt(text):
+##    """Get text, return translation of string"""
+##    return app.tctranslator.gt(text)
 
 class ImageWindow(wx.ScrolledWindow, tcui.fileTextBox):
     """Window onto which bitmaps may be drawn, background colour is TRANSPARENT colour

@@ -6,6 +6,8 @@
 #
 import wx, imres, tcui
 
+# Utility functions
+from translator import gt as gt
 from debug import DebugFrame as debug
 
 class menuObject:
@@ -52,38 +54,36 @@ class menuObject:
         """Update the text of all menu items to reflect a new translation"""
         # File menu
         self.menu.SetMenuLabel(0,"&File")
-        self.menu_file_new.SetItemLabel(self.gt("&New Project") + self.gsc("menu_file_new", "Ctrl-N"))
-        self.menu_file_new.SetHelp(self.gt("tt_menu_file_new"))
-        self.menu_file_open.SetItemLabel(self.gt("&Open Project") + self.gsc("menu_file_open", "Ctrl-O"))
-        self.menu_file_open.SetHelp(self.gt("tt_menu_file_open"))
-        self.menu_file_save.SetItemLabel(self.gt("&Save Project") + self.gsc("menu_file_save", "Ctrl-S"))
-        self.menu_file_save.SetHelp(self.gt("tt_menu_file_save"))
-        self.menu_file_saveas.SetItemLabel(self.gt("Save Project &As") + self.gsc("menu_file_saveas", "Ctrl-A"))
-        self.menu_file_saveas.SetHelp(self.gt("tt_menu_file_saveas"))
-        self.menu_file_cut.SetItemLabel(self.gt("&Cut Image") + self.gsc("menu_file_cut", "Ctrl-K"))
-        self.menu_file_cut.SetHelp(self.gt("tt_menu_file_cut"))
-        self.menu_file_export.SetItemLabel(self.gt("&Export .pak") + self.gsc("menu_file_export", "Ctrl-E"))
-        self.menu_file_export.SetHelp(self.gt("tt_menu_file_export"))
-        self.menu_file_exit.SetItemLabel(self.gt("E&xit") + self.gsc("menu_file_exit", "Alt-Q"))
-        self.menu_file_exit.SetHelp(self.gt("tt_menu_file_exit"))
+        self.menu_file_new.SetItemLabel(gt("&New Project") + self.gsc("menu_file_new", "Ctrl-N"))
+        self.menu_file_new.SetHelp(gt("tt_menu_file_new"))
+        self.menu_file_open.SetItemLabel(gt("&Open Project") + self.gsc("menu_file_open", "Ctrl-O"))
+        self.menu_file_open.SetHelp(gt("tt_menu_file_open"))
+        self.menu_file_save.SetItemLabel(gt("&Save Project") + self.gsc("menu_file_save", "Ctrl-S"))
+        self.menu_file_save.SetHelp(gt("tt_menu_file_save"))
+        self.menu_file_saveas.SetItemLabel(gt("Save Project &As") + self.gsc("menu_file_saveas", "Ctrl-A"))
+        self.menu_file_saveas.SetHelp(gt("tt_menu_file_saveas"))
+        self.menu_file_cut.SetItemLabel(gt("&Cut Image") + self.gsc("menu_file_cut", "Ctrl-K"))
+        self.menu_file_cut.SetHelp(gt("tt_menu_file_cut"))
+        self.menu_file_export.SetItemLabel(gt("&Export .pak") + self.gsc("menu_file_export", "Ctrl-E"))
+        self.menu_file_export.SetHelp(gt("tt_menu_file_export"))
+        self.menu_file_exit.SetItemLabel(gt("E&xit") + self.gsc("menu_file_exit", "Alt-Q"))
+        self.menu_file_exit.SetHelp(gt("tt_menu_file_exit"))
         # Tools menu
         self.menu.SetMenuLabel(1,"&Tools")
-        self.menu_tools_dat.SetItemLabel(self.gt(".&dat file options") + self.gsc("menu_tools_dat", "Ctrl-D"))
-        self.menu_tools_dat.SetHelp(self.gt("tt_menu_tools_dat"))
-        self.menu_tools_smoke.SetItemLabel(self.gt("&Smoke options") + self.gsc("menu_tools_smoke", "Ctrl-M"))
-        self.menu_tools_smoke.SetHelp(self.gt("tt_menu_tools_smoke"))
-        self.menu_tools_language.SetItemLabel(self.gt("&Language") + self.gsc("menu_tools_language", "Ctrl-L"))
-        self.menu_tools_language.SetHelp(self.gt("tt_menu_languages"))
-        self.menu_tools_prefs.SetItemLabel(self.gt("&Preferences...") + self.gsc("menu_tools_prefs", "Ctrl-P"))
-        self.menu_tools_prefs.SetHelp(self.gt("tt_menu_tools_prefs"))
+        self.menu_tools_dat.SetItemLabel(gt(".&dat file options") + self.gsc("menu_tools_dat", "Ctrl-D"))
+        self.menu_tools_dat.SetHelp(gt("tt_menu_tools_dat"))
+        self.menu_tools_smoke.SetItemLabel(gt("&Smoke options") + self.gsc("menu_tools_smoke", "Ctrl-M"))
+        self.menu_tools_smoke.SetHelp(gt("tt_menu_tools_smoke"))
+        self.menu_tools_language.SetItemLabel(gt("&Language") + self.gsc("menu_tools_language", "Ctrl-L"))
+        self.menu_tools_language.SetHelp(gt("tt_menu_languages"))
+        self.menu_tools_prefs.SetItemLabel(gt("&Preferences...") + self.gsc("menu_tools_prefs", "Ctrl-P"))
+        self.menu_tools_prefs.SetHelp(gt("tt_menu_tools_prefs"))
         # Help menu
         self.menu.SetMenuLabel(2,"&Help")
-        self.menu_help_help.SetItemLabel(self.gt("TileCutter Help") + self.gsc("", ""))
-        self.menu_help_help.SetHelp(self.gt("tt_menu_help_help"))
-        self.menu_help_about.SetItemLabel(self.gt("&About TileCutter") + self.gsc("", ""))
-        self.menu_help_about.SetHelp(self.gt("tt_menu_help_about"))
-    def gt(self, text):
-        return self.app.tctranslator.gt(text)
+        self.menu_help_help.SetItemLabel(gt("TileCutter Help") + self.gsc("", ""))
+        self.menu_help_help.SetHelp(gt("tt_menu_help_help"))
+        self.menu_help_about.SetItemLabel(gt("&About TileCutter") + self.gsc("", ""))
+        self.menu_help_about.SetHelp(gt("tt_menu_help_about"))
     def gsc(self, text, default=None):
         """Return the keyboard shortcut associated with a menu item"""
         # Filler function for now

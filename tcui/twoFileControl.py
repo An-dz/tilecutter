@@ -4,6 +4,10 @@
 #
 import wx, imres, tcui
 
+# Utility functions
+from translator import gt as gt
+from debug import DebugFrame as debug
+
 class twoFileControl(tcui.fileTextBox):
     """Controls at the bottom of the window, file output locations"""
     def __init__(self, parent, app, parent_sizer):
@@ -44,17 +48,15 @@ class twoFileControl(tcui.fileTextBox):
 
     def translate(self):
         """Update the text of all controls to reflect a new translation"""
-        self.dat_outpath_label.SetLabel(self.gt("Output Dat or Pak File Location:"))
-        self.dat_outpath_box.SetToolTipString(self.gt("tt_output_dat_file_location"))
-        self.dat_outpath_filebrowse.SetLabel(self.gt("Browse..."))
-        self.dat_outpath_filebrowse.SetToolTipString(self.gt("tt_browse_output_dat_file_location"))
+        self.dat_outpath_label.SetLabel(gt("Output Dat or Pak File Location:"))
+        self.dat_outpath_box.SetToolTipString(gt("tt_output_dat_file_location"))
+        self.dat_outpath_filebrowse.SetLabel(gt("Browse..."))
+        self.dat_outpath_filebrowse.SetToolTipString(gt("tt_browse_output_dat_file_location"))
 
-        self.im_outpath_label.SetLabel(self.gt("Path from .dat to .png:"))
-        self.im_outpath_box.SetToolTipString(self.gt("tt_output_image_location"))
-        self.im_outpath_filebrowse.SetLabel(self.gt("Browse..."))
-        self.im_outpath_filebrowse.SetToolTipString(self.gt("tt_browse_output_image_location"))
-    def gt(self,text):
-        return self.app.tctranslator.gt(text)
+        self.im_outpath_label.SetLabel(gt("Path from .dat to .png:"))
+        self.im_outpath_box.SetToolTipString(gt("tt_output_image_location"))
+        self.im_outpath_filebrowse.SetLabel(gt("Browse..."))
+        self.im_outpath_filebrowse.SetToolTipString(gt("tt_browse_output_image_location"))
 
     def update(self):
         """Set the values of the controls in this group to the values in the model"""
@@ -81,12 +83,12 @@ class twoFileControl(tcui.fileTextBox):
 
     def OnBrowseDat(self,e):
         """Opens a file save as dialog for the dat/pak output file"""
-        value = self.filePickerDialog(self.app.activeproject.datfile(), "", self.gt("Choose a location to output .dat/.pak to"),
+        value = self.filePickerDialog(self.app.activeproject.datfile(), "", gt("Choose a location to output .dat/.pak to"),
                                       "DAT/PAK files (*.dat)|*.dat|(*.pak)|*.pak", wx.FD_SAVE|wx.OVERWRITE_PROMPT)
         self.dat_outpath_box.SetValue(value)
 
     def OnBrowsePng(self,e):
         """Opens a file save as dialog for the png output file"""
-        value = self.filePickerDialog(self.app.activeproject.pngfile(), self.app.activeproject.datfile(), self.gt("Choose a file to save to..."),
+        value = self.filePickerDialog(self.app.activeproject.pngfile(), self.app.activeproject.datfile(), gt("Choose a file to save to..."),
                                       "PNG files (*.png)|*.png", wx.FD_SAVE|wx.OVERWRITE_PROMPT)
         self.im_outpath_box.SetValue(value)

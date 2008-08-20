@@ -4,6 +4,10 @@
 #
 import wx, imres
 
+# Utility functions
+from translator import gt as gt
+from debug import DebugFrame as debug
+
 class aboutDialog(wx.Dialog):
     """Dialog which displays information about the program"""
     def __init__(self, parent, app, version_number):
@@ -51,17 +55,15 @@ class aboutDialog(wx.Dialog):
 
     def translate(self):
         """Update the text of all controls to reflect a new translation"""
-        self.SetLabel(self.gt("About TileCutter"))
-        self.close_button.SetLabel(self.gt("Close"))
-        self.title_text.SetLabel(self.gt("TileCutter"))
-        self.subtitle_text.SetLabel(self.gt("Simutrans Building Editor"))
-        self.version_text.SetLabel(self.gt("Version %s") % self.version_number)
+        self.SetLabel(gt("About TileCutter"))
+        self.close_button.SetLabel(gt("Close"))
+        self.title_text.SetLabel(gt("TileCutter"))
+        self.subtitle_text.SetLabel(gt("Simutrans Building Editor"))
+        self.version_text.SetLabel(gt("Version %s") % self.version_number)
         self.copyright_text.SetLabel("Copyright © 2008 Timothy Baldock. All rights reserved.")
 
         self.Layout()
         self.Refresh()
-    def gt(self,text):
-        return self.app.tctranslator.gt(text)
 
     def update(self):
         """Set the values of the controls in this group to the values in the model"""

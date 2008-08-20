@@ -4,11 +4,15 @@
 #
 import wx, imres
 
+# Utility functions
+from translator import gt as gt
+from debug import DebugFrame as debug
+
 class offsetControl(wx.StaticBox):
     """Box containing offset controls"""
     def __init__(self, parent, app, parent_sizer):
         self.app = app
-        wx.StaticBox.__init__(self, parent, wx.ID_ANY, self.gt("Offset/Mask"))
+        wx.StaticBox.__init__(self, parent, wx.ID_ANY, gt("Offset/Mask"))
             # Setup sizers
         self.s_offset = wx.StaticBoxSizer(self, wx.VERTICAL)
         self.s_offset_flex = wx.FlexGridSizer(0,4,0,0)
@@ -44,15 +48,13 @@ class offsetControl(wx.StaticBox):
 
     def translate(self):
         """Update the text of all controls to reflect a new translation"""
-        self.offset_button_up.SetToolTipString(self.gt("tt_offset_button_up"))
-        self.offset_button_left.SetToolTipString(self.gt("tt_offset_button_left"))
-        self.offset_button_reset.SetToolTipString(self.gt("offset_button_reset"))
-        self.offset_button_right.SetToolTipString(self.gt("tt_offset_button_right"))
-        self.offset_button_down.SetToolTipString(self.gt("tt_offset_button_down"))
-        self.offset_selector.SetLabel(self.gt("Fine"))
-        self.offset_selector.SetToolTipString(self.gt("tt_offset_selector"))
-    def gt(self,text):
-        return self.app.tctranslator.gt(text)
+        self.offset_button_up.SetToolTipString(gt("tt_offset_button_up"))
+        self.offset_button_left.SetToolTipString(gt("tt_offset_button_left"))
+        self.offset_button_reset.SetToolTipString(gt("offset_button_reset"))
+        self.offset_button_right.SetToolTipString(gt("tt_offset_button_right"))
+        self.offset_button_down.SetToolTipString(gt("tt_offset_button_down"))
+        self.offset_selector.SetLabel(gt("Fine"))
+        self.offset_selector.SetToolTipString(gt("tt_offset_selector"))
 
     def update(self):
         """Set the values of the controls in this group to the values in the model"""
