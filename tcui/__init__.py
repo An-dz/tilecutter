@@ -16,6 +16,7 @@ from facingControl import facingControl as facingControl
 from dimsControl import dimsControl as dimsControl
 from offsetControl import offsetControl as offsetControl
 from twoFileControl import twoFileControl as twoFileControl
+from imageWindow import imageWindow as imageWindow
 
 # Dialogs
 from translationDialog import translationDialog as translationDialog
