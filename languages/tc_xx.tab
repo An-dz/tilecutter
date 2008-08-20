@@ -1,6 +1,6 @@
 [setup]
 name = base_translation
-name_translated = Base translation
+name_translated = Unicode Test translation
 language_code = XX
 created_by = Timothy Baldock
 created_date = 04-06-2008

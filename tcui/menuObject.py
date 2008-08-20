@@ -111,17 +111,30 @@ class menuObject:
     def OnNewProject(self,e):
         debug("Menu-File-> New Project")
         # Check if current project has been changed since last save
-        continue_new_project = False
+        continue_new_project = True
         if self.app.CheckProjectChanged():
             # If so, pop up a confirmation dialog offering the chance to save the file
-            continue_new_project = True
+            dlg = wx.MessageDialog(self.parent, gt("Save changes before proceeding?"),
+                                   gt("Current project has changed"),
+                                   style=wx.YES_NO|wx.CANCEL|wx.YES_DEFAULT|wx.ICON_QUESTION)
+            result = dlg.ShowModal()
+            if result == wx.ID_YES:
+                # Save current working, display save-as if not previously saved
+                dlg.Destroy()
+            elif result == wx.ID_NO:
+                # Do not save file, continue
+                dlg.Destroy()
+                continue_new_project = True
+            elif result == wx.ID_CANCEL:
+                # Cancel, do nothing
+                dlg.Destroy()
+                continue_new_project = False
+
         if continue_new_project:
             # If we should continue (e.g. user hasn't cancelled on confirmation or save dialog)
             self.app.NewProject()
             self.parent.update()
-            return 1
-        else:
-            return 0
+
     def OnOpenProject(self,e):
         debug("Menu-File-> Open Project")
         # Check if current project has been changed since last save

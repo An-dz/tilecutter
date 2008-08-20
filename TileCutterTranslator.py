@@ -4,12 +4,13 @@
 # Version 0.2 for TileCutter v.0.5
 
 import re, time, os, codecs
-import u_newlines, w_newlines
+import translator.w_newlines as w_newlines
+import translator.u_newlines as u_newlines
+
 
 VERSION_NUMBER = "0.2"
 COMPAT_VERSION_NUMBER = "0.5"
 # Should duplicate translator entries be outputted to the translation file?
-WRITE_DUPLICATES=0
 FILE_ENCODING = "utf-8"
 ENCODE_WIN = True
 
@@ -18,12 +19,31 @@ logging = False
 # This script finds translation strings in TileCutter and outputs them
 # in a format SimuTranslator can understand
 
+print os.getcwd()
+# All files and directories to be scanned should be entered in this list (directory scanning is not recursive)
+components = ["TileCutter5.pyw", "tcui", ]
+# For directories, specify a list of valid extensions to scan
+component_valid_extensions = [".py"]
 
-# All files to be scanned should be entered in this list
-components = ["TileCutter5.py"]
+# Pre-process components list to expand directories
+new_components = []
+for c in components:
+    if os.path.isdir(c):
+        dir = os.listdir(c)
+        for d in dir:
+            if os.path.splitext(d)[1] in component_valid_extensions:
+                new_components.append(os.path.join(c, d))
+    else:
+        new_components.append(c)
+
+print components
+components = new_components
+print components
+
 
 # Name of output file
-outputfile = "languages" + os.path.sep + "tc_xx.tab"
+outputfile = "languages" + os.path.sep + "tc_test.tab"
+outputfile = "tc_test.tab"
 if logging:
     logfile = "tct.log"
 
@@ -36,6 +56,9 @@ if logging:
 # Multi-line translation strings - Newlines inside translation strings will be
 #   stripped if not escaped
 # 
+
+print codecs.lookup("w_newlines")
+print codecs.lookup("u_newlines")
 
 f = codecs.open(outputfile, "w", encoding=FILE_ENCODING)
 if ENCODE_WIN:
