@@ -1,6 +1,6 @@
 # coding: UTF-8
 #
-# TileCutter, version 0.5 (rewrite)
+# TileCutter, version 0.5
 #
 
 # Todo:
@@ -10,7 +10,6 @@
 
 
 # Move debug into own module, to allow it to be easily accessed by other modules        - DONE
-#   (like imres is at the moment)
 
 # Find some way to eliminate flickering on translation update/initial load              
 # Text entry boxes visible position at end, or cursor, rather than beginning            
@@ -95,9 +94,6 @@ import tcui
 import tc, tcproject, imres
 import translator
 
-# Custom platform codecs
-import u_newlines, w_newlines
-
 from debug import DebugFrame as debug
 
 # Init variables
@@ -127,7 +123,7 @@ Winter  = 1
 
 # Lists of values for choicelists, also provides acceptable values for the project class
 # Also set in tcproject module
-choicelist_anim = ["0",]
+##choicelist_anim = ["0",]
 choicelist_paksize_int = [16,32,48,64,80,96,112,128,144,160,176,192,208,224,240]
 choicelist_views_int = [1,2,4]
 choicelist_dims_int = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
@@ -177,13 +173,10 @@ class ImageWindow(wx.ScrolledWindow, tcui.fileTextBox):
             # Add element to its parent sizer
         parent_sizer.Add(self.s_panel_imagewindow_path, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND, 0)
 
-
         self.s_panel_imagewindow = wx.BoxSizer(wx.HORIZONTAL)           # Right side (bottom part for the image window
         self.s_panel_imagewindow.Add(self, 1, wx.EXPAND, 4)
 
         parent_sizer.Add(self.s_panel_imagewindow,1,wx.EXPAND, 0)
-
-
 
         self.lines = []
         self.x = self.y = 0
@@ -202,7 +195,6 @@ class ImageWindow(wx.ScrolledWindow, tcui.fileTextBox):
 ##            self.Bind(wx.EVT_MOTION, self.OnMotion)
 
         #Need to make intelligent buffer bitmap sizing work!
-        
         self.buffer = wx.EmptyBitmap(4000,2500)
         self.lastisopos = (-1,-1)
         self.isopos = (-1,-1)
@@ -500,7 +492,7 @@ class MyApp(wx.App):
     Front   = 1
     Summer  = 0
     Winter  = 1
-    choicelist_anim = choicelist_anim
+##    choicelist_anim = choicelist_anim
     choicelist_paksize_int = choicelist_paksize_int
     choicelist_views_int = choicelist_views_int
     choicelist_dims_int = choicelist_dims_int

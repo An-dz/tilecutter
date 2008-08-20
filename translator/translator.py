@@ -9,7 +9,8 @@ import wx
 import sys, os, ConfigParser, StringIO, re, codecs
 import imres
 # Custom platform codecs
-import u_newlines, w_newlines
+import u_newlines
+import w_newlines
 
 from debug import DebugFrame as debug
 
@@ -21,16 +22,20 @@ DEFAULT_LANGFILE_ENCODING = "utf-8"
 class Translator:
     """Contains all available translations as well as the active translation"""
     language_list = None
+    # Translation setup
+    PATH_TO_TRANSLATIONS = "languages"
+    TRANSLATION_FILE_EXTENSION = ".tab"
+    DEFAULT_LANGFILE_ENCODING = "utf-8"
     def __init__(self):
         """Load translation files"""
         if Translator.language_list is None:
             # Obtain directory listing of available languages
-            list = os.listdir(PATH_TO_TRANSLATIONS)
+            list = os.listdir(Translator.PATH_TO_TRANSLATIONS)
             language_file_list = []
             for i in list:
                 split = os.path.splitext(i)
-                if split[1] == TRANSLATION_FILE_EXTENSION:
-                    language_file_list.append(PATH_TO_TRANSLATIONS + os.path.sep + i)
+                if split[1] == Translator.TRANSLATION_FILE_EXTENSION:
+                    language_file_list.append(Translator.PATH_TO_TRANSLATIONS + os.path.sep + i)
             # Next produce a translation object for each file in language_file_list
             Translator.language_list = []
             Translator.language_names_list = []
@@ -208,8 +213,8 @@ class translation:
     def icon(self, value=None):
         """Return the translation's icon image, takes a path as input"""
         if value != None:
-            if os.path.exists(PATH_TO_TRANSLATIONS + os.path.sep + value):
-                self.value_icon = wx.Bitmap(PATH_TO_TRANSLATIONS + os.path.sep + value)
+            if os.path.exists(Translator.PATH_TO_TRANSLATIONS + os.path.sep + value):
+                self.value_icon = wx.Bitmap(Translator.PATH_TO_TRANSLATIONS + os.path.sep + value)
             else:
                 self.value_icon = imres.catalog['tc_icon2_48_plain'].getBitmap()
         else:
