@@ -471,6 +471,7 @@ def Export(self, export_dat=1, export_png=1):
                                 xxx = x
                             if front == 0:
                                 # Write image array info (BackImage)
+                                # BackImage[direction][ydim][xdim][zdim][frame][season]
                                 image_array.write("BackImage[%i][%i][%i][%i][%i][%i]=%s.%i.%i\n"%(d,yyy,xxx,z,f,win,
                                                                                                   dat_to_png,ypos,xpos))
                             else:

@@ -13,6 +13,7 @@
 
 # Find some way to eliminate flickering on translation update/initial load              
 # Text entry boxes visible position at end, or cursor, rather than beginning            
+#   - needs full revamp of text entry box class to deal with special stuff really       
 # Padding/general layout optimisation                                                   
 # -> Layout optimisation for mac                                                        
 # Cutting mask display based on dimensions                                              - DONE
@@ -47,13 +48,13 @@
 # "Warning, this will set all views in the project to use the current image, proceed?"  
 # -> Function to reload the current view's image                                        - DONE
 
-# Move UI classes into a module to enhance loading speed        - MOSTLY DONE (JUST IMAGEWINDOW TO MOVE)
+# Move UI classes into a module to enhance loading speed                                - DONE
 
 # Needs much better error handling, add try/except clauses in critical places
 # Could also encase entire script in an exception catcher, which can display exception 
 #   and then gracefully shutdown wx, to prevent the flashing box/pythonwin crashing problem
 
-# Add the TileCutter icon                                                               - Icon made, works well in windows
+# Add the TileCutter icon                                                               - DONE Icon made, works well in windows
 # Use img2py to compile icon image into the application                                 - DONE
 # Can use the same technique for all the other images, e.g. bitmap buttons etc.         - DONE
 # Need higher detail icons for the mac version                                          - DONE (Test icon display in OSX)
@@ -291,8 +292,7 @@ class MyApp(wx.App):
         return True
 
     def CheckProjectChanged(self, project):
-        """Check if the active project has been changed since it was saved last,
-           returns True if it's changed"""
+        """Return True if project changed since last save"""
         if self.PickleProject(project) == self.activepickle:
             debug("Check Project for changes - Project Unchanged")
             return False
@@ -301,20 +301,8 @@ class MyApp(wx.App):
             return True
 
     def SaveProject(self, project, saveas=False):
-        """Save a project to the file location specified"""
-
-        # Check if file changed since last save (pickle+compare)
-        # If no, do nothing
-        # If yes, check if output_location set
-        #   If output_location not set, set saveas to True (so that user will be prompted for a save location)
-        # If saveas True:
-        #   Prompt user to enter a filename to save to
-        #     If OK, continue and set project's output_location to result
-        #     If Cancel, cancel entire saving process
-        # Pickle project and output it to the value of output_location
-        # Return True if save was successful, False if user cancelled (cancelling at this stage in the process
-        #   should also cancel whatever process spawned the save, e.g. quitting the program should stop if the
-        #   user cancels the saving, as their intentions are unclear)
+        """Save a project to the file location specified
+        return True if save successful or not needed, false otherwise"""
 
         # If not saving-as (which will always happen) and there is no difference in the string, don't continue
         if self.CheckProjectChanged(project) or saveas:
@@ -337,10 +325,11 @@ class MyApp(wx.App):
 ##                    relative = self.comparePaths(value, path2)
 ##                    pickerDialog.Destroy()
 ##                    return relative
+                    dlg.Destroy()
                 else:
                     # Else cancel was pressed, do nothing
+                    dlg.Destroy()
                     return False
-                dlg.Destroy()
             else:
                 # Else save it in the same place
                 debug("Using existing save path")
@@ -351,8 +340,10 @@ class MyApp(wx.App):
             output.write(pickle_string)
             output.close()
             debug("Save project success")
+            return True
         else:
             debug("No changes in file, doing nothing")
+            return True
 
     def NewProject(self):
         """Replace a project with a new one"""
@@ -429,8 +420,6 @@ class MyApp(wx.App):
                 app.active_save_name = dlg.GetFilename()
                 debug("app.active_save_location: %s" % app.active_save_location)
                 debug("app.active_save_name: %s" % app.active_save_name)
-                value = os.path.join(dlg.GetDirectory(), dlg.GetFilename())
-                debug(value)
                 file = os.path.join(dlg.GetDirectory(), dlg.GetFilename())
                 self.activeproject = self.UnPickleProject(file)
                 self.activepickle = self.PickleProject(self.activeproject)
@@ -448,6 +437,7 @@ class MyApp(wx.App):
 
     def PickleProject(self, project, picklemode = 0):
         """Pickle a project, returns a pickled string"""
+        # Remove all image information, as this can't be pickled (and doesn't need to be anyway)
         project.delImages()
         outstring = StringIO.StringIO()
         pickle.dump(project, outstring, picklemode)
@@ -525,6 +515,7 @@ if __name__ == '__main__':
 
 
 
+# BackImage[direction][ydim][xdim][zdim][frame][season]=path.ypos.xpos
 
 
 
