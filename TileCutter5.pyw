@@ -254,6 +254,7 @@ class MainWindow(wx.Frame):
 
 class MyApp(wx.App):
     """The main application, pre-window launch stuff should go here"""
+    start_directory = os.getcwd()
     VERSION_NUMBER = VERSION_NUMBER
     VALID_IMAGE_EXTENSIONS = VALID_IMAGE_EXTENSIONS
     # Static variables
@@ -289,16 +290,30 @@ class MyApp(wx.App):
     def CheckProjectChanged(self):
         """Check if the active project has been changed since it was saved last,
            returns True if it's changed"""
-        if self.PickleProject(app.activeproject) == app.activepickle:
+        if self.PickleProject(self.activeproject) == self.activepickle:
             debug("Check Project for changes - Project Unchanged")
             return False
         else:
             debug("Check Project for changes - Project Changed")
             return True
 
-    def SaveProject(self, project, file):
+    def SaveProject(self, project, saveas=False):
         """Save a project to the file location specified"""
+        file = "blah.txt"
         debug("Saving project to: %s" % file)
+
+        # Check if file changed since last save (pickle+compare)
+        # If no, do nothing
+        # If yes, check if output_location set
+        #   If output_location not set, set saveas to True (so that user will be prompted for a save location)
+        # If saveas True:
+        #   Prompt user to enter a filename to save to
+        #     If OK, continue and set project's output_location to result
+        #     If Cancel, cancel entire saving process
+        # Pickle project and output it to the value of output_location
+        # Return True if save was successful, False if user cancelled (cancelling at this stage in the process
+        #   should also cancel whatever process spawned the save, e.g. quitting the program should stop if the
+        #   user cancels the saving, as their intentions are unclear)
 
         pickle_string = self.PickleProject(project, 0)
 
@@ -310,17 +325,60 @@ class MyApp(wx.App):
 
     def NewProject(self):
         """Replace a project with a new one"""
-        # Call init on the project, this will reset it to its defaults
-        app.activeproject = tcproject.Project()
-        app.activepickle = self.PickleProject(app.activeproject)
-        debug("Active project reset to defaults (New project)")
+        continue_new_project = True
+        if self.CheckProjectChanged():
+            # If so, pop up a confirmation dialog offering the chance to save the file
+            dlg = wx.MessageDialog(self.frame, gt("Save changes before proceeding?"),
+                                   gt("Current project has changed"),
+                                   style=wx.YES_NO|wx.CANCEL|wx.YES_DEFAULT|wx.ICON_QUESTION)
+            result = dlg.ShowModal()
+            if result == wx.ID_YES:
+                # Save current working, display save-as if not previously saved
+                dlg.Destroy()
+                # If not previously saved, do save-as
+                # If previously saved, just save file there
+                filesAllowed = "TileCutter Project files (*.tcp)|*.tcp"
+                dialogFlags = wx.FD_SAVE|wx.OVERWRITE_PROMPT
+                path = self.start_directory
+                filename = ""
+                dlg = wx.FileDialog(self.frame, gt("Choose a location to save to..."),
+                                    path, filename, filesAllowed, dialogFlags)
+                result = dlg.ShowModal()
+                if result == wx.ID_OK:
+                    # This needs to calculate a relative path between the location of the output png and the location of the output dat
+                    value = os.path.join(pickerDialog.GetDirectory(), pickerDialog.GetFilename())
+                    debug(value)
+##                    relative = self.comparePaths(value, path2)
+##                    pickerDialog.Destroy()
+##                    return relative
+##                else:
+##                    # Else cancel was pressed, do nothing
+##                    return path1
+                dlg.Destroy()
+            elif result == wx.ID_NO:
+                # Do not save file, continue
+                dlg.Destroy()
+                continue_new_project = True
+            elif result == wx.ID_CANCEL:
+                # Cancel, do nothing
+                dlg.Destroy()
+                continue_new_project = False
 
-    def LoadProject(self, file):
+        if continue_new_project:
+            # If we should continue (e.g. user hasn't cancelled on confirmation or save dialog)
+
+            # Call init on the project, this will reset it to its defaults
+            self.activeproject = tcproject.Project()
+            self.activepickle = self.PickleProject(self.activeproject)
+            debug("Active project reset to defaults (New project)")
+
+            self.frame.update()
+
+    def OpenProject(self, file):
         """Load project from file, replacing the current activeproject"""
-        app.activeproject = self.UnPickleProject(file)
-        app.activepickle = self.PickleProject(app.activeproject)
+        self.activeproject = self.UnPickleProject(file)
+        self.activepickle = self.PickleProject(self.activeproject)
         debug("Loaded project from: %s" % file)
-        debug(app.activeproject.paksize())
 
     def PickleProject(self, project, picklemode = 0):
         """Pickle a project, returns a pickled string"""
@@ -365,6 +423,9 @@ class MyApp(wx.App):
         self.SetTopWindow(self.frame)
         self.frame.Bind(wx.EVT_CLOSE, self.OnQuit)
 
+    def Exit(self):
+        """Quit the application indirectly"""
+        self.OnQuit(None)
 
     def OnQuit(self, e):
         """Close the debugging window and quit the application on a quit event in the main window

@@ -1,14 +1,14 @@
 # coding: UTF-8
 
 # TileCutter translation string finder
-# Version 0.2 for TileCutter v.0.5
+# Version 0.3 for TileCutter v.0.5
 
 import re, time, os, codecs
 import translator.w_newlines as w_newlines
 import translator.u_newlines as u_newlines
 
 
-VERSION_NUMBER = "0.2"
+VERSION_NUMBER = "0.3"
 COMPAT_VERSION_NUMBER = "0.5"
 # Should duplicate translator entries be outputted to the translation file?
 FILE_ENCODING = "utf-8"
@@ -36,10 +36,7 @@ for c in components:
     else:
         new_components.append(c)
 
-print components
 components = new_components
-print components
-
 
 # Name of output file
 outputfile = "languages" + os.path.sep + "tc_test.tab"
@@ -57,9 +54,6 @@ if logging:
 #   stripped if not escaped
 # 
 
-print codecs.lookup("w_newlines")
-print codecs.lookup("u_newlines")
-
 f = codecs.open(outputfile, "w", encoding=FILE_ENCODING)
 if ENCODE_WIN:
     outfile = codecs.EncodedFile(f, "w_newlines")
@@ -71,7 +65,7 @@ if logging:
 name = u"base_translation"
 name_translated = u"Base Translation"
 language_code = u"XX"
-created_by = u"Timothy Baldock"
+created_by = u"Auto-Generated"
 created_date = time.strftime(u"%d-%m-%Y")
 flag = u"tc_xx.png"
 

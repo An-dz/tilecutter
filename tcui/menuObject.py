@@ -5,6 +5,7 @@
 # This module creates the program's menus
 #
 import wx, imres, tcui
+import os ##
 
 # Utility functions
 from translator import gt as gt
@@ -110,63 +111,28 @@ class menuObject:
     # Menu event functions
     def OnNewProject(self,e):
         debug("Menu-File-> New Project")
-        # Check if current project has been changed since last save
-        continue_new_project = True
-        if self.app.CheckProjectChanged():
-            # If so, pop up a confirmation dialog offering the chance to save the file
-            dlg = wx.MessageDialog(self.parent, gt("Save changes before proceeding?"),
-                                   gt("Current project has changed"),
-                                   style=wx.YES_NO|wx.CANCEL|wx.YES_DEFAULT|wx.ICON_QUESTION)
-            result = dlg.ShowModal()
-            if result == wx.ID_YES:
-                # Save current working, display save-as if not previously saved
-                dlg.Destroy()
-            elif result == wx.ID_NO:
-                # Do not save file, continue
-                dlg.Destroy()
-                continue_new_project = True
-            elif result == wx.ID_CANCEL:
-                # Cancel, do nothing
-                dlg.Destroy()
-                continue_new_project = False
-
-        if continue_new_project:
-            # If we should continue (e.g. user hasn't cancelled on confirmation or save dialog)
-            self.app.NewProject()
-            self.parent.update()
-
+        # Call app's NewProject method
+        self.app.NewProject()
     def OnOpenProject(self,e):
         debug("Menu-File-> Open Project")
-        # Check if current project has been changed since last save
-        continue_new_project = True
-        if self.app.CheckProjectChanged():
-            # If so, pop up a confirmation dialog offering the chance to save the file
-            continue_new_project = True
-        if continue_new_project:
-            # If we should continue (e.g. user hasn't cancelled on confirmation or save dialog)
-            self.app.LoadProject("blah.txt")
-            self.parent.update()
-            return 1
-        else:
-            return 0
+        # Call app's OpenProject method
+        self.app.OpenProject()
     def OnSaveProject(self,e):
         debug("Menu-File-> Save Project")
-        self.app.SaveProject(self.app.activeproject, "blah.txt")
-        return 1
+        # Call app's SaveProject method
+        self.app.SaveProject(self.app.activeproject)
     def OnSaveProjectAs(self,e):
         debug("Menu-File-> Save Project As...")
-        return 1
+        # Call app's SaveProject method with saveas set to True
+        self.app.SaveProject(self.app.activeproject, True)
     def OnCutProject(self,e):
         debug("Menu-File-> Cut Project")
-        self.parent.update()
-        debug(self.app.activeproject.paksize())
-        return 1
     def OnExportProject(self,e):
         debug("Menu-File-> Export Project")
-        return 1
     def OnExit(self,e):
         debug("Menu-File-> Exit Program")
-        return 1
+        # Call app's Exit method
+        self.app.Exit()
 
     def OnDatEdit(self,e):
         debug("Menu-Tools-> Open .dat edit dialog")

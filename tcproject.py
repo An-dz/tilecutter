@@ -14,7 +14,6 @@ North = 2
 West = 3
 
 DEFAULT_IMPATH = "dino.png"
-DEFAULT_IMPATH = "nukeplant.png"
 VALID_IMAGE_EXTENSIONS = [".png"]
 OFFSET_NEGATIVE_ALLOWED = True
 
