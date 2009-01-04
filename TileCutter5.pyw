@@ -77,9 +77,12 @@
 # Debugging system with nice output
 # Translation function implemented
 # Project save/load functions
+#   - Implement using pickle
 
 # Aims v.0.6
 # Extend UI, include dat editor
+# Project save/load functions
+#   - Change to use more robust system (maybe XML?)
 
 # Aims v.0.7
 # Multi-project support
@@ -287,10 +290,10 @@ class MyApp(wx.App):
             self.debug.Show(1)
         return True
 
-    def CheckProjectChanged(self):
+    def CheckProjectChanged(self, project):
         """Check if the active project has been changed since it was saved last,
            returns True if it's changed"""
-        if self.PickleProject(self.activeproject) == self.activepickle:
+        if self.PickleProject(project) == self.activepickle:
             debug("Check Project for changes - Project Unchanged")
             return False
         else:
@@ -299,8 +302,6 @@ class MyApp(wx.App):
 
     def SaveProject(self, project, saveas=False):
         """Save a project to the file location specified"""
-        file = "blah.txt"
-        debug("Saving project to: %s" % file)
 
         # Check if file changed since last save (pickle+compare)
         # If no, do nothing
@@ -315,18 +316,48 @@ class MyApp(wx.App):
         #   should also cancel whatever process spawned the save, e.g. quitting the program should stop if the
         #   user cancels the saving, as their intentions are unclear)
 
-        pickle_string = self.PickleProject(project, 0)
-
-        output = open(file, "wb")
-        app.activepickle = pickle_string
-        output.write(pickle_string)
-        output.close()
-        debug("Save project success")
+        # If not saving-as (which will always happen) and there is no difference in the string, don't continue
+        if self.CheckProjectChanged(project) or saveas:
+            pickle_string = self.PickleProject(project, 0)
+            if saveas or app.active_save_name == "":
+                debug("Grabbing save path from dialog")
+                filesAllowed = "TileCutter Project files (*.tcp)|*.tcp"
+                dialogFlags = wx.FD_SAVE|wx.OVERWRITE_PROMPT
+                path = app.active_save_location
+                filename = app.active_save_name
+                dlg = wx.FileDialog(self.frame, gt("Choose a location to save to..."),
+                                    path, filename, filesAllowed, dialogFlags)
+                result = dlg.ShowModal()
+                if result == wx.ID_OK:
+                    # This needs to calculate a relative path between the location of the output png and the location of the output dat
+                    app.active_save_location = dlg.GetDirectory()
+                    app.active_save_name = dlg.GetFilename()
+                    value = os.path.join(dlg.GetDirectory(), dlg.GetFilename())
+                    debug(value)
+##                    relative = self.comparePaths(value, path2)
+##                    pickerDialog.Destroy()
+##                    return relative
+                else:
+                    # Else cancel was pressed, do nothing
+                    return False
+                dlg.Destroy()
+            else:
+                # Else save it in the same place
+                debug("Using existing save path")
+            file = os.path.join(app.active_save_location, app.active_save_name)
+            debug("Save path:%s" % file)
+            output = open(file, "wb")
+            app.activepickle = pickle_string
+            output.write(pickle_string)
+            output.close()
+            debug("Save project success")
+        else:
+            debug("No changes in file, doing nothing")
 
     def NewProject(self):
         """Replace a project with a new one"""
         continue_new_project = True
-        if self.CheckProjectChanged():
+        if self.CheckProjectChanged(app.activeproject):
             # If so, pop up a confirmation dialog offering the chance to save the file
             dlg = wx.MessageDialog(self.frame, gt("Save changes before proceeding?"),
                                    gt("Current project has changed"),
@@ -335,26 +366,9 @@ class MyApp(wx.App):
             if result == wx.ID_YES:
                 # Save current working, display save-as if not previously saved
                 dlg.Destroy()
-                # If not previously saved, do save-as
-                # If previously saved, just save file there
-                filesAllowed = "TileCutter Project files (*.tcp)|*.tcp"
-                dialogFlags = wx.FD_SAVE|wx.OVERWRITE_PROMPT
-                path = self.start_directory
-                filename = ""
-                dlg = wx.FileDialog(self.frame, gt("Choose a location to save to..."),
-                                    path, filename, filesAllowed, dialogFlags)
-                result = dlg.ShowModal()
-                if result == wx.ID_OK:
-                    # This needs to calculate a relative path between the location of the output png and the location of the output dat
-                    value = os.path.join(pickerDialog.GetDirectory(), pickerDialog.GetFilename())
-                    debug(value)
-##                    relative = self.comparePaths(value, path2)
-##                    pickerDialog.Destroy()
-##                    return relative
-##                else:
-##                    # Else cancel was pressed, do nothing
-##                    return path1
-                dlg.Destroy()
+                # Invoke the standard project saving system (check if this works, abandon new file if it does)
+                if not self.SaveProject(app.activeproject):
+                    continue_new_project = False
             elif result == wx.ID_NO:
                 # Do not save file, continue
                 dlg.Destroy()
@@ -371,11 +385,15 @@ class MyApp(wx.App):
             self.activeproject = tcproject.Project()
             self.activepickle = self.PickleProject(self.activeproject)
             debug("Active project reset to defaults (New project)")
+            # Reset project save location/name
+            self.active_save_location = app.activeproject.files.save_location
+            self.active_save_name = ""
 
             self.frame.update()
 
     def OpenProject(self, file):
         """Load project from file, replacing the current activeproject"""
+        # File open dialog
         self.activeproject = self.UnPickleProject(file)
         self.activepickle = self.PickleProject(self.activeproject)
         debug("Loaded project from: %s" % file)
@@ -410,6 +428,10 @@ class MyApp(wx.App):
         # differs from the saved one, then we know the project has been changed since last change and so
         # needs to be saved on new project/quit/load etc.
         self.activepickle = app.PickleProject(app.activeproject)
+        # Active project needs a file save location, by default this is set to a default in the new project
+        self.active_save_location = app.activeproject.files.save_location
+        # Save name by default is blank
+        self.active_save_name = ""
 
         # Single project implementation
         # Only one project in the dict at a time, prompt on new project to save etc.

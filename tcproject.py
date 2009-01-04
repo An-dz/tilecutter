@@ -323,10 +323,10 @@ class ProjectFile:
             self.save_location = start_directory
         # Location of .dat/.pak file output, can be either a relative path (relative to save location)
         # or an absolute path. Default is relative path, same as save location (which defaults to home directory)
-        self.datfile_location = self.save_location + os.path.sep + "output.dat"
+        self.datfile_location = os.path.join(self.save_location, "output.dat")
 
         # Location of .png file output (relative to .dat file output), default is "images/output.png"
-        self.pngfile_location = "images" + os.path.sep + "output.png"
+        self.pngfile_location = os.path.join("images", "output.png")
 
         # If self.saved is False, then project is not saved, thus datfile_location is absolute path (by default, the
         # same as save_location, i.e. the home directory), if self.saved is True, then the datfile directory should be
