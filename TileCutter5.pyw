@@ -391,12 +391,60 @@ class MyApp(wx.App):
 
             self.frame.update()
 
-    def OpenProject(self, file):
+    def OpenProject(self):
         """Load project from file, replacing the current activeproject"""
-        # File open dialog
-        self.activeproject = self.UnPickleProject(file)
-        self.activepickle = self.PickleProject(self.activeproject)
-        debug("Loaded project from: %s" % file)
+        continue_open_project = True
+        if self.CheckProjectChanged(app.activeproject):
+            # If so, pop up a confirmation dialog offering the chance to save the file
+            dlg = wx.MessageDialog(self.frame, gt("Save changes before proceeding?"),
+                                   gt("Current project has changed"),
+                                   style=wx.YES_NO|wx.CANCEL|wx.YES_DEFAULT|wx.ICON_QUESTION)
+            result = dlg.ShowModal()
+            if result == wx.ID_YES:
+                # Save current working, display save-as if not previously saved
+                dlg.Destroy()
+                # Invoke the standard project saving system (check if this works, abandon new file if it does)
+                if not self.SaveProject(app.activeproject):
+                    continue_open_project = False
+            elif result == wx.ID_NO:
+                # Do not save file, continue
+                dlg.Destroy()
+                continue_open_project = True
+            elif result == wx.ID_CANCEL:
+                # Cancel, do nothing
+                dlg.Destroy()
+                continue_open_project = False
+
+        if continue_open_project:
+            # File open dialog
+            filesAllowed = "TileCutter Project files (*.tcp)|*.tcp"
+            dialogFlags = wx.FD_OPEN|wx.FD_FILE_MUST_EXIST
+            path = app.active_save_location
+            dlg = wx.FileDialog(self.frame, gt("Choose a project file to open..."),
+                                path, "", filesAllowed, dialogFlags)
+            result = dlg.ShowModal()
+            if result == wx.ID_OK:
+                # This needs to calculate a relative path between the location of the output png and the location of the output dat
+                app.active_save_location = dlg.GetDirectory()
+                app.active_save_name = dlg.GetFilename()
+                debug("app.active_save_location: %s" % app.active_save_location)
+                debug("app.active_save_name: %s" % app.active_save_name)
+                value = os.path.join(dlg.GetDirectory(), dlg.GetFilename())
+                debug(value)
+                file = os.path.join(dlg.GetDirectory(), dlg.GetFilename())
+                self.activeproject = self.UnPickleProject(file)
+                self.activepickle = self.PickleProject(self.activeproject)
+                dlg.Destroy()
+                self.frame.update()
+                debug("Loaded project from: %s" % file)
+    ##                    relative = self.comparePaths(value, path2)
+    ##                    pickerDialog.Destroy()
+    ##                    return relative
+            else:
+                # Else cancel was pressed, do nothing
+                dlg.Destroy()
+                debug("Cancel Open Project")
+                return False
 
     def PickleProject(self, project, picklemode = 0):
         """Pickle a project, returns a pickled string"""
@@ -430,7 +478,6 @@ class MyApp(wx.App):
         self.activepickle = app.PickleProject(app.activeproject)
         # Active project needs a file save location, by default this is set to a default in the new project
         self.active_save_location = app.activeproject.files.save_location
-        # Save name by default is blank
         self.active_save_name = ""
 
         # Single project implementation
