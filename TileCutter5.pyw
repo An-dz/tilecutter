@@ -176,7 +176,8 @@ class MainWindow(wx.Frame):
         self.s_panel_imagewindow_container = wx.BoxSizer(wx.VERTICAL)   # Right side
 
         self.s_panel_bottom = wx.BoxSizer(wx.HORIZONTAL)
-        self.s_panel_bottom_right = wx.BoxSizer(wx.HORIZONTAL)          # Contains cut/export buttons
+        self.s_panel_bottom_right = wx.BoxSizer(wx.VERTICAL)            # Contains cut/export buttons
+        self.s_panel_bottom_right_buttons = wx.BoxSizer(wx.HORIZONTAL)  # "export dat" checkbox
 
         # LEFT SIDE CONTROLS
         # Left side controls are contained within static boxes
@@ -204,11 +205,19 @@ class MainWindow(wx.Frame):
         # Cut button
         self.cut_button = wx.Button(self.panel, wx.ID_ANY)
         self.cut_button.Bind(wx.EVT_BUTTON, self.menubar.OnCutProject, self.cut_button)
-        self.s_panel_bottom_right.Add(self.cut_button, 1, wx.EXPAND, 4)
+        self.s_panel_bottom_right_buttons.Add(self.cut_button, 1, wx.EXPAND, 4)
         # Export button
         self.export_button = wx.Button(self.panel, wx.ID_ANY)
         self.export_button.Bind(wx.EVT_BUTTON, self.menubar.OnExportProject, self.export_button)
-        self.s_panel_bottom_right.Add(self.export_button, 1, wx.EXPAND, 4)
+        self.s_panel_bottom_right_buttons.Add(self.export_button, 1, wx.EXPAND, 4)
+        # Export .dat checkbox
+        self.export_dat_toggle = wx.CheckBox(self.panel, wx.ID_ANY, "", (-1,-1), (-1,-1))
+        self.export_dat_toggle.SetValue(1)
+        self.export_dat_toggle.Bind(wx.EVT_CHECKBOX, self.OnToggleDatExport, self.export_dat_toggle)
+        # Add buttons and checkbox to sizer
+        self.s_panel_bottom_right.Add(self.s_panel_bottom_right_buttons, 1, wx.EXPAND, 4)
+        self.s_panel_bottom_right.Add(self.export_dat_toggle, 1, wx.ALIGN_CENTER, 4)
+
         # Add these buttons to the bottom-right panel container
         self.s_panel_bottom.Add(self.s_panel_bottom_right,0,wx.EXPAND, 0)
 
@@ -232,6 +241,7 @@ class MainWindow(wx.Frame):
         """Master translate function for the mainwindow object"""
         self.cut_button.SetLabel(gt("Cut"))
         self.export_button.SetLabel(gt("Export"))
+        self.export_dat_toggle.SetLabel(gt("Export .dat file?"))
         # And translate the window's title string
         # Then call translate methods of all child controls
         self.control_seasons.translate()
@@ -255,6 +265,10 @@ class MainWindow(wx.Frame):
         self.control_offset.update()
         self.control_iopaths.update()
         self.display.update()
+
+    def OnToggleDatExport(self):
+        """Toggle whether .dat file info should be exported, or just the cut image
+        if .dat file exporting is disabled the .dat file will be displayed in a dialog"""
 
 class MyApp(wx.App):
     """The main application, pre-window launch stuff should go here"""
