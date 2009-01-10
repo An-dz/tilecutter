@@ -13,7 +13,7 @@ East = 1
 North = 2
 West = 3
 
-DEFAULT_IMPATH = "dino.png"
+DEFAULT_IMPATH = "red.png"
 VALID_IMAGE_EXTENSIONS = [".png"]
 OFFSET_NEGATIVE_ALLOWED = False
 

@@ -15,8 +15,8 @@ class TCMasks:
         if not TCMasks.masksets.has_key(paksize):
             # Generate new masks
             TCMasks.masksets[paksize] = TCMaskSet(paksize)
+            debug("TCMasks - Generated new TCMaskSet for paksize: %s" % paksize)
         self.mask = TCMasks.masksets[paksize]
-            
 
 class TCMaskSet:
     """A set of cutting masks, 1bit bitmaps"""
@@ -28,18 +28,32 @@ class TCMaskSet:
         # 4 -> Right side only
         # 5 -> Left side only
         self.masks = {}
+        self.masks[0] = self.makeMaskFromPoints(
+            [(p/2,p),(0,p/4+p/2),(p/2-1,p/2+1),(p/2,p/2+1),(p-1,p/4+p/2),(p/2,p-1)], p)
+        self.masks[1] = self.makeMaskFromPoints(
+            [(p/2,p),(0,p/4+p/2),(p/2-1,p/2+1),(p/2,p/2+1),(p/2,0),(p-1,0),(p-1,p/4+p/2),(p/2,p-1)], p)
+        self.masks[2] = self.makeMaskFromPoints(
+            [(p/2,p),(0,p/4+p/2),(0,0),(p/2-1,0),(p/2-1,p/2+1),(p/2,p/2+1),(p-1,p/4+p/2),(p/2,p-1)], p)
+        self.masks[3] = self.makeMaskFromPoints(
+            [(p/2,p),(0,p/4+p/2),(0,0),(p-1,0),(p-1,p/4+p/2),(p/2,p-1)], p)
+        self.masks[4] = self.makeMaskFromPoints(
+            [(p-1,0),(p-1,p-1),(p/2,p-1),(p/2,0)], p)
+        self.masks[5] = self.makeMaskFromPoints(
+            [(0,0),(p/2-1,0),(p/2-1,p-1),(0,p-1)], p)
+
+    def makeMaskFromPoints(self, points, p):
+        """Make a mask from a sequence of points"""
         # Init the DC, for monochrome bitmap/mask white pen/brush draws the bits which are see-through
         dc = wx.MemoryDC()
         dc.SetPen(wx.WHITE_PEN)
         dc.SetBrush(wx.WHITE_BRUSH)
-        #
         b = wx.EmptyBitmap(p,p)
         dc.SelectObject(b)
-        dc.DrawRectangle(p/2,0,p,p)
-        dc.SelectObject(wx.EmptyBitmap(1,1))
-        self.masks[0] = wx.Mask(b)
+        dc.DrawPolygon(points)
+        dc.SelectObject(wx.NullBitmap)
+        return b
     def __getitem__(self, key):
-        return self.masks[key]
+        return wx.Mask(self.masks[key])
 
 # Take tile coords and convert into screen coords
 def tile_to_screen(pos, dims, off, p, screen_height=None):
@@ -94,14 +108,16 @@ def export_cutter(bitmap, dims, offset, p):
                 debug(str(tile_to_screen((x,y,z), dims, offset, p, bitmap.GetHeight())))
                 pos = tile_to_screen((x,y,z), dims, offset, p, bitmap.GetHeight())
                 submap = bitmap.GetSubBitmap((pos[0], pos[1], p,p))
-                submap.SetMask(masks.mask[0])
+                submap.SetMask(masks.mask[5])
 
                 tdc = wx.MemoryDC()
                 kk = wx.EmptyBitmap(p,p)
                 tdc.SelectObject(kk)
                 tdc.DrawBitmap(submap, 0, 0, True)
-                tdc.SelectObject(wx.EmptyBitmap(1,1))
+                tdc.SelectObject(wx.NullBitmap)
+                tdc = 0
                 kk.SaveFile("test_%s%s.png" % (x,y), wx.BITMAP_TYPE_PNG)
+                kk = 0
 
                 zarray.append(submap)
             yarray.append(zarray)
