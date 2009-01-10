@@ -130,6 +130,7 @@ class menuObject:
         self.app.ExportProject(self.app.activeproject, export=False)
     def OnExportProject(self,e):
         debug("Menu-File-> Export Project")
+        self.app.ExportProject(self.app.activeproject, export=True)
     def OnExit(self,e):
         debug("Menu-File-> Exit Program")
         # Call app's Exit method

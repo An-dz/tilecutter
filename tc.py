@@ -6,12 +6,73 @@ import pickle, copy
 
 from debug import DebugFrame as debug
 
-def export_cutter(bitmap, dims, offset):
+class TCMasks:
+    """Generates and contains cutting masks for various paksizes"""
+    # Whenever a TCMask is made, it checks if that paksize of masks has been generated
+    # and if not makes them
+    masksets = {}
+    def __init__(self, paksize):
+        if not TCMasks.masksets.has_key(paksize):
+            # Generate new masks
+            TCMasks.masksets[paksize] = TCMaskSet(paksize)
+        self.mask = TCMasks.masksets[paksize]
+            
+
+class TCMaskSet:
+    """A set of cutting masks, 1bit bitmaps"""
+    def __init__(self, p):
+        # 0 -> Tile only
+        # 1 -> Tile and top-right
+        # 2 -> Tile and top-left
+        # 3 -> Tile and all top
+        # 4 -> Right side only
+        # 5 -> Left side only
+        self.masks = {}
+        # Init the DC, for monochrome bitmap/mask white pen/brush draws the bits which are see-through
+        dc = wx.MemoryDC()
+        dc.SetPen(wx.WHITE_PEN)
+        dc.SetBrush(wx.WHITE_BRUSH)
+        #
+        b = wx.EmptyBitmap(p,p)
+        dc.SelectObject(b)
+        dc.DrawRectangle(p/2,0,p,p)
+        dc.SelectObject(wx.EmptyBitmap(1,1))
+        self.masks[0] = wx.Mask(b)
+    def __getitem__(self, key):
+        return self.masks[key]
+
+# Take tile coords and convert into screen coords
+def tile_to_screen(pos, dims, off, p, screen_height=None):
+    """Take tile coords and convert to screen coords
+    by default converts into bottom-left screen coords,
+    but with height attribute supplied converts to top-left
+    returns the bottom-left position of the tile on the screen"""
+    offx, offy = off
+    if offx < 0:
+        offx = 0
+    xpos, ypos, zpos = pos          # x, y and z position
+    xdims, ydims, zdims = dims      # Total size of x, y and z
+    xx = (xdims - 1 - xpos + ypos) * p/2 + offx
+    # Gives top-left position of subsection
+    yy = ((xdims - xpos) + (ydims - ypos)) * (p/4) + (zpos * p) + offy + p/2
+    if screen_height != None:
+        yy = screen_height - yy
+    return (xx,yy)
+
+def export_cutter(bitmap, dims, offset, p):
     """Takes a bitmap and dimensions, and returns an array of masked bitmaps"""
     debug("e_c: export_cutter init")
     debug("e_c: Passed in bitmap of size (x, y): (%s, %s)" % (bitmap.GetWidth(), bitmap.GetHeight()))
     debug("e_c: Dims (x, y, z, d): %s" % str(dims))
     debug("e_c: Offset (offx, offy): %s" % str(offset))
+
+
+    # To account for irregularly shaped buildings, the values of x and y dims
+    # need to be swapped where offset[3] (view#) is in [1,3]
+    if dims[3] in [1,3]:
+        dims = (dims[1],dims[0],dims[2])
+    else:
+        dims = (dims[0],dims[1],dims[2])
 
     # Based on the paksize of the project, cut it into little bits which are stored in an array
     # ready for the next stage of the process
@@ -19,8 +80,8 @@ def export_cutter(bitmap, dims, offset):
     # the appropriate masking image which is generated automatically for each paksize the first time
     # the mask provider function is called with that particular paksize
 
-    # To account for irregularly shaped buildings, the values of x and y dims
-    # need to be swapped where offset[3] (view#) is in [1,3]
+    # Init mask provider
+    masks = TCMasks(p)
 
     debug("e_c: Building output array...")
     output_array = []
@@ -29,7 +90,20 @@ def export_cutter(bitmap, dims, offset):
         for y in range(dims[1]):
             zarray = []
             for z in range(dims[2]):
-                zarray.append(dims)
+                debug("(%s,%s,%s), %s, %s, %s, %s" % (x,y,z, str(dims), str(offset), p, bitmap.GetHeight()))
+                debug(str(tile_to_screen((x,y,z), dims, offset, p, bitmap.GetHeight())))
+                pos = tile_to_screen((x,y,z), dims, offset, p, bitmap.GetHeight())
+                submap = bitmap.GetSubBitmap((pos[0], pos[1], p,p))
+                submap.SetMask(masks.mask[0])
+
+                tdc = wx.MemoryDC()
+                kk = wx.EmptyBitmap(p,p)
+                tdc.SelectObject(kk)
+                tdc.DrawBitmap(submap, 0, 0, True)
+                tdc.SelectObject(wx.EmptyBitmap(1,1))
+                kk.SaveFile("test_%s%s.png" % (x,y), wx.BITMAP_TYPE_PNG)
+
+                zarray.append(submap)
             yarray.append(zarray)
         output_array.append(yarray)
     debug("e_c: Build output array complete, exiting")

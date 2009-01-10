@@ -39,11 +39,11 @@ class ProjectImage:
         self.cutimageset = 0
     def __getitem__(self, key):
         return self.cutimageset[key]
-    def cutImage(self, cutting_function, dims):
+    def cutImage(self, cutting_function, dims, p):
         """Generates an array of cut images based on this image
         using the cutting routine"""
         self.reloadImage()
-        self.cutimageset = cutting_function(self.bitmap(), dims, self.offset)
+        self.cutimageset = cutting_function(self.bitmap(), dims, self.offset, p)
 
     def image(self):
         """Return a wxImage representation of the cached image"""
@@ -153,7 +153,7 @@ class Project:
 ##                    for i in range(len(self.images[d][s][f])):
 ##                        self.images[d][s][f][i].cutImage(cutting_function, (self.x(), self.y(), self.z(), d))
 
-        self.images[0][0][0][0].cutImage(cutting_function, (self.x(), self.y(), self.z(), 0))
+        self.images[0][0][0][0].cutImage(cutting_function, (self.x(), self.y(), self.z(), 0), self.paksize())
 
     def delImages(self):
         """Delete all image data representations, ready for pickling"""

@@ -2,7 +2,7 @@
 #
 # TileCutter, User Interface Module - imageWindow
 #
-import os, wx, imres, tcui
+import os, wx, imres, tcui, tc
 
 # Utility functions
 from translator import gt as gt
@@ -100,8 +100,13 @@ class imageWindow(wx.ScrolledWindow, tcui.fileTextBox):
         bitmap = self.app.activeproject.activeImage().bitmap()
 
         # Setup image properties for mask generation
-        x = self.app.activeproject.x()
-        y = self.app.activeproject.y()
+        # If direction is 1 or 3, then reverse x/y to take account of irregular buildings
+        if self.app.activeproject.active.direction in [1,3]:
+            x = self.app.activeproject.y()
+            y = self.app.activeproject.x()
+        else:
+            x = self.app.activeproject.x()
+            y = self.app.activeproject.y()
         z = self.app.activeproject.z()
         p = self.app.activeproject.paksize()
         p2 = p/2
@@ -184,6 +189,7 @@ class imageWindow(wx.ScrolledWindow, tcui.fileTextBox):
             dc.DrawLine(pos[0],pos[1] - p4, pos[0]+p2,pos[1])
 
     # Take tile coords and convert into screen coords
+    # This function is replicated in tc, and references to it should be made there!
     def tileToScreen(self, pos, dims, off, p, screen_height=None):
         """Take tile coords and convert to screen coords
         by default converts into bottom-left screen coords, but with height attribute supplied converts to top-left
