@@ -6,6 +6,35 @@ import pickle, copy
 
 from debug import DebugFrame as debug
 
+def export_cutter(bitmap, dims, offset):
+    """Takes a bitmap and dimensions, and returns an array of masked bitmaps"""
+    debug("e_c: export_cutter init")
+    debug("e_c: Passed in bitmap of size (x, y): (%s, %s)" % (bitmap.GetWidth(), bitmap.GetHeight()))
+    debug("e_c: Dims (x, y, z, d): %s" % str(dims))
+    debug("e_c: Offset (offx, offy): %s" % str(offset))
+
+    # Based on the paksize of the project, cut it into little bits which are stored in an array
+    # ready for the next stage of the process
+    # Use wx.Bitmap.GetSubBitmap to grab the correct paksize section, then set the Bitmap's mask to
+    # the appropriate masking image which is generated automatically for each paksize the first time
+    # the mask provider function is called with that particular paksize
+
+    # To account for irregularly shaped buildings, the values of x and y dims
+    # need to be swapped where offset[3] (view#) is in [1,3]
+
+    debug("e_c: Building output array...")
+    output_array = []
+    for x in range(dims[0]):
+        yarray = []
+        for y in range(dims[1]):
+            zarray = []
+            for z in range(dims[2]):
+                zarray.append(dims)
+            yarray.append(zarray)
+        output_array.append(yarray)
+    debug("e_c: Build output array complete, exiting")
+    return output_array
+
 def Export(self, export_dat=1, export_png=1):
     """Exports the cut png image and dat file"""
 

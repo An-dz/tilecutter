@@ -15,7 +15,7 @@ West = 3
 
 DEFAULT_IMPATH = "dino.png"
 VALID_IMAGE_EXTENSIONS = [".png"]
-OFFSET_NEGATIVE_ALLOWED = True
+OFFSET_NEGATIVE_ALLOWED = False
 
 choicelist_paksize_int = [16,32,48,64,80,96,112,128,144,160,176,192,208,224,240]
 choicelist_views_int = [1,2,4]
@@ -28,7 +28,6 @@ class ProjectImage:
         """Initialise default values, new image, empty path, zeroed offsets"""
         # Also needs some provision for setting the cutting mask on a per-image basis (like the offset)
         # given that fine-tuning of the mask is a desirable feature
-        # Also needs a reload function to refresh the image from disk
         if b in [True, 1]:
             self.b = True
         elif b in [False, 0]:
@@ -37,6 +36,15 @@ class ProjectImage:
         self.value_lastpath = DEFAULT_IMPATH          # Used to check if the text in the entry box has really changed (temporary)
         self.reloadImage()
         self.offset = [0,0]
+        self.cutimageset = 0
+    def __getitem__(self, key):
+        return self.cutimageset[key]
+    def cutImage(self, cutting_function, dims):
+        """Generates an array of cut images based on this image
+        using the cutting routine"""
+        self.reloadImage()
+        self.cutimageset = cutting_function(self.bitmap(), dims, self.offset)
+
     def image(self):
         """Return a wxImage representation of the cached image"""
         if self.value_image == None:
@@ -135,6 +143,17 @@ class Project:
         self.active = ActiveImage(self)
     def __getitem__(self, key):
         return self.images[key]
+
+    def cutImages(self, cutting_function):
+        """Produce cut imagesets for all images in this project"""
+        # Can make this work conditionally based on which images are enabled later
+##        for d in range(len(self.images)):
+##            for s in range(len(self.images[d])):
+##                for f in range(len(self.images[d][s])):
+##                    for i in range(len(self.images[d][s][f])):
+##                        self.images[d][s][f][i].cutImage(cutting_function, (self.x(), self.y(), self.z(), d))
+
+        self.images[0][0][0][0].cutImage(cutting_function, (self.x(), self.y(), self.z(), 0))
 
     def delImages(self):
         """Delete all image data representations, ready for pickling"""

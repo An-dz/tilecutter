@@ -116,7 +116,7 @@ MAIN_WINDOW_SIZE=(800,500)
 MAIN_WINDOW_MINSIZE=(800,500)
 MAIN_WINDOW_POSITION=(100,50)
 
-# Static variables
+# Static variables              These directions may be wrong, check this!
 South   = 0
 East    = 1
 North   = 2
@@ -180,18 +180,15 @@ class MainWindow(wx.Frame):
         self.s_panel_bottom_right_buttons = wx.BoxSizer(wx.HORIZONTAL)  # "export dat" checkbox
 
         # LEFT SIDE CONTROLS
-        # Left side controls are contained within static boxes
-        # Frame controls-------------------------------------------------------------------
-
-        # Season controls------------------------------------------------------------------
+        # Season controls
         self.control_seasons    = tcui.seasonControl(self.panel, app, self.s_panel_controls)
-        # Image controls-------------------------------------------------------------------
+        # Image controls
         self.control_images     = tcui.imageControl(self.panel, app, self.s_panel_controls)
-        # Facing controls------------------------------------------------------------------
+        # Facing controls
         self.control_facing     = tcui.facingControl(self.panel, app, self.s_panel_controls)
-        # Dimension controls---------------------------------------------------------------
+        # Dimension controls
         self.control_dims       = tcui.dimsControl(self.panel, app, self.s_panel_controls)
-        # Offset/mask controls-------------------------------------------------------------
+        # Offset/mask controls
         self.control_offset     = tcui.offsetControl(self.panel, app, self.s_panel_controls)
 
         # Create Image display window and image path entry control, which adds itself to the sizer
@@ -304,6 +301,13 @@ class MyApp(wx.App):
         if debug_on:
             self.debug.Show(1)
         return True
+
+    def ExportProject(self, project, export=False):
+        """Trigger exporting of specified project"""
+        # First trigger project to generate cut images
+        project.cutImages(tc.export_cutter)
+        # Then feed project into outputting routine
+        # Will need a way to report back progress to a progress bar/indicator
 
     def CheckProjectChanged(self, project):
         """Return True if project changed since last save"""

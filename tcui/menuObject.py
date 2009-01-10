@@ -127,6 +127,7 @@ class menuObject:
         self.app.SaveProject(self.app.activeproject, True)
     def OnCutProject(self,e):
         debug("Menu-File-> Cut Project")
+        self.app.ExportProject(self.app.activeproject, export=False)
     def OnExportProject(self,e):
         debug("Menu-File-> Export Project")
     def OnExit(self,e):
