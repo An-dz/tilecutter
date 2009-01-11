@@ -2,7 +2,7 @@
 
 import wx
 import sys, os
-import pickle, copy, math
+import pickle, copy, math, StringIO
 
 from debug import DebugFrame as debug
 
@@ -133,6 +133,8 @@ def export_writer(project):
     output_bitmap = wx.EmptyBitmap(side*p, side*p)
     outdc = wx.MemoryDC()
     outdc.SelectObject(output_bitmap)
+    outdc.SetBackground(wx.Brush(TRANSPARENT))
+    outdc.Clear()
 
     # A list can now be produced of all images to be output
     # project[view][season][frame][image][xdim][ydim][zdim] = [bitmap, (xposout, yposout)]
@@ -145,13 +147,14 @@ def export_writer(project):
                         for y in range(ydims):
                             for z in range(zdims):
 ##                                if (z > 0 and (x == 0 or y == 0)) or z == 0:
-                                output_list.append(project[d][s][f][i][x][y][z])
+                                output_list.append((project[d][s][f][i][x][y][z], {"d":d,"s":s,"f":f,"i":i,"x":x,"y":y,"z":z}))
 
     x = 0
     y = 0
     for k in output_list:
-        outdc.DrawBitmap(k[0], x*p, y*p, True)
-        k[1] = (x,y)
+        outdc.DrawBitmap(k[0][0], x*p, y*p, True)
+        # Makeobj references the image array by row,column, e.g. y,x, so switch these
+        k[0][1] = (y,x)
         x += 1
         if x == side:
             x = 0
@@ -160,8 +163,42 @@ def export_writer(project):
     outdc.SelectObject(wx.NullBitmap)
 
     debug("e_w: Image output complete")
+    # output_bitmap now contains the image array
 
     output_bitmap.SaveFile("test_output.png", wx.BITMAP_TYPE_PNG)
+
+
+    output_text = StringIO.StringIO()
+    filename = "test_output"
+
+    output_text.write("Obj=building\nName=test_1\nType=cur\nPassengers=100\nintro_year=1900\nchance=100\n")
+
+    # x and y here wrong way around, why?
+
+    # dims=East-West, North-south, Views
+
+    output_text.write("dims=%s,%s,%s\n" % (ydims, xdims, views))
+
+    # Needs testing for views, seasons etc.
+
+    for k in output_list:
+        # (d,s,f,i,x,y,z)
+        j = k[1]
+        if j["i"] == 0:
+            imtext = "BackImage"
+        else:
+            imtext = "FrontImage"
+        # imtext[direction][x][y][z][frame][season]=filename.xpos.ypos
+        output_text.write("%s[%s][%s][%s][%s][%s][%s]=%s.%s.%s\n" % (
+            imtext, j["d"], j["x"], j["y"], j["z"], j["f"], j["s"], filename, k[0][1][0], k[0][1][1]))
+    s = output_text.getvalue()
+
+    f = open("test.dat", "w")
+
+    f.write(s)
+    f.close()
+
+    debug(s)
 
     # Alternatively, a more "pretty" output could put the various images into an ordered grid
 
