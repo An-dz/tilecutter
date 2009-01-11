@@ -80,7 +80,6 @@ def export_cutter(bitmap, dims, offset, p):
     debug("e_c: Dims (x, y, z, d): %s" % str(dims))
     debug("e_c: Offset (offx, offy): %s" % str(offset))
 
-
     # To account for irregularly shaped buildings, the values of x and y dims
     # need to be swapped where offset[3] (view#) is in [1,3]
     if dims[3] in [1,3]:
@@ -108,7 +107,7 @@ def export_cutter(bitmap, dims, offset, p):
                 debug(str(tile_to_screen((x,y,z), dims, offset, p, bitmap.GetHeight())))
                 pos = tile_to_screen((x,y,z), dims, offset, p, bitmap.GetHeight())
                 submap = bitmap.GetSubBitmap((pos[0], pos[1], p,p))
-                submap.SetMask(masks.mask[5])
+                submap.SetMask(masks.mask[1])
 
                 tdc = wx.MemoryDC()
                 kk = wx.EmptyBitmap(p,p)
