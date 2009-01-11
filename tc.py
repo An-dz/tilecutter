@@ -6,6 +6,8 @@ import pickle, copy
 
 from debug import DebugFrame as debug
 
+TRANSPARENT = (231,255,255)
+
 class TCMasks:
     """Generates and contains cutting masks for various paksizes"""
     # Whenever a TCMask is made, it checks if that paksize of masks has been generated
@@ -21,13 +23,16 @@ class TCMasks:
 class TCMaskSet:
     """A set of cutting masks, 1bit bitmaps"""
     def __init__(self, p):
+        # -1 -> Nothing (fully masked)
         # 0 -> Tile only
         # 1 -> Tile and top-right
         # 2 -> Tile and top-left
         # 3 -> Tile and all top
         # 4 -> Right side only
         # 5 -> Left side only
+        # 6 -> Everything (no mask)
         self.masks = {}
+        self.masks[-1] = self.makeMaskFromPoints([], p)
         self.masks[0] = self.makeMaskFromPoints(
             [(p/2,p),(0,p/4+p/2),(p/2-1,p/2+1),(p/2,p/2+1),(p-1,p/4+p/2),(p/2,p-1)], p)
         self.masks[1] = self.makeMaskFromPoints(
@@ -40,6 +45,8 @@ class TCMaskSet:
             [(p-1,0),(p-1,p-1),(p/2,p-1),(p/2,0)], p)
         self.masks[5] = self.makeMaskFromPoints(
             [(0,0),(p/2-1,0),(p/2-1,p-1),(0,p-1)], p)
+        self.masks[6] = self.makeMaskFromPoints(
+            [(0,0),(p-1,0),(p-1,p-1),(0,p-1)], p)
 
     def makeMaskFromPoints(self, points, p):
         """Make a mask from a sequence of points"""
@@ -81,7 +88,7 @@ def export_cutter(bitmap, dims, offset, p):
     debug("e_c: Offset (offx, offy): %s" % str(offset))
 
     # To account for irregularly shaped buildings, the values of x and y dims
-    # need to be swapped where offset[3] (view#) is in [1,3]
+    # need to be swapped where dims[3] (view#) is in [1,3]
     if dims[3] in [1,3]:
         dims = (dims[1],dims[0],dims[2])
     else:
@@ -98,25 +105,59 @@ def export_cutter(bitmap, dims, offset, p):
 
     debug("e_c: Building output array...")
     output_array = []
+    # Must ensure that the source bitmap is large enough so that all subbitmap operations succeed
+    # Extend to the right and up
+    # Max height will be offy + (dimsx+dimsy)*p/4 + p/2 + p*(dimsz-1)
+    # Max width will be offx + (dimsx+dimsy)*p/2
+    max_width = offset[0] + (dims[0]+dims[1])*(p/2)
+    max_height = offset[1] + (dims[0]+dims[1])*(p/4) + p/2 + p*(dims[2]-1)
+    if max_width < bitmap.GetWidth():
+        max_width = bitmap.GetWidth()
+    if max_height < bitmap.GetHeight():
+        max_height = bitmap.GetHeight()
+    source_bitmap = wx.EmptyBitmap(max_width, max_height)
+    tdc = wx.MemoryDC()
+    tdc.SelectObject(source_bitmap)
+    tdc.SetPen(wx.Pen(TRANSPARENT, 1, wx.SOLID))
+    tdc.SetBrush(wx.Brush(TRANSPARENT, wx.SOLID))
+    tdc.DrawRectangle(0,0,max_width, max_height)
+    tdc.DrawBitmap(bitmap, 0, max_height - bitmap.GetHeight())
+    tdc.SelectObject(wx.NullBitmap)
+    
     for x in range(dims[0]):
         yarray = []
         for y in range(dims[1]):
             zarray = []
             for z in range(dims[2]):
-                debug("(%s,%s,%s), %s, %s, %s, %s" % (x,y,z, str(dims), str(offset), p, bitmap.GetHeight()))
-                debug(str(tile_to_screen((x,y,z), dims, offset, p, bitmap.GetHeight())))
-                pos = tile_to_screen((x,y,z), dims, offset, p, bitmap.GetHeight())
-                submap = bitmap.GetSubBitmap((pos[0], pos[1], p,p))
-                submap.SetMask(masks.mask[1])
+                pos = tile_to_screen((x,y,z), dims, offset, p, source_bitmap.GetHeight())
+                submap = source_bitmap.GetSubBitmap((pos[0], pos[1], p,p))
+                if z == 0:
+                    if x == 0 and y == 0:
+                        submap.SetMask(masks.mask[3])
+                    elif x == 0 and y != 0:
+                        submap.SetMask(masks.mask[1])
+                    elif x != 0 and y == 0:
+                        submap.SetMask(masks.mask[2])
+                    else:
+                        submap.SetMask(masks.mask[0])
+                else:
+                    if x == 0 and y == 0:
+                        submap.SetMask(masks.mask[6])
+                    elif x == 0 and y != 0:
+                        submap.SetMask(masks.mask[4])
+                    elif x != 0 and y == 0:
+                        submap.SetMask(masks.mask[5])
+                    else:
+                        submap.SetMask(masks.mask[-1])
 
-                tdc = wx.MemoryDC()
-                kk = wx.EmptyBitmap(p,p)
-                tdc.SelectObject(kk)
-                tdc.DrawBitmap(submap, 0, 0, True)
-                tdc.SelectObject(wx.NullBitmap)
-                tdc = 0
-                kk.SaveFile("test_%s%s.png" % (x,y), wx.BITMAP_TYPE_PNG)
-                kk = 0
+##                tdc = wx.MemoryDC()
+##                kk = wx.EmptyBitmap(p,p)
+##                tdc.SelectObject(kk)
+##                tdc.DrawBitmap(submap, 0, 0, True)
+##                tdc.SelectObject(wx.NullBitmap)
+##                tdc = 0
+##                kk.SaveFile("test_%s%s%s.png" % (x,y, z), wx.BITMAP_TYPE_PNG)
+##                kk = 0
 
                 zarray.append(submap)
             yarray.append(zarray)
