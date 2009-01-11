@@ -308,6 +308,7 @@ class MyApp(wx.App):
         project.cutImages(tc.export_cutter)
         # Then feed project into outputting routine
         # Will need a way to report back progress to a progress bar/indicator
+        tc.export_writer(project)
 
     def CheckProjectChanged(self, project):
         """Return True if project changed since last save"""

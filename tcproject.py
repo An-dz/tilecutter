@@ -147,13 +147,13 @@ class Project:
     def cutImages(self, cutting_function):
         """Produce cut imagesets for all images in this project"""
         # Can make this work conditionally based on which images are enabled later
-##        for d in range(len(self.images)):
-##            for s in range(len(self.images[d])):
-##                for f in range(len(self.images[d][s])):
-##                    for i in range(len(self.images[d][s][f])):
-##                        self.images[d][s][f][i].cutImage(cutting_function, (self.x(), self.y(), self.z(), d))
+        for d in range(len(self.images)):
+            for s in range(len(self.images[d])):
+                for f in range(len(self.images[d][s])):
+                    for i in range(len(self.images[d][s][f])):
+                        self.images[d][s][f][i].cutImage(cutting_function, (self.x(), self.y(), self.z(), d), self.paksize())
 
-        self.images[0][0][0][0].cutImage(cutting_function, (self.x(), self.y(), self.z(), 0), self.paksize())
+##        self.images[0][0][0][0].cutImage(cutting_function, (self.x(), self.y(), self.z(), 0), self.paksize())
 
     def delImages(self):
         """Delete all image data representations, ready for pickling"""
