@@ -124,12 +124,14 @@ def export_writer(project):
     debug("e_w: Outputting %s seasons" % seasons)
     debug("e_w: Outputting dims: x:%s, y:%s, z:%s" % (xdims, ydims, zdims))
 
+    # Calculate dimensions of output image
     dims = xdims*ydims + (xdims+ydims-1)*(zdims-1)
     totalimages = dims * images * views * seasons
     side = int(math.ceil(math.sqrt(totalimages)))
 
     debug("e_w: Outputting %s images total, output size %sx%sp (%sx%spx)" % (totalimages, side, side, side*p, side*p))
 
+    # Init output bitmap and dc for drawing into it
     output_bitmap = wx.EmptyBitmap(side*p, side*p)
     outdc = wx.MemoryDC()
     outdc.SelectObject(output_bitmap)
@@ -141,46 +143,46 @@ def export_writer(project):
     output_list = []
     for d in range(views):
         for s in range(seasons):
-            for f in range(1):      # Change for multi-frame
+            for f in range(1):              # Change for multi-frame
                 for i in range(images):
-                    for x in range(xdims):
-                        for y in range(ydims):
+                    if d in [1,3]:          # Reverse x and y dims for rotation views
+                        xx = ydims
+                        yy = xdims
+                    else:
+                        xx = xdims
+                        yy = ydims
+                    for x in range(xx):
+                        for y in range(yy):
                             for z in range(zdims):
-##                                if (z > 0 and (x == 0 or y == 0)) or z == 0:
-                                output_list.append((project[d][s][f][i][x][y][z], {"d":d,"s":s,"f":f,"i":i,"x":x,"y":y,"z":z}))
+                                # No need to write out middle bits of higher levels
+                                if (z > 0 and (x == 0 or y == 0)) or z == 0:
+                                    output_list.append([project[d][s][f][i][x][y][z], {"d":d,"s":s,"f":f,"i":i,"x":x,"y":y,"z":z}, None])
 
+    # Now that a list of component images has been generated, output these in sequence
     x = 0
     y = 0
     for k in output_list:
-        outdc.DrawBitmap(k[0][0], x*p, y*p, True)
+        outdc.DrawBitmap(k[0], x*p, y*p, True)
         # Makeobj references the image array by row,column, e.g. y,x, so switch these
-        k[0][1] = (y,x)
+        k[2] = (y,x)
         x += 1
         if x == side:
             x = 0
             y += 1
-
+    # Select bitmap out of dc ready for saving
     outdc.SelectObject(wx.NullBitmap)
 
-    debug("e_w: Image output complete")
     # output_bitmap now contains the image array
+    debug("e_w: Image output complete")
 
-    output_bitmap.SaveFile("test_output.png", wx.BITMAP_TYPE_PNG)
 
-
-    output_text = StringIO.StringIO()
     filename = "test_output"
 
+    output_text = StringIO.StringIO()
+    # Test text
     output_text.write("Obj=building\nName=test_1\nType=cur\nPassengers=100\nintro_year=1900\nchance=100\n")
-
-    # x and y here wrong way around, why?
-
     # dims=East-West, North-south, Views
-
     output_text.write("dims=%s,%s,%s\n" % (ydims, xdims, views))
-
-    # Needs testing for views, seasons etc.
-
     for k in output_list:
         # (d,s,f,i,x,y,z)
         j = k[1]
@@ -190,13 +192,18 @@ def export_writer(project):
             imtext = "FrontImage"
         # imtext[direction][x][y][z][frame][season]=filename.xpos.ypos
         output_text.write("%s[%s][%s][%s][%s][%s][%s]=%s.%s.%s\n" % (
-            imtext, j["d"], j["x"], j["y"], j["z"], j["f"], j["s"], filename, k[0][1][0], k[0][1][1]))
+            imtext, j["d"], j["x"], j["y"], j["z"], j["f"], j["s"], filename, k[2][0], k[2][1]))
     s = output_text.getvalue()
 
-    f = open("test.dat", "w")
 
+    # Write out to files if required
+    # Dat file
+    f = open("test.dat", "w")
     f.write(s)
     f.close()
+    # Image file
+    output_bitmap.SaveFile("test_output.png", wx.BITMAP_TYPE_PNG)
+
 
     debug(s)
 
@@ -288,7 +295,7 @@ def export_cutter(bitmap, dims, offset, p):
 
                 # submap = Bitmap+Mask, Second variable stores location of this tile within
                 #                       the output image as a tuple
-                zarray.append([submap, None])
+                zarray.append(submap)
             yarray.append(zarray)
         output_array.append(yarray)
     debug("e_c: Build output array complete, exiting")

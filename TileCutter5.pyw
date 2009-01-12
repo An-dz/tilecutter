@@ -238,7 +238,7 @@ class MainWindow(wx.Frame):
         """Master translate function for the mainwindow object"""
         self.cut_button.SetLabel(gt("Cut"))
         self.export_button.SetLabel(gt("Export"))
-        self.export_dat_toggle.SetLabel(gt("Export .dat file?"))
+        self.export_dat_toggle.SetLabel(gt("Export .dat file"))
         # And translate the window's title string
         # Then call translate methods of all child controls
         self.control_seasons.translate()

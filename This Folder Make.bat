@@ -1,0 +1,1 @@
+..\makeobj pak ../simutrans/pak/ ./ >..\err.txt
