@@ -1,4 +1,7 @@
-# TC Backend functions
+# coding: UTF-8
+#
+# TC Cutting Engine
+#
 
 import wx
 import sys, os
