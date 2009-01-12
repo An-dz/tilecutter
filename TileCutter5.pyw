@@ -27,6 +27,7 @@
 
 # Program settings, load from a config file (using configparser)                        
 # Dialog to set program options                                                         
+# Move all static variables and program option variables into config class              
 # Implement use of special menu IDs to make menus work properly on, e.g., mac osx       
 # Produce frames picker control                                                         - POSTPONE 0.6
 # Offset/Mask control - internal functions, click modifies model & triggers redrawing   - DONE
@@ -48,7 +49,9 @@
 # "Warning, this will set all views in the project to use the current image, proceed?"  
 # -> Function to reload the current view's image                                        - DONE
 
+# UI
 # Move UI classes into a module to enhance loading speed                                - DONE
+# Add display/direct edit boxes to the offset control                                   
 
 # Needs much better error handling, add try/except clauses in critical places
 # Could also encase entire script in an exception catcher, which can display exception 
@@ -68,6 +71,14 @@
 # Test with Linux, Mac OSX, Windows (xp), try and have the same code across all platforms!
 # Produce help documentation                                                            
 # -> Quick start guide (interface should be fairly self-explanatory though)             
+
+# Cutting engine
+# Dynamic mask generation + caching                                                     - DONE
+# New cutting engine able to cope with all settings except frames                       - DONE
+#   -> Test this cutting engine in all circumstances                                    
+# Ability to add a copyright text notice to bottom of outputted image
+# Full .dat editing capability
+# "Pretty" output mode
 
 
 # Aims v.0.5
@@ -266,6 +277,13 @@ class MainWindow(wx.Frame):
     def OnToggleDatExport(self):
         """Toggle whether .dat file info should be exported, or just the cut image
         if .dat file exporting is disabled the .dat file will be displayed in a dialog"""
+
+# config class will load configuration settings from file the first time it is accessed
+# Then any writes to the config class will cause those variables to be synced out to the
+# configuration settings file. Config settings file should be stored in the correct place
+# on a system by system basis
+# config class accessed like the debug/translator utility classes
+
 
 class MyApp(wx.App):
     """The main application, pre-window launch stuff should go here"""
