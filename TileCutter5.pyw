@@ -110,7 +110,14 @@ import tc, tcproject, imres
 
 # Utility functions
 from translator import gt as gt
+
 from debug import DebugFrame as debug
+
+from config import Config
+config = Config()
+
+TRANSPARENT = config.TRANSPARENT
+
 
 # Init variables
 debug_on = True
@@ -285,9 +292,8 @@ class MainWindow(wx.Frame):
 # config class accessed like the debug/translator utility classes
 
 
-class MyApp(wx.App):
+class TCApp(wx.App):
     """The main application, pre-window launch stuff should go here"""
-    start_directory = os.getcwd()
     VERSION_NUMBER = VERSION_NUMBER
     VALID_IMAGE_EXTENSIONS = VALID_IMAGE_EXTENSIONS
     # Static variables
@@ -304,21 +310,31 @@ class MyApp(wx.App):
     choicelist_views_int = choicelist_views_int
     choicelist_dims_int = choicelist_dims_int
     choicelist_dims_z_int = choicelist_dims_z_int
-    def OnInit(self):
-        """Things to do immediately after the wx.App has been created"""
-        # Load Program Options
+    def __init__(self):
+        wx.App.__init__(self)
+        self.start_directory = os.getcwd()
+        self.translator = translator.Translator()
+        self.tctranslator = self.translator
+        self.gt = self.translator.gt
 
-        # Create and show debug window if debugging turned on
-        
-        # Could improve debug window by only initialising the frame etc. if debugging is turned on,
-        # if it isn't then nothing gets created and calls to debug() simply log in the background
-        # Debug frame also needs a save/export control to save messages (and some way to redirect
-        # error output to the same frame)
-        
         self.debug = debug(None, wx.ID_ANY, "Debugging", debug_on)
         if debug_on:
             self.debug.Show(1)
-        return True
+##    def OnInit(self):
+##        """Things to do immediately after the wx.App has been created"""
+##        # Load Program Options
+##
+##        # Create and show debug window if debugging turned on
+##        
+##        # Could improve debug window by only initialising the frame etc. if debugging is turned on,
+##        # if it isn't then nothing gets created and calls to debug() simply log in the background
+##        # Debug frame also needs a save/export control to save messages (and some way to redirect
+##        # error output to the same frame)
+##        
+##        self.debug = debug(None, wx.ID_ANY, "Debugging", debug_on)
+##        if debug_on:
+##            self.debug.Show(1)
+##        return True
 
     def ExportProject(self, project, export=False):
         """Trigger exporting of specified project"""
@@ -533,9 +549,8 @@ class MyApp(wx.App):
 if __name__ == '__main__':
     start_directory = os.getcwd()
     # Create the application
-    app = MyApp()
-    # Create the translation manager
-    app.tctranslator = translator.Translator()
+    app = TCApp()
+    gt = app.gt
 ##    sys.stderr = open("error.txt","w")
 
     # Create the main application window
