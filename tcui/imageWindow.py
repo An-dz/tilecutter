@@ -7,6 +7,8 @@ import os, wx, imres, tcui, tc
 # Utility functions
 import translator
 gt = translator.Translator()
+import config
+config = config.Config()
 
 from debug import DebugFrame as debug
 
@@ -215,7 +217,7 @@ class imageWindow(wx.ScrolledWindow, tcui.fileTextBox):
             debug("Text changed in image path box, new text: " + self.impath_entry_box.GetValue())
             # Check whether the entered path exists or not, if it does update the value in the activeproject (which will cause
             # that new image to be loaded & displayed) if not don't set this value
-            if os.path.isfile(self.impath_entry_box.GetValue()) and os.path.splitext(self.impath_entry_box.GetValue())[1] in self.app.VALID_IMAGE_EXTENSIONS:
+            if os.path.isfile(self.impath_entry_box.GetValue()) and os.path.splitext(self.impath_entry_box.GetValue())[1] in config.valid_image_extensions:
                 # Is a valid file, display green tick icon
                 debug("...new text is a valid file")
                 self.impath_entry_icon.SetBitmap(wx.ArtProvider.GetBitmap(wx.ART_TICK_MARK))

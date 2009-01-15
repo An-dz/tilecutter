@@ -15,8 +15,23 @@ class Config(object):
     # All config values must exist in defaults, or they are ignored on loading config files
     # and won't be settable/readable by the program
     defaults = {
+        "debug_on": True,
         "TRANSPARENT": [231,255,255],
-        "key1": "value1",
+        "default_paksize": "64",
+##        "PROJECT_FILE_EXTENSION": ".tcp",
+        "valid_image_extensions": [".png"],
+        "OFFSET_NEGATIVE_ALLOWED": False,
+        "window_size": [800,500],
+        "window_position": [100,50],
+
+        "negative_offset_allowed": False,
+        "default_image_path": "test.png",
+
+
+        "choicelist_paksize": [16,32,48,64,80,96,112,128,144,160,176,192,208,224,240],
+        "choicelist_views": [1,2,4],
+        "choicelist_dims": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],
+        "choicelist_dims_z": [1,2,3,4],
         }
     conf_path = "tc.config"
 

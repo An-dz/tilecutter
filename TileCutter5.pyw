@@ -10,6 +10,8 @@
 # BUG - Translation for static boxes in UI components
 
 # Move debug into own module, to allow it to be easily accessed by other modules        - DONE
+# Fix debug so that it logs to a file instead
+# Debug frame should plug into the debug logger, so that the latter can init before wx
 
 # Find some way to eliminate flickering on translation update/initial load              
 # Text entry boxes visible position at end, or cursor, rather than beginning            
@@ -72,7 +74,7 @@
 # Produce help documentation                                                            
 # -> Quick start guide (interface should be fairly self-explanatory though)             
 
-# Cutting engine
+# Cutting engine                                                                        
 # Dynamic mask generation + caching                                                     - DONE
 # New cutting engine able to cope with all settings except frames                       - DONE
 #   -> Test this cutting engine in all circumstances                                    
@@ -114,26 +116,22 @@ gt = translator.Translator()
 
 from debug import DebugFrame as debug
 
-from config import Config
-config = Config()
+import config
+config = config.Config()
 
-TRANSPARENT = config.TRANSPARENT
-
+config.save()
 
 # Init variables
 debug_on = True
 
-VERSION_NUMBER = "0.5a"
+# Hard coded settings - can move to config.interals
+VERSION = "0.5a"
+MAIN_WINDOW_MINSIZE=(800,500)
+PROJECT_FILE_EXTENSION = ".tcp"
+
+# Settings to be moved to config
 TRANSPARENT = (0,0,0)
 ##TRANSPARENT = (231,255,255)
-DEFAULT_PAKSIZE = "64"
-PROJECT_FILE_EXTENSION = ".tcp"
-### SB_WIDTH may be different on other platforms...
-##SCROLLBAR_WIDTH = 16
-VALID_IMAGE_EXTENSIONS = tcproject.VALID_IMAGE_EXTENSIONS
-MAIN_WINDOW_SIZE=(800,500)
-MAIN_WINDOW_MINSIZE=(800,500)
-MAIN_WINDOW_POSITION=(100,50)
 
 # Static variables              These directions may be wrong, check this!
 South   = 0
@@ -164,8 +162,7 @@ class MainWindow(wx.Frame):
     """Main frame window inside which all else is put"""
     def __init__(self, parent, id, title, windowsize, windowposition, windowminsize):
         wx.Frame.__init__(self, parent, wx.ID_ANY, title, windowposition, windowsize,
-                                        style=wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL
-                                        )
+                                        style=wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL)
         # Init stuff
         self.SetMinSize(windowminsize)
 
@@ -295,8 +292,6 @@ class MainWindow(wx.Frame):
 
 class TCApp(wx.App):
     """The main application, pre-window launch stuff should go here"""
-    VERSION_NUMBER = VERSION_NUMBER
-    VALID_IMAGE_EXTENSIONS = VALID_IMAGE_EXTENSIONS
     # Static variables
     South   = 0
     East    = 1
@@ -314,7 +309,7 @@ class TCApp(wx.App):
     def __init__(self):
         wx.App.__init__(self)
         self.start_directory = os.getcwd()
-
+        self.version = VERSION
 
     def AfterInit(self):
         """After wx.App and TCApp init, create UI"""
@@ -323,6 +318,13 @@ class TCApp(wx.App):
         if debug_on:
             self.debug.Show(1)
 
+
+        # Single project implementation
+        # Only one project in the dict at a time, prompt on new project to save etc.
+        # New project -> If default changed, prompt to save, then create a new tcproject object and init frame
+        # Load project -> prompt save, prompt to load, load in project and init frame
+        # Need to write save/load routine, using pickle for data persistence
+        # Higher level function to set activeproject, so can abstract for multi-project implementation
 
         # Create a default active project
         self.projects = {}
@@ -336,15 +338,8 @@ class TCApp(wx.App):
         self.active_save_name = ""
 
 
-        # Single project implementation
-        # Only one project in the dict at a time, prompt on new project to save etc.
-        # New project -> If default changed, prompt to save, then create a new tcproject object and init frame
-        # Load project -> prompt save, prompt to load, load in project and init frame
-        # Need to write save/load routine, using pickle for data persistence
-        # Higher level function to set activeproject, so can abstract for multi-project implementation
-
         # Create and show main frame
-        self.frame = MainWindow(None, wx.ID_ANY, "TileCutter", MAIN_WINDOW_SIZE, MAIN_WINDOW_POSITION, MAIN_WINDOW_MINSIZE)
+        self.frame = MainWindow(None, wx.ID_ANY, "TileCutter", config.window_size, config.window_position, MAIN_WINDOW_MINSIZE)
         self.SetTopWindow(self.frame)
         self.frame.Bind(wx.EVT_CLOSE, self.OnQuit)
 

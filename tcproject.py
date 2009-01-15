@@ -1,26 +1,21 @@
 # coding: UTF-8
+#
+# TileCutter Project Module
+#
 
 import os, sys
 import wx
 
 from debug import DebugFrame as debug
 
-# TileCutter Project module
+import config
+config = config.Config()
 
 # Static variables
 South = 0
 East = 1
 North = 2
 West = 3
-
-DEFAULT_IMPATH = "test.png"
-VALID_IMAGE_EXTENSIONS = [".png"]
-OFFSET_NEGATIVE_ALLOWED = False
-
-choicelist_paksize_int = [16,32,48,64,80,96,112,128,144,160,176,192,208,224,240]
-choicelist_views_int = [1,2,4]
-choicelist_dims_int = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
-choicelist_dims_z_int = [1,2,3,4]
 
 class ProjectImage:
     """An individual image object, consisting of a cached image, path to that image and offset dimensions"""
@@ -32,8 +27,8 @@ class ProjectImage:
             self.b = True
         elif b in [False, 0]:
             self.b = False
-        self.value_path = DEFAULT_IMPATH
-        self.value_lastpath = DEFAULT_IMPATH          # Used to check if the text in the entry box has really changed (temporary)
+        self.value_path = config.default_image_path
+        self.value_lastpath = config.default_image_path          # Used to check if the text in the entry box has really changed (temporary)
         self.reloadImage()
         self.offset = [0,0]
         self.cutimageset = 0
@@ -81,7 +76,7 @@ class ProjectImage:
         """Set or return the path of this image"""
         if path != None:
             # Check that path exists and is a file of the right type (if it's an empty string, reset to empty image)
-            if (os.path.isfile(path) and os.path.splitext(path)[1] in VALID_IMAGE_EXTENSIONS) or path == "":
+            if (os.path.isfile(path) and os.path.splitext(path)[1] in config.valid_image_extensions) or path == "":
                 self.value_path = path
                 self.reloadImage()
                 debug("Image path set to \"%s\", new cached image loaded" % str(path))
@@ -173,7 +168,7 @@ class Project:
             changed = True
         elif x != None:
             self.active.image.offset[0] += x
-            if not OFFSET_NEGATIVE_ALLOWED:
+            if not config.negative_offset_allowed:
                 if self.active.image.offset[0] < 0:
                     self.active.image.offset[0] = 0     # Limit to 0
             changed = True
@@ -182,7 +177,7 @@ class Project:
             changed = True
         elif y != None:
             self.active.image.offset[1] += y
-            if not OFFSET_NEGATIVE_ALLOWED:
+            if not config.negative_offset_allowed:
                 if self.active.image.offset[1] < 0:
                     self.active.image.offset[1] = 0     # Limit to 0
             changed = True
@@ -222,7 +217,7 @@ class Project:
 
     def x(self, set=None):
         if set != None:
-            if set in choicelist_dims_int:
+            if set in config.choicelist_dims:
                 self.dims.x = int(set)
                 debug("X dimension set to %i" % self.dims.x)
                 return 0
@@ -233,7 +228,7 @@ class Project:
             return self.dims.x
     def y(self, set=None):
         if set != None:
-            if set in choicelist_dims_int:
+            if set in config.choicelist_dims:
                 self.dims.y = int(set)
                 debug("Y dimension set to %i" % self.dims.y)
                 return 0
@@ -244,7 +239,7 @@ class Project:
             return self.dims.y
     def z(self, set=None):
         if set != None:
-            if set in choicelist_dims_z_int:
+            if set in config.choicelist_dims_z:
                 self.dims.z = int(set)
                 debug("Z dimension set to %i" % self.dims.z)
                 return 0
@@ -255,7 +250,7 @@ class Project:
             return self.dims.z
     def paksize(self, set=None):
         if set != None:
-            if set in choicelist_paksize_int:
+            if set in config.choicelist_paksize:
                 self.dims.paksize = int(set)
                 debug("Paksize set to %i" % self.dims.paksize)
                 return 0
@@ -296,7 +291,7 @@ class Project:
             return self.dims.frontimage
     def views(self, set=None):
         if set != None:
-            if set in choicelist_views_int:
+            if set in config.choicelist_views:
                 self.dims.views = int(set)
                 debug("Views set to %i" % self.dims.views)
                 return 0

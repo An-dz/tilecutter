@@ -158,6 +158,6 @@ class menuObject:
         return 1
     def OnAbout(self,e):
         debug("Menu-Help-> Open about dialog")
-        dlg = tcui.aboutDialog(self.parent, self.app, self.app.VERSION_NUMBER)
+        dlg = tcui.aboutDialog(self.parent, self.app, self.app.version)
         if dlg.ShowModal() == wx.ID_OK:
             dlg.Destroy()

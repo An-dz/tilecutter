@@ -7,6 +7,8 @@ import wx, imres
 # Utility functions
 import translator
 gt = translator.Translator()
+import config
+config = config.Config()
 
 from debug import DebugFrame as debug
 
