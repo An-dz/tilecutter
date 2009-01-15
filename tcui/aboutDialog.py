@@ -5,7 +5,9 @@
 import wx, imres
 
 # Utility functions
-from translator import gt as gt
+import translator
+gt = translator.Translator()
+
 from debug import DebugFrame as debug
 
 class aboutDialog(wx.Dialog):

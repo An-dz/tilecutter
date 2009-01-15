@@ -7,7 +7,7 @@
 import wx, imres, os
 
 # Utility functions
-from translator import gt as gt
+
 from debug import DebugFrame as debug
 
 class fileTextBox:

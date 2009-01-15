@@ -1,3 +1,4 @@
+# coding: UTF-8
 #
 # TileCutter debugger window
 #
@@ -8,6 +9,14 @@
 #
 
 import wx
+
+
+# Make debug() seperate from debug frame, debugger a file like object/StringIO that can be written to
+# DebugFrame updated via this file like object, optional, can be inited after the debugger is
+# Ideally debugger inited as early in program as possible, before anything else
+
+# Debugger extends StringIO, adding line numbering etc.
+# Debug window displays output (like tail)
 
 class DebugFrame(wx.Frame):
     """Debugging output display, debug.out() (or just debug()) to output debugging text"""

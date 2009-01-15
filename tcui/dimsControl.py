@@ -5,7 +5,9 @@
 import wx, imres
 
 # Utility functions
-from translator import gt as gt
+import translator
+gt = translator.Translator()
+
 from debug import DebugFrame as debug
 
 class dimsControl(wx.StaticBox):
@@ -57,21 +59,21 @@ class dimsControl(wx.StaticBox):
         # To allow for translation of values in combobox controls, master list is int list, translated list is generated
         #   on the fly from the master list, these lists then index each other to determine the values to set
         # Translate the choicelist values for paksize
-        self.choicelist_packsize = self.app.tctranslator.translateIntArray(self.app.choicelist_paksize_int)
+        self.choicelist_packsize = gt.translateIntArray(self.app.choicelist_paksize_int)
         self.dims_p_select.Clear()
         for i in self.choicelist_packsize:
             self.dims_p_select.Append(i)
         # And set value to value in the project
         self.dims_p_select.SetStringSelection(self.choicelist_packsize[self.app.choicelist_paksize_int.index(self.app.activeproject.paksize())])
         # Translate the choicelist values for z dims
-        self.choicelist_dims_z = self.app.tctranslator.translateIntArray(self.app.choicelist_dims_z_int)
+        self.choicelist_dims_z = gt.translateIntArray(self.app.choicelist_dims_z_int)
         self.dims_z_select.Clear()
         for i in self.choicelist_dims_z:
             self.dims_z_select.Append(i)
         # And set value to value in the project
         self.dims_z_select.SetStringSelection(self.choicelist_dims_z[self.app.choicelist_dims_z_int.index(self.app.activeproject.z())])
         # Translate the choicelist values for x and y dims
-        self.choicelist_dims = self.app.tctranslator.translateIntArray(self.app.choicelist_dims_int)
+        self.choicelist_dims = gt.translateIntArray(self.app.choicelist_dims_int)
         self.dims_x_select.Clear()
         self.dims_y_select.Clear()
         for i in self.choicelist_dims:

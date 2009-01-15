@@ -11,6 +11,5 @@ import u_newlines
 
 from translator import Translator as Translator
 
-from translator import gt as gt
 
 

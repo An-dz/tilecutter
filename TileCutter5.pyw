@@ -7,7 +7,7 @@
 
 # BUG - Set active image to new image, then edit textbox to make path invalid, then edit it back to the original -> highlighting fails
 # BUG - Season select does not set to summer when enable winter is unchecked
-
+# BUG - Translation for static boxes in UI components
 
 # Move debug into own module, to allow it to be easily accessed by other modules        - DONE
 
@@ -109,7 +109,8 @@ import tcui, translator
 import tc, tcproject, imres
 
 # Utility functions
-from translator import gt as gt
+import translator
+gt = translator.Translator()
 
 from debug import DebugFrame as debug
 
@@ -313,28 +314,40 @@ class TCApp(wx.App):
     def __init__(self):
         wx.App.__init__(self)
         self.start_directory = os.getcwd()
-        self.translator = translator.Translator()
-        self.tctranslator = self.translator
-        self.gt = self.translator.gt
 
+
+    def AfterInit(self):
+        """After wx.App and TCApp init, create UI"""
+        # Debugging window
         self.debug = debug(None, wx.ID_ANY, "Debugging", debug_on)
         if debug_on:
             self.debug.Show(1)
-##    def OnInit(self):
-##        """Things to do immediately after the wx.App has been created"""
-##        # Load Program Options
-##
-##        # Create and show debug window if debugging turned on
-##        
-##        # Could improve debug window by only initialising the frame etc. if debugging is turned on,
-##        # if it isn't then nothing gets created and calls to debug() simply log in the background
-##        # Debug frame also needs a save/export control to save messages (and some way to redirect
-##        # error output to the same frame)
-##        
-##        self.debug = debug(None, wx.ID_ANY, "Debugging", debug_on)
-##        if debug_on:
-##            self.debug.Show(1)
-##        return True
+
+
+        # Create a default active project
+        self.projects = {}
+        self.projects["default"] = tcproject.Project()
+        self.activeproject = self.projects["default"]
+        # Serialise active project, this string is then checked to see if it needs to be saved
+        self.activepickle = self.PickleProject(self.activeproject)
+
+        # Active project needs a file save location, by default this is set to a default in the new project
+        self.active_save_location = self.activeproject.files.save_location
+        self.active_save_name = ""
+
+
+        # Single project implementation
+        # Only one project in the dict at a time, prompt on new project to save etc.
+        # New project -> If default changed, prompt to save, then create a new tcproject object and init frame
+        # Load project -> prompt save, prompt to load, load in project and init frame
+        # Need to write save/load routine, using pickle for data persistence
+        # Higher level function to set activeproject, so can abstract for multi-project implementation
+
+        # Create and show main frame
+        self.frame = MainWindow(None, wx.ID_ANY, "TileCutter", MAIN_WINDOW_SIZE, MAIN_WINDOW_POSITION, MAIN_WINDOW_MINSIZE)
+        self.SetTopWindow(self.frame)
+        self.frame.Bind(wx.EVT_CLOSE, self.OnQuit)
+
 
     def ExportProject(self, project, export=False):
         """Trigger exporting of specified project"""
@@ -508,33 +521,6 @@ class TCApp(wx.App):
     def ReloadWindow(self):
         """Reload the main window, e.g. to effect a translation change, does not affect debugging window"""
 
-    def MainWindow(self):
-        """Create main window after intialising project and debugging etc."""
-
-        # Create a default active project
-        self.projects = {}
-        self.projects["default"] = tcproject.Project()
-        self.activeproject = self.projects["default"]
-        # Active hash is regenerated each time the project is saved, if the activeproject's current hash
-        # differs from the saved one, then we know the project has been changed since last change and so
-        # needs to be saved on new project/quit/load etc.
-        self.activepickle = app.PickleProject(app.activeproject)
-        # Active project needs a file save location, by default this is set to a default in the new project
-        self.active_save_location = app.activeproject.files.save_location
-        self.active_save_name = ""
-
-        # Single project implementation
-        # Only one project in the dict at a time, prompt on new project to save etc.
-        # New project -> If default changed, prompt to save, then create a new tcproject object and init frame
-        # Load project -> prompt save, prompt to load, load in project and init frame
-        # Need to write save/load routine, using pickle for data persistence
-        # Higher level function to set activeproject, so can abstract for multi-project implementation
-
-        # Create and show main frame
-        self.frame = MainWindow(None, wx.ID_ANY, "TileCutter", MAIN_WINDOW_SIZE, MAIN_WINDOW_POSITION, MAIN_WINDOW_MINSIZE)
-        self.SetTopWindow(self.frame)
-        self.frame.Bind(wx.EVT_CLOSE, self.OnQuit)
-
     def Exit(self):
         """Quit the application indirectly"""
         self.OnQuit(None)
@@ -550,11 +536,11 @@ if __name__ == '__main__':
     start_directory = os.getcwd()
     # Create the application
     app = TCApp()
-    gt = app.gt
+
+    # Create UI elements
+    app.AfterInit()
 ##    sys.stderr = open("error.txt","w")
 
-    # Create the main application window
-    app.MainWindow()
     display = app.frame.display
     # Init all main frame controls
     app.frame.update()

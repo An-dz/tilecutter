@@ -5,7 +5,9 @@
 import wx, imres
 
 # Utility functions
-from translator import gt as gt
+from translator import Translator
+gt = Translator()
+
 from debug import DebugFrame as debug
 
 class facingControl(wx.StaticBox):
@@ -68,7 +70,7 @@ class facingControl(wx.StaticBox):
         self.facing_enable_label.SetLabel(gt("Number\nof views:"))
         self.facing_enable_select.SetToolTipString(gt("tt_facing_enable_select"))
         # Translate the choicelist values for paksize
-        self.choicelist_views = self.app.tctranslator.translateIntArray(self.app.choicelist_views_int)
+        self.choicelist_views = gt.translateIntArray(self.app.choicelist_views_int)
         self.facing_enable_select.Clear()
         for i in self.choicelist_views:
             self.facing_enable_select.Append(i)

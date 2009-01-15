@@ -14,17 +14,18 @@ import w_newlines
 
 from debug import DebugFrame as debug
 
-def gt(text):
-    lator = Translator()
-    return lator.gt(text)
+##def gt(text):
+##    lator = Translator()
+##    return lator.gt(text)
 
-class Translator:
+class Translator(object):
     """Contains all available translations as well as the active translation"""
     language_list = None
     # Translation setup
     PATH_TO_TRANSLATIONS = "languages"
     TRANSLATION_FILE_EXTENSION = ".tab"
     DEFAULT_LANGFILE_ENCODING = "utf-8"
+    default_icon = PATH_TO_TRANSLATIONS + os.path.sep + "tc_default.png"
     def __init__(self):
         """Load translation files"""
         if Translator.language_list is None:
@@ -49,7 +50,11 @@ class Translator:
 
             # Should obtain this from the program settings object, similarly, when setting translation need to update program setting
             self.setActiveTranslation("base_translation")
-            
+
+    def __call__(self, vars):
+        """Used so we can do Translator() and call gt()"""
+        return self.gt(vars)
+
     def gt(self, text):
         """Return translated version of a string"""
         text = unicode(text)
@@ -213,8 +218,11 @@ class translation:
         """Return the translation's icon image, takes a path as input"""
         if value != None:
             if os.path.exists(Translator.PATH_TO_TRANSLATIONS + os.path.sep + value):
-                self.value_icon = wx.Bitmap(Translator.PATH_TO_TRANSLATIONS + os.path.sep + value)
+##                self.value_icon = wx.Bitmap(Translator.PATH_TO_TRANSLATIONS + os.path.sep + value)
+                self.value_icon = Translator.PATH_TO_TRANSLATIONS + os.path.sep + value
             else:
-                self.value_icon = imres.catalog['tc_icon2_48_plain'].getBitmap()
+                self.value_icon = None
+##                self.value_icon = imres.catalog['tc_icon2_48_plain'].getBitmap()
+##                self.value_icon = imres.catalog['tc_icon2_48_plain'].getBitmap()
         else:
             return self.value_icon

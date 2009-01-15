@@ -5,7 +5,9 @@
 import wx, imres
 
 # Utility functions
-from translator import gt as gt
+from translator import Translator
+gt = Translator()
+
 from debug import DebugFrame as debug
 
 class offsetControl(wx.StaticBox):
