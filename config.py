@@ -12,8 +12,9 @@ class Config(object):
     """Program configuration object"""
     # The first time this object is instantiated, config is populated
     config = {}
-    # All config values must exist in defaults, or they are ignored on loading config files
-    # and won't be settable/readable by the program
+    # All externally settable variables must be included in defaults, or they won't be read
+    # by Config on loading. Non-externally settable variables can be placed in internals
+    # Internals will always be checked before config
     defaults = {
         "debug_on": True,
         "TRANSPARENT": [231,255,255],
@@ -32,6 +33,8 @@ class Config(object):
         "choicelist_views": [1,2,4],
         "choicelist_dims": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],
         "choicelist_dims_z": [1,2,3,4],
+        }
+    internals = {
         }
     conf_path = "tc.config"
 
