@@ -5,8 +5,8 @@
 import wx, imres, tcui
 
 # Utility functions
-from translator import Translator
-gt = Translator()
+import translator
+gt = translator.Translator()
 
 from debug import DebugFrame as debug
 
