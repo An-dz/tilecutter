@@ -10,6 +10,8 @@ import os
 # Utility functions
 import translator
 gt = translator.Translator()
+import config
+config = config.Config()
 
 from debug import DebugFrame as debug
 
@@ -158,6 +160,6 @@ class menuObject:
         return 1
     def OnAbout(self,e):
         debug("Menu-Help-> Open about dialog")
-        dlg = tcui.aboutDialog(self.parent, self.app, self.app.version)
+        dlg = tcui.aboutDialog(self.parent, self.app, config.version)
         if dlg.ShowModal() == wx.ID_OK:
             dlg.Destroy()

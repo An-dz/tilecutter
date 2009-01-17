@@ -57,7 +57,7 @@ class seasonControl(wx.StaticBox):
             # If currently have winter image selected, switch to summer image
             if self.seasons_select_summer.GetValue() == True:
                 # Update model
-                self.app.activeproject.activeImage(season = self.app.Summer)
+                self.app.activeproject.activeImage(season = 0)
                 self.seasons_select_summer.SetValue(1)
                 # As active season changed, need to redraw display
                 self.app.frame.display.update()
@@ -75,12 +75,12 @@ class seasonControl(wx.StaticBox):
     def OnSummer(self,e):
         """Toggle Summer image"""
         # Set active image to Summer
-        self.app.activeproject.activeImage(season = self.app.Summer)
+        self.app.activeproject.activeImage(season = 0)
         # Redraw active image
         self.app.frame.display.update()
     def OnWinter(self,e):
         """Toggle Winter image"""
         # Set active image to Winter
-        self.app.activeproject.activeImage(season = self.app.Winter)
+        self.app.activeproject.activeImage(season = 1)
         # Redraw active image
         self.app.frame.display.update()

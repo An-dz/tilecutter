@@ -61,50 +61,50 @@ class dimsControl(wx.StaticBox):
         # To allow for translation of values in combobox controls, master list is int list, translated list is generated
         #   on the fly from the master list, these lists then index each other to determine the values to set
         # Translate the choicelist values for paksize
-        self.choicelist_packsize = gt.translateIntArray(self.app.choicelist_paksize_int)
+        self.choicelist_packsize = gt.translateIntArray(config.choicelist_paksize)
         self.dims_p_select.Clear()
         for i in self.choicelist_packsize:
             self.dims_p_select.Append(i)
         # And set value to value in the project
-        self.dims_p_select.SetStringSelection(self.choicelist_packsize[self.app.choicelist_paksize_int.index(self.app.activeproject.paksize())])
+        self.dims_p_select.SetStringSelection(self.choicelist_packsize[config.choicelist_paksize.index(self.app.activeproject.paksize())])
         # Translate the choicelist values for z dims
-        self.choicelist_dims_z = gt.translateIntArray(self.app.choicelist_dims_z_int)
+        self.choicelist_dims_z = gt.translateIntArray(config.choicelist_dims_z)
         self.dims_z_select.Clear()
         for i in self.choicelist_dims_z:
             self.dims_z_select.Append(i)
         # And set value to value in the project
-        self.dims_z_select.SetStringSelection(self.choicelist_dims_z[self.app.choicelist_dims_z_int.index(self.app.activeproject.z())])
+        self.dims_z_select.SetStringSelection(self.choicelist_dims_z[config.choicelist_dims_z.index(self.app.activeproject.z())])
         # Translate the choicelist values for x and y dims
-        self.choicelist_dims = gt.translateIntArray(self.app.choicelist_dims_int)
+        self.choicelist_dims = gt.translateIntArray(config.choicelist_dims)
         self.dims_x_select.Clear()
         self.dims_y_select.Clear()
         for i in self.choicelist_dims:
             self.dims_x_select.Append(i)
             self.dims_y_select.Append(i)
         # And set value to value in the project
-        self.dims_x_select.SetStringSelection(self.choicelist_dims[self.app.choicelist_dims_int.index(self.app.activeproject.x())])
-        self.dims_y_select.SetStringSelection(self.choicelist_dims[self.app.choicelist_dims_int.index(self.app.activeproject.y())])
+        self.dims_x_select.SetStringSelection(self.choicelist_dims[config.choicelist_dims.index(self.app.activeproject.x())])
+        self.dims_y_select.SetStringSelection(self.choicelist_dims[config.choicelist_dims.index(self.app.activeproject.y())])
 
     def update(self):
         """Set the values of the controls in this group to the values in the model"""
-        self.dims_p_select.SetStringSelection(self.choicelist_packsize[self.app.choicelist_paksize_int.index(self.app.activeproject.paksize())])
-        self.dims_z_select.SetStringSelection(self.choicelist_dims_z[self.app.choicelist_dims_z_int.index(self.app.activeproject.z())])
-        self.dims_x_select.SetStringSelection(self.choicelist_dims[self.app.choicelist_dims_int.index(self.app.activeproject.x())])
-        self.dims_y_select.SetStringSelection(self.choicelist_dims[self.app.choicelist_dims_int.index(self.app.activeproject.y())])
+        self.dims_p_select.SetStringSelection(self.choicelist_packsize[config.choicelist_paksize.index(self.app.activeproject.paksize())])
+        self.dims_z_select.SetStringSelection(self.choicelist_dims_z[config.choicelist_dims_z.index(self.app.activeproject.z())])
+        self.dims_x_select.SetStringSelection(self.choicelist_dims[config.choicelist_dims.index(self.app.activeproject.x())])
+        self.dims_y_select.SetStringSelection(self.choicelist_dims[config.choicelist_dims.index(self.app.activeproject.y())])
 
     def OnPaksizeSelect(self,e):
         """Change value of the paksize"""
-        self.app.activeproject.paksize(self.app.choicelist_paksize_int[self.choicelist_packsize.index(self.dims_p_select.GetValue())])
+        self.app.activeproject.paksize(config.choicelist_paksize[self.choicelist_packsize.index(self.dims_p_select.GetValue())])
         self.app.frame.display.update()
     def OnZdimsSelect(self,e):
         """Change value of the Z dims"""
-        self.app.activeproject.z(self.app.choicelist_dims_z_int[self.choicelist_dims_z.index(self.dims_z_select.GetValue())])
+        self.app.activeproject.z(config.choicelist_dims_z[self.choicelist_dims_z.index(self.dims_z_select.GetValue())])
         self.app.frame.display.update()
     def OnXdimsSelect(self,e):
         """Change value of the X dims"""
-        self.app.activeproject.x(self.app.choicelist_dims_int[self.choicelist_dims.index(self.dims_x_select.GetValue())])
+        self.app.activeproject.x(config.choicelist_dims[self.choicelist_dims.index(self.dims_x_select.GetValue())])
         self.app.frame.display.update()
     def OnYdimsSelect(self,e):
         """Change value of the Y dims"""
-        self.app.activeproject.y(self.app.choicelist_dims_int[self.choicelist_dims.index(self.dims_y_select.GetValue())])
+        self.app.activeproject.y(config.choicelist_dims[self.choicelist_dims.index(self.dims_y_select.GetValue())])
         self.app.frame.display.update()

@@ -74,12 +74,12 @@ class imageControl(wx.StaticBox):
     def OnBackImage(self,e):
         """Toggle BackImage on"""
         # Set active image to Back
-        self.app.activeproject.activeImage(layer=self.app.Back)
+        self.app.activeproject.activeImage(layer=0)
         # Redraw active image
         self.app.frame.display.update()
     def OnFrontImage(self,e):
         """Toggle FrontImage on"""
         # Set active image to Front
-        self.app.activeproject.activeImage(layer=self.app.Front)
+        self.app.activeproject.activeImage(layer=1)
         # Redraw active image
         self.app.frame.display.update()

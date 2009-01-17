@@ -17,7 +17,7 @@ class Config(object):
     # Internals will always be checked before config
     defaults = {
         "debug_on": True,
-        "TRANSPARENT": [231,255,255],
+        "transparent": [231,255,255],
         "default_paksize": "64",
 ##        "PROJECT_FILE_EXTENSION": ".tcp",
         "valid_image_extensions": [".png"],
@@ -28,13 +28,14 @@ class Config(object):
         "negative_offset_allowed": False,
         "default_image_path": "test.png",
 
-
         "choicelist_paksize": [16,32,48,64,80,96,112,128,144,160,176,192,208,224,240],
         "choicelist_views": [1,2,4],
         "choicelist_dims": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],
         "choicelist_dims_z": [1,2,3,4],
         }
     internals = {
+        "version": "0.5a",
+        "window_minsize": [800,500],
         }
     conf_path = "tc.config"
 
@@ -58,26 +59,36 @@ class Config(object):
             print Config.config
     def __getattr__(self, name):
         """Lookup method by . access e.g. z = x.y"""
-        if Config.config.has_key(name):
+        if Config.internals.has_key(name):
+            return Config.internals[name]
+        elif Config.config.has_key(name):
             return Config.config[name]
         else:
             raise AttributeError(name)
     def __setattr__(self, name, value):
         """Set method by . access e.g. x.y = z"""
-        if name in Config.defaults:
+        # Internal attributes are immutable
+        if name in Config.internals:
+            pass
+        elif name in Config.defaults:
             Config.config[name] = value
             self.save()
         else:
             object.__setattr__(self, name, value)
     def __getitem__(self, key):
         """Lookup method by dict access e.g. z = x["y"]"""
-        if Config.config.has_key(key):
+        if Config.internals.has_key(key):
+            return Config.internals[key]
+        elif Config.config.has_key(key):
             return Config.config[key]
         else:
             raise KeyError(key)
     def __setitem__(self, key, value):
         """Set method by dict access e.g. x["y"] = z"""
-        if Config.defaults.has_key(key):
+        # Again, internals are immutable
+        if Config.internals.has_key(name):
+            pass
+        elif Config.defaults.has_key(key):
             Config.config[key] = value
             self.save()
         else:

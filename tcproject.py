@@ -11,11 +11,6 @@ from debug import DebugFrame as debug
 import config
 config = config.Config()
 
-# Static variables
-South = 0
-East = 1
-North = 2
-West = 3
 
 class ProjectImage:
     """An individual image object, consisting of a cached image, path to that image and offset dimensions"""

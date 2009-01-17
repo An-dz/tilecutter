@@ -118,45 +118,16 @@ from debug import DebugFrame as debug
 
 import config
 config = config.Config()
-
 config.save()
 
 # Init variables
 debug_on = True
 
-# Hard coded settings - can move to config.interals
-VERSION = "0.5a"
-MAIN_WINDOW_MINSIZE=(800,500)
-PROJECT_FILE_EXTENSION = ".tcp"
-
-# Settings to be moved to config
-TRANSPARENT = (0,0,0)
-##TRANSPARENT = (231,255,255)
-
-# Static variables              These directions may be wrong, check this!
-South   = 0
-East    = 1
-North   = 2
-West    = 3
-Back    = 0
-Front   = 1
-Summer  = 0
-Winter  = 1
-
-# Lists of values for choicelists, also provides acceptable values for the project class
-# Also set in tcproject module
-##choicelist_anim = ["0",]
-choicelist_paksize_int = [16,32,48,64,80,96,112,128,144,160,176,192,208,224,240]
-choicelist_views_int = [1,2,4]
-choicelist_dims_int = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
-choicelist_dims_z_int = [1,2,3,4]
 # Need some kind of auto-generation function for the translator, to produce a range of numbers (0-64, then in 16 increments to 240)
 ##choicelist_paksize = [gt("16"),gt("32"),gt("48"),gt("64"),gt("80"),gt("96"),gt("112"),gt("128"),gt("144"),gt("160"),gt("176"),gt("192"),gt("208"),gt("224"),gt("240")]
 ##choicelist_views = ["1","2","4"]
 ##choicelist_dims = ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16"]
 ##choicelist_dims_z = ["1","2","3","4"]
-
-
 
 class MainWindow(wx.Frame):
     """Main frame window inside which all else is put"""
@@ -208,7 +179,7 @@ class MainWindow(wx.Frame):
         self.control_offset     = tcui.offsetControl(self.panel, app, self.s_panel_controls)
 
         # Create Image display window and image path entry control, which adds itself to the sizer
-        self.display = tcui.imageWindow(self.panel, app, self.s_panel_imagewindow_container, TRANSPARENT)
+        self.display = tcui.imageWindow(self.panel, app, self.s_panel_imagewindow_container, config.transparent)
 
         # IMAGE/DAT OUTPUT PATHS
         # Create the I/O path inputs, which are added to the bottom-left panel container
@@ -283,33 +254,11 @@ class MainWindow(wx.Frame):
         """Toggle whether .dat file info should be exported, or just the cut image
         if .dat file exporting is disabled the .dat file will be displayed in a dialog"""
 
-# config class will load configuration settings from file the first time it is accessed
-# Then any writes to the config class will cause those variables to be synced out to the
-# configuration settings file. Config settings file should be stored in the correct place
-# on a system by system basis
-# config class accessed like the debug/translator utility classes
-
-
 class TCApp(wx.App):
     """The main application, pre-window launch stuff should go here"""
-    # Static variables
-    South   = 0
-    East    = 1
-    North   = 2
-    West    = 3
-    Back    = 0
-    Front   = 1
-    Summer  = 0
-    Winter  = 1
-##    choicelist_anim = choicelist_anim
-    choicelist_paksize_int = choicelist_paksize_int
-    choicelist_views_int = choicelist_views_int
-    choicelist_dims_int = choicelist_dims_int
-    choicelist_dims_z_int = choicelist_dims_z_int
     def __init__(self):
         wx.App.__init__(self)
         self.start_directory = os.getcwd()
-        self.version = VERSION
 
     def AfterInit(self):
         """After wx.App and TCApp init, create UI"""
@@ -339,7 +288,7 @@ class TCApp(wx.App):
 
 
         # Create and show main frame
-        self.frame = MainWindow(None, wx.ID_ANY, "TileCutter", config.window_size, config.window_position, MAIN_WINDOW_MINSIZE)
+        self.frame = MainWindow(None, wx.ID_ANY, "TileCutter", config.window_size, config.window_position, config.window_minsize)
         self.SetTopWindow(self.frame)
         self.frame.Bind(wx.EVT_CLOSE, self.OnQuit)
 

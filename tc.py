@@ -9,7 +9,9 @@ import pickle, copy, math, StringIO
 
 from debug import DebugFrame as debug
 
-TRANSPARENT = (231,255,255)
+import config
+config = config.Config()
+
 
 class TCMasks:
     """Generates and contains cutting masks for various paksizes"""
@@ -138,7 +140,7 @@ def export_writer(project):
     output_bitmap = wx.EmptyBitmap(side*p, side*p)
     outdc = wx.MemoryDC()
     outdc.SelectObject(output_bitmap)
-    outdc.SetBackground(wx.Brush(TRANSPARENT))
+    outdc.SetBackground(wx.Brush(config.transparent))
     outdc.Clear()
 
     # A list can now be produced of all images to be output
@@ -255,8 +257,8 @@ def export_cutter(bitmap, dims, offset, p):
     source_bitmap = wx.EmptyBitmap(max_width, max_height)
     tdc = wx.MemoryDC()
     tdc.SelectObject(source_bitmap)
-    tdc.SetPen(wx.Pen(TRANSPARENT, 1, wx.SOLID))
-    tdc.SetBrush(wx.Brush(TRANSPARENT, wx.SOLID))
+    tdc.SetPen(wx.Pen(config.transparent, 1, wx.SOLID))
+    tdc.SetBrush(wx.Brush(config.transparent, wx.SOLID))
     tdc.DrawRectangle(0,0,max_width, max_height)
     tdc.DrawBitmap(bitmap, 0, max_height - bitmap.GetHeight())
     tdc.SelectObject(wx.NullBitmap)

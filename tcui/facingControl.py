@@ -7,6 +7,8 @@ import wx, imres
 # Utility functions
 import translator
 gt = translator.Translator()
+import config
+config = config.Config()
 
 from debug import DebugFrame as debug
 
@@ -70,12 +72,12 @@ class facingControl(wx.StaticBox):
         self.facing_enable_label.SetLabel(gt("Number\nof views:"))
         self.facing_enable_select.SetToolTipString(gt("tt_facing_enable_select"))
         # Translate the choicelist values for paksize
-        self.choicelist_views = gt.translateIntArray(self.app.choicelist_views_int)
+        self.choicelist_views = gt.translateIntArray(config.choicelist_views)
         self.facing_enable_select.Clear()
         for i in self.choicelist_views:
             self.facing_enable_select.Append(i)
         # And set value to value in the project
-        self.facing_enable_select.SetStringSelection(self.choicelist_views[self.app.choicelist_views_int.index(self.app.activeproject.views())])
+        self.facing_enable_select.SetStringSelection(self.choicelist_views[config.choicelist_views.index(self.app.activeproject.views())])
 
     def update(self):
         """Set the values of the controls in this group to the values in the model"""
@@ -112,33 +114,33 @@ class facingControl(wx.StaticBox):
             self.facing_select_north.Enable()
             self.facing_select_west.Enable()
         # Update the combobox
-        self.facing_enable_select.SetStringSelection(self.choicelist_views[self.app.choicelist_views_int.index(self.app.activeproject.views())])
+        self.facing_enable_select.SetStringSelection(self.choicelist_views[config.choicelist_views.index(self.app.activeproject.views())])
 
     def OnToggle(self,e):
         """Changing the value in the selection box"""
-        self.app.activeproject.views(self.app.choicelist_views_int[self.choicelist_views.index(self.facing_enable_select.GetValue())])
+        self.app.activeproject.views(config.choicelist_views[self.choicelist_views.index(self.facing_enable_select.GetValue())])
         self.update()
     def OnSouth(self,e):
         """Toggle South direction"""
         # Set active image to South
-        self.app.activeproject.activeImage(direction = self.app.South)
+        self.app.activeproject.activeImage(direction = 0)
         # Redraw active image
         self.app.frame.display.update()
     def OnEast(self,e):
         """Toggle East direction"""
         # Set active image to East
-        self.app.activeproject.activeImage(direction = self.app.East)
+        self.app.activeproject.activeImage(direction = 1)
         # Redraw active image
         self.app.frame.display.update()
     def OnNorth(self,e):
         """Toggle North direction"""
         # Set active image to North
-        self.app.activeproject.activeImage(direction = self.app.North)
+        self.app.activeproject.activeImage(direction = 2)
         # Redraw active image
         self.app.frame.display.update()
     def OnWest(self,e):
         """Toggle West direction"""
         # Set active image to West
-        self.app.activeproject.activeImage(direction = self.app.West)
+        self.app.activeproject.activeImage(direction = 3)
         # Redraw active image
         self.app.frame.display.update()
