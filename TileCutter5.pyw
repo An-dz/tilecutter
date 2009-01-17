@@ -115,6 +115,7 @@ import translator
 gt = translator.Translator()
 
 import logger
+debug = logger.Log()
 
 
 import config
@@ -141,7 +142,7 @@ class MainWindow(wx.Frame):
         self.icons.AddIcon(imres.catalog["tc_icon2_32_plain"].getIcon())
         self.icons.AddIcon(imres.catalog["tc_icon2_48_plain"].getIcon())
         self.SetIcons(self.icons)
-        app.debug.SetIcons(self.icons)
+##        app.debugframe.SetIcons(self.icons)
 
         # Create the menus
         self.menubar = tcui.menuObject(self, app)
@@ -261,9 +262,12 @@ class TCApp(wx.App):
     def AfterInit(self):
         """After wx.App and TCApp init, create UI"""
         # Debugging window
-        self.debug = debug(None, wx.ID_ANY, "Debugging", debug_on)
-        if debug_on:
-            self.debug.Show(1)
+##        if debug_on:
+##            self.debugframe = logger.DebugFrame(None, debug, wx.ID_ANY, "Debugging")
+##            self.debugframe.Show(1)
+##        self.debug = debug(None, wx.ID_ANY, "Debugging", debug_on)
+##        if debug_on:
+##            self.debug.Show(1)
 
 
         # Single project implementation
@@ -470,7 +474,7 @@ class TCApp(wx.App):
     def OnQuit(self, e):
         """Close the debugging window and quit the application on a quit event in the main window
         closing the debugging window doesn't do anything"""
-        self.debug.Destroy()
+##        self.debugframe.Destroy()
         self.frame.Destroy()
 
 # Run the program

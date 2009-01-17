@@ -12,7 +12,8 @@ import imres
 import u_newlines
 import w_newlines
 
-from debug import DebugFrame as debug
+import logger
+debug = logger.Log()
 
 ##def gt(text):
 ##    lator = Translator()

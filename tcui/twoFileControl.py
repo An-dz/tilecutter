@@ -8,7 +8,8 @@ import wx, imres, tcui
 import translator
 gt = translator.Translator()
 
-from debug import DebugFrame as debug
+import logger
+debug = logger.Log()
 
 class twoFileControl(tcui.fileTextBox):
     """Controls at the bottom of the window, file output locations"""

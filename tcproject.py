@@ -6,7 +6,8 @@
 import os, sys
 import wx
 
-from debug import DebugFrame as debug
+import logger
+debug = logger.Log()
 
 import config
 config = config.Config()

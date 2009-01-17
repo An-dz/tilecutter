@@ -10,7 +10,8 @@ gt = translator.Translator()
 import config
 config = config.Config()
 
-from debug import DebugFrame as debug
+import logger
+debug = logger.Log()
 
 class imageWindow(wx.ScrolledWindow, tcui.fileTextBox):
     """Window onto which bitmaps may be drawn, background colour is set by bgcolor

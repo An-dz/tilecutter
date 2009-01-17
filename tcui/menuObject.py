@@ -13,7 +13,8 @@ gt = translator.Translator()
 import config
 config = config.Config()
 
-from debug import DebugFrame as debug
+import logger
+debug = logger.Log()
 
 class menuObject:
     """Class containing the main program menu"""

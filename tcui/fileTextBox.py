@@ -8,7 +8,8 @@ import wx, imres, os
 
 # Utility functions
 
-from debug import DebugFrame as debug
+import logger
+debug = logger.Log()
 
 class fileTextBox:
     """Methods for text boxes displaying URLs"""

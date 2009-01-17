@@ -7,7 +7,8 @@ import wx
 import sys, os
 import pickle, copy, math, StringIO
 
-from debug import DebugFrame as debug
+import logger
+debug = logger.Log()
 
 import config
 config = config.Config()

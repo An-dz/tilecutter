@@ -10,7 +10,8 @@ gt = translator.Translator()
 import config
 config = config.Config()
 
-from debug import DebugFrame as debug
+import logger
+debug = logger.Log()
 
 class facingControl(wx.StaticBox):
     """Box containing direction facing controls"""

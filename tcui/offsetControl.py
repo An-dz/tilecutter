@@ -8,7 +8,8 @@ import wx, imres
 import translator
 gt = translator.Translator()
 
-from debug import DebugFrame as debug
+import logger
+debug = logger.Log()
 
 class offsetControl(wx.StaticBox):
     """Box containing offset controls"""
