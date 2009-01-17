@@ -114,7 +114,8 @@ import tc, tcproject, imres
 import translator
 gt = translator.Translator()
 
-from debug import DebugFrame as debug
+import logger
+
 
 import config
 config = config.Config()
@@ -125,9 +126,6 @@ debug_on = True
 
 # Need some kind of auto-generation function for the translator, to produce a range of numbers (0-64, then in 16 increments to 240)
 ##choicelist_paksize = [gt("16"),gt("32"),gt("48"),gt("64"),gt("80"),gt("96"),gt("112"),gt("128"),gt("144"),gt("160"),gt("176"),gt("192"),gt("208"),gt("224"),gt("240")]
-##choicelist_views = ["1","2","4"]
-##choicelist_dims = ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16"]
-##choicelist_dims_z = ["1","2","3","4"]
 
 class MainWindow(wx.Frame):
     """Main frame window inside which all else is put"""

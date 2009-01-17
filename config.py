@@ -17,6 +17,7 @@ class Config(object):
     # Internals will always be checked before config
     defaults = {
         "debug_on": True,
+        "logfile": "tilecutter.log",
         "transparent": [231,255,255],
         "default_paksize": "64",
 ##        "PROJECT_FILE_EXTENSION": ".tcp",
