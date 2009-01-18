@@ -173,6 +173,27 @@ class MainWindow(wx.Frame):
         # Create the I/O path inputs, which are added to the bottom-left panel container
         self.control_iopaths = tcui.twoFileControl(self.panel, app, self.s_panel_bottom)
 
+        # Save, Dat, Image and Pak output paths
+        self.s_panel_flex = wx.FlexGridSizer(0,3,0,0)
+        self.control_savepath = tcui.FileControl(self.panel, app, self.s_panel_flex, app.activeproject.savefile,
+                                                 "Project Save Location", "tt_save_file_location",
+                                                 "Test FPicker title", "Test FPicker allowed",
+                                                 "Browse...", "tt_browse_save_file")
+        self.control_datpath = tcui.FileControl(self.panel, app, self.s_panel_flex, app.activeproject.datfile,
+                                                ".dat Output Location", "tt_dat_file_location",
+                                                "Test FPicker title", "Test FPicker allowed",
+                                                "Browse...", "tt_browse_dat_file")
+        self.control_pngpath = tcui.FileControl(self.panel, app, self.s_panel_flex, app.activeproject.pngfile,
+                                                ".png Output Location", "tt_png_file_location",
+                                                "Test FPicker title", "Test FPicker allowed",
+                                                "Browse...", "tt_browse_png_file")
+        self.control_pakpath = tcui.FileControl(self.panel, app, self.s_panel_flex, app.activeproject.pakfile,
+                                                ".pak Output Location", "tt_pak_file_location",
+                                                "Test FPicker title", "Test FPicker allowed",
+                                                "Browse...", "tt_browse_pak_file")
+
+        self.s_panel_bottom.Add(self.s_panel_flex, 0, wx.EXPAND, 0)
+
         # CUT/EXPORT BUTTONS
         # Cut button
         self.cut_button = wx.Button(self.panel, wx.ID_ANY)
@@ -223,6 +244,11 @@ class MainWindow(wx.Frame):
         self.control_dims.translate()
         self.control_offset.translate()
         self.control_iopaths.translate()
+        # Path entry controls
+        self.control_savepath.translate()
+        self.control_datpath.translate()
+        self.control_pngpath.translate()
+        self.control_pakpath.translate()
         # And the menus
         self.menubar.translate()
         # Finally re-do the window's layout
@@ -238,10 +264,14 @@ class MainWindow(wx.Frame):
         self.control_dims.update()
         self.control_offset.update()
         self.control_iopaths.update()
+        self.control_savepath.update()
+        self.control_datpath.update()
+        self.control_pngpath.update()
+        self.control_pakpath.update()
         self.display.update()
         self.Thaw()
 
-    def OnToggleDatExport(self):
+    def OnToggleDatExport(self, e):
         """Toggle whether .dat file info should be exported, or just the cut image
         if .dat file exporting is disabled the .dat file will be displayed in a dialog"""
 
@@ -444,11 +474,13 @@ class TCApp(wx.App):
 
     def Exit(self):
         """Quit the application indirectly"""
+        debug("app.Exit -> app.OnQuit()")
         self.OnQuit(None)
 
     def OnQuit(self, e):
         """Close the debugging window and quit the application on a quit event in the main window
         closing the debugging window doesn't do anything"""
+        debug("Application quitting...")
         self.frame.Destroy()
 
 
@@ -458,6 +490,8 @@ if __name__ == '__main__':
     sys.stdout = debug
     start_directory = os.getcwd()
     # Create the application
+    debug("--------------------------------------------------------------------------")
+    debug("Init - Creating app")
     app = TCApp()
 
     display = app.frame.display

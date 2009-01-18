@@ -14,7 +14,14 @@
 
 # Has usual translate/update methods.
 
-class FileControl(object):
+import wx
+
+import tcui
+
+import translator
+gt = translator.Translator()
+
+class FileControl(tcui.fileTextBox):
     def __init__(self, parent, app, parent_sizer, linked,
                  label, tooltip,
                  filepicker_title, filepicker_allowed,
@@ -47,7 +54,6 @@ class FileControl(object):
         self.path_box.Bind(wx.EVT_TEXT, self.OnTextChange, self.path_box)
         self.path_filebrowse.Bind(wx.EVT_BUTTON, self.OnBrowse, self.path_filebrowse)
 
-
     def translate(self):
         """Update the text of all controls to reflect a new translation"""
         self.path_label.SetLabel(gt(self.label))
@@ -55,6 +61,14 @@ class FileControl(object):
         self.path_filebrowse.SetLabel(gt(self.browse_string))
         self.path_filebrowse.SetToolTipString(gt(self.browse_tooltip))
 
+    def update(self):
+        """Set the values of the controls in this group to the values in the model"""
+        # Setting these values should also cause text highlighting to occur
+        self.path_box.SetValue(self.linked())
+        if self.relative != None:
+            self.highlightText(self.path_box, self.linked(), self.relative())
+        else:
+            self.highlightText(self.path_box, self.linked())
 
     def OnTextChange(self, e):
         """Triggered when the text in the path box is changed"""
