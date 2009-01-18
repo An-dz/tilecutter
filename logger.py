@@ -20,11 +20,14 @@ class Log(object):
     file = None
     line_number = 0
     newline = True
-    def __init__(self):
+    def __init__(self, file=None):
         """"""
         if Log.file == None:
-            # Appends this session's log info to the logging file
-            Log.file = open(config.logfile, "a")
+            if file == None:
+                # Appends this session's log info to the logging file
+                Log.file = open(config.logfile, "a")
+            else:
+                Log.file = open(file, "a")
     def __call__(self, s):
         """Calls self.write()"""
         self.out(s)

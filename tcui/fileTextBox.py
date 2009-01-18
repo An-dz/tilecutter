@@ -64,8 +64,10 @@ class fileTextBox(object):
 
     def highlightText(self, box, p1, p2=None):
         """Update the highlighting in a text entry box"""
+##        debug("highlightText, p1: %s, p2: %s" % (p1, p2))
         # Path value, optionally relative to a second path
         a = self.splitPath(p1, p2)
+##        debug(str(a))
         # Set entire length of the box to default colour
         box.SetStyle(0,len(p1), wx.TextAttr(None, "white"))
         # Then recolour both boxes to reflect path existence
@@ -96,6 +98,8 @@ class fileTextBox(object):
         while os.path.split(p1)[1] != "":
             n = os.path.split(p1)
             # Add at front, text,   offset,             length,     exists or not,      File or Directory?
+##            debug("path1: %s, path2: %s" % (p1, p2))
+##            debug("exists? %s, %s" % (self.joinPaths(p2, p1), os.path.exists(self.joinPaths(p2, p1))))
             a.insert(0,    [n[1],  len(p1)-len(n[1]),   len(n[1]),  os.path.exists(self.joinPaths(p2, p1))])#, existsAsType(p)])
             p1 = n[0]
         return a
@@ -103,13 +107,13 @@ class fileTextBox(object):
     def joinPaths(self, p1, p2):
         """Join p2 to p1, accounting for end cases (is directory, is file etc.)"""
         if p1 != None:
-            # Workdir is a working directory optionally used to check for existence of relative paths
             # Need to check the end component
             if os.path.isfile(p1):
                 # If it's a file that exists, split the directory off
                 p1 = os.path.split(p1)[0]
-            else:
-                # Otherwise hard to tell, best to just split it (assuming here that there's a filename at the end)
+            elif not os.path.isdir(p1):
+                # If the path isn't a file which exists, and isn't a directory, split the end bit off
+                # (Assume it's a file which hasn't been created yet)
                 p1 = os.path.split(p1)[0]
         else:
             p1 = ""

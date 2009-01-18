@@ -20,6 +20,8 @@ import tcui
 
 import translator
 gt = translator.Translator()
+import logger
+debug = logger.Log()
 
 class FileControl(tcui.fileTextBox):
     def __init__(self, parent, app, parent_sizer, linked,
@@ -37,6 +39,7 @@ class FileControl(tcui.fileTextBox):
         self.browse_string = browse_string
         self.browse_tooltip = browse_tooltip
 
+        self.dependants = None
         self.app = app
         self.parent = parent
 
@@ -44,10 +47,12 @@ class FileControl(tcui.fileTextBox):
         self.path_label = wx.StaticText(parent, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
         self.path_box = wx.TextCtrl(parent, wx.ID_ANY, value="", style=wx.TE_RICH|wx.BORDER_SUNKEN)#|wx.TE_MULTILINE)#, style=wx.TE_READONLY)
         self.path_box.SetFont(wx.Font(9, wx.MODERN, wx.NORMAL, wx.NORMAL))
+        self.path_icon = wx.StaticBitmap(parent, wx.ID_ANY, wx.ArtProvider.GetBitmap(wx.ART_TICK_MARK))
         self.path_filebrowse = wx.Button(parent, wx.ID_ANY, label="")
         # Add to parent sizer (which must be a wx.FlexGridSizer)
         parent_sizer.Add(self.path_label, 0, wx.ALIGN_CENTER_VERTICAL, 2)
         parent_sizer.Add(self.path_box, 0, wx.EXPAND|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TE_READONLY, 2)
+        parent_sizer.Add(self.path_icon, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 1)
         parent_sizer.Add(self.path_filebrowse, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 1)
         # Bind events
         self.path_box.Bind(wx.EVT_TEXT, self.OnTextChange, self.path_box)
@@ -64,14 +69,42 @@ class FileControl(tcui.fileTextBox):
         """Set the values of the controls in this group to the values in the model"""
         # Setting these values should also cause text highlighting to occur
         self.path_box.SetValue(self.linked())
+        self.highlight()
+
+    def SetDependants(self, list):
+        """When highlight method is called for this control, also call it for the controls in this list
+        Should be used when the dependant controls rely on this one for their relative path info"""
+        self.dependants = list
+
+    def highlight(self):
+        """Highlight entry box text"""
         if self.relative != None:
+            debug("highlight with relative, %s | %s" % (self.linked(), self.relative()))
             self.highlightText(self.path_box, self.linked(), self.relative())
         else:
+            debug("highlight without relative, %s" % self.linked())
             self.highlightText(self.path_box, self.linked())
+        if self.dependants:
+            for i in self.dependants:
+                debug("highlighting dependant...")
+                i.highlight()
+
 
     def OnTextChange(self, e):
         """Triggered when the text in the path box is changed"""
+        if self.linked() != self.path_box.GetValue():
+            self.linked(self.path_box.GetValue())
+##            debug("Text changed in PNG entry box, new text: " + str(self.app.activeproject.pngfile()))
+        self.highlight()
+
     def OnBrowse(self, e):
         """Triggered when the browse button is clicked"""
+        if self.relative:
+            rel = self.relative()
+        else:
+            rel = ""
+        value = self.filePickerDialog(self.linked(), rel, self.filepicker_title,
+                                      self.filepicker_allowed, wx.FD_SAVE|wx.OVERWRITE_PROMPT)
+        self.path_box.SetValue(value)
 
 

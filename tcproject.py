@@ -307,6 +307,14 @@ class Project(object):
             self.files.datfile_location = str(set)
         else:
             return self.files.datfile_location
+    def writedat(self, set=None):
+        """Set or return if dat file should be written"""
+        if set in [True, 1]:
+            self.files.writedat = True
+        elif set in [False, 0]:
+            self.files.writedat = False
+        else:
+            return self.files.writedat
     def pngfile(self, set=None):
         """Set or return (relative) path to png file"""
         if set != None:
@@ -349,15 +357,16 @@ class ProjectFiles(object):
     def __init__(self, parent):
         # Location of save file, by default this is the user's home directory
         if "HOME" in os.environ:
-            self.save_location = os.environ["HOME"]
+            self.save_location = os.path.join(os.environ["HOME"], "new_project.tcp")
         elif "USERPROFILE" in os.environ:
-            self.save_location = os.environ["USERPROFILE"]
+            self.save_location = os.path.join(os.environ["USERPROFILE"], "new_project.tcp")
         else:   # Otherwise use location of program
-            self.save_location = start_directory
+            self.save_location = os.path.join(start_directory, "new_project.tcp")
         # As initialised, project is unsaved, so other paths relative to the default value
         self.saved = False
         # Location of .dat file output (relative to save location)
         self.datfile_location = "output.dat"
+        self.writedat = True
         # Location of .png file output (relative to dat file)
         self.pngfile_location = os.path.join("images", "output.png")
 

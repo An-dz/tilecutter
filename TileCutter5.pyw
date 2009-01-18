@@ -5,6 +5,8 @@
 
 # Todo:
 
+# BUG - If abs path to save doesn't have slash at the end, browse dialog uses end path
+#       segment as filename
 # BUG - Set active image to new image, then edit textbox to make path invalid, then edit it back to the original -> highlighting fails
 # BUG - Season select does not set to summer when enable winter is unchecked            - FIXED
 # BUG - Translation for static boxes in UI components
@@ -109,6 +111,9 @@ import tcui, tc, tcproject, imres
 # Utility functions
 import translator
 gt = translator.Translator()
+# _gt() used where class needs to be fed untranslated string, but we still want TCTranslator
+# script to pick it up for the translation file
+_gt = gt.loop
 import logger
 debug = logger.Log()
 import config
@@ -152,7 +157,6 @@ class MainWindow(wx.Frame):
 
         self.s_panel_bottom = wx.BoxSizer(wx.HORIZONTAL)
         self.s_panel_bottom_right = wx.BoxSizer(wx.VERTICAL)            # Contains cut/export buttons
-        self.s_panel_bottom_right_buttons = wx.BoxSizer(wx.HORIZONTAL)  # "export dat" checkbox
 
         # LEFT SIDE CONTROLS
         # Season controls
@@ -170,47 +174,61 @@ class MainWindow(wx.Frame):
         self.display = tcui.imageWindow(self.panel, app, self.s_panel_imagewindow_container, config.transparent)
 
         # Save, Dat, Image and Pak output paths
-        self.s_panel_flex = wx.FlexGridSizer(0,3,0,0)
+        self.s_panel_flex = wx.FlexGridSizer(0,4,3,4)
         self.control_savepath = tcui.FileControl(self.panel, app, self.s_panel_flex, app.activeproject.savefile,
-                                                 "Project Save Location", "tt_save_file_location",
-                                                 "Test FPicker title", "Test FPicker allowed",
-                                                 "Browse...", "tt_browse_save_file")
+                                                 _gt("Project Save Location"), _gt("tt_save_file_location"),
+                                                 _gt("Choose a location to save project..."), "TCP files (*.tcp)|*.tcp",
+                                                 _gt("Browse..."), _gt("tt_browse_save_file"), None)
         self.control_datpath = tcui.FileControl(self.panel, app, self.s_panel_flex, app.activeproject.datfile,
-                                                ".dat Output Location", "tt_dat_file_location",
-                                                "Test FPicker title", "Test FPicker allowed",
-                                                "Browse...", "tt_browse_dat_file")
+                                                _gt(".dat Output Location"), _gt("tt_dat_file_location"),
+                                                _gt("Choose a location to save .dat file..."), "DAT files (*.dat)|*.dat",
+                                                _gt("Browse..."), _gt("tt_browse_dat_file"), app.activeproject.savefile)
         self.control_pngpath = tcui.FileControl(self.panel, app, self.s_panel_flex, app.activeproject.pngfile,
-                                                ".png Output Location", "tt_png_file_location",
-                                                "Test FPicker title", "Test FPicker allowed",
-                                                "Browse...", "tt_browse_png_file")
+                                                _gt(".png Output Location"), _gt("tt_png_file_location"),
+                                                _gt("Choose a location to save .png file..."), "PNG files (*.png)|*.png",
+                                                _gt("Browse..."), _gt("tt_browse_png_file"), app.activeproject.savefile)
         self.control_pakpath = tcui.FileControl(self.panel, app, self.s_panel_flex, app.activeproject.pakfile,
-                                                ".pak Output Location", "tt_pak_file_location",
-                                                "Test FPicker title", "Test FPicker allowed",
-                                                "Browse...", "tt_browse_pak_file")
+                                                _gt(".pak Output Location"), _gt("tt_pak_file_location"),
+                                                _gt("Choose a location to export .pak file..."), "PAK files (*.pak)|*.pak",
+                                                _gt("Browse..."), _gt("tt_browse_pak_file"), app.activeproject.savefile)
+
+        # Set controls that savepath also alters (ones which are relative to it)
+        self.control_savepath.SetDependants([self.control_datpath, self.control_pngpath, self.control_pakpath])
 
         self.s_panel_flex.AddGrowableCol(1)
 
-        self.s_panel_bottom.Add(self.s_panel_flex, 1, wx.EXPAND, 0)
+        self.s_panel_bottom.Add(self.s_panel_flex, 1, wx.EXPAND|wx.ALL, 4)
+
+        self.s_panel_bottom.Add(wx.StaticLine(self.panel, wx.ID_ANY, (-1,-1),(-1,-1), wx.LI_VERTICAL), 0, wx.EXPAND|wx.LEFT, 2)
+
+        self.cut_button_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        self.cut_button_sizer2 = wx.BoxSizer(wx.VERTICAL)
+        self.export_button_sizer = wx.BoxSizer(wx.HORIZONTAL)
 
         # CUT/EXPORT BUTTONS
         # Cut button
         self.cut_button = wx.Button(self.panel, wx.ID_ANY)
         self.cut_button.Bind(wx.EVT_BUTTON, self.menubar.OnCutProject, self.cut_button)
-        self.s_panel_bottom_right_buttons.Add(self.cut_button, 1, wx.EXPAND, 4)
-        # Export button
-        self.export_button = wx.Button(self.panel, wx.ID_ANY)
-        self.export_button.Bind(wx.EVT_BUTTON, self.menubar.OnExportProject, self.export_button)
-        self.s_panel_bottom_right_buttons.Add(self.export_button, 1, wx.EXPAND, 4)
+        self.cut_button_sizer2.Add(self.cut_button, 0, wx.EXPAND|wx.ALIGN_CENTER_HORIZONTAL, 0)
         # Export .dat checkbox
         self.export_dat_toggle = wx.CheckBox(self.panel, wx.ID_ANY, "", (-1,-1), (-1,-1))
         self.export_dat_toggle.SetValue(1)
         self.export_dat_toggle.Bind(wx.EVT_CHECKBOX, self.OnToggleDatExport, self.export_dat_toggle)
-        # Add buttons and checkbox to sizer
-        self.s_panel_bottom_right.Add(self.s_panel_bottom_right_buttons, 1, wx.EXPAND, 4)
-        self.s_panel_bottom_right.Add(self.export_dat_toggle, 1, wx.ALIGN_CENTER, 4)
+        self.cut_button_sizer2.Add(self.export_dat_toggle, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.TOP, 6)
+
+        self.cut_button_sizer.Add(self.cut_button_sizer2, 0, wx.ALIGN_CENTER_VERTICAL)
+
+        # Export button
+        self.export_button = wx.Button(self.panel, wx.ID_ANY)
+        self.export_button.Bind(wx.EVT_BUTTON, self.menubar.OnExportProject, self.export_button)
+        self.export_button_sizer.Add(self.export_button, 1, wx.ALIGN_CENTER_VERTICAL, 0)
+
+        self.s_panel_bottom_right.Add(self.cut_button_sizer, 1, wx.ALIGN_CENTER_HORIZONTAL|wx.ALL, 4)
+        self.s_panel_bottom_right.Add(wx.StaticLine(self.panel, wx.ID_ANY, (-1,-1),(-1,-1), wx.LI_HORIZONTAL), 0, wx.EXPAND|wx.ALIGN_CENTER_HORIZONTAL, 4)
+        self.s_panel_bottom_right.Add(self.export_button_sizer, 1, wx.EXPAND|wx.ALIGN_CENTER_HORIZONTAL|wx.ALL, 4)
 
         # Add these buttons to the bottom-right panel container
-        self.s_panel_bottom.Add(self.s_panel_bottom_right,0,wx.EXPAND, 0)
+        self.s_panel_bottom.Add(self.s_panel_bottom_right, 0, wx.EXPAND|wx.ALIGN_CENTER|wx.LEFT, 2)
 
         # SIZERS
         # Add the remaining sizers to each other
@@ -218,8 +236,8 @@ class MainWindow(wx.Frame):
         self.s_panel_top.Add(self.s_panel_controls,0,wx.EXPAND|wx.RIGHT, 1)
         self.s_panel_top.Add(self.s_panel_imagewindow_container,1,wx.EXPAND, 0)
         # Add bottom and top parts to overall panel 
-        self.s_panel.Add(self.s_panel_top,1,wx.EXPAND, 0)
-        self.s_panel.Add(self.s_panel_bottom,0,wx.EXPAND|wx.RIGHT, 0)
+        self.s_panel.Add(self.s_panel_top,1,wx.EXPAND|wx.BOTTOM, 4)
+        self.s_panel.Add(self.s_panel_bottom,0,wx.EXPAND|wx.BOTTOM, 2)
 
         # Layout sizers
         self.panel.SetSizer(self.s_panel)
@@ -231,9 +249,9 @@ class MainWindow(wx.Frame):
     def translate(self):
         """Master translate function for the mainwindow object"""
         self.Freeze()
-        self.cut_button.SetLabel(gt("Cut"))
-        self.export_button.SetLabel(gt("Export"))
-        self.export_dat_toggle.SetLabel(gt("Export .dat file"))
+        self.cut_button.SetLabel(gt("Cut image"))
+        self.export_button.SetLabel(gt("Compile pak"))
+        self.export_dat_toggle.SetLabel(gt("Write out .dat file"))
         # And translate the window's title string
         # Then call translate methods of all child controls
         self.control_seasons.translate()
@@ -260,10 +278,10 @@ class MainWindow(wx.Frame):
         self.control_facing.update()
         self.control_dims.update()
         self.control_offset.update()
-        self.control_savepath.update()
         self.control_datpath.update()
         self.control_pngpath.update()
         self.control_pakpath.update()
+        self.control_savepath.update()
         self.display.update()
         self.Thaw()
 

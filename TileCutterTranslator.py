@@ -7,14 +7,13 @@ import re, time, os, codecs
 import translator.w_newlines as w_newlines
 import translator.u_newlines as u_newlines
 
-
 VERSION_NUMBER = "0.3"
 COMPAT_VERSION_NUMBER = "0.5"
 # Should duplicate translator entries be outputted to the translation file?
 FILE_ENCODING = "utf-8"
 ENCODE_WIN = True
 
-logging = False
+logging = True
 
 # This script finds translation strings in TileCutter and outputs them
 # in a format SimuTranslator can understand

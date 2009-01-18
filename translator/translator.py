@@ -56,6 +56,10 @@ class Translator(object):
         """Used so we can do Translator() and call gt()"""
         return self.gt(vars)
 
+    def loop(self, text):
+        """Just return the provided value, used for _gt() functionality"""
+        return text
+
     def gt(self, text):
         """Return translated version of a string"""
         text = unicode(text)
