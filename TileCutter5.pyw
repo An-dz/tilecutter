@@ -13,7 +13,7 @@
 # Fix debug so that it logs to a file instead                                           - DONE
 # Remove debug frame                                                                    - DONE
 
-# Find some way to eliminate flickering on translation update/initial load              
+# Find some way to eliminate flickering on translation update/initial load              - DONE
 # Text entry boxes visible position at end, or cursor, rather than beginning            
 #   - needs full revamp of text entry box class to deal with special stuff really       
 # Padding/general layout optimisation                                                   
@@ -120,7 +120,7 @@ config.save()
 
 class MainWindow(wx.Frame):
     """Main frame window inside which all else is put"""
-    def __init__(self, parent, id, title, windowsize, windowposition, windowminsize):
+    def __init__(self, parent, app, id, title, windowsize, windowposition, windowminsize):
         wx.Frame.__init__(self, parent, wx.ID_ANY, title, windowposition, windowsize,
                                         style=wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL)
         # Init stuff
@@ -211,6 +211,7 @@ class MainWindow(wx.Frame):
 
     def translate(self):
         """Master translate function for the mainwindow object"""
+        self.Freeze()
         self.cut_button.SetLabel(gt("Cut"))
         self.export_button.SetLabel(gt("Export"))
         self.export_dat_toggle.SetLabel(gt("Export .dat file"))
@@ -226,10 +227,11 @@ class MainWindow(wx.Frame):
         self.menubar.translate()
         # Finally re-do the window's layout
         self.panel.Layout()
-##        self.update()
+        self.Thaw()
 
     def update(self):
         """Update frame and all its children to reflect values in the active project"""
+        self.Freeze()
         self.control_seasons.update()
         self.control_images.update()
         self.control_facing.update()
@@ -237,6 +239,7 @@ class MainWindow(wx.Frame):
         self.control_offset.update()
         self.control_iopaths.update()
         self.display.update()
+        self.Thaw()
 
     def OnToggleDatExport(self):
         """Toggle whether .dat file info should be exported, or just the cut image
@@ -245,18 +248,14 @@ class MainWindow(wx.Frame):
 class TCApp(wx.App):
     """The main application, pre-window launch stuff should go here"""
     def __init__(self):
-        wx.App.__init__(self)
         self.start_directory = os.getcwd()
+        wx.App.__init__(self)
 
-    def AfterInit(self):
-        """After wx.App and TCApp init, create UI"""
-        # Single project implementation
-        # Only one project in the dict at a time, prompt on new project to save etc.
-        # New project -> If default changed, prompt to save, then create a new tcproject object and init frame
-        # Load project -> prompt save, prompt to load, load in project and init frame
-        # Need to write save/load routine, using pickle for data persistence
-        # Higher level function to set activeproject, so can abstract for multi-project implementation
-
+    def OnInit(self):
+        """Called after app has been initialised"""
+        # Override wx's mechanism for writing stderr/out
+        sys.stderr = debug
+        sys.stdout = debug
         # Create a default active project
         self.projects = {}
         self.projects["default"] = tcproject.Project()
@@ -268,11 +267,11 @@ class TCApp(wx.App):
         self.active_save_location = self.activeproject.files.save_location
         self.active_save_name = ""
 
-
         # Create and show main frame
-        self.frame = MainWindow(None, wx.ID_ANY, "TileCutter", config.window_size, config.window_position, config.window_minsize)
+        self.frame = MainWindow(None, self, wx.ID_ANY, "TileCutter", config.window_size, config.window_position, config.window_minsize)
         self.SetTopWindow(self.frame)
         self.frame.Bind(wx.EVT_CLOSE, self.OnQuit)
+        return True
 
 
     def ExportProject(self, project, export=False):
@@ -454,15 +453,12 @@ class TCApp(wx.App):
 
 
 if __name__ == '__main__':
+    # Redirect stdout/err to internal logging mechanism
+    sys.stderr = debug
+    sys.stdout = debug
     start_directory = os.getcwd()
     # Create the application
     app = TCApp()
-    sys.stderr = debug
-    sys.stdout = debug
-
-    # Create UI elements
-    app.AfterInit()
-##    sys.stderr = open("error.txt","w")
 
     display = app.frame.display
     # Init all main frame controls

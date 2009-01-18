@@ -4,7 +4,7 @@
 #
 # This class provides additional methods for filename input controls, including highlighting
 #
-import wx, imres, os
+import wx, os
 
 # Utility functions
 

@@ -9,6 +9,8 @@ from fileTextBox import fileTextBox
 # Menus
 from menuObject import menuObject
 
+from FileControl import FileControl
+
 # Controls
 from seasonControl import seasonControl
 from imageControl import imageControl

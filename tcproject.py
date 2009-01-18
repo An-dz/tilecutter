@@ -302,25 +302,41 @@ class Project(object):
         return self.dims.views
 
     def datfile(self, set=None):
-        """Set or return path to dat file"""
+        """Set or return (relative) path to dat file"""
         if set != None:
             self.files.datfile_location = str(set)
         else:
             return self.files.datfile_location
     def pngfile(self, set=None):
-        """Set or return path to png file"""
+        """Set or return (relative) path to png file"""
         if set != None:
             self.files.pngfile_location = str(set)
         else:
             return self.files.pngfile_location
-##    def save(self, set=None):
-##        if set != None:
-##            if set in [True, 1, False, 0]:
-##                self.files.saved = set
-##            else:
-##                debug("Attempt to set Saved status failed - Value (%s) outside of acceptable range" % str(set))
-##        else:
-##            return self.files.saved
+    def pakfile(self, set=None):
+        """Set or return (relative) path to pak file"""
+        if set != None:
+            self.files.pakfile_location = str(set)
+        else:
+            return self.files.pakfile_location
+    def saved(self, set=None):
+        """Set or return whether a save path has been set for this project"""
+        if set != None:
+            if set in [True, 1]:
+                self.files.saved = True
+            elif set in [False, 0]:
+                self.files.saved = False
+            else:
+                debug("Attempt to set project saved status failed - Value (%s) outside of acceptable range" % str(set))
+        else:
+            return self.files.saved
+    def savefile(self, set=None):
+        """Set or return (absolute) path to project save file location"""
+        if set != None:
+            self.files.save_location = str(set)
+        else:
+            return self.files.save_location
+
     # Inputting/extracting information from the project is done via methods of the project class, so we can change the underlying
     # structure without having to change the way every other function interacts with it
     # Should allow for array like behaviour to access images,
@@ -338,24 +354,20 @@ class ProjectFiles(object):
             self.save_location = os.environ["USERPROFILE"]
         else:   # Otherwise use location of program
             self.save_location = start_directory
-        # Location of .dat/.pak file output, can be either a relative path (relative to save location)
-        # or an absolute path. Default is relative path, same as save location (which defaults to home directory)
-        self.datfile_location = os.path.join(self.save_location, "output.dat")
-
-        # Location of .png file output (relative to .dat file output), default is "images/output.png"
+        # As initialised, project is unsaved, so other paths relative to the default value
+        self.saved = False
+        # Location of .dat file output (relative to save location)
+        self.datfile_location = "output.dat"
+        # Location of .png file output (relative to dat file)
         self.pngfile_location = os.path.join("images", "output.png")
 
-        # If self.saved is False, then project is not saved, thus datfile_location is absolute path (by default, the
-        # same as save_location, i.e. the home directory), if self.saved is True, then the datfile directory should be
-        # converted to a relative path, relative to the location of the saved file.
-        # This means the user can move the saved project file and retain the same output file hierarchy, while at the
-        # same time being able to define output paths without saving the project (and allows for default output
-        # paths for quick and easy use)
-        self.saved = False
+        # Location of .pak output file (relative to save location)
+        self.pakfile_location = "output.pak"
 
-        debug("save_location: %s, datfile_location: %s, pngfile_location: %s" % (self.save_location,
-                                                                                     self.datfile_location,
-                                                                                     self.pngfile_location))
+        debug("save_location: %s, datfile_location: %s, pngfile_location: %s, pakfile_location: %s" % (self.save_location,
+                                                                                                       self.datfile_location,
+                                                                                                       self.pngfile_location,
+                                                                                                       self.pakfile_location))
 
 class ActiveImage(object):
     """Details of the active image"""
