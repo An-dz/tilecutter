@@ -19,7 +19,7 @@ class Config(object):
         "debug_on": True,
         "logfile": "tilecutter.log",
         "transparent": [231,255,255],
-        "default_paksize": "64",
+        "default_paksize": 64,
 ##        "PROJECT_FILE_EXTENSION": ".tcp",
         "valid_image_extensions": [".png"],
         "OFFSET_NEGATIVE_ALLOWED": False,

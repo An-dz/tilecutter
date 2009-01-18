@@ -9,7 +9,6 @@ import translator
 gt = translator.Translator()
 import config
 config = config.Config()
-
 import logger
 debug = logger.Log()
 

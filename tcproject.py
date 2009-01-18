@@ -8,12 +8,11 @@ import wx
 
 import logger
 debug = logger.Log()
-
 import config
 config = config.Config()
 
 
-class ProjectImage:
+class ProjectImage(object):
     """An individual image object, consisting of a cached image, path to that image and offset dimensions"""
     def __init__(self, b):
         """Initialise default values, new image, empty path, zeroed offsets"""
@@ -27,7 +26,7 @@ class ProjectImage:
         self.value_lastpath = config.default_image_path          # Used to check if the text in the entry box has really changed (temporary)
         self.reloadImage()
         self.offset = [0,0]
-        self.cutimageset = 0
+        self.cutimageset = None
     def __getitem__(self, key):
         return self.cutimageset[key]
     def cutImage(self, cutting_function, dims, p):
@@ -50,6 +49,7 @@ class ProjectImage:
         """Delete stored images, to enable pickling"""
         self.value_image = None
         self.value_bitmap = None
+        self.cutimageset = None
     def reloadImage(self):
         """Refresh the cached image"""
         if self.value_path == "":
@@ -86,7 +86,7 @@ class ProjectImage:
         """Returns True if this is a backimage, false if it is a frontimage"""
         return self.b
 
-class ProjectFrame:
+class ProjectFrame(object):
     """Contains a single frame of the project, with a front and back image"""
     def __init__(self):
         """Initialise array containing two images"""
@@ -98,7 +98,7 @@ class ProjectFrame:
     def __len__(self):
         return len(self.images)
 
-class ProjectFrameset:
+class ProjectFrameset(object):
     """Contains a sequence of ProjectFrame objects for each animation frame of this direction/season combination"""
     def __init__(self, season):
         self.season = season    # 0 for summer, 1 for winter
@@ -110,7 +110,7 @@ class ProjectFrameset:
         return len(self.frames)
     # Needs methods to add a frame, remove a frame, move frames up/down etc. (To be added with animation support)
 
-class Project:
+class Project(object):
     """The project is our model, it contains all information about a project."""
     def __init__(self):
         """Initialise this project, and set default values"""
@@ -124,13 +124,13 @@ class Project:
             b.append(ProjectFrameset(0))
             b.append(ProjectFrameset(1))
             self.images.append(b)
-        self.south = self.images[0]
-        self.east  = self.images[1]
-        self.north = self.images[2]
-        self.west  = self.images[3]
+##        self.south = self.images[0]
+##        self.east  = self.images[1]
+##        self.north = self.images[2]
+##        self.west  = self.images[3]
 
         self.dims = ProjectDims(self)
-        self.files = ProjectFile(self)
+        self.files = ProjectFiles(self)
         self.active = ActiveImage(self)
     def __getitem__(self, key):
         return self.images[key]
@@ -143,8 +143,6 @@ class Project:
                 for f in range(len(self.images[d][s])):
                     for i in range(len(self.images[d][s][f])):
                         self.images[d][s][f][i].cutImage(cutting_function, (self.x(), self.y(), self.z(), d), self.paksize())
-
-##        self.images[0][0][0][0].cutImage(cutting_function, (self.x(), self.y(), self.z(), 0), self.paksize())
 
     def delImages(self):
         """Delete all image data representations, ready for pickling"""
@@ -212,6 +210,7 @@ class Project:
             return self.active.image
 
     def x(self, set=None):
+        """Set or return X dimension"""
         if set != None:
             if set in config.choicelist_dims:
                 self.dims.x = int(set)
@@ -223,6 +222,7 @@ class Project:
         else:
             return self.dims.x
     def y(self, set=None):
+        """Set or return Y dimension"""
         if set != None:
             if set in config.choicelist_dims:
                 self.dims.y = int(set)
@@ -234,6 +234,7 @@ class Project:
         else:
             return self.dims.y
     def z(self, set=None):
+        """Set or return Z dimension"""
         if set != None:
             if set in config.choicelist_dims_z:
                 self.dims.z = int(set)
@@ -245,6 +246,7 @@ class Project:
         else:
             return self.dims.z
     def paksize(self, set=None):
+        """Set or return paksize"""
         if set != None:
             if set in config.choicelist_paksize:
                 self.dims.paksize = int(set)
@@ -256,6 +258,7 @@ class Project:
         else:
             return self.dims.paksize
     def winter(self, set=None):
+        """Set or return if Winter image is enabled"""
         if set != None:
             if set == 1 or set == True:
                 self.dims.winter = 1
@@ -271,6 +274,7 @@ class Project:
         else:
             return self.dims.winter
     def frontimage(self, set=None):
+        """Set or return if Front image is enabled"""
         if set != None:
             if set == 1 or set == True:
                 self.dims.frontimage = 1
@@ -286,6 +290,7 @@ class Project:
         else:
             return self.dims.frontimage
     def views(self, set=None):
+        """Set or return number of views (1, 2 or 4)"""
         if set != None:
             if set in config.choicelist_views:
                 self.dims.views = int(set)
@@ -297,23 +302,25 @@ class Project:
         return self.dims.views
 
     def datfile(self, set=None):
+        """Set or return path to dat file"""
         if set != None:
             self.files.datfile_location = str(set)
         else:
             return self.files.datfile_location
     def pngfile(self, set=None):
+        """Set or return path to png file"""
         if set != None:
             self.files.pngfile_location = str(set)
         else:
             return self.files.pngfile_location
-    def save(self, set=None):
-        if set != None:
-            if set in [True, 1, False, 0]:
-                self.files.saved = set
-            else:
-                debug("Attempt to set Saved status failed - Value (%s) outside of acceptable range" % str(set))
-        else:
-            return self.files.saved
+##    def save(self, set=None):
+##        if set != None:
+##            if set in [True, 1, False, 0]:
+##                self.files.saved = set
+##            else:
+##                debug("Attempt to set Saved status failed - Value (%s) outside of acceptable range" % str(set))
+##        else:
+##            return self.files.saved
     # Inputting/extracting information from the project is done via methods of the project class, so we can change the underlying
     # structure without having to change the way every other function interacts with it
     # Should allow for array like behaviour to access images,
@@ -321,7 +328,7 @@ class Project:
     # and: blah[0][0][0][0].setPath("") will set that path
 
 
-class ProjectFile:
+class ProjectFiles(object):
     """Information relating to file paths"""
     def __init__(self, parent):
         # Location of save file, by default this is the user's home directory
@@ -350,7 +357,7 @@ class ProjectFile:
                                                                                      self.datfile_location,
                                                                                      self.pngfile_location))
 
-class ActiveImage:
+class ActiveImage(object):
     """Details of the active image"""
     def __init__(self, parent):
         self.parent = parent
@@ -363,7 +370,7 @@ class ActiveImage:
     def UpdateImage(self):
         self.image = self.parent.images[self.direction][self.season][self.frame][self.layer]
 
-class ProjectDims:
+class ProjectDims(object):
     """Dimensions of the project, X, Y, Z, paksize, also whether winter/frontimage are enabled
     Note that the number of frames per frameset is not set outside of the length of the frameset,
     and can only be altered by adding or removing frames"""
@@ -372,7 +379,7 @@ class ProjectDims:
         self.x = 1
         self.y = 1
         self.z = 1
-        self.paksize = 64
+        self.paksize = int(config.default_paksize)
         self.views = 1
         self.winter = 0
         self.frontimage = 0

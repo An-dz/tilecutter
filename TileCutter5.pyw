@@ -443,9 +443,6 @@ class TCApp(wx.App):
         project = pickle.load(file)
         return project
 
-    def ReloadWindow(self):
-        """Reload the main window, e.g. to effect a translation change, does not affect debugging window"""
-
     def Exit(self):
         """Quit the application indirectly"""
         self.OnQuit(None)
@@ -453,7 +450,6 @@ class TCApp(wx.App):
     def OnQuit(self, e):
         """Close the debugging window and quit the application on a quit event in the main window
         closing the debugging window doesn't do anything"""
-##        self.debugframe.Destroy()
         self.frame.Destroy()
 
 
