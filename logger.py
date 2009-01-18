@@ -2,14 +2,13 @@
 #
 # TileCutter debugger window
 #
-# Use:
-# from debug import DebugFrame as debug
-# To import previously intialised global debug() method, for use with debug output in any module that
-# requires it
-#
 
-import StringIO
-import sys, os
+# To use:
+# import logger
+# debug = logger.Log()
+#
+# Then debug(<string to output>)
+# Time/newline added automatically
 
 import config
 config = config.Config()
@@ -19,15 +18,12 @@ from datetime import datetime as dt
 class Log(object):
     """Debug/log output to file"""
     file = None
-    stringio = None
     line_number = 0
     def __init__(self):
         """"""
         if Log.file == None:
             # Appends this session's log info to the logging file
             Log.file = open(config.logfile, "a")
-            # Stores this session's log info in memory for view in the built-in debug window
-            Log.stringio = StringIO.StringIO("some text")
     def __call__(self, s):
         """Calls self.write()"""
         self.write(s)
@@ -44,8 +40,4 @@ class Log(object):
         outline = dt.now().replace(microsecond=0).isoformat(" ") + " |    " + s + "\n"
         Log.file.write(outline)
         Log.file.flush()
-        # Prepend line number, append newline
-        outline = "[%s] %s\n" % (self.line_number, s)
-        Log.stringio.write(outline)
-        Log.stringio.flush()
 

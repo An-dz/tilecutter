@@ -6,12 +6,12 @@
 # Todo:
 
 # BUG - Set active image to new image, then edit textbox to make path invalid, then edit it back to the original -> highlighting fails
-# BUG - Season select does not set to summer when enable winter is unchecked
+# BUG - Season select does not set to summer when enable winter is unchecked            - FIXED
 # BUG - Translation for static boxes in UI components
 
 # Move debug into own module, to allow it to be easily accessed by other modules        - DONE
-# Fix debug so that it logs to a file instead
-# Debug frame should plug into the debug logger, so that the latter can init before wx
+# Fix debug so that it logs to a file instead                                           - DONE
+# Remove debug frame                                                                    - DONE
 
 # Find some way to eliminate flickering on translation update/initial load              
 # Text entry boxes visible position at end, or cursor, rather than beginning            
@@ -27,9 +27,9 @@
 # Do the project save/load/new etc. and management functionality (using pickle & hash)  
 #   Multi-project system for later versions                                             - POSTPONE 0.7
 
-# Program settings, load from a config file (using configparser)                        
+# Program settings, load from a config file (using json)                                - DONE
 # Dialog to set program options                                                         
-# Move all static variables and program option variables into config class              
+# Move all static variables and program option variables into config class              - DONE
 # Implement use of special menu IDs to make menus work properly on, e.g., mac osx       
 # Produce frames picker control                                                         - POSTPONE 0.6
 # Offset/Mask control - internal functions, click modifies model & triggers redrawing   - DONE
@@ -102,28 +102,18 @@
 # Multi-project support
 
 import wx
-##import wx.lib.masked as masked
-##import wx.lib.scrolledpanel as scrolled
-##import wx.lib.hyperlink as hl
 
-import sys, os, ConfigParser, StringIO, re, codecs, pickle
-import tcui, translator
-import tc, tcproject, imres
+import sys, os, StringIO, pickle
+import tcui, tc, tcproject, imres
 
 # Utility functions
 import translator
 gt = translator.Translator()
-
 import logger
 debug = logger.Log()
-
-
 import config
 config = config.Config()
 config.save()
-
-# Init variables
-debug_on = True
 
 # Need some kind of auto-generation function for the translator, to produce a range of numbers (0-64, then in 16 increments to 240)
 ##choicelist_paksize = [gt("16"),gt("32"),gt("48"),gt("64"),gt("80"),gt("96"),gt("112"),gt("128"),gt("144"),gt("160"),gt("176"),gt("192"),gt("208"),gt("224"),gt("240")]
@@ -142,7 +132,6 @@ class MainWindow(wx.Frame):
         self.icons.AddIcon(imres.catalog["tc_icon2_32_plain"].getIcon())
         self.icons.AddIcon(imres.catalog["tc_icon2_48_plain"].getIcon())
         self.SetIcons(self.icons)
-##        app.debugframe.SetIcons(self.icons)
 
         # Create the menus
         self.menubar = tcui.menuObject(self, app)
@@ -261,15 +250,6 @@ class TCApp(wx.App):
 
     def AfterInit(self):
         """After wx.App and TCApp init, create UI"""
-        # Debugging window
-##        if debug_on:
-##            self.debugframe = logger.DebugFrame(None, debug, wx.ID_ANY, "Debugging")
-##            self.debugframe.Show(1)
-##        self.debug = debug(None, wx.ID_ANY, "Debugging", debug_on)
-##        if debug_on:
-##            self.debug.Show(1)
-
-
         # Single project implementation
         # Only one project in the dict at a time, prompt on new project to save etc.
         # New project -> If default changed, prompt to save, then create a new tcproject object and init frame
@@ -315,7 +295,6 @@ class TCApp(wx.App):
     def SaveProject(self, project, saveas=False):
         """Save a project to the file location specified
         return True if save successful or not needed, false otherwise"""
-
         # If not saving-as (which will always happen) and there is no difference in the string, don't continue
         if self.CheckProjectChanged(project) or saveas:
             pickle_string = self.PickleProject(project, 0)
@@ -477,11 +456,13 @@ class TCApp(wx.App):
 ##        self.debugframe.Destroy()
         self.frame.Destroy()
 
-# Run the program
+
 if __name__ == '__main__':
     start_directory = os.getcwd()
     # Create the application
     app = TCApp()
+    sys.stderr = debug
+    sys.stdout = debug
 
     # Create UI elements
     app.AfterInit()

@@ -4,23 +4,23 @@
 #
 
 # Subclasses (depended upon by controls, must come first)
-from fileTextBox import fileTextBox as fileTextBox
+from fileTextBox import fileTextBox
 
 # Menus
-from menuObject import menuObject as menuObject
+from menuObject import menuObject
 
 # Controls
-from seasonControl import seasonControl as seasonControl
-from imageControl import imageControl as imageControl
-from facingControl import facingControl as facingControl
-from dimsControl import dimsControl as dimsControl
-from offsetControl import offsetControl as offsetControl
-from twoFileControl import twoFileControl as twoFileControl
-from imageWindow import imageWindow as imageWindow
+from seasonControl import seasonControl
+from imageControl import imageControl
+from facingControl import facingControl
+from dimsControl import dimsControl
+from offsetControl import offsetControl
+from twoFileControl import twoFileControl
+from imageWindow import imageWindow
 
 # Dialogs
-from translationDialog import translationDialog as translationDialog
-from aboutDialog import aboutDialog as aboutDialog
+from translationDialog import translationDialog
+from aboutDialog import aboutDialog
 
 ### Set value of * in import
 ##__all__ = ["facingControl", "seasonControl", "dimsControl", "translationDialog"]

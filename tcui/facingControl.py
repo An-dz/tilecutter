@@ -93,7 +93,7 @@ class facingControl(wx.StaticBox):
             if self.facing_select_east.GetValue() == True or self.facing_select_north.GetValue() == True or self.facing_select_west.GetValue() == True:
                 self.facing_select_south.SetValue(1)
                 # Modify active image to only available option
-                self.app.activeproject.activeImage(direction = self.app.South)
+                self.app.activeproject.activeImage(direction = 0)
                 # Redraw active image
                 self.app.frame.display.update()
         elif self.app.activeproject.views() == 2:
@@ -105,7 +105,7 @@ class facingControl(wx.StaticBox):
             if self.facing_select_north.GetValue() == True or self.facing_select_west.GetValue() == True:
                 self.facing_select_east.SetValue(1)
                 # Modify active image to available option
-                self.app.activeproject.activeImage(direction = self.app.East)
+                self.app.activeproject.activeImage(direction = 1)
                 # Redraw active image
                 self.app.frame.display.update()
         else:

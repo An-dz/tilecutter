@@ -57,7 +57,7 @@ class imageControl(wx.StaticBox):
             # If currently have frontimage selected, switch to backimage
             if self.images_select_front.GetValue() == True:
                 # Update model
-                self.app.activeproject.activeImage(layer=self.app.Back)
+                self.app.activeproject.activeImage(layer = 0)
                 self.images_select_back.SetValue(1)
                 # As active layer changed, need to redraw display
                 self.app.frame.display.update()
