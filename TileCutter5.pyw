@@ -169,10 +169,6 @@ class MainWindow(wx.Frame):
         # Create Image display window and image path entry control, which adds itself to the sizer
         self.display = tcui.imageWindow(self.panel, app, self.s_panel_imagewindow_container, config.transparent)
 
-        # IMAGE/DAT OUTPUT PATHS
-        # Create the I/O path inputs, which are added to the bottom-left panel container
-        self.control_iopaths = tcui.twoFileControl(self.panel, app, self.s_panel_bottom)
-
         # Save, Dat, Image and Pak output paths
         self.s_panel_flex = wx.FlexGridSizer(0,3,0,0)
         self.control_savepath = tcui.FileControl(self.panel, app, self.s_panel_flex, app.activeproject.savefile,
@@ -192,7 +188,9 @@ class MainWindow(wx.Frame):
                                                 "Test FPicker title", "Test FPicker allowed",
                                                 "Browse...", "tt_browse_pak_file")
 
-        self.s_panel_bottom.Add(self.s_panel_flex, 0, wx.EXPAND, 0)
+        self.s_panel_flex.AddGrowableCol(1)
+
+        self.s_panel_bottom.Add(self.s_panel_flex, 1, wx.EXPAND, 0)
 
         # CUT/EXPORT BUTTONS
         # Cut button
@@ -243,7 +241,6 @@ class MainWindow(wx.Frame):
         self.control_facing.translate()
         self.control_dims.translate()
         self.control_offset.translate()
-        self.control_iopaths.translate()
         # Path entry controls
         self.control_savepath.translate()
         self.control_datpath.translate()
@@ -263,7 +260,6 @@ class MainWindow(wx.Frame):
         self.control_facing.update()
         self.control_dims.update()
         self.control_offset.update()
-        self.control_iopaths.update()
         self.control_savepath.update()
         self.control_datpath.update()
         self.control_pngpath.update()

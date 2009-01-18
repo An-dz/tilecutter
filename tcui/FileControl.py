@@ -49,7 +49,6 @@ class FileControl(tcui.fileTextBox):
         parent_sizer.Add(self.path_label, 0, wx.ALIGN_CENTER_VERTICAL, 2)
         parent_sizer.Add(self.path_box, 0, wx.EXPAND|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TE_READONLY, 2)
         parent_sizer.Add(self.path_filebrowse, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 1)
-        parent_sizer.AddGrowableCol(1)
         # Bind events
         self.path_box.Bind(wx.EVT_TEXT, self.OnTextChange, self.path_box)
         self.path_filebrowse.Bind(wx.EVT_BUTTON, self.OnBrowse, self.path_filebrowse)
