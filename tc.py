@@ -295,13 +295,6 @@ def export_writer(project):
     for a in output_text.readlines():
         debug(a.partition("\n")[0])
 
-    # Alternatively, a more "pretty" output could put the various images into an ordered grid
-
-    # Images can be written in any order, their position within the output image is recorded
-    # ready for .dat file writing - if tidy output is required for the images then that can
-    # be setup here
-    
-
 def export_cutter(bitmap, dims, offset, p):
     """Takes a bitmap and dimensions, and returns an array of masked bitmaps"""
     debug("e_c: export_cutter init")
