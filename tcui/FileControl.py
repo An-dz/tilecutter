@@ -68,7 +68,8 @@ class FileControl(tcui.fileTextBox):
     def update(self):
         """Set the values of the controls in this group to the values in the model"""
         # Setting these values should also cause text highlighting to occur
-        self.path_box.SetValue(self.linked())
+        self.path_box.ChangeValue(self.linked())
+        debug("update file control")
         self.highlight()
 
     def SetDependants(self, list):
@@ -78,6 +79,7 @@ class FileControl(tcui.fileTextBox):
 
     def highlight(self):
         """Highlight entry box text"""
+        debug("highlighting %s entry box" % self.label)
         if self.relative != None:
             debug("highlight with relative, %s | %s" % (self.linked(), self.relative()))
             self.highlightText(self.path_box, self.linked(), self.relative())
@@ -85,8 +87,8 @@ class FileControl(tcui.fileTextBox):
             debug("highlight without relative, %s" % self.linked())
             self.highlightText(self.path_box, self.linked())
         if self.dependants:
+            debug("highlighting dependants: %s" % (str(self.dependants)))
             for i in self.dependants:
-                debug("highlighting dependant...")
                 i.highlight()
 
 
@@ -94,8 +96,8 @@ class FileControl(tcui.fileTextBox):
         """Triggered when the text in the path box is changed"""
         if self.linked() != self.path_box.GetValue():
             self.linked(self.path_box.GetValue())
-##            debug("Text changed in PNG entry box, new text: " + str(self.app.activeproject.pngfile()))
-        self.highlight()
+            debug("Text changed in %s entry box, new text: %s" % (self.label, str(self.path_box.GetValue())))
+            self.highlight()
 
     def OnBrowse(self, e):
         """Triggered when the browse button is clicked"""
