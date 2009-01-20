@@ -7,6 +7,8 @@ import os, wx, imres, tcui, tc
 # Utility functions
 import translator
 gt = translator.Translator()
+_gt = gt.loop
+
 import config
 config = config.Config()
 
@@ -20,34 +22,30 @@ class imageWindow(wx.ScrolledWindow, tcui.fileTextBox):
     def __init__(self, parent, app, parent_sizer, bgcolor, id=wx.ID_ANY, size=wx.DefaultSize, extended=0):
         self.bgcolor = bgcolor
         self.app = app
+        self.panel = parent
         self.parent = parent
         wx.ScrolledWindow.__init__(self, parent, id, (0, 0), size=size, style=wx.SUNKEN_BORDER)
         # Make controls for the image path entry box
-        self.s_panel_imagewindow_path = wx.FlexGridSizer(0,6,0,0)
+        self.s_panel_flex = wx.FlexGridSizer(0,6,0,0)
             # Make controls
-        self.impath_entry_label = wx.StaticText(parent, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
-        self.impath_entry_box = wx.TextCtrl(parent, wx.ID_ANY, value="", style=wx.TE_RICH|wx.BORDER_SUNKEN)
-        self.impath_entry_box.SetFont(wx.Font(9, wx.MODERN, wx.NORMAL, wx.NORMAL))
-##        self.impath_entry_icon = wx.StaticBitmap(parent, wx.ID_ANY, imres.catalog["FileReload"].getBitmap())
-        self.impath_entry_icon = wx.StaticBitmap(parent, wx.ID_ANY, wx.ArtProvider.GetBitmap(wx.ART_TICK_MARK))
-        self.impath_entry_filebrowse = wx.Button(parent, wx.ID_ANY, "")
+        # tcproject image class does some additional checking on the path to source images
+        # which break this control
+        self.control_imagepath = tcui.FileControl(self.panel, app, self.s_panel_flex, app.activeproject.active.image.path,
+                                                  _gt("Source image location:"), _gt("tt_image_file_location"),
+                                                  _gt("Choose a location to save project..."), "TCP files (*.tcp)|*.tcp",
+                                                  _gt("Browse..."), _gt("tt_browse_input_file"), app.activeproject.savefile)
+
         self.impath_entry_reloadfile = wx.BitmapButton(parent, wx.ID_ANY, size=(25,-1), bitmap=imres.catalog["FileReload"].getBitmap())
         self.impath_entry_sameforall = wx.BitmapButton(parent, wx.ID_ANY, size=(25,-1), bitmap=imres.catalog["FileSameForAll"].getBitmap())
             # Add them to sizer...
-        self.s_panel_imagewindow_path.Add(self.impath_entry_label, 0, wx.ALIGN_CENTER_VERTICAL, 2)
-        self.s_panel_imagewindow_path.Add(self.impath_entry_box, 0, wx.EXPAND|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 2)
-        self.s_panel_imagewindow_path.Add(self.impath_entry_icon, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 4)
-        self.s_panel_imagewindow_path.Add(self.impath_entry_filebrowse, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 4)
-        self.s_panel_imagewindow_path.Add(self.impath_entry_reloadfile, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 1)
-        self.s_panel_imagewindow_path.Add(self.impath_entry_sameforall, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 1)
-        self.s_panel_imagewindow_path.AddGrowableCol(1)
+        self.s_panel_flex.Add(self.impath_entry_reloadfile, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 1)
+        self.s_panel_flex.Add(self.impath_entry_sameforall, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 1)
+        self.s_panel_flex.AddGrowableCol(1)
             # Bind them to events
-        self.impath_entry_box.Bind(wx.EVT_TEXT, self.OnTextChange, self.impath_entry_box)
-        self.impath_entry_filebrowse.Bind(wx.EVT_BUTTON, self.OnBrowseSource, self.impath_entry_filebrowse)
         self.impath_entry_reloadfile.Bind(wx.EVT_BUTTON, self.OnReloadImage, self.impath_entry_reloadfile)
         self.impath_entry_sameforall.Bind(wx.EVT_BUTTON, self.OnLoadImageForAll, self.impath_entry_sameforall)
             # Add element to its parent sizer
-        parent_sizer.Add(self.s_panel_imagewindow_path, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND, 0)
+        parent_sizer.Add(self.s_panel_flex, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND, 0)
 
         self.s_panel_imagewindow = wx.BoxSizer(wx.HORIZONTAL)           # Right side (bottom part for the image window
         self.s_panel_imagewindow.Add(self, 1, wx.EXPAND, 4)
@@ -88,19 +86,17 @@ class imageWindow(wx.ScrolledWindow, tcui.fileTextBox):
 
     def translate(self):
         """Update the text of all controls to reflect a new translation"""
-        self.impath_entry_label.SetLabel(gt("Source image location:"))
-        self.impath_entry_box.SetToolTipString(gt("ttinputpath"))
-        self.impath_entry_filebrowse.SetLabel(gt("Browse..."))
-        self.impath_entry_filebrowse.SetToolTipString(gt("ttbrowseinputfile"))
-        self.impath_entry_reloadfile.SetToolTipString(gt("ttreloadinputfile"))
-        self.impath_entry_sameforall.SetToolTipString(gt("ttsamefileforall"))
+        self.control_imagepath.translate()
+        self.impath_entry_reloadfile.SetToolTipString(gt("tt_reload_input_file"))
+        self.impath_entry_sameforall.SetToolTipString(gt("tt_same_file_for_all"))
 
     # Update refreshes both textbox (if it's changed) and the device context
     def update(self):
         """Set the values of the controls in this group to the values in the model"""
+        self.control_imagepath.update()
         # Setting these values should also cause text highlighting to occur
-        if self.impath_entry_box.GetValue() != self.app.activeproject.activeImage().path() and self.impath_entry_box.GetValue() != self.app.activeproject.activeImage().lastpath():
-            self.impath_entry_box.SetValue(self.app.activeproject.activeImage().path())
+##        if self.impath_entry_box.GetValue() != self.app.activeproject.activeImage().path() and self.impath_entry_box.GetValue() != self.app.activeproject.activeImage().lastpath():
+##            self.impath_entry_box.SetValue(self.app.activeproject.activeImage().path())
         # And then redraw the active image in the window, with mask etc.
         bitmap = self.app.activeproject.activeImage().bitmap()
 
@@ -241,7 +237,9 @@ class imageWindow(wx.ScrolledWindow, tcui.fileTextBox):
         self.impath_entry_box.SetValue(value)
     def OnReloadImage(self,e):
         """When reload image button clicked"""
+        debug("Reload active image...")
         self.app.activeproject.activeImage().reloadImage()
         self.update()
     def OnLoadImageForAll(self,e):
         """When "load same image for all" button is clicked"""
+        debug("Load active image for all images")
