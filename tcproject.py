@@ -11,6 +11,15 @@ debug = logger.Log()
 import config
 config = config.Config()
 
+# Image should store:
+# Last path entered
+# Path of current image
+# Image itself (cached)
+# As user enters a path in the box, it updates the active image, only when the path points to a valid
+# file should the current image path be set, and the image loaded from file into the cache
+# File validity is measured relative to the current project save location
+
+
 
 class ProjectImage(object):
     """An individual image object, consisting of a cached image, path to that image and offset dimensions"""

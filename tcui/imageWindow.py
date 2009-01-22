@@ -15,7 +15,7 @@ config = config.Config()
 import logger
 debug = logger.Log()
 
-class imageWindow(wx.ScrolledWindow, tcui.fileTextBox):
+class imageWindow(wx.ScrolledWindow):
     """Window onto which bitmaps may be drawn, background colour is set by bgcolor
     Also contains the image path entry box and associated controls"""
     bmp = []
@@ -32,7 +32,7 @@ class imageWindow(wx.ScrolledWindow, tcui.fileTextBox):
         # which break this control
         self.control_imagepath = tcui.FileControl(self.panel, app, self.s_panel_flex, app.activeproject.active.image.path,
                                                   _gt("Source image location:"), _gt("tt_image_file_location"),
-                                                  _gt("Choose a location to save project..."), "TCP files (*.tcp)|*.tcp",
+                                                  _gt("Choose a location to save project..."), "PNG files (*.png)|*.png",
                                                   _gt("Browse..."), _gt("tt_browse_input_file"), app.activeproject.savefile)
 
         self.impath_entry_reloadfile = wx.BitmapButton(parent, wx.ID_ANY, size=(25,-1), bitmap=imres.catalog["FileReload"].getBitmap())
@@ -94,9 +94,6 @@ class imageWindow(wx.ScrolledWindow, tcui.fileTextBox):
     def update(self):
         """Set the values of the controls in this group to the values in the model"""
         self.control_imagepath.update()
-        # Setting these values should also cause text highlighting to occur
-##        if self.impath_entry_box.GetValue() != self.app.activeproject.activeImage().path() and self.impath_entry_box.GetValue() != self.app.activeproject.activeImage().lastpath():
-##            self.impath_entry_box.SetValue(self.app.activeproject.activeImage().path())
         # And then redraw the active image in the window, with mask etc.
         bitmap = self.app.activeproject.activeImage().bitmap()
 
@@ -206,8 +203,20 @@ class imageWindow(wx.ScrolledWindow, tcui.fileTextBox):
             yy = screen_height - yy
         return (xx,yy)
 
+    def OnReloadImage(self,e):
+        """When reload image button clicked"""
+        debug("Reload active image...")
+        self.app.activeproject.activeImage().reloadImage()
+        self.update()
+    def OnLoadImageForAll(self,e):
+        """When "load same image for all" button is clicked"""
+        debug("Load active image for all images")
+
+
+    # These methods are obsolete now...
+
     # Image path entry events and methods
-    def OnTextChange(self,e):
+    def OnTextChange(self,e):                               # Obsolete!
         """When text changes in the entry box"""
         # If text has actually changed (i.e. it's different to that set in the image's info)
         if self.impath_entry_box.GetValue() != self.app.activeproject.activeImage().path() and self.impath_entry_box.GetValue() != self.app.activeproject.activeImage().lastpath():
@@ -235,11 +244,3 @@ class imageWindow(wx.ScrolledWindow, tcui.fileTextBox):
         value = self.filePickerDialog(self.app.activeproject.activeImage().path(), "", gt("Choose a source image for this view:"),
                                       "PNG files (*.png)|*.png", wx.FD_OPEN|wx.FD_FILE_MUST_EXIST)
         self.impath_entry_box.SetValue(value)
-    def OnReloadImage(self,e):
-        """When reload image button clicked"""
-        debug("Reload active image...")
-        self.app.activeproject.activeImage().reloadImage()
-        self.update()
-    def OnLoadImageForAll(self,e):
-        """When "load same image for all" button is clicked"""
-        debug("Load active image for all images")

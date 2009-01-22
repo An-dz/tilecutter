@@ -90,6 +90,12 @@ class Makeobj:
     """Interface class to Makeobj"""
     def __init__(self):
         """"""
+        # Creates a makeobj run object
+        # Path to makeobj configurable, defaults to program's working directory
+        # Paths to input/output files need to be relative to makeobj's location
+        # Methods
+        # pak - takes arguments paksize, path to pak file, path to dat file
+        # First time run normally, all subsequent times use quiet to suppress copyright info
 
 class Paths(object):
     """Advanced path manipulation functions"""
