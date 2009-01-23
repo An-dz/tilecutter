@@ -15,18 +15,19 @@ class offsetControl(wx.StaticBox):
     """Box containing offset controls"""
     def __init__(self, parent, app, parent_sizer):
         self.app = app
-        wx.StaticBox.__init__(self, parent, wx.ID_ANY, gt("Offset/Mask"))
-            # Setup sizers
-        self.s_offset = wx.StaticBoxSizer(self, wx.VERTICAL)
+        # Setup sizers
+        self.sizer = wx.BoxSizer(wx.VERTICAL)
         self.s_offset_flex = wx.FlexGridSizer(0,4,0,0)
-            # Add items
+        # Header text
+        self.label = wx.StaticText(parent, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
+        # Add items
         self.offset_button_up = wx.BitmapButton(parent, wx.ID_ANY, imres.catalog["MoveUpDouble"].getBitmap(), (-1,-1), (18,18))
         self.offset_button_left = wx.BitmapButton(parent, wx.ID_ANY, imres.catalog["MoveLeftDouble"].getBitmap(), (-1,-1), (18,18))
         self.offset_button_reset = wx.BitmapButton(parent, wx.ID_ANY, imres.catalog["MoveCenter"].getBitmap(), (-1,-1), (18,18))
         self.offset_button_right = wx.BitmapButton(parent, wx.ID_ANY, imres.catalog["MoveRightDouble"].getBitmap(), (-1,-1), (18,18))
         self.offset_button_down = wx.BitmapButton(parent, wx.ID_ANY, imres.catalog["MoveDownDouble"].getBitmap(), (-1,-1), (18,18))
         self.offset_selector = wx.CheckBox(parent, wx.ID_ANY, "", (-1,-1), (-1,-1))
-            # Add to sizers
+        # Add to sizers
         self.s_offset_flex.Add(wx.Size(1,1))
         self.s_offset_flex.Add(self.offset_button_up, 0, wx.LEFT, 0)
         self.s_offset_flex.Add(wx.Size(1,1))
@@ -38,10 +39,13 @@ class offsetControl(wx.StaticBox):
         self.s_offset_flex.Add(wx.Size(1,1))
         self.s_offset_flex.Add(self.offset_button_down, 0, wx.LEFT, 0)
         self.s_offset_flex.Add(wx.Size(1,1))
-        self.s_offset.Add(self.s_offset_flex, 1, wx.ALIGN_CENTER_HORIZONTAL, 0)
-            # Add element to its parent sizer
-        parent_sizer.Add(self.s_offset, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND|wx.LEFT|wx.RIGHT, 3)
-            # Bind functions
+        # Add to default sizer with header and line
+        self.sizer.Add(self.label, 0, wx.LEFT|wx.BOTTOM, 2)
+        self.sizer.Add(wx.StaticLine(parent, wx.ID_ANY, (-1,-1),(-1,-1), wx.LI_HORIZONTAL), 0, wx.EXPAND, 0)
+        self.sizer.Add(self.s_offset_flex, 1, wx.ALIGN_CENTER_HORIZONTAL, 0)
+        # Add element to its parent sizer
+        parent_sizer.Add(self.sizer, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND|wx.LEFT|wx.RIGHT, 3)
+        # Bind functions
         self.offset_button_up.Bind(wx.EVT_BUTTON, self.OnUp, self.offset_button_up)
         self.offset_button_left.Bind(wx.EVT_BUTTON, self.OnLeft, self.offset_button_left)
         self.offset_button_reset.Bind(wx.EVT_BUTTON, self.OnCenter, self.offset_button_reset)
@@ -51,6 +55,7 @@ class offsetControl(wx.StaticBox):
 
     def translate(self):
         """Update the text of all controls to reflect a new translation"""
+        self.label.SetLabel(gt("Offset/Mask"))
         self.offset_button_up.SetToolTipString(gt("tt_offset_button_up"))
         self.offset_button_left.SetToolTipString(gt("tt_offset_button_left"))
         self.offset_button_reset.SetToolTipString(gt("offset_button_reset"))

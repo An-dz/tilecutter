@@ -12,16 +12,17 @@ config = config.Config()
 import logger
 debug = logger.Log()
 
-class dimsControl(wx.StaticBox):
+class dimsControl(object):
     """Box containing dimensions controls"""
     def __init__(self, parent, app, parent_sizer):
         self.app = app
-        wx.StaticBox.__init__(self, parent, wx.ID_ANY, gt("Dimensions"))
-            # Setup sizers
-        self.s_dims = wx.StaticBoxSizer(self, wx.VERTICAL)
+        # Setup sizers
+        self.sizer = wx.BoxSizer(wx.VERTICAL)
         self.s_dims_flex = wx.FlexGridSizer(0,2,1,0)
         self.s_dims_flex.AddGrowableCol(1)
-            # Add items
+        # Header text
+        self.label = wx.StaticText(parent, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
+        # Add items
         self.dims_p_label = wx.StaticText(parent, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
         self.dims_p_select = wx.ComboBox(parent, wx.ID_ANY, "", (-1, -1), (54, -1), "", wx.CB_READONLY)
         self.dims_z_label = wx.StaticText(parent, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
@@ -30,7 +31,7 @@ class dimsControl(wx.StaticBox):
         self.dims_x_select = wx.ComboBox(parent, wx.ID_ANY, "", (-1, -1), (54, -1), "", wx.CB_READONLY)
         self.dims_y_label = wx.StaticText(parent, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
         self.dims_y_select = wx.ComboBox(parent, wx.ID_ANY, "", (-1, -1), (54, -1), "", wx.CB_READONLY)
-            # Add to sizers
+        # Add to sizers
         self.s_dims_flex.Add(self.dims_p_label, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.RIGHT, 3)
         self.s_dims_flex.Add(self.dims_x_label, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.LEFT, 3)
         self.s_dims_flex.Add(self.dims_p_select, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.RIGHT|wx.BOTTOM, 3)
@@ -39,10 +40,13 @@ class dimsControl(wx.StaticBox):
         self.s_dims_flex.Add(self.dims_y_label, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.LEFT, 3)
         self.s_dims_flex.Add(self.dims_z_select, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.RIGHT, 3)
         self.s_dims_flex.Add(self.dims_y_select, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.LEFT, 3)
-        self.s_dims.Add(self.s_dims_flex, 1, wx.ALIGN_CENTER_HORIZONTAL|wx.BOTTOM, 2)
-            # Add element to its parent sizer
-        parent_sizer.Add(self.s_dims, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND|wx.LEFT|wx.RIGHT, 3)
-            # Bind functions
+        # Add to default sizer with header and line
+        self.sizer.Add(self.label, 0, wx.LEFT|wx.BOTTOM, 2)
+        self.sizer.Add(wx.StaticLine(parent, wx.ID_ANY, (-1,-1),(-1,-1), wx.LI_HORIZONTAL), 0, wx.EXPAND, 0)
+        self.sizer.Add(self.s_dims_flex, 1, wx.ALIGN_CENTER_HORIZONTAL|wx.BOTTOM, 2)
+        # Add element to its parent sizer
+        parent_sizer.Add(self.sizer, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND|wx.LEFT|wx.RIGHT, 3)
+        # Bind functions
         self.dims_p_select.Bind(wx.EVT_COMBOBOX, self.OnPaksizeSelect, self.dims_p_select)
         self.dims_z_select.Bind(wx.EVT_COMBOBOX, self.OnZdimsSelect, self.dims_z_select)
         self.dims_x_select.Bind(wx.EVT_COMBOBOX, self.OnXdimsSelect, self.dims_x_select)
@@ -50,6 +54,7 @@ class dimsControl(wx.StaticBox):
 
     def translate(self):
         """Update the text of all controls to reflect a new translation"""
+        self.label.SetLabel(gt("Dimensions:"))
         self.dims_p_label.SetLabel(gt("Paksize"))
         self.dims_p_select.SetToolTipString(gt("tt_dims_paksize_select"))
         self.dims_z_label.SetLabel(gt("Z dimension"))

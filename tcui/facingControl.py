@@ -13,18 +13,20 @@ config = config.Config()
 import logger
 debug = logger.Log()
 
-class facingControl(wx.StaticBox):
+class facingControl(object):
     """Box containing direction facing controls"""
     def __init__(self, parent, app, parent_sizer):
         self.app = app
-        wx.StaticBox.__init__(self, parent, wx.ID_ANY, gt("Direction Facing"))
-            # Setup sizers
-        self.s_facing = wx.StaticBoxSizer(self, wx.HORIZONTAL)
+        # Setup sizers
+        self.sizer = wx.BoxSizer(wx.VERTICAL)
+        self.s_facing = wx.BoxSizer(wx.HORIZONTAL)
         self.s_facing_flex = wx.FlexGridSizer(0,2,1,0)
         self.s_facing_flex.AddGrowableCol(1)
         self.s_facing_right = wx.BoxSizer(wx.VERTICAL)
         self.s_facing_1 = wx.BoxSizer(wx.HORIZONTAL)
-            # Add items
+        # Header text
+        self.label = wx.StaticText(parent, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
+        # Add items
         self.facing_select_south_im = wx.StaticBitmap(parent, wx.ID_ANY, imres.catalog["ImageSouth"].getBitmap())
         self.facing_select_south = wx.RadioButton(parent, wx.ID_ANY, "", (-1,-1), (-1,-1), wx.RB_GROUP)
         self.facing_select_east_im = wx.StaticBitmap(parent, wx.ID_ANY, imres.catalog["ImageEast"].getBitmap())
@@ -35,7 +37,7 @@ class facingControl(wx.StaticBox):
         self.facing_select_west = wx.RadioButton(parent, wx.ID_ANY, "", (-1,-1), (-1,-1))
         self.facing_enable_label = wx.StaticText(parent, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
         self.facing_enable_select = wx.ComboBox(parent, wx.ID_ANY, "", (-1, -1), (54, -1), "", wx.CB_READONLY|wx.ALIGN_CENTER_VERTICAL)
-            # Add to sizers
+        # Add to sizers
         self.s_facing_flex.Add(self.facing_select_south_im, 0, wx.ALIGN_LEFT|wx.RIGHT|wx.LEFT, 2)
         self.s_facing_flex.Add(self.facing_select_south, 0, wx.ALIGN_LEFT|wx.RIGHT, 0)
         self.s_facing_flex.Add(self.facing_select_east_im, 0, wx.ALIGN_LEFT|wx.RIGHT|wx.LEFT, 2)
@@ -50,18 +52,23 @@ class facingControl(wx.StaticBox):
         self.s_facing_1.Add(self.s_facing_flex, 0, wx.RIGHT, 0)
         self.s_facing_1.Add(self.s_facing_right, 1, wx.ALIGN_CENTER_HORIZONTAL, 0)
         self.s_facing.Add(self.s_facing_1, 1, wx.RIGHT|wx.TOP|wx.BOTTOM, 2)
-            # Bind events
+        # Add to default sizer with header and line
+        self.sizer.Add(self.label, 0, wx.LEFT|wx.BOTTOM, 2)
+        self.sizer.Add(wx.StaticLine(parent, wx.ID_ANY, (-1,-1),(-1,-1), wx.LI_HORIZONTAL), 0, wx.EXPAND, 0)
+        self.sizer.Add(self.s_facing, 1, wx.RIGHT|wx.TOP|wx.BOTTOM, 2)
+        # Bind events
         self.facing_enable_select.Bind(wx.EVT_COMBOBOX, self.OnToggle, self.facing_enable_select)
         self.facing_select_south.Bind(wx.EVT_RADIOBUTTON, self.OnSouth, self.facing_select_south)
         self.facing_select_east.Bind(wx.EVT_RADIOBUTTON, self.OnEast, self.facing_select_east)
         self.facing_select_north.Bind(wx.EVT_RADIOBUTTON, self.OnNorth, self.facing_select_north)
         self.facing_select_west.Bind(wx.EVT_RADIOBUTTON, self.OnWest, self.facing_select_west)
 
-            # Add element to its parent sizer
-        parent_sizer.Add(self.s_facing, 0, wx.EXPAND|wx.LEFT|wx.RIGHT, 3)
+        # Add element to its parent sizer
+        parent_sizer.Add(self.sizer, 0, wx.EXPAND|wx.LEFT|wx.RIGHT, 3)
 
     def translate(self):
         """Update the text of all controls to reflect a new translation"""
+        self.label.SetLabel(gt("Direction Facing:"))
         self.facing_select_south.SetLabel(gt("South"))
         self.facing_select_south.SetToolTipString(gt("tt_facing_select_south"))
         self.facing_select_east.SetLabel(gt("East"))
