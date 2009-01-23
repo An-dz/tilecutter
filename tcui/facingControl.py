@@ -20,7 +20,7 @@ class facingControl(wx.StaticBox):
         wx.StaticBox.__init__(self, parent, wx.ID_ANY, gt("Direction Facing"))
             # Setup sizers
         self.s_facing = wx.StaticBoxSizer(self, wx.HORIZONTAL)
-        self.s_facing_flex = wx.FlexGridSizer(0,2,0,0)
+        self.s_facing_flex = wx.FlexGridSizer(0,2,1,0)
         self.s_facing_flex.AddGrowableCol(1)
         self.s_facing_right = wx.BoxSizer(wx.VERTICAL)
         self.s_facing_1 = wx.BoxSizer(wx.HORIZONTAL)
@@ -49,7 +49,7 @@ class facingControl(wx.StaticBox):
         self.s_facing_right.Add(self.facing_enable_select, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.RIGHT, 0)
         self.s_facing_1.Add(self.s_facing_flex, 0, wx.RIGHT, 0)
         self.s_facing_1.Add(self.s_facing_right, 1, wx.ALIGN_CENTER_HORIZONTAL, 0)
-        self.s_facing.Add(self.s_facing_1, 1, wx.RIGHT, 0)
+        self.s_facing.Add(self.s_facing_1, 1, wx.RIGHT|wx.TOP|wx.BOTTOM, 2)
             # Bind events
         self.facing_enable_select.Bind(wx.EVT_COMBOBOX, self.OnToggle, self.facing_enable_select)
         self.facing_select_south.Bind(wx.EVT_RADIOBUTTON, self.OnSouth, self.facing_select_south)

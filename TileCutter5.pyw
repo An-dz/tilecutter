@@ -174,7 +174,7 @@ class MainWindow(wx.Frame):
         self.display = tcui.imageWindow(self.panel, app, self.s_panel_imagewindow_container, config.transparent)
 
         # Save, Dat, Image and Pak output paths
-        self.s_panel_flex = wx.FlexGridSizer(0,4,3,4)
+        self.s_panel_flex = wx.FlexGridSizer(0,4,3,0)
         self.control_savepath = tcui.FileControl(self.panel, app, self.s_panel_flex, app.activeproject.savefile,
                                                  _gt("Project Save Location"), _gt("tt_save_file_location"),
                                                  _gt("Choose a location to save project..."), "TCP files (*.tcp)|*.tcp",
@@ -235,7 +235,9 @@ class MainWindow(wx.Frame):
         # Top panel, left side controls and right side image window added
         self.s_panel_top.Add(self.s_panel_controls,0,wx.EXPAND|wx.RIGHT, 1)
         self.s_panel_top.Add(self.s_panel_imagewindow_container,1,wx.EXPAND, 0)
-        # Add bottom and top parts to overall panel 
+        # Line under menu bar
+        self.s_panel.Add(wx.StaticLine(self.panel, wx.ID_ANY, (-1,-1),(-1,-1), wx.LI_HORIZONTAL), 0, wx.EXPAND, 0)
+        # Add bottom and top parts to overall panel
         self.s_panel.Add(self.s_panel_top,1,wx.EXPAND|wx.BOTTOM, 4)
         self.s_panel.Add(self.s_panel_bottom,0,wx.EXPAND|wx.BOTTOM, 2)
 

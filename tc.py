@@ -94,7 +94,8 @@ class Makeobj:
         # Path to makeobj configurable, defaults to program's working directory
         # Paths to input/output files need to be relative to makeobj's location
         # Methods
-        # pak - takes arguments paksize, path to pak file, path to dat file
+        #   pak - takes arguments paksize, path to pak file, path to dat file
+        #   Other functions of makeobj are likely not work implementing
         # First time run normally, all subsequent times use quiet to suppress copyright info
 
 class Paths(object):

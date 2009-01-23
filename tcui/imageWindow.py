@@ -37,18 +37,18 @@ class imageWindow(wx.ScrolledWindow):
 
         self.impath_entry_reloadfile = wx.BitmapButton(parent, wx.ID_ANY, size=(25,-1), bitmap=imres.catalog["FileReload"].getBitmap())
         self.impath_entry_sameforall = wx.BitmapButton(parent, wx.ID_ANY, size=(25,-1), bitmap=imres.catalog["FileSameForAll"].getBitmap())
-            # Add them to sizer...
-        self.s_panel_flex.Add(self.impath_entry_reloadfile, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 1)
-        self.s_panel_flex.Add(self.impath_entry_sameforall, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 1)
+        # Add them to sizer...
+        self.s_panel_flex.Add(self.impath_entry_reloadfile, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 3)
+        self.s_panel_flex.Add(self.impath_entry_sameforall, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 3)
         self.s_panel_flex.AddGrowableCol(1)
-            # Bind them to events
+        # Bind them to events
         self.impath_entry_reloadfile.Bind(wx.EVT_BUTTON, self.OnReloadImage, self.impath_entry_reloadfile)
         self.impath_entry_sameforall.Bind(wx.EVT_BUTTON, self.OnLoadImageForAll, self.impath_entry_sameforall)
-            # Add element to its parent sizer
-        parent_sizer.Add(self.s_panel_flex, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND, 0)
+        # Add element to its parent sizer
+        parent_sizer.Add(self.s_panel_flex, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND|wx.ALL, 4)
 
         self.s_panel_imagewindow = wx.BoxSizer(wx.HORIZONTAL)           # Right side (bottom part for the image window
-        self.s_panel_imagewindow.Add(self, 1, wx.EXPAND, 4)
+        self.s_panel_imagewindow.Add(self, 1, wx.EXPAND|wx.TOP|wx.BOTTOM, 0)
 
         parent_sizer.Add(self.s_panel_imagewindow,1,wx.EXPAND, 0)
 

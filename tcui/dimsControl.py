@@ -19,7 +19,7 @@ class dimsControl(wx.StaticBox):
         wx.StaticBox.__init__(self, parent, wx.ID_ANY, gt("Dimensions"))
             # Setup sizers
         self.s_dims = wx.StaticBoxSizer(self, wx.VERTICAL)
-        self.s_dims_flex = wx.FlexGridSizer(0,2,0,0)
+        self.s_dims_flex = wx.FlexGridSizer(0,2,1,0)
         self.s_dims_flex.AddGrowableCol(1)
             # Add items
         self.dims_p_label = wx.StaticText(parent, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
@@ -39,7 +39,7 @@ class dimsControl(wx.StaticBox):
         self.s_dims_flex.Add(self.dims_y_label, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.LEFT, 3)
         self.s_dims_flex.Add(self.dims_z_select, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.RIGHT, 3)
         self.s_dims_flex.Add(self.dims_y_select, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.LEFT, 3)
-        self.s_dims.Add(self.s_dims_flex, 1, wx.ALIGN_CENTER_HORIZONTAL, 0)
+        self.s_dims.Add(self.s_dims_flex, 1, wx.ALIGN_CENTER_HORIZONTAL|wx.BOTTOM, 2)
             # Add element to its parent sizer
         parent_sizer.Add(self.s_dims, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND|wx.LEFT|wx.RIGHT, 3)
             # Bind functions
