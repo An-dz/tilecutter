@@ -3,7 +3,7 @@
 from distutils.core import setup
 import sys, os, os.path
 
-version = "0.5.1"
+version = "0.5.2"
 
 ### this manifest enables the standard Windows XP-looking theme
 ##manifest = """
@@ -56,10 +56,7 @@ options = {
     'author_email':     'tb@entropy.me.uk',
     'url':              'http://entropy.me.uk/tilecutter',
     "zipfile":          "python\\library.zip",
-##  "packages":         ["tcui",],
-##  "scripts":          ["TileCutter5.pyw",],
-##  "package_data":     {},
-    "data_files":       ["../dist/msvcp71.dll", "tc.config", "test.png"] + walk_dir("languages")
+    "data_files":       ["licence.txt", "tc.config", "test.png"] + walk_dir("languages")
 }
 
 # windows specific
@@ -67,28 +64,28 @@ if len(sys.argv) >= 2 and sys.argv[1] == "py2exe":
     try:
         import py2exe
     except ImportError:
-        print 'Could not import py2exe.   Windows exe could not be built.'
+        print "Could not import py2exe. Aborting windows exe output"
         sys.exit(0)
     # windows-specific options
-    options['windows'] = [
+    options["windows"] = [
         {
-        'script':'TileCutter5.pyw',
-        'windows':'TileCutter5.pyw',
-        'icon_resources': [
-            ( 1, 'tilecutter.ico' ),
-        ],
-##            'other_resources': [
-##                ( 24, 1, manifest ),
-##            ],
+        "script":"TileCutter5.pyw",
+        "windows":"TileCutter5.pyw",
+        "icon_resources": [(1, "TileCutter icon/tilecutter.ico"),(2, "TileCutter icon/tilecutter_document.ico")],
         },
     ]
+    options["data_files"] += ["../dist/msvcp71.dll", ]
     options["options"] = {
         # Bundling of .dlls into the zip results in massively bigger package?!
         # Option 1 creates corrupt zip, option 2 adds dlls and makes them uncompressible
-        "py2exe": {"dist_dir": "../dist/win_dist_%s" % version, "bundle_files": 3,},
+        "py2exe": {"dist_dir": "../dist/win_dist_%s" % version,
+                   "bundle_files": 3,
+                   "excludes": ["difflib", "doctest", "optparse", "calendar", "pdb", "inspect"]
+                   },
     }
 
-print str(options)
+
+
 # mac specific
 ##if len(sys.argv) >= 2 and sys.argv[1] == 'py2app':
 ##    try:
