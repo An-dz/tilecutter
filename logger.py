@@ -33,8 +33,11 @@ class Log(object):
         self.out(s)
     def out(self, s):
         """Write a string to file, stripping newlines and reformatting"""
-        outline = dt.now().replace(microsecond=0).isoformat(" ") + " |    " + s + "\n"
-        Log.file.write(outline)
+        s = s.replace("\r", "")
+        splits = s.split("\n")
+        for k in splits:
+            outline = dt.now().replace(microsecond=0).isoformat(" ") + " |    " + k + "\n"
+            Log.file.write(outline)
         Log.file.flush()
     def write(self, s):
         """Write a string to file, preserving newlines fed in"""

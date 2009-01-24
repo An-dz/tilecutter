@@ -4,7 +4,7 @@
 #
 
 import wx
-import sys, os
+import sys, os, string
 import pickle, copy, math, StringIO
 
 import logger
@@ -86,10 +86,13 @@ def tile_to_screen(pos, dims, off, p, screen_height=None):
         yy = screen_height - yy
     return (xx,yy)
 
+import subprocess
+
 class Makeobj:
     """Interface class to Makeobj"""
-    def __init__(self):
-        """"""
+    def __init__(self, path_to_makeobj):
+        """Takes absolute path to makeobj and returns a makeobj control object"""
+        self.path_to_makeobj = path_to_makeobj
         # Creates a makeobj run object
         # Path to makeobj configurable, defaults to program's working directory
         # Paths to input/output files need to be relative to makeobj's location
@@ -97,6 +100,20 @@ class Makeobj:
         #   pak - takes arguments paksize, path to pak file, path to dat file
         #   Other functions of makeobj are likely not work implementing
         # First time run normally, all subsequent times use quiet to suppress copyright info
+    def pak(self, paksize, path_to_pak, path_to_dat):
+        """Calls makeobj with appropriate arguments for generating a pakfile"""
+        # path_to_makeobj pak[paksize] path_to_pak path_to_dat
+        # makeobj.exe pak64 ./blah.pak ./meh.dat
+        # Paths to pak and dat are absolute paths (or relative to makeobj)
+        args = "\"%s\" pak%s \"%s\" \"%s\"" % (self.path_to_makeobj, paksize, path_to_pak, path_to_dat)
+        debug("Activating Makeobj with arguments: %s" % args)
+        process = subprocess.Popen(args, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+        process.wait()
+        output = process.communicate()
+        if output[0] != "":
+            debug(output[0])
+        if output[1] != "":
+            debug(output[1])
 
 class Paths(object):
     """Advanced path manipulation functions"""
@@ -130,7 +147,11 @@ class Paths(object):
         if os.path.isfile(p1) or os.path.splitext(p1)[1] != "" and not os.path.isdir(p1):
             # Split off end section
             p1 = os.path.split(p1)[0]
-        return os.path.join(p1, p2)
+        p3 = os.path.join(p1, p2)
+        if os.path.isfile(p3) or os.path.splitext(p3)[1] != "" and not os.path.isdir(p3):
+            return p3
+        else:
+            return os.path.join(p3, "")
 
     def joinPaths(self, p1, p2):
         """Join p2 to p1, accounting for end cases (is directory, is file etc.)"""
@@ -173,6 +194,10 @@ class Paths(object):
         """Compare two absolute paths, returning either a relative path from p1 to p2, or p1 if no relative path exists"""
         return self.compare_paths(p1, p2)
 
+    def win_to_unix(self, path):
+        """Convert windows style path blah\meh to unix style blah/meh"""
+        trans = string.maketrans("\\", "/")
+        return path.translate(trans)
     
 def export_writer(project):
     """Write a project's dat and png files"""
@@ -181,6 +206,7 @@ def export_writer(project):
     paths = Paths()
     dat_path = paths.join_paths(project.savefile(), project.datfile())
     png_path = paths.join_paths(project.savefile(), project.pngfile())
+    pak_path = paths.join_paths(project.savefile(), project.pakfile())
     debug("e_w: export_writer init")
     debug("e_w: Writing .png to file: %s" % png_path)
     if project.writedat == False:
@@ -287,7 +313,7 @@ def export_writer(project):
             imtext = "FrontImage"
         # imtext[direction][x][y][z][frame][season]=filename.xpos.ypos
         output_text.write("%s[%s][%s][%s][%s][%s][%s]=%s.%s.%s\n" % (
-            imtext, j["d"], j["x"], j["y"], j["z"], j["f"], j["s"], dat_to_png, k[2][0], k[2][1]))
+            imtext, j["d"], j["x"], j["y"], j["z"], j["f"], j["s"], paths.win_to_unix(dat_to_png), k[2][0], k[2][1]))
     s = output_text.getvalue()
 
     # Write out to files if required
@@ -297,6 +323,12 @@ def export_writer(project):
     f.close()
     # Image file
     output_bitmap.SaveFile(png_path, wx.BITMAP_TYPE_PNG)
+
+    # Output .pak file using makeobj if required
+    debug("e_w: Use makeobj to output pak file")
+    path_to_makeobj = paths.join_paths(os.getcwd(), config.path_to_makeobj)
+    makeobj = Makeobj(path_to_makeobj)
+    makeobj.pak(project.paksize(), paths.win_to_unix(pak_path), paths.win_to_unix(dat_path))
 
     output_text.seek(0)
     for a in output_text.readlines():
