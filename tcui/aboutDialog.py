@@ -2,6 +2,9 @@
 #
 # TileCutter, User Interface Module - aboutDialog
 #
+
+# Copyright © 2008-2009 Timothy Baldock. All Rights Reserved.
+
 import wx, imres
 
 # Utility functions
@@ -17,7 +20,7 @@ class aboutDialog(wx.Dialog):
         """Intialise the dialog"""
         self.app = app
         self.version_number = version_number
-        size = (300,300)
+        size = (330,400)
         wx.Dialog.__init__(self, parent, wx.ID_ANY, "", (-1,-1), size)
 
         # Overall panel sizer
@@ -30,18 +33,18 @@ class aboutDialog(wx.Dialog):
         self.subtitle_text = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_CENTER)
         self.SetFont(f)
         self.version_text = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_CENTER)
-        self.copyright_text = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_CENTER)
+        self.copyright_text = wx.StaticText(self, wx.ID_ANY, "\n\n\n\n", (-1, -1), (-1, -1), wx.ALIGN_CENTER)
 
         # Add close button at the bottom
         self.buttons = wx.BoxSizer(wx.HORIZONTAL)
         self.close_button = wx.Button(self, wx.ID_ANY, "", (-1,-1), (-1,-1), wx.ALIGN_RIGHT)
         self.buttons.Add(self.close_button, 0 ,wx.ALIGN_RIGHT, 0)
 
-        self.s_panel.Add(self.icon,1,wx.EXPAND|wx.ALIGN_CENTER_HORIZONTAL|wx.TOP|wx.BOTTOM, 10)
+        self.s_panel.Add(self.icon,0,wx.EXPAND|wx.ALIGN_CENTER_HORIZONTAL|wx.TOP|wx.BOTTOM, 15)
         self.s_panel.Add(self.title_text,0,wx.EXPAND|wx.ALIGN_CENTER_HORIZONTAL|wx.BOTTOM, 2)
         self.s_panel.Add(self.subtitle_text,0,wx.EXPAND|wx.ALIGN_CENTER_HORIZONTAL|wx.BOTTOM, 4)
         self.s_panel.Add(self.version_text,0,wx.EXPAND|wx.ALIGN_CENTER_HORIZONTAL|wx.BOTTOM, 4)
-        self.s_panel.Add(self.copyright_text,0,wx.EXPAND|wx.ALIGN_CENTER_HORIZONTAL|wx.BOTTOM, 10)
+        self.s_panel.Add(self.copyright_text,1,wx.EXPAND|wx.ALIGN_CENTER_HORIZONTAL|wx.BOTTOM, 10)
         # These bits are non-mac only
         self.s_panel.Add(wx.StaticLine(self, wx.ID_ANY, (-1,-1), (-1,1)),0,wx.EXPAND|wx.ALIGN_CENTER_HORIZONTAL, 0)
         self.s_panel.Add(self.buttons,0,wx.ALIGN_RIGHT|wx.ALL, 3)
@@ -63,7 +66,7 @@ class aboutDialog(wx.Dialog):
         self.title_text.SetLabel(gt("TileCutter"))
         self.subtitle_text.SetLabel(gt("Simutrans Building Editor"))
         self.version_text.SetLabel(gt("Version %s") % self.version_number)
-        self.copyright_text.SetLabel("Copyright © 2008 Timothy Baldock. All rights reserved.")
+        self.copyright_text.SetLabel("Copyright © 2008-2009 Timothy Baldock. All rights reserved.\n\n\nThis program makes use of the wxWidgets library, which is Copyright © 1992-2006 Julian Smart, Robert Roebling, Vadim Zeitlin and other members of the wxWidgets team\n\nPortions © 1996 Artificial Intelligence Applications Institute")
 
         self.Layout()
         self.Refresh()

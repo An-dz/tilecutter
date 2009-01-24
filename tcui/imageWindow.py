@@ -1,7 +1,10 @@
 # coding: UTF-8
 #
-# TileCutter, User Interface Module - imageWindow
+# TileCutter User Interface Module - imageWindow
 #
+
+# Copyright © 2008-2009 Timothy Baldock. All Rights Reserved.
+
 import os, wx, imres, tcui, tc
 
 # Utility functions

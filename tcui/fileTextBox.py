@@ -1,9 +1,12 @@
 # coding: UTF-8
 #
-# TileCutter, User Interface Module - fileTextBox
+# TileCutter User Interface Module - fileTextBox
 #
 # This class provides additional methods for filename input controls, including highlighting
 #
+
+# Copyright © 2008-2009 Timothy Baldock. All Rights Reserved.
+
 import wx, os
 
 # Utility functions

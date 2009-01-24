@@ -19,8 +19,6 @@ config = config.Config()
 # file should the current image path be set, and the image loaded from file into the cache
 # File validity is measured relative to the current project save location
 
-
-
 class ProjectImage(object):
     """An individual image object, consisting of a cached image, path to that image and offset dimensions"""
     def __init__(self, b):

@@ -3,6 +3,8 @@
 # Config Management Utility
 #
 
+# Copyright © 2008-2009 Timothy Baldock. All Rights Reserved.
+
 import simplejson as json
 
 # Better to use json module in python 2.6 here

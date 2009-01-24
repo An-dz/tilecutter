@@ -1,7 +1,10 @@
 # coding: UTF-8
-
+#
 # TileCutter translation string finder
 # Version 0.3 for TileCutter v.0.5
+#
+
+# Copyright © 2008-2009 Timothy Baldock. All Rights Reserved.
 
 import re, time, os, codecs
 import translator.w_newlines as w_newlines

@@ -1,9 +1,12 @@
 # coding: UTF-8
 #
-# TileCutter, User Interface Module - menuObject
+# TileCutter User Interface Module - menuObject
 #
+
+# Copyright © 2008-2009 Timothy Baldock. All Rights Reserved.
+
 # This module creates the program's menus
-#
+
 import wx, imres, tcui
 import os
 

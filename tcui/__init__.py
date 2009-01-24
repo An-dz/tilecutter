@@ -1,7 +1,9 @@
 # coding: UTF-8
 #
-# TileCutter, User Interface Library
+# TileCutter User Interface Library
 #
+
+# Copyright © 2008-2009 Timothy Baldock. All Rights Reserved.
 
 # Subclasses (depended upon by controls, must come first)
 from fileTextBox import fileTextBox

@@ -1,7 +1,10 @@
 # coding: UTF-8
 #
-# TileCutter, User Interface Module - FileControl
+# TileCutter User Interface Module - FileControl
 #
+
+# Copyright © 2008-2009 Timothy Baldock. All Rights Reserved.
+
 
 # FileControl is a combination of controls and methods:
 # Static Text (description)

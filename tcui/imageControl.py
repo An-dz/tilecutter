@@ -1,7 +1,10 @@
 # coding: UTF-8
 #
-# TileCutter, User Interface Module - imageControl
+# TileCutter User Interface Module - imageControl
 #
+
+# Copyright © 2008-2009 Timothy Baldock. All Rights Reserved.
+
 import wx, imres
 
 # Utility functions

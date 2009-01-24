@@ -1,7 +1,10 @@
 # coding: UTF-8
 #
-# TC Cutting Engine
+# TileCutter Cutting Engine
 #
+
+# Copyright © 2008-2009 Timothy Baldock. All Rights Reserved.
+
 
 import wx
 import sys, os, string
@@ -93,27 +96,21 @@ class Makeobj:
     def __init__(self, path_to_makeobj):
         """Takes absolute path to makeobj and returns a makeobj control object"""
         self.path_to_makeobj = path_to_makeobj
-        # Creates a makeobj run object
-        # Path to makeobj configurable, defaults to program's working directory
-        # Paths to input/output files need to be relative to makeobj's location
-        # Methods
-        #   pak - takes arguments paksize, path to pak file, path to dat file
-        #   Other functions of makeobj are likely not work implementing
-        # First time run normally, all subsequent times use quiet to suppress copyright info
     def pak(self, paksize, path_to_pak, path_to_dat):
         """Calls makeobj with appropriate arguments for generating a pakfile"""
         # path_to_makeobj pak[paksize] path_to_pak path_to_dat
-        # makeobj.exe pak64 ./blah.pak ./meh.dat
         # Paths to pak and dat are absolute paths (or relative to makeobj)
         args = "\"%s\" pak%s \"%s\" \"%s\"" % (self.path_to_makeobj, paksize, path_to_pak, path_to_dat)
         debug("Activating Makeobj with arguments: %s" % args)
         process = subprocess.Popen(args, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
         process.wait()
+        # Write out makeobj log information to main log
         output = process.communicate()
         if output[0] != "":
             debug(output[0])
         if output[1] != "":
             debug(output[1])
+        debug("Makeobj output complete")
 
 class Paths(object):
     """Advanced path manipulation functions"""
