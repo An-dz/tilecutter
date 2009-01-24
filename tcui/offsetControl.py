@@ -55,6 +55,10 @@ class offsetControl(wx.StaticBox):
         self.offset_button_reset.Bind(wx.EVT_BUTTON, self.OnCenter, self.offset_button_reset)
         self.offset_button_right.Bind(wx.EVT_BUTTON, self.OnRight, self.offset_button_right)
         self.offset_button_down.Bind(wx.EVT_BUTTON, self.OnDown, self.offset_button_down)
+        self.offset_button_up_left.Bind(wx.EVT_BUTTON, self.OnUpLeft, self.offset_button_up_left)
+        self.offset_button_up_right.Bind(wx.EVT_BUTTON, self.OnUpRight, self.offset_button_up_right)
+        self.offset_button_down_left.Bind(wx.EVT_BUTTON, self.OnDownLeft, self.offset_button_down_left)
+        self.offset_button_down_right.Bind(wx.EVT_BUTTON, self.OnDownRight, self.offset_button_down_right)
         self.offset_selector.Bind(wx.EVT_CHECKBOX, self.OnFine, self.offset_selector)
 
     def translate(self):
@@ -93,6 +97,42 @@ class offsetControl(wx.StaticBox):
             self.offset_button_down_left.SetBitmapLabel(imres.catalog["MoveDownAndLeftDouble"].getBitmap())
             self.offset_button_down_right.SetBitmapLabel(imres.catalog["MoveDownAndRightDouble"].getBitmap())
 
+    def OnUpLeft(self,e):
+        """Move mask up and left"""
+        if self.offset_selector.GetValue():
+            r = self.app.activeproject.offset(x=-2,y=1)
+        else:
+            r = self.app.activeproject.offset(x=-self.app.activeproject.paksize()/2,
+                                              y=self.app.activeproject.paksize()/4)
+        if r == 1:
+            self.app.frame.display.update()
+    def OnUpRight(self,e):
+        """Move mask up and right"""
+        if self.offset_selector.GetValue():
+            r = self.app.activeproject.offset(x=2,y=1)
+        else:
+            r = self.app.activeproject.offset(x=self.app.activeproject.paksize()/2,
+                                              y=self.app.activeproject.paksize()/4)
+        if r == 1:
+            self.app.frame.display.update()
+    def OnDownLeft(self,e):
+        """Move mask down and left"""
+        if self.offset_selector.GetValue():
+            r = self.app.activeproject.offset(x=-2,y=-1)
+        else:
+            r = self.app.activeproject.offset(x=-self.app.activeproject.paksize()/2,
+                                              y=-self.app.activeproject.paksize()/4)
+        if r == 1:
+            self.app.frame.display.update()
+    def OnDownRight(self,e):
+        """Move mask down and right"""
+        if self.offset_selector.GetValue():
+            r = self.app.activeproject.offset(x=2,y=-1)
+        else:
+            r = self.app.activeproject.offset(x=self.app.activeproject.paksize()/2,
+                                              y=-self.app.activeproject.paksize()/4)
+        if r == 1:
+            self.app.frame.display.update()
     def OnUp(self,e):
         """Move mask up"""
         if self.offset_selector.GetValue():
