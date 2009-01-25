@@ -426,7 +426,17 @@ class TCApp(wx.App):
         """Save project to its save location, returns True if success, False if failed"""
         debug("SaveToFile - Save project out to disk")
         # Finally update the frame to display changes
+        project.saved(True)
+        self.activepickle = self.PickleProject(app.activeproject)
+##        file = os.path.join(app.active_save_location, app.active_save_name)
+##        debug("Save path:%s" % file)
+##        output = open(file, "wb")
+##        app.activepickle = pickle_string
+##        output.write(pickle_string)
+##        output.close()
         self.frame.update()
+        debug("SaveToFile - Save project success")
+        return True
     def LoadFromFile(self, location):
         """Load a project based on a file location"""
         debug("LoadFromFile - Load project from file: %s" % location)
@@ -504,14 +514,6 @@ class TCApp(wx.App):
 
 
 
-##            file = os.path.join(app.active_save_location, app.active_save_name)
-##            debug("Save path:%s" % file)
-##            output = open(file, "wb")
-##            app.activepickle = pickle_string
-##            output.write(pickle_string)
-##            output.close()
-##            debug("Save project success")
-##            return True
 
 
     def PickleProject(self, project, picklemode = 0):
