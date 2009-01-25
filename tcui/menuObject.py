@@ -120,19 +120,19 @@ class menuObject:
     def OnNewProject(self,e):
         debug("Menu-File-> New Project")
         # Call app's NewProject method
-        self.app.NewProject()
+        self.app.OnNewProject()
     def OnOpenProject(self,e):
         debug("Menu-File-> Open Project")
         # Call app's OpenProject method
-        self.app.OpenProject()
+        self.app.OnLoadProject()
     def OnSaveProject(self,e):
         debug("Menu-File-> Save Project")
         # Call app's SaveProject method
-        self.app.SaveProject(self.app.activeproject)
+        self.app.OnSaveProject(self.app.activeproject)
     def OnSaveProjectAs(self,e):
         debug("Menu-File-> Save Project As...")
         # Call app's SaveProject method with saveas set to True
-        self.app.SaveProject(self.app.activeproject, True)
+        self.app.OnSaveAsProject(self.app.activeproject)
     def OnCutProject(self,e):
         debug("Menu-File-> Cut Project")
         self.app.ExportProject(self.app.activeproject, export=False)
