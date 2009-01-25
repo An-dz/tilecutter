@@ -336,7 +336,6 @@ class TCApp(wx.App):
         self.frame.Bind(wx.EVT_CLOSE, self.OnQuit)
         return True
 
-
     def ExportProject(self, project, export=False):
         """Trigger exporting of specified project"""
         # First trigger project to generate cut images
@@ -344,6 +343,75 @@ class TCApp(wx.App):
         # Then feed project into outputting routine
         # Will need a way to report back progress to a progress bar/indicator
         tc.export_writer(project)
+
+    def CheckIfSaved(self, project):
+        """Returns true if project is unchanged since last save"""
+    def CheckIfEverSaved(self, project):
+        """Returns true if project has ever been saved (i.e. has a save location)"""
+    def PromptToSave(self, project):
+        """Prompts user to save file, return wx.ID_YES, wx.ID_NO or wx.ID_CANCEL"""
+    def SaveAsDialog(self, project):
+        """Prompts user to select a location to save project to, returns True if location picked,
+        False if cancelled. Sets project's save location to result file"""
+    def LoadDialog(self):
+        """Prompts user to select a location to load a project file from, returns filename or wx.ID_CANCEL"""
+
+    def SaveToFile(self, project):
+        """Save project to its save location, returns True if success, False if failed"""
+    def LoadFromFile(self, location):
+        """Load a project based on a file location"""
+        # If successfully loaded
+        return True
+    def NewProject(self):
+        """Create a new project"""
+
+    def OnNewProject(self):
+        """Init process of starting a new project"""
+        if not self.CheckIfSaved(project):
+            ret = self.PromptToSave(project)
+            if ret == wx.ID_YES:
+                if not self.CheckIfEverSaved(project):
+                    if not self.SaveAsDialog(project):
+                        return False
+                self.SaveToFile(project)
+            elif ret == wx.ID_CANCEL:
+                return False
+        self.NewProject()
+        
+    def OnLoadProject(self):
+        """Init process of loading a project from file"""
+        if not self.CheckIfSaved(project):
+            ret = self.PromptToSave(project)
+            if ret == wx.ID_YES:
+                if not self.CheckIfEverSaved(project):
+                    if not self.SaveAsDialog(project):
+                        return False
+                self.SaveToFile(project)
+            elif ret == wx.ID_CANCEL:
+                return False
+        ret = self.LoadDialog()
+        if ret != wx.ID_CANCEL:
+            return self.LoadFromFile()
+        else:
+            return False
+
+    def OnSaveProject(self, project):
+        """Init process of saving a project to file"""
+        if not self.CheckIfSaved(project):
+            if self.CheckIfEverSaved(project):
+                return self.SaveToFile(project)
+            else:
+                if self.SaveAsDialog(project):
+                    return self.SaveToFile(project)
+                return False
+        # Project already saved
+        return True
+    def OnSaveAsProject(self, project):
+        """Init process of saving a project to a new location"""
+        if self.SaveAsDialog(project):
+            return self.SaveToFile(project)
+        return False
+
 
     def CheckProjectChanged(self, project):
         """Return True if project changed since last save"""

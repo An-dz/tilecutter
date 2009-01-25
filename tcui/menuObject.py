@@ -160,7 +160,7 @@ class menuObject:
         return 1
 
     def OnHelp(self,e):
-        debug("Menu-Help-> Open help")
+        debug("Menu-Help-> Open online help")
         wx.LaunchDefaultBrowser("http://entropy.me.uk/tilecutter/docs")
     def OnAbout(self,e):
         debug("Menu-Help-> Open about dialog")
