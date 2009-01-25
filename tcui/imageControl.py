@@ -38,9 +38,9 @@ class imageControl(object):
         self.s_images_flex.Add(wx.Size(1,1))
         self.s_images_flex.Add(self.images_enable_front, 0, wx.ALIGN_LEFT|wx.RIGHT, 2)
         # Add to default sizer with header and line
-        self.sizer.Add(self.label, 0, wx.LEFT|wx.BOTTOM, 2)
-        self.sizer.Add(wx.StaticLine(parent, wx.ID_ANY, (-1,-1),(-1,-1), wx.LI_HORIZONTAL), 0, wx.EXPAND, 0)
+        self.sizer.Add(self.label, 0, wx.LEFT|wx.TOP|wx.BOTTOM, 2)
         self.sizer.Add(self.s_images_flex, 0, wx.TOP|wx.BOTTOM, 2)
+        self.sizer.Add(wx.StaticLine(parent, wx.ID_ANY, (-1,-1),(-1,-1), wx.LI_HORIZONTAL), 0, wx.EXPAND|wx.TOP|wx.BOTTOM, 2)
         # Bind events
         self.images_enable_front.Bind(wx.EVT_CHECKBOX, self.OnToggle, self.images_enable_front)
         self.images_select_back.Bind(wx.EVT_RADIOBUTTON, self.OnBackImage, self.images_select_back)

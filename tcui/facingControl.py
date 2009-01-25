@@ -56,9 +56,9 @@ class facingControl(object):
         self.s_facing_1.Add(self.s_facing_right, 1, wx.ALIGN_CENTER_HORIZONTAL, 0)
         self.s_facing.Add(self.s_facing_1, 1, wx.RIGHT|wx.TOP|wx.BOTTOM, 2)
         # Add to default sizer with header and line
-        self.sizer.Add(self.label, 0, wx.LEFT|wx.BOTTOM, 2)
-        self.sizer.Add(wx.StaticLine(parent, wx.ID_ANY, (-1,-1),(-1,-1), wx.LI_HORIZONTAL), 0, wx.EXPAND, 0)
-        self.sizer.Add(self.s_facing, 1, wx.RIGHT|wx.TOP|wx.BOTTOM, 2)
+        self.sizer.Add(self.label, 0, wx.LEFT|wx.TOP|wx.BOTTOM, 2)
+        self.sizer.Add(self.s_facing, 1, wx.TOP|wx.BOTTOM, 2)
+        self.sizer.Add(wx.StaticLine(parent, wx.ID_ANY, (-1,-1),(-1,-1), wx.LI_HORIZONTAL), 0, wx.EXPAND|wx.TOP|wx.BOTTOM, 2)
         # Bind events
         self.facing_enable_select.Bind(wx.EVT_COMBOBOX, self.OnToggle, self.facing_enable_select)
         self.facing_select_south.Bind(wx.EVT_RADIOBUTTON, self.OnSouth, self.facing_select_south)

@@ -33,8 +33,8 @@
 # Remove debug frame                                                                    - DONE
 
 # Find some way to eliminate flickering on translation update/initial load              - DONE
-# Text entry boxes visible position at end, or cursor, rather than beginning            
-#   - needs full revamp of text entry box class to deal with special stuff really       
+# Text entry boxes visible position at end, or cursor, rather than beginning            - 0.7
+#   - needs full revamp of text entry box class to deal with special stuff really       - 0.7
 # Padding/general layout optimisation                                                   
 # -> Layout optimisation for mac                                                        
 # Cutting mask display based on dimensions                                              - DONE
@@ -47,7 +47,7 @@
 #   Multi-project system for later versions                                             - POSTPONE 0.7
 
 # Program settings, load from a config file (using json)                                - DONE
-# Dialog to set program options                                                         
+# Dialog to set program options                                                         - 0.7
 # Move all static variables and program option variables into config class              - DONE
 # Implement use of special menu IDs to make menus work properly on, e.g., mac osx       
 # Produce frames picker control                                                         - POSTPONE 0.6
@@ -72,7 +72,7 @@
 
 # UI
 # Move UI classes into a module to enhance loading speed                                - DONE
-# Add display/direct edit boxes to the offset control                                   
+# Add display/direct edit boxes to the offset control                                   - 0.7
 
 # Needs much better error handling, add try/except clauses in critical places
 # Could also encase entire script in an exception catcher, which can display exception 

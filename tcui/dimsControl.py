@@ -44,9 +44,9 @@ class dimsControl(object):
         self.s_dims_flex.Add(self.dims_z_select, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.RIGHT, 3)
         self.s_dims_flex.Add(self.dims_y_select, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.LEFT, 3)
         # Add to default sizer with header and line
-        self.sizer.Add(self.label, 0, wx.LEFT|wx.BOTTOM, 2)
-        self.sizer.Add(wx.StaticLine(parent, wx.ID_ANY, (-1,-1),(-1,-1), wx.LI_HORIZONTAL), 0, wx.EXPAND, 0)
-        self.sizer.Add(self.s_dims_flex, 1, wx.ALIGN_CENTER_HORIZONTAL|wx.BOTTOM, 2)
+        self.sizer.Add(self.label, 0, wx.LEFT|wx.TOP|wx.BOTTOM, 2)
+        self.sizer.Add(self.s_dims_flex, 1, wx.ALIGN_CENTER_HORIZONTAL|wx.TOP|wx.BOTTOM, 2)
+        self.sizer.Add(wx.StaticLine(parent, wx.ID_ANY, (-1,-1),(-1,-1), wx.LI_HORIZONTAL), 0, wx.EXPAND|wx.TOP|wx.BOTTOM, 2)
         # Add element to its parent sizer
         parent_sizer.Add(self.sizer, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND|wx.LEFT|wx.RIGHT, 3)
         # Bind functions

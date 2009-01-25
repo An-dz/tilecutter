@@ -89,7 +89,7 @@ class menuObject:
         self.menu_tools_prefs.SetHelp(gt("tt_menu_tools_prefs"))
         # Help menu
         self.menu.SetMenuLabel(2,"&Help")
-        self.menu_help_help.SetItemLabel(gt("TileCutter Help") + self.gsc("", ""))
+        self.menu_help_help.SetItemLabel(gt("TileCutter Online Help") + self.gsc("", ""))
         self.menu_help_help.SetHelp(gt("tt_menu_help_help"))
         self.menu_help_about.SetItemLabel(gt("&About TileCutter") + self.gsc("", ""))
         self.menu_help_about.SetHelp(gt("tt_menu_help_about"))
@@ -161,7 +161,7 @@ class menuObject:
 
     def OnHelp(self,e):
         debug("Menu-Help-> Open help")
-        return 1
+        wx.LaunchDefaultBrowser("http://entropy.me.uk/tilecutter/docs")
     def OnAbout(self,e):
         debug("Menu-Help-> Open about dialog")
         dlg = tcui.aboutDialog(self.parent, self.app, config.version)
