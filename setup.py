@@ -3,7 +3,7 @@
 from distutils.core import setup
 import sys, os, os.path
 
-version = "0.5.2"
+version = "0.5.3"
 
 ### this manifest enables the standard Windows XP-looking theme
 ##manifest = """
@@ -80,7 +80,8 @@ if len(sys.argv) >= 2 and sys.argv[1] == "py2exe":
         # Option 1 creates corrupt zip, option 2 adds dlls and makes them uncompressible
         "py2exe": {"dist_dir": "../dist/win_dist_%s" % version,
                    "bundle_files": 3,
-                   "excludes": ["difflib", "doctest", "optparse", "calendar", "pdb", "inspect"]
+                   "excludes": ["difflib", "doctest", "optparse", "calendar", "pdb", "inspect",
+                                "Tkconstants", "Tkinter", "tcl"]
                    },
     }
 
