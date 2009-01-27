@@ -153,6 +153,7 @@ class MainWindow(wx.Frame):
         self.icons.AddIcon(imres.catalog["tc_icon2_16_plain"].getIcon())
         self.icons.AddIcon(imres.catalog["tc_icon2_32_plain"].getIcon())
         self.icons.AddIcon(imres.catalog["tc_icon2_48_plain"].getIcon())
+        self.icons.AddIcon(imres.catalog["tc_icon2_128_plain"].getIcon())
         self.SetIcons(self.icons)
 
         # Create the menus
@@ -350,19 +351,19 @@ class TCApp(wx.App):
         """Returns true if project is unchanged since last save"""
         debug("CheckIfChanged")
         if self.PickleProject(project) == self.activepickle:
-            debug("Check Project for changes - Project Unchanged")
+            debug("  Check Project for changes - Project Unchanged")
             return False
         else:
-            debug("Check Project for changes - Project Changed")
+            debug("  Check Project for changes - Project Changed")
             return True
     def CheckIfEverSaved(self, project):
         """Returns true if project has ever been saved (i.e. has a save location)"""
         debug("CheckIfEverSaved")
         if project.saved():
-            debug("Project has an existing save location")
+            debug("  Project has an existing save location")
             return True
         else:
-            debug("Project does not have an existing save location")
+            debug("  Project does not have an existing save location")
             return False
     def PromptToSave(self, project):
         """Prompts user to save file, return wx.ID_YES, wx.ID_NO or wx.ID_CANCEL"""
@@ -373,11 +374,11 @@ class TCApp(wx.App):
         result = dlg.ShowModal()
         dlg.Destroy()
         if result == wx.ID_YES:
-            debug("PromptToSave - Dialog destroyed with result YES")
+            debug("  PromptToSave - Result YES")
         if result == wx.ID_NO:
-            debug("PromptToSave - Dialog destroyed with result NO")
+            debug("  PromptToSave - Result NO")
         if result == wx.ID_CANCEL:
-            debug("PromptToSave - Dialog destroyed with result CANCEL")
+            debug("  PromptToSave - Result CANCEL")
         return result
     def SaveAsDialog(self, project):
         """Prompts user to select a location to save project to, returns True if location picked,
@@ -392,12 +393,12 @@ class TCApp(wx.App):
         result = dlg.ShowModal()
         if result == wx.ID_OK:
             project.savefile(os.path.join(dlg.GetDirectory(), dlg.GetFilename()))
-            debug("New savefile for project is: %s" % project.savefile())
+            debug("  New savefile for project is: %s" % project.savefile())
             dlg.Destroy()
             return True
         else:
             # Else cancel was pressed, do nothing
-            debug("User cancelled SaveAs Dialog")
+            debug("  User cancelled SaveAs Dialog")
             dlg.Destroy()
             return False
     def LoadDialog(self):
@@ -414,12 +415,12 @@ class TCApp(wx.App):
         if result == wx.ID_OK:
             load_location = os.path.join(dlg.GetDirectory(), dlg.GetFilename())
             dlg.Destroy()
-            debug("User picked location:" % load_location)
+            debug("  User picked location:" % load_location)
             return load_location
         else:
             # Else cancel was pressed, do nothing
             dlg.Destroy()
-            debug("User cancelled location picking")
+            debug("  User cancelled location picking")
             return False
 
     def SaveToFile(self, project):
@@ -444,7 +445,7 @@ class TCApp(wx.App):
         self.activeproject = self.UnPickleProject(load_location)
         self.activepickle = self.PickleProject(self.activeproject)
         self.frame.update()
-        debug("Load Project succeeded")
+        debug("  Load Project succeeded")
         return True
     def NewProject(self):
         """Create a new project"""
@@ -456,7 +457,7 @@ class TCApp(wx.App):
         self.active_save_name = ""
         # Finally update the frame to display changes
         self.frame.update()
-        debug("NewProject - Complete!")
+        debug("  NewProject - Complete!")
 
     def OnNewProject(self):
         """Init process of starting a new project"""

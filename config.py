@@ -25,8 +25,8 @@ class Config(object):
 ##        "PROJECT_FILE_EXTENSION": ".tcp",
         "valid_image_extensions": [".png"],
         "OFFSET_NEGATIVE_ALLOWED": False,
-        "window_size": [800,550],
-        "window_position": [100,10],
+        "window_size": [800,570],
+        "window_position": [100,0],
 
         "negative_offset_allowed": False,
         "default_image_path": "test.png",
