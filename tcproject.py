@@ -11,6 +11,9 @@ debug = logger.Log()
 import config
 config = config.Config()
 
+from tc import Paths
+paths = Paths()
+
 # Image should store:
 # Last path entered
 # Path of current image
@@ -21,16 +24,19 @@ config = config.Config()
 
 class ProjectImage(object):
     """An individual image object, consisting of a cached image, path to that image and offset dimensions"""
-    def __init__(self, b):
+    def __init__(self, parent, b):
         """Initialise default values, new image, empty path, zeroed offsets"""
+        self.parent = parent
         # Also needs some provision for setting the cutting mask on a per-image basis (like the offset)
         # given that fine-tuning of the mask is a desirable feature
         if b in [True, 1]:
             self.b = True
         elif b in [False, 0]:
             self.b = False
-        self.value_path = config.default_image_path
-        self.value_lastpath = config.default_image_path          # Used to check if the text in the entry box has really changed (temporary)
+        # Whatever is in the path entry box
+        self.value_path = ""
+        # Last valid/real path entered
+        self.value_valid_path = ""
         self.reloadImage()
         self.offset = [0,0]
         self.cutimageset = None
@@ -59,12 +65,13 @@ class ProjectImage(object):
         self.cutimageset = None
     def reloadImage(self):
         """Refresh the cached image"""
-        if self.value_path == "":
+        if self.value_valid_path == "":
             self.value_image = wx.EmptyImage(1,1)
             self.value_bitmap = wx.BitmapFromImage(self.value_image)
         else:
+            abspath = paths.join_paths(self.parent.parent.parent.savefile(), self.value_valid_path)
             self.value_image = wx.EmptyImage(1,1)
-            self.value_image.LoadFile(self.value_path, wx.BITMAP_TYPE_ANY)
+            self.value_image.LoadFile(abspath, wx.BITMAP_TYPE_ANY)
             self.value_bitmap = wx.BitmapFromImage(self.value_image)
     def lastpath(self, path=None):
         """Set or return the non-valid path set for this image"""
@@ -75,18 +82,19 @@ class ProjectImage(object):
             debug("Image lastpath set to \"%s\"" % str(path))
         else:
             return self.value_lastpath
+    def valid_path(self):
+        """Return the valid/real path of this image"""
+        return self.value_valid_path
     def path(self, path=None):
-        """Set or return the path of this image"""
+        """Set or return the path of this image as entered"""
         if path != None:
-            # Check that path exists and is a file of the right type (if it's an empty string, reset to empty image)
-            if (os.path.isfile(path) and os.path.splitext(path)[1] in config.valid_image_extensions) or path == "":
-                self.value_path = path
+            self.value_path = path
+            debug("value_path set to: \"%s\"" % self.value_path)
+            abspath = paths.join_paths(self.parent.parent.parent.savefile(), self.value_path)
+            if (paths.is_input_file(abspath) and os.path.exists(abspath)) or path == "":
+                self.value_valid_path = path
                 self.reloadImage()
-                debug("Image path set to \"%s\", new cached image loaded" % str(path))
-            else:
-                debug("Attempt to set image path failed - Path \"%s\" invalid" % str(path))
-                return 1
-            # Otherwise raise an error (path must be to a file that exists)
+                debug("Valid image path set to \"%s\", new cached image will be loaded" % str(self.value_valid_path))
         else:
             return self.value_path
     def back(self):
@@ -95,11 +103,12 @@ class ProjectImage(object):
 
 class ProjectFrame(object):
     """Contains a single frame of the project, with a front and back image"""
-    def __init__(self):
+    def __init__(self, parent):
         """Initialise array containing two images"""
+        self.parent = parent
         self.images = []
-        self.images.append(ProjectImage(0))
-        self.images.append(ProjectImage(1))
+        self.images.append(ProjectImage(self, 0))
+        self.images.append(ProjectImage(self, 1))
     def __getitem__(self, key):
         return self.images[key]
     def __len__(self):
@@ -107,10 +116,11 @@ class ProjectFrame(object):
 
 class ProjectFrameset(object):
     """Contains a sequence of ProjectFrame objects for each animation frame of this direction/season combination"""
-    def __init__(self, season):
+    def __init__(self, parent, season):
+        self.parent = parent
         self.season = season    # 0 for summer, 1 for winter
         self.frames = []
-        self.frames.append(ProjectFrame())
+        self.frames.append(ProjectFrame(self))
     def __getitem__(self, key):
         return self.frames[key]
     def __len__(self):
@@ -128,13 +138,9 @@ class Project(object):
         self.images = []
         for a in range(4):
             b = []
-            b.append(ProjectFrameset(0))
-            b.append(ProjectFrameset(1))
+            b.append(ProjectFrameset(self, 0))
+            b.append(ProjectFrameset(self, 1))
             self.images.append(b)
-##        self.south = self.images[0]
-##        self.east  = self.images[1]
-##        self.north = self.images[2]
-##        self.west  = self.images[3]
 
         self.dims = ProjectDims(self)
         self.files = ProjectFiles(self)
@@ -190,6 +196,10 @@ class Project(object):
                 return 0
         else:
             return self.active.image.offset
+
+    def active_image_path(self, path=None):
+        """Set or return the path of the active image"""
+        return self.activeImage().path(path)
 
     def activeImage(self, direction=None, season=None, frame=None, layer=None):
         """Set or return the currently active image"""
@@ -378,7 +388,8 @@ class ProjectFiles(object):
         self.pngfile_location = os.path.join("images", "output.png")
 
         # Location of .pak output file (relative to save location)
-        self.pakfile_location = "output.pak"
+        # Blank by default so that pak file name is produced by building type/name
+        self.pakfile_location = ""
 
         debug("save_location: %s, datfile_location: %s, pngfile_location: %s, pakfile_location: %s" % (self.save_location,
                                                                                                        self.datfile_location,

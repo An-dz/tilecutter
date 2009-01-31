@@ -18,6 +18,8 @@ config = config.Config()
 import logger
 debug = logger.Log()
 
+from tc import Paths
+
 class imageWindow(wx.ScrolledWindow):
     """Window onto which bitmaps may be drawn, background colour is set by bgcolor
     Also contains the image path entry box and associated controls"""
@@ -33,10 +35,11 @@ class imageWindow(wx.ScrolledWindow):
             # Make controls
         # tcproject image class does some additional checking on the path to source images
         # which break this control
-        self.control_imagepath = tcui.FileControl(self.panel, app, self.s_panel_flex, app.activeproject.active.image.path,
+        self.control_imagepath = tcui.FileControl(self.panel, app, self.s_panel_flex, app.activeproject.active_image_path,
                                                   _gt("Source image location:"), _gt("tt_image_file_location"),
-                                                  _gt("Choose a location to save project..."), "PNG files (*.png)|*.png",
-                                                  _gt("Browse..."), _gt("tt_browse_input_file"), app.activeproject.savefile)
+                                                  _gt("Choose an image file to open..."), "PNG files (*.png)|*.png",
+                                                  _gt("Browse..."), _gt("tt_browse_input_file"), app.activeproject.savefile,
+                                                  wx.FD_OPEN|wx.FD_FILE_MUST_EXIST, self.refresh_if_valid)
 
         self.impath_entry_reloadfile = wx.BitmapButton(parent, wx.ID_ANY, size=(25,-1), bitmap=imres.catalog["FileReload"].getBitmap())
         self.impath_entry_sameforall = wx.BitmapButton(parent, wx.ID_ANY, size=(25,-1), bitmap=imres.catalog["FileSameForAll"].getBitmap())
@@ -97,7 +100,20 @@ class imageWindow(wx.ScrolledWindow):
     def update(self):
         """Set the values of the controls in this group to the values in the model"""
         self.control_imagepath.update()
-        # And then redraw the active image in the window, with mask etc.
+        self.refresh_screen()
+
+    def refresh_if_valid(self):
+        """Called when child impath entry box text changes
+        Only updates the displayed image if a new valid file has been entered"""
+        debug("valid: %s, path: %s" % (self.app.activeproject.activeImage().valid_path(),self.app.activeproject.activeImage().path()))
+        if self.app.activeproject.activeImage().valid_path() == self.app.activeproject.activeImage().path():
+            # If valid_path and path are same, then refresh screen
+            self.refresh_screen()
+
+    def refresh_screen(self):
+        """Refresh the screen display"""
+        debug("imageWindow - refresh_screen")
+        # Redraw the active image in the window, with mask etc.
         bitmap = self.app.activeproject.activeImage().bitmap()
 
         # Setup image properties for mask generation
@@ -151,12 +167,15 @@ class imageWindow(wx.ScrolledWindow):
         # Setup default brushes
         dc.SetBackground(wx.Brush(self.bgcolor))
         dc.SetPen(wx.Pen((255,0,0)))
+##        dc.SetPen(wx.Pen(config.transparent))
+        
         dc.SetBrush(wx.Brush((0,128,0)))
+        dc.SetBrush(wx.Brush(config.transparent))
         # Clear ready for drawing
         dc.Clear()
 
         # Test rectangle to indicate virtual size area of DC (shows extent of mask at present however)
-        dc.DrawRectangle(bmp_offset_x,bitmap.GetHeight() + bmp_offset_y, mask_width_off, -mask_height_off)
+##        dc.DrawRectangle(bmp_offset_x,bitmap.GetHeight() + bmp_offset_y, mask_width_off, -mask_height_off)
 
         # Draw the bitmap
         dc.DrawBitmap(bitmap, bmp_offset_x, bmp_offset_y, True)
@@ -215,35 +234,3 @@ class imageWindow(wx.ScrolledWindow):
         """When "load same image for all" button is clicked"""
         debug("Load active image for all images")
 
-
-    # These methods are obsolete now...
-
-    # Image path entry events and methods
-    def OnTextChange(self,e):                               # Obsolete!
-        """When text changes in the entry box"""
-        # If text has actually changed (i.e. it's different to that set in the image's info)
-        if self.impath_entry_box.GetValue() != self.app.activeproject.activeImage().path() and self.impath_entry_box.GetValue() != self.app.activeproject.activeImage().lastpath():
-            debug("Text changed in image path box, new text: " + self.impath_entry_box.GetValue())
-            # Check whether the entered path exists or not, if it does update the value in the activeproject (which will cause
-            # that new image to be loaded & displayed) if not don't set this value
-            if os.path.isfile(self.impath_entry_box.GetValue()) and os.path.splitext(self.impath_entry_box.GetValue())[1] in config.valid_image_extensions:
-                # Is a valid file, display green tick icon
-                debug("...new text is a valid file")
-                self.impath_entry_icon.SetBitmap(wx.ArtProvider.GetBitmap(wx.ART_TICK_MARK))
-                # Update the active image with the new path
-                self.app.activeproject.activeImage().path(self.impath_entry_box.GetValue())
-                # Then redraw the image
-                self.update()
-            else:
-                # Not a valid file, display red cross icon
-                self.impath_entry_icon.SetBitmap(wx.ArtProvider.GetBitmap(wx.ART_CROSS_MARK))
-                debug("...but new text not a valid file!")
-                # Highlight text function only needed if it isn't a valid file, obviously
-                self.highlightText(self.impath_entry_box, self.impath_entry_box.GetValue())
-            # Update the last path
-            self.app.activeproject.activeImage().lastpath(self.impath_entry_box.GetValue())
-    def OnBrowseSource(self,e):
-        """When browse source button clicked"""
-        value = self.filePickerDialog(self.app.activeproject.activeImage().path(), "", gt("Choose a source image for this view:"),
-                                      "PNG files (*.png)|*.png", wx.FD_OPEN|wx.FD_FILE_MUST_EXIST)
-        self.impath_entry_box.SetValue(value)

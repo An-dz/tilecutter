@@ -30,11 +30,15 @@ class FileControl(tcui.fileTextBox):
     def __init__(self, parent, app, parent_sizer, linked,
                  label, tooltip,
                  filepicker_title, filepicker_allowed,
-                 browse_string, browse_tooltip, relative=None):
+                 browse_string, browse_tooltip, relative=None,
+                 flags=wx.FD_SAVE|wx.OVERWRITE_PROMPT, parent_change_function=None):
         """parent, ref to app, ref to parent sizer, description, variable to link to
         title for file picker, allowed types for file picker, variable this is relative to (if any)"""
         self.filepicker_title = filepicker_title
         self.filepicker_allowed = filepicker_allowed
+        self.filepicker_flags = flags
+
+        self.parent_change_function = parent_change_function
         self.relative = relative
         self.label = label
         self.tooltip = tooltip
@@ -101,6 +105,9 @@ class FileControl(tcui.fileTextBox):
             self.linked(self.path_box.GetValue())
             debug("Text changed in %s entry box, new text: %s" % (self.label, str(self.path_box.GetValue())))
             self.highlight()
+        # Optionally trigger some action in the parent when the text is updated
+        if self.parent_change_function != None:
+            self.parent_change_function()
 
     def OnBrowse(self, e):
         """Triggered when the browse button is clicked"""
@@ -109,7 +116,39 @@ class FileControl(tcui.fileTextBox):
         else:
             rel = ""
         value = self.filePickerDialog(self.linked(), rel, self.filepicker_title,
-                                      self.filepicker_allowed, wx.FD_SAVE|wx.OVERWRITE_PROMPT)
+                                      self.filepicker_allowed, self.filepicker_flags)
         self.path_box.SetValue(value)
 
 
+
+
+
+
+
+
+##    # These methods are obsolete now...
+##
+##    # Image path entry events and methods
+##    def OnTextChange2(self,e):                               # Obsolete!
+##        """When text changes in the entry box"""
+##        # If text has actually changed (i.e. it's different to that set in the image's info)
+##        if self.impath_entry_box.GetValue() != self.app.activeproject.activeImage().path() and self.impath_entry_box.GetValue() != self.app.activeproject.activeImage().lastpath():
+##            debug("Text changed in image path box, new text: " + self.impath_entry_box.GetValue())
+##            # Check whether the entered path exists or not, if it does update the value in the activeproject (which will cause
+##            # that new image to be loaded & displayed) if not don't set this value
+##            if os.path.isfile(self.impath_entry_box.GetValue()) and os.path.splitext(self.impath_entry_box.GetValue())[1] in config.valid_image_extensions:
+##                # Is a valid file, display green tick icon
+##                debug("...new text is a valid file")
+##                self.impath_entry_icon.SetBitmap(wx.ArtProvider.GetBitmap(wx.ART_TICK_MARK))
+##                # Update the active image with the new path
+##                self.app.activeproject.activeImage().path(self.impath_entry_box.GetValue())
+##                # Then redraw the image
+##                self.update()
+##            else:
+##                # Not a valid file, display red cross icon
+##                self.impath_entry_icon.SetBitmap(wx.ArtProvider.GetBitmap(wx.ART_CROSS_MARK))
+##                debug("...but new text not a valid file!")
+##                # Highlight text function only needed if it isn't a valid file, obviously
+##                self.highlightText(self.impath_entry_box, self.impath_entry_box.GetValue())
+##            # Update the last path
+##            self.app.activeproject.activeImage().lastpath(self.impath_entry_box.GetValue())

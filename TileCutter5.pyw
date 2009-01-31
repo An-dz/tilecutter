@@ -188,6 +188,7 @@ class MainWindow(wx.Frame):
         # Offset/mask controls
         self.control_offset     = tcui.offsetControl(self.panel, app, self.s_panel_controls)
 
+
         # Create Image display window and image path entry control, which adds itself to the sizer
         self.display = tcui.imageWindow(self.panel, app, self.s_panel_imagewindow_container, config.transparent)
 
@@ -547,7 +548,7 @@ class TCApp(wx.App):
         self.frame.Destroy()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Redirect stdout/err to internal logging mechanism
     sys.stderr = debug
     sys.stdout = debug

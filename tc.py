@@ -165,6 +165,13 @@ class Paths(object):
             p = os.path.split(p)[0]
         return p
 
+    def is_input_file(self, path):
+        """Checks if file's extension is in the list of allowed input extensions"""
+        if os.path.splitext(path)[1] in config.valid_image_extensions:
+            return True
+        else:
+            return False
+
     def compare_paths(self, p1, p2):
         """Return either a relative path from p1 to p2, or p1 if no relative path exists"""
         # Check that p2 is not an empty string, or None, and that drive letters match
