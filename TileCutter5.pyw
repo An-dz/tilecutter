@@ -65,10 +65,9 @@
 # -> File must exist                                                                    - DONE
 # -> Implement modal dialog for browse                                                  - DONE
 # -> Allow text entry, highlight in red if file does not exist??                        - DONE
-# -> Implement modal confirmation dialog for "open same file for all" button            
-# "Warning, this will set all views in the project to use the current image, proceed?"  
+# -> Implement modal confirmation dialog for "open same file for all" button            - DONE
 # -> Function to reload the current view's image                                        - DONE
-# Add tick/cross functionality to input boxes
+# Add tick/cross functionality to input boxes                                           
 # Extend tick/cross functionality to provide more info                                  - POSTPONE 0.6
 
 # UI
@@ -193,7 +192,6 @@ class MainWindow(wx.Frame):
         self.control_dims       = tcui.dimsControl(self.panel, app, self.s_panel_controls)
         # Offset/mask controls
         self.control_offset     = tcui.offsetControl(self.panel, app, self.s_panel_controls)
-
 
         # Create Image display window and image path entry control, which adds itself to the sizer
         self.display = tcui.imageWindow(self.panel, app, self.s_panel_imagewindow_container, config.transparent)
@@ -436,6 +434,7 @@ class TCApp(wx.App):
         # Finally update the frame to display changes
         project.saved(True)
         self.activepickle = self.PickleProject(app.activeproject)
+        # Pickling the project/unpickling the project should strip all active image info
 ##        file = os.path.join(app.active_save_location, app.active_save_name)
 ##        debug("Save path:%s" % file)
 ##        output = open(file, "wb")
@@ -450,6 +449,9 @@ class TCApp(wx.App):
         debug("LoadFromFile - Load project from file: %s" % location)
         # Needs exception handling for unpickle failure
         self.activeproject = self.UnPickleProject(load_location)
+        # Here we need to set the savefile location of the active project to its current location
+        # since this may have changed since it was saved
+        # Do this before making the active pickle, so that this change doesn't count as save-worthy
         self.activepickle = self.PickleProject(self.activeproject)
         self.frame.update()
         debug("  Load Project succeeded")

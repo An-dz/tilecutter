@@ -73,15 +73,15 @@ class ProjectImage(object):
             self.value_image = wx.EmptyImage(1,1)
             self.value_image.LoadFile(abspath, wx.BITMAP_TYPE_ANY)
             self.value_bitmap = wx.BitmapFromImage(self.value_image)
-    def lastpath(self, path=None):
-        """Set or return the non-valid path set for this image"""
-        # Non-valid path keeps track of user entries in the text entry box which aren't valid files
-        # This may also be a valid file, but shouldn't be relied upon
-        if path != None:
-            self.value_lastpath = path
-            debug("Image lastpath set to \"%s\"" % str(path))
-        else:
-            return self.value_lastpath
+##    def lastpath(self, path=None):
+##        """Set or return the non-valid path set for this image"""
+##        # Non-valid path keeps track of user entries in the text entry box which aren't valid files
+##        # This may also be a valid file, but shouldn't be relied upon
+##        if path != None:
+##            self.value_lastpath = path
+##            debug("Image lastpath set to \"%s\"" % str(path))
+##        else:
+##            return self.value_lastpath
     def valid_path(self):
         """Return the valid/real path of this image"""
         return self.value_valid_path
@@ -147,6 +147,14 @@ class Project(object):
         self.active = ActiveImage(self)
     def __getitem__(self, key):
         return self.images[key]
+
+    def set_all_images(self, path):
+        """Set the path for all images to the same path"""
+        for d in range(len(self.images)):
+            for s in range(len(self.images[d])):
+                for f in range(len(self.images[d][s])):
+                    for i in range(len(self.images[d][s][f])):
+                        self.images[d][s][f][i].path(path)
 
     def cutImages(self, cutting_function):
         """Produce cut imagesets for all images in this project"""

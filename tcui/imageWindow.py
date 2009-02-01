@@ -233,4 +233,14 @@ class imageWindow(wx.ScrolledWindow):
     def OnLoadImageForAll(self,e):
         """When "load same image for all" button is clicked"""
         debug("Load active image for all images")
+        dlg = wx.MessageDialog(self, gt("This action will set all images in the project to be the same as this one. Do you wish to proceed?"),
+                               gt("Load same image for all"),
+                               style=wx.YES_NO|wx.YES_DEFAULT|wx.ICON_QUESTION)
+        result = dlg.ShowModal()
+        dlg.Destroy()
+        if result == wx.ID_YES:
+            debug("  LoadImageForAll - Result YES")
+            self.app.activeproject.set_all_images(self.app.activeproject.active_image_path())
+        else:
+            debug("  LoadImageForAll - Result NO")
 
