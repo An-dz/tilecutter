@@ -105,9 +105,9 @@ class FileControl(tcui.fileTextBox):
             self.linked(self.path_box.GetValue())
             debug("Text changed in %s entry box, new text: %s" % (self.label, str(self.path_box.GetValue())))
             self.highlight()
-        # Optionally trigger some action in the parent when the text is updated
-        if self.parent_change_function != None:
-            self.parent_change_function()
+            # Optionally trigger some action in the parent when the text is updated
+            if self.parent_change_function != None:
+                self.parent_change_function()
 
     def OnBrowse(self, e):
         """Triggered when the browse button is clicked"""

@@ -24,9 +24,8 @@
 
 # BUG - If abs path to save doesn't have slash at the end, browse dialog uses end path
 #       segment as filename
-# BUG - Set active image to new image, then edit textbox to make path invalid, then edit it back to the original -> highlighting fails
 # BUG - Season select does not set to summer when enable winter is unchecked            - FIXED
-# BUG - Translation for static boxes in UI components
+# BUG - Translation for static boxes in UI components                                   - DONE
 
 # Move debug into own module, to allow it to be easily accessed by other modules        - DONE
 # Fix debug so that it logs to a file instead                                           - DONE
@@ -38,12 +37,12 @@
 # Padding/general layout optimisation                                                   
 # -> Layout optimisation for mac                                                        
 # Cutting mask display based on dimensions                                              - DONE
-# Make .dat and input images relative to save location path                             
+# Make .dat and input images relative to save location path                             - DONE
 # Speed optimisations - switching views seems really sluggish!                          
 # Optimise code for generating lists in comboboxes (translation slowing this?)          
 
 # Finish output file boxes, switching them to use the new set of functions              - DONE
-# Do the project save/load/new etc. and management functionality (using pickle & hash)  
+# Do the project save/load/new etc. and management functionality (using pickle & hash)  - DONE
 #   Multi-project system for later versions                                             - POSTPONE 0.7
 
 # Program settings, load from a config file (using json)                                - DONE
@@ -62,13 +61,15 @@
 
 # Current view context built into activeproject, details of the currently selected view - DONE
 # Implement current view context to all view controls                                   - DONE
-# Source image control (needs current view context)                                     - MOSTLY DONE
+# Source image control (needs current view context)                                     - DONE
 # -> File must exist                                                                    - DONE
 # -> Implement modal dialog for browse                                                  - DONE
-# -> Allow text entry, highlight in red if file does not exist??                        - DONE (Needs icons for tick/cross)
+# -> Allow text entry, highlight in red if file does not exist??                        - DONE
 # -> Implement modal confirmation dialog for "open same file for all" button            
 # "Warning, this will set all views in the project to use the current image, proceed?"  
 # -> Function to reload the current view's image                                        - DONE
+# Add tick/cross functionality to input boxes
+# Extend tick/cross functionality to provide more info                                  - POSTPONE 0.6
 
 # UI
 # Move UI classes into a module to enhance loading speed                                - DONE
@@ -84,10 +85,15 @@
 # Need higher detail icons for the mac version                                          - DONE (Test icon display in OSX)
 
 # About dialog                                                                          - DONE
-# Make py2exe, look into producing smaller packages     - Also py2app                   
-#   Import only bits of wx needed, to reduce py2exe package?                            
-# Look into producing more mac-native package                                           
-# Mac drag + drop support                                                               
+
+# Distribution
+# Make py2exe, look into producing smaller packages                                     - DONE
+# -> Produce msi installer for windows                                                  - 0.6
+# Make py2app distribution template                                                     - 0.6
+# -> Make .dmg distribution of the py2app application (automated if possible)           - 0.6
+# Import only bits of wx needed, to reduce py2exe package?                              
+# Look into producing more mac-native package                                           - 0.6
+# Mac drag + drop support                                                               - 0.6
 # Linux just the script                                                                 
 # Test with Linux, Mac OSX, Windows (xp), try and have the same code across all platforms!
 # Produce help documentation                                                            
@@ -97,9 +103,9 @@
 # Dynamic mask generation + caching                                                     - DONE
 # New cutting engine able to cope with all settings except frames                       - DONE
 #   -> Test this cutting engine in all circumstances                                    
-# Ability to add a copyright text notice to bottom of outputted image
-# Full .dat editing capability
-# "Pretty" output mode
+# Ability to add a copyright text notice to bottom of outputted image                   - 0.6
+# Full .dat editing capability                                                          - 0.6
+# "Pretty" output mode                                                                  - 0.6
 
 
 # Aims v.0.5
