@@ -45,6 +45,11 @@
 # Finish output file boxes, switching them to use the new set of functions              - DONE
 # Do the project save/load/new etc. and management functionality (using pickle & hash)  - DONE
 #   Multi-project system for later versions                                             - POSTPONE 0.7
+#   Multi-project version implemented as object, contains projects in a dict
+#   referenced by keyword lookup, this has lookup methods for the active project
+#   so that all of that stuff can be taken out of the main program entirely
+#   This stuff will likely go into tcproject
+
 
 # Program settings, load from a config file (using json)                                - DONE
 # Dialog to set program options                                                         - 0.7
