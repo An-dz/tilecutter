@@ -24,25 +24,25 @@ class imageWindow(wx.ScrolledWindow):
     """Window onto which bitmaps may be drawn, background colour is set by bgcolor
     Also contains the image path entry box and associated controls"""
     bmp = []
-    def __init__(self, parent, app, parent_sizer, bgcolor, id=wx.ID_ANY, size=wx.DefaultSize, extended=0):
+    def __init__(self, parent, panel, app, parent_sizer, bgcolor, id=wx.ID_ANY, size=wx.DefaultSize, extended=0):
         self.bgcolor = bgcolor
         self.app = app
-        self.panel = parent
+        self.panel = panel
         self.parent = parent
-        wx.ScrolledWindow.__init__(self, parent, id, (0, 0), size=size, style=wx.SUNKEN_BORDER)
+        wx.ScrolledWindow.__init__(self, panel, id, (0, 0), size=size, style=wx.SUNKEN_BORDER)
         # Make controls for the image path entry box
         self.s_panel_flex = wx.FlexGridSizer(0,6,0,0)
             # Make controls
         # tcproject image class does some additional checking on the path to source images
         # which break this control
-        self.control_imagepath = tcui.FileControl(self.panel, app, self.s_panel_flex, app.activeproject.active_image_path,
+        self.control_imagepath = tcui.FileControl(self.panel, app, self.s_panel_flex, parent.get_active_image_path,
                                                   _gt("Source image location:"), _gt("tt_image_file_location"),
                                                   _gt("Choose an image file to open..."), "PNG files (*.png)|*.png",
-                                                  _gt("Browse..."), _gt("tt_browse_input_file"), app.activeproject.savefile,
+                                                  _gt("Browse..."), _gt("tt_browse_input_file"), parent.get_active_savefile_path,
                                                   wx.FD_OPEN|wx.FD_FILE_MUST_EXIST, self.refresh_if_valid)
 
-        self.impath_entry_reloadfile = wx.BitmapButton(parent, wx.ID_ANY, size=(25,-1), bitmap=imres.catalog["FileReload"].getBitmap())
-        self.impath_entry_sameforall = wx.BitmapButton(parent, wx.ID_ANY, size=(25,-1), bitmap=imres.catalog["FileSameForAll"].getBitmap())
+        self.impath_entry_reloadfile = wx.BitmapButton(panel, wx.ID_ANY, size=(25,-1), bitmap=imres.catalog["FileReload"].getBitmap())
+        self.impath_entry_sameforall = wx.BitmapButton(panel, wx.ID_ANY, size=(25,-1), bitmap=imres.catalog["FileSameForAll"].getBitmap())
         # Add them to sizer...
         self.s_panel_flex.Add(self.impath_entry_reloadfile, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 3)
         self.s_panel_flex.Add(self.impath_entry_sameforall, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 3)

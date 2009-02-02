@@ -26,6 +26,7 @@
 #       segment as filename
 # BUG - Season select does not set to summer when enable winter is unchecked            - FIXED
 # BUG - Translation for static boxes in UI components                                   - DONE
+# BUG - Active image isn't set to the correct one after project load                    
 
 # Move debug into own module, to allow it to be easily accessed by other modules        - DONE
 # Fix debug so that it logs to a file instead                                           - DONE
@@ -150,6 +151,7 @@ class MainWindow(wx.Frame):
     def __init__(self, parent, app, id, title, windowsize, windowposition, windowminsize):
         wx.Frame.__init__(self, parent, wx.ID_ANY, title, windowposition, windowsize,
                                         style=wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL)
+        self.app = app
         # Init stuff
         self.SetMinSize(windowminsize)
 
@@ -194,26 +196,29 @@ class MainWindow(wx.Frame):
         self.control_offset     = tcui.offsetControl(self.panel, app, self.s_panel_controls)
 
         # Create Image display window and image path entry control, which adds itself to the sizer
-        self.display = tcui.imageWindow(self.panel, app, self.s_panel_imagewindow_container, config.transparent)
+        self.display = tcui.imageWindow(self, self.panel, app, self.s_panel_imagewindow_container, config.transparent)
 
         # Save, Dat, Image and Pak output paths
         self.s_panel_flex = wx.FlexGridSizer(0,4,3,0)
-        self.control_savepath = tcui.FileControl(self.panel, app, self.s_panel_flex, app.activeproject.savefile,
+        # Passing through reference to app.activeproject.XXXfile doesn't work here when we make a new
+        # project/load a project, since it still points to the old one! needs to access these values
+        # some other way...
+        self.control_savepath = tcui.FileControl(self.panel, app, self.s_panel_flex, self.get_active_savefile_path,
                                                  _gt("Project Save Location"), _gt("tt_save_file_location"),
                                                  _gt("Choose a location to save project..."), "TCP files (*.tcp)|*.tcp",
                                                  _gt("Browse..."), _gt("tt_browse_save_file"), None)
-        self.control_datpath = tcui.FileControl(self.panel, app, self.s_panel_flex, app.activeproject.datfile,
+        self.control_datpath = tcui.FileControl(self.panel, app, self.s_panel_flex, self.get_active_datfile_path,
                                                 _gt(".dat Output Location"), _gt("tt_dat_file_location"),
                                                 _gt("Choose a location to save .dat file..."), "DAT files (*.dat)|*.dat",
-                                                _gt("Browse..."), _gt("tt_browse_dat_file"), app.activeproject.savefile)
-        self.control_pngpath = tcui.FileControl(self.panel, app, self.s_panel_flex, app.activeproject.pngfile,
+                                                _gt("Browse..."), _gt("tt_browse_dat_file"), self.get_active_savefile_path)
+        self.control_pngpath = tcui.FileControl(self.panel, app, self.s_panel_flex, self.get_active_pngfile_path,
                                                 _gt(".png Output Location"), _gt("tt_png_file_location"),
                                                 _gt("Choose a location to save .png file..."), "PNG files (*.png)|*.png",
-                                                _gt("Browse..."), _gt("tt_browse_png_file"), app.activeproject.savefile)
-        self.control_pakpath = tcui.FileControl(self.panel, app, self.s_panel_flex, app.activeproject.pakfile,
+                                                _gt("Browse..."), _gt("tt_browse_png_file"), self.get_active_savefile_path)
+        self.control_pakpath = tcui.FileControl(self.panel, app, self.s_panel_flex, self.get_active_pakfile_path,
                                                 _gt(".pak Output Location"), _gt("tt_pak_file_location"),
                                                 _gt("Choose a location to export .pak file..."), "PAK files (*.pak)|*.pak",
-                                                _gt("Browse..."), _gt("tt_browse_pak_file"), app.activeproject.savefile)
+                                                _gt("Browse..."), _gt("tt_browse_pak_file"), self.get_active_savefile_path)
 
         # Set controls that savepath also alters (ones which are relative to it)
         self.control_savepath.SetDependants([self.control_datpath, self.control_pngpath, self.control_pakpath])
@@ -270,6 +275,22 @@ class MainWindow(wx.Frame):
         self.panel.Layout()
 
         self.translate()
+
+    def get_active_image_path(self, val=None):
+        """Return activeproject's active image path"""
+        return self.app.activeproject.active_image_path(val)
+    def get_active_savefile_path(self, val=None):
+        """Return activeproject's save path"""
+        return self.app.activeproject.savefile(val)
+    def get_active_datfile_path(self, val=None):
+        """Return activeproject's datfile path"""
+        return self.app.activeproject.datfile(val)
+    def get_active_pngfile_path(self, val=None):
+        """Return activeproject's pngfile path"""
+        return self.app.activeproject.pngfile(val)
+    def get_active_pakfile_path(self, val=None):
+        """Return activeproject's pakfile path"""
+        return self.app.activeproject.pakfile(val)
 
     def translate(self):
         """Master translate function for the mainwindow object"""
@@ -420,7 +441,7 @@ class TCApp(wx.App):
         if result == wx.ID_OK:
             load_location = os.path.join(dlg.GetDirectory(), dlg.GetFilename())
             dlg.Destroy()
-            debug("  User picked location:" % load_location)
+            debug("  User picked location: %s" % load_location)
             return load_location
         else:
             # Else cancel was pressed, do nothing
@@ -435,12 +456,11 @@ class TCApp(wx.App):
         project.saved(True)
         self.activepickle = self.PickleProject(app.activeproject)
         # Pickling the project/unpickling the project should strip all active image info
-##        file = os.path.join(app.active_save_location, app.active_save_name)
-##        debug("Save path:%s" % file)
-##        output = open(file, "wb")
-##        app.activepickle = pickle_string
-##        output.write(pickle_string)
-##        output.close()
+        file = app.activeproject.savefile()
+        debug("Save path:%s" % file)
+        output = open(file, "wb")
+        output.write(self.activepickle)
+        output.close()
         self.frame.update()
         debug("SaveToFile - Save project success")
         return True
@@ -448,7 +468,7 @@ class TCApp(wx.App):
         """Load a project based on a file location"""
         debug("LoadFromFile - Load project from file: %s" % location)
         # Needs exception handling for unpickle failure
-        self.activeproject = self.UnPickleProject(load_location)
+        self.activeproject = self.UnPickleProject(location)
         # Here we need to set the savefile location of the active project to its current location
         # since this may have changed since it was saved
         # Do this before making the active pickle, so that this change doesn't count as save-worthy
@@ -499,7 +519,7 @@ class TCApp(wx.App):
             # else ret is wx.ID_NO, so we don't want to save but can continue
         ret = self.LoadDialog()                             # Prompt for file to load
         if ret != wx.ID_CANCEL:                             # If file specified
-            return self.LoadFromFile()                      # Load the project
+            return self.LoadFromFile(ret)                   # Load the project
         else:                                               # Otherwise
             return False                                    # Quit out
 
