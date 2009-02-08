@@ -42,9 +42,11 @@ class menuObject:
         self.toolsMenu = wx.Menu()
         self.menu_tools_dat = self.AddMenuItem(self.toolsMenu, self.OnDatEdit)
         self.menu_tools_smoke = self.AddMenuItem(self.toolsMenu, self.OnSmokeEdit)
+        self.menu_tools_smoke.Enable(False)
         self.toolsMenu.AppendSeparator()
         self.menu_tools_language = self.AddMenuItem(self.toolsMenu, self.OnSelectLanguage)
         self.menu_tools_prefs = self.AddMenuItem(self.toolsMenu, self.OnPreferences, id=wx.ID_PREFERENCES)
+        self.menu_tools_prefs.Enable(False)
         # Help menu
         self.helpMenu = wx.Menu()
         self.menu_help_help = self.AddMenuItem(self.helpMenu, self.OnHelp, id=wx.ID_HELP)
@@ -135,10 +137,10 @@ class menuObject:
         self.app.OnSaveAsProject(self.app.activeproject)
     def OnCutProject(self,e):
         debug("Menu-File-> Cut Project")
-        self.app.ExportProject(self.app.activeproject, export=False)
+        self.app.ExportProject(self.app.activeproject, pak_output=False)
     def OnExportProject(self,e):
         debug("Menu-File-> Export Project")
-        self.app.ExportProject(self.app.activeproject, export=True)
+        self.app.ExportProject(self.app.activeproject, pak_output=True)
     def OnExit(self,e):
         debug("Menu-File-> Exit Program")
         # Call app's Exit method
@@ -146,7 +148,8 @@ class menuObject:
 
     def OnDatEdit(self,e):
         debug("Menu-Tools-> Open .dat edit dialog")
-        return 1
+        self.app.OnDatEdit(self.app.activeproject)
+
     def OnSmokeEdit(self,e):
         debug("Menu-Tools-> Open smoke edit dialog")
         return 1

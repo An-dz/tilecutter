@@ -246,6 +246,7 @@ class MainWindow(wx.Frame):
         # Export .dat checkbox
         self.export_dat_toggle = wx.CheckBox(self.panel, wx.ID_ANY, "", (-1,-1), (-1,-1))
         self.export_dat_toggle.SetValue(1)
+        self.export_dat_toggle.Enable(False)
         self.export_dat_toggle.Bind(wx.EVT_CHECKBOX, self.OnToggleDatExport, self.export_dat_toggle)
         self.cut_button_sizer2.Add(self.export_dat_toggle, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.TOP, 6)
 
@@ -368,13 +369,13 @@ class TCApp(wx.App):
         self.frame.Bind(wx.EVT_CLOSE, self.OnQuit)
         return True
 
-    def ExportProject(self, project, export=False):
+    def ExportProject(self, project, pak_output=False):
         """Trigger exporting of specified project"""
         # First trigger project to generate cut images
         project.cutImages(tc.export_cutter)
         # Then feed project into outputting routine
         # Will need a way to report back progress to a progress bar/indicator
-        tc.export_writer(project)
+        tc.export_writer(project, pak_output)
 
 
 
@@ -568,6 +569,11 @@ class TCApp(wx.App):
         project = pickle.load(file)
         file.close()
         return project
+
+    def OnDatEdit(self, project):
+        """Dat editor"""
+        # For now this just pops up a box for arbitrary code input
+        # This gets put in before the image array in the output
 
     def Exit(self):
         """Quit the application indirectly"""
