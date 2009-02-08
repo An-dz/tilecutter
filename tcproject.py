@@ -145,8 +145,19 @@ class Project(object):
         self.dims = ProjectDims(self)
         self.files = ProjectFiles(self)
         self.active = ActiveImage(self)
+
+        self.val_temp_dat = "Obj=building\nName=test_1\nType=cur\nPassengers=100\nintro_year=1900\nchance=100"
     def __getitem__(self, key):
         return self.images[key]
+
+    def temp_dat_properties(self, set=None):
+        """References a string containing arbitrary dat properties for the project"""
+        if set != None:
+            self.val_temp_dat = set
+            debug("TEMP dat properties set to %s" % self.val_temp_dat)
+            return 0
+        else:
+            return self.val_temp_dat
 
     def set_all_images(self, path):
         """Set the path for all images to the same path"""

@@ -570,11 +570,6 @@ class TCApp(wx.App):
         file.close()
         return project
 
-    def OnDatEdit(self, project):
-        """Dat editor"""
-        # For now this just pops up a box for arbitrary code input
-        # This gets put in before the image array in the output
-
     def Exit(self):
         """Quit the application indirectly"""
         debug("app.Exit -> app.OnQuit()")

@@ -305,7 +305,7 @@ def export_writer(project, pak_output=False):
 
     output_text = StringIO.StringIO()
     # Test text
-    output_text.write("Obj=building\nName=test_1\nType=cur\nPassengers=100\nintro_year=1900\nchance=100\n")
+    output_text.write(project.temp_dat_properties() + "\n")
     # dims=East-West, North-south, Views
     output_text.write("dims=%s,%s,%s\n" % (ydims, xdims, views))
     for k in output_list:

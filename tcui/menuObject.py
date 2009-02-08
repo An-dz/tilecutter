@@ -148,7 +148,9 @@ class menuObject:
 
     def OnDatEdit(self,e):
         debug("Menu-Tools-> Open .dat edit dialog")
-        self.app.OnDatEdit(self.app.activeproject)
+        dlg = tcui.DatFileEditDialog(self.parent, self.app)
+        if dlg.ShowModal() == wx.ID_OK:
+            dlg.Destroy()
 
     def OnSmokeEdit(self,e):
         debug("Menu-Tools-> Open smoke edit dialog")

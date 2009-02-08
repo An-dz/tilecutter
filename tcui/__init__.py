@@ -24,6 +24,7 @@ from imageWindow import imageWindow
 # Dialogs
 from translationDialog import translationDialog
 from aboutDialog import aboutDialog
+from DatFileEditDialog import DatFileEditDialog
 
 ### Set value of * in import
 ##__all__ = ["facingControl", "seasonControl", "dimsControl", "translationDialog"]
