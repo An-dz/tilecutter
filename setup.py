@@ -3,7 +3,7 @@
 from distutils.core import setup
 import sys, os, os.path
 
-version = "0.5.3"
+version = "0.5.1"
 
 ### this manifest enables the standard Windows XP-looking theme
 ##manifest = """

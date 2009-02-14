@@ -2,8 +2,8 @@
 name = base_translation
 name_translated = Base Translation
 language_code = XX
-created_by = Timothy Baldock
-created_date = 20-08-2008
+created_by = Auto-Generated
+created_date = 14-02-2009
 icon = tc_xx.png
 [/setup]
 #
@@ -13,8 +13,8 @@ icon = tc_xx.png
 #
 #	File Encoding: UTF-8
 #
-#	Produced using TileCutterTranslator version 0.2 for TileCutter version 0.5
-#	On (20-August-2008)
+#	Produced using TileCutterTranslator version 0.3 for TileCutter version 0.5
+#	On (14-February-2009)
 #
 #	* Translation keys are provided, translation string should be on the line below
 #	* Entries with tt before them are tooltips (usually)
@@ -55,9 +55,53 @@ icon = tc_xx.png
 
 240
 
-Cut
+Project Save Location
 
-Export
+tt_save_file_location
+
+Choose a location to save project...
+
+Browse...
+
+tt_browse_save_file
+
+.dat Output Location
+
+tt_dat_file_location
+
+Choose a location to save .dat file...
+
+tt_browse_dat_file
+
+.png Output Location
+
+tt_png_file_location
+
+Choose a location to save .png file...
+
+tt_browse_png_file
+
+.pak Output Location
+
+tt_pak_file_location
+
+Choose a location to export .pak file...
+
+tt_browse_pak_file
+
+Cut image
+
+Compile pak
+
+Write out .dat file
+
+Save changes before proceeding?
+
+Current project has changed
+
+Choose a location to save to...
+
+Choose a project file to open...
 
 About TileCutter
 
@@ -69,7 +113,11 @@ Simutrans Building Editor
 
 Version %s
 
-Dimensions
+Datfile Properties
+
+Here you can enter the datfile properties necessary to produce a building using makeobj
+
+Dimensions:
 
 Paksize
 
@@ -87,7 +135,7 @@ Y dimension
 
 tt_dims_y_select
 
-Direction Facing
+Direction Facing:
 
 South
 
@@ -109,7 +157,7 @@ Number\nof views:
 
 tt_facing_enable_select
 
-Image
+Image:
 
 BackImage
 
@@ -125,17 +173,19 @@ tt_images_enable_front
 
 Source image location:
 
-ttinputpath
+tt_image_file_location
 
-Browse...
+Choose an image file to open...
 
-ttbrowseinputfile
+tt_browse_input_file
 
-ttreloadinputfile
+tt_reload_input_file
 
-ttsamefileforall
+tt_same_file_for_all
 
-Choose a source image for this view:
+This action will set all images in the project to be the same as this one. Do you wish to proceed?
+
+Load same image for all
 
 &New Project
 
@@ -181,7 +231,7 @@ tt_menu_languages
 
 tt_menu_tools_prefs
 
-TileCutter Help
+TileCutter Online Help
 
 tt_menu_help_help
 
@@ -189,11 +239,7 @@ tt_menu_help_help
 
 tt_menu_help_about
 
-Save changes before proceeding?
-
-Current project has changed
-
-Offset/Mask
+Mask Offset:
 
 tt_offset_button_up
 
@@ -209,7 +255,7 @@ Fine
 
 tt_offset_selector
 
-Season
+Season:
 
 Summer
 
@@ -235,20 +281,4 @@ Created by:
 
 Created on:
 
-Output Dat or Pak File Location:
-
-tt_output_dat_file_location
-
-tt_browse_output_dat_file_location
-
-Path from .dat to .png:
-
-tt_output_image_location
-
-tt_browse_output_image_location
-
-Choose a location to output .dat/.pak to
-
-Choose a file to save to...
-
-#End of File - Total of 113 strings
+#End of File - Total of 128 strings
