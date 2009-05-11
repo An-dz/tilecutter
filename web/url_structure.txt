@@ -1,0 +1,11 @@
+tilecutter/
+	   index				(main page, intro etc.
+           docs/
+	   download/
+		    index			(main download index, links to latest version + archive)
+	   	    latest/			(links to the latest release in each distribution)
+			   feed.xml		(xml feed of release info, updated on each release)
+			   win/
+			   mac/
+			   source/
+	   	    0.5.1/win/			(links to specific versions, if broken, links to latest)
