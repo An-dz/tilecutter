@@ -66,7 +66,9 @@ class Config(object):
                     Config.config[k] = file_config.pop(k)
                 else:
                     Config.config[k] = Config.defaults[k]
-            print Config.config
+    def __str__(self):
+        """Return a string representing this object"""
+        return str(Config.config)
     def __getattr__(self, name):
         """Lookup method by . access e.g. z = x.y"""
         if Config.internals.has_key(name):
