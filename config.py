@@ -5,7 +5,8 @@
 
 # Copyright © 2008-2009 Timothy Baldock. All Rights Reserved.
 
-import simplejson as json
+##import simplejson as json
+import json
 
 # Better to use json module in python 2.6 here
 # Tuples probably need to be converted to arrays here
@@ -51,9 +52,13 @@ class Config(object):
         # the settings, can add a setting by name, set a setting's value, remove a setting
         # re-read settings from file etc.
         if Config.config == {}:
-            f = open(self.conf_path, "r")
-            file_config = json.loads(f.read())
-            f.close()
+            try:
+                f = open(self.conf_path, "r")
+                file_config = json.loads(f.read())
+                f.close()
+            except IOError:
+                # If unable to open config file, abort and use defaults
+                file_config = {}
             # Now merge this into the defaults, value from default is always overrided if there
             # is a value in the file, also means only keys with a default set are loaded in
             for k in Config.defaults.keys():
