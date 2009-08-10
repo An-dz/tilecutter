@@ -14,7 +14,7 @@ VERSION_NUMBER = "0.3"
 COMPAT_VERSION_NUMBER = "0.5"
 # Should duplicate translator entries be outputted to the translation file?
 FILE_ENCODING = "utf-8"
-ENCODE_WIN = True
+ENCODE_WIN = False
 
 logging = True
 

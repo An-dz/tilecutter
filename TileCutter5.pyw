@@ -27,6 +27,7 @@
 # BUG - Season select does not set to summer when enable winter is unchecked            - FIXED
 # BUG - Translation for static boxes in UI components                                   - DONE
 # BUG - Active image isn't set to the correct one after project load                    
+# BUG - Translation file with windows newlines on unix doesn't work			
 
 # Move debug into own module, to allow it to be easily accessed by other modules        - DONE
 # Fix debug so that it logs to a file instead                                           - DONE
