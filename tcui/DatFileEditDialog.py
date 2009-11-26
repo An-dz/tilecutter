@@ -62,7 +62,7 @@ class DatFileEditDialog(wx.Dialog):
         """Triggered when the text in the path box is changed"""
         if self.app.activeproject.temp_dat_properties() != self.text_input.GetValue():
             self.app.activeproject.temp_dat_properties(self.text_input.GetValue())
-            debug("Text changed in dat file properties entry box, new text: %s" % (str(self.text_input.GetValue())))
+            debug("Text changed in dat file properties entry box, new text: %s" % (unicode(self.text_input.GetValue())))
 
 
     def OnClose(self,e):

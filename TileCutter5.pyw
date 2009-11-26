@@ -29,6 +29,11 @@
 # BUG - Translation for static boxes in UI components                                   - DONE
 # BUG - Active image isn't set to the correct one after project load                    
 # BUG - Translation file with windows newlines on unix doesn't work			
+# BUG - When changing root drive on windows (e.g. from c:\ to d:\) in the 
+#       Project Save Location box, path isn't correctly set, missing first \
+# BUG - Source image locations do not update to reflect changes to the project save path
+# BUG - Unicode filenames causing logging to break, due to str() rather than unicode()
+#       and also due to incorrect codec used in logging module                          - FIXED 0.5.2
 
 # Move debug into own module, to allow it to be easily accessed by other modules        - DONE
 # Fix debug so that it logs to a file instead                                           - DONE
@@ -150,7 +155,8 @@ import config
 config = config.Config()
 config.save()
 
-debug(str(config))
+debug("\n--------------------------------------------------------------------------")
+debug(unicode(config))
 
 # Need some kind of auto-generation function for the translator, to produce a range of numbers (0-64, then in 16 increments to 240)
 ##choicelist_paksize = [gt("16"),gt("32"),gt("48"),gt("64"),gt("80"),gt("96"),gt("112"),gt("128"),gt("144"),gt("160"),gt("176"),gt("192"),gt("208"),gt("224"),gt("240")]
@@ -564,7 +570,7 @@ class TCApp(wx.App):
         pickle.dump(project, outstring, picklemode)
         pickle_string = outstring.getvalue()
         outstring.close()
-        debug("PickleProject, object type: %s pickle type: %s" % (str(project), picklemode))
+        debug("PickleProject, object type: %s pickle type: %s" % (unicode(project), picklemode))
         return pickle_string
 
     def UnPickleProject(self, filename):
@@ -592,7 +598,6 @@ if __name__ == "__main__":
     sys.stdout = debug
     start_directory = os.getcwd()
     # Create the application
-    debug("--------------------------------------------------------------------------")
     debug("Init - Creating app")
     app = TCApp()
 

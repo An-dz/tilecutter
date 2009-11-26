@@ -79,7 +79,7 @@ class ProjectImage(object):
 ##        # This may also be a valid file, but shouldn't be relied upon
 ##        if path != None:
 ##            self.value_lastpath = path
-##            debug("Image lastpath set to \"%s\"" % str(path))
+##            debug("Image lastpath set to \"%s\"" % unicode(path))
 ##        else:
 ##            return self.value_lastpath
     def valid_path(self):
@@ -94,7 +94,7 @@ class ProjectImage(object):
             if (paths.is_input_file(abspath) and os.path.exists(abspath)) or path == "":
                 self.value_valid_path = path
                 self.reloadImage()
-                debug("Valid image path set to \"%s\", new cached image will be loaded" % str(self.value_valid_path))
+                debug("Valid image path set to \"%s\", new cached image will be loaded" % unicode(self.value_valid_path))
         else:
             return self.value_path
     def back(self):
@@ -208,7 +208,7 @@ class Project(object):
                     self.active.image.offset[1] = 0     # Limit to 0
             changed = True
         if changed == True:
-            debug("Active Image offset changed to: %s" % str(self.active.image.offset))
+            debug("Active Image offset changed to: %s" % unicode(self.active.image.offset))
             if old_x != self.active.image.offset[0] or old_y != self.active.image.offset[1]:
                 return 1
             else:
@@ -227,19 +227,19 @@ class Project(object):
         if direction != self.active.direction and direction != None:
             self.active.direction = direction
             changed = True
-            debug("Active Image direction changed to: %s" % str(self.active.direction))
+            debug("Active Image direction changed to: %s" % unicode(self.active.direction))
         if season != self.active.season and season != None:
             self.active.season = season
             changed = True
-            debug("Active Image season changed to: %s" % str(self.active.season))
+            debug("Active Image season changed to: %s" % unicode(self.active.season))
         if frame != self.active.frame and frame != None:
             self.active.frame = frame
             changed = True
-            debug("Active Image frame changed to: %s" % str(self.active.frame))
+            debug("Active Image frame changed to: %s" % unicode(self.active.frame))
         if layer != self.active.layer and layer != None:
             self.active.layer = layer
             changed = True
-            debug("Active Image layer changed to: %s" % str(self.active.layer))
+            debug("Active Image layer changed to: %s" % unicode(self.active.layer))
         if changed == True:
             self.active.UpdateImage()
         else:
@@ -253,7 +253,7 @@ class Project(object):
                 debug("X dimension set to %i" % self.dims.x)
                 return 0
             else:
-                debug("Attempt to set X dimension failed - Value (%s) outside of acceptable range" % str(set))
+                debug("Attempt to set X dimension failed - Value (%s) outside of acceptable range" % unicode(set))
                 return 1
         else:
             return self.dims.x
@@ -265,7 +265,7 @@ class Project(object):
                 debug("Y dimension set to %i" % self.dims.y)
                 return 0
             else:
-                debug("Attempt to set Y dimension failed - Value (%s) outside of acceptable range" % str(set))
+                debug("Attempt to set Y dimension failed - Value (%s) outside of acceptable range" % unicode(set))
                 return 1
         else:
             return self.dims.y
@@ -277,7 +277,7 @@ class Project(object):
                 debug("Z dimension set to %i" % self.dims.z)
                 return 0
             else:
-                debug("Attempt to set Z dimension failed - Value (%s) outside of acceptable range" % str(set))
+                debug("Attempt to set Z dimension failed - Value (%s) outside of acceptable range" % unicode(set))
                 return 1
         else:
             return self.dims.z
@@ -289,7 +289,7 @@ class Project(object):
                 debug("Paksize set to %i" % self.dims.paksize)
                 return 0
             else:
-                debug("Attempt to set Paksize failed - Value (%s) outside of acceptable range" % str(set))
+                debug("Attempt to set Paksize failed - Value (%s) outside of acceptable range" % unicode(set))
                 return 1
         else:
             return self.dims.paksize
@@ -305,7 +305,7 @@ class Project(object):
                 debug("WinterViewEnable set to %i" % self.dims.winter)
                 return 0
             else:
-                debug("Attempt to set WinterViewEnable failed - Value (%s) outside of acceptable range" % str(set))
+                debug("Attempt to set WinterViewEnable failed - Value (%s) outside of acceptable range" % unicode(set))
                 return 1
         else:
             return self.dims.winter
@@ -321,7 +321,7 @@ class Project(object):
                 debug("FrontImageEnable set to %i" % self.dims.frontimage)
                 return 0
             else:
-                debug("Attempt to set FrontImageEnable failed - Value (%s) outside of acceptable range" % str(set))
+                debug("Attempt to set FrontImageEnable failed - Value (%s) outside of acceptable range" % unicode(set))
                 return 1
         else:
             return self.dims.frontimage
@@ -333,14 +333,14 @@ class Project(object):
                 debug("Views set to %i" % self.dims.views)
                 return 0
             else:
-                debug("Attempt to set Views failed - Value (%s) outside of acceptable range" % str(set))
+                debug("Attempt to set Views failed - Value (%s) outside of acceptable range" % unicode(set))
                 return 1
         return self.dims.views
 
     def datfile(self, set=None):
         """Set or return (relative) path to dat file"""
         if set != None:
-            self.files.datfile_location = str(set)
+            self.files.datfile_location = unicode(set)
         else:
             return self.files.datfile_location
     def writedat(self, set=None):
@@ -354,13 +354,13 @@ class Project(object):
     def pngfile(self, set=None):
         """Set or return (relative) path to png file"""
         if set != None:
-            self.files.pngfile_location = str(set)
+            self.files.pngfile_location = unicode(set)
         else:
             return self.files.pngfile_location
     def pakfile(self, set=None):
         """Set or return (relative) path to pak file"""
         if set != None:
-            self.files.pakfile_location = str(set)
+            self.files.pakfile_location = unicode(set)
         else:
             return self.files.pakfile_location
     def saved(self, set=None):
@@ -371,13 +371,13 @@ class Project(object):
             elif set in [False, 0]:
                 self.files.saved = False
             else:
-                debug("Attempt to set project saved status failed - Value (%s) outside of acceptable range" % str(set))
+                debug("Attempt to set project saved status failed - Value (%s) outside of acceptable range" % unicode(set))
         else:
             return self.files.saved
     def savefile(self, set=None):
         """Set or return (absolute) path to project save file location"""
         if set != None:
-            self.files.save_location = str(set)
+            self.files.save_location = unicode(set)
         else:
             return self.files.save_location
 

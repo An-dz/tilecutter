@@ -95,7 +95,7 @@ class FileControl(tcui.fileTextBox):
             debug("highlight without relative, %s" % self.linked())
             self.highlightText(self.path_box, self.linked())
         if self.dependants:
-            debug("highlighting dependants: %s" % (str(self.dependants)))
+            debug("highlighting dependants: %s" % (unicode(self.dependants)))
             for i in self.dependants:
                 i.highlight()
 
@@ -104,7 +104,7 @@ class FileControl(tcui.fileTextBox):
         """Triggered when the text in the path box is changed"""
         if self.linked() != self.path_box.GetValue():
             self.linked(self.path_box.GetValue())
-            debug("Text changed in %s entry box, new text: %s" % (self.label, str(self.path_box.GetValue())))
+            debug("Text changed in %s entry box, new text: %s" % (self.label, unicode(self.path_box.GetValue())))
             self.highlight()
             # Optionally trigger some action in the parent when the text is updated
             if self.parent_change_function != None:
