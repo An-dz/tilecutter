@@ -29,10 +29,8 @@ class Log(object):
         if Log.file == None:
             if file == None:
                 # Appends this session's log info to the logging file
-#                Log.file = open(config.logfile, "a")
                 Log.file = codecs.open(config.logfile, "a", "utf-8")
             else:
-#                Log.file = open(file, "a")
                 Log.file = codecs.open(file, "a", "utf-8")
     def __call__(self, s):
         """Calls self.write()"""
