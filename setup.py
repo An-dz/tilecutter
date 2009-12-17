@@ -3,7 +3,7 @@
 from distutils.core import setup
 import sys, os, os.path
 
-version = "0.5.1"
+version = "0.5.2"
 
 ### this manifest enables the standard Windows XP-looking theme
 ##manifest = """
@@ -35,7 +35,7 @@ version = "0.5.1"
 # returns a list of all the files in a directory tree
 def walk_dir(dirname):
     files = []
-    ret = [ (dirname, files) ]
+    ret = (dirname, files)
     for name in os.listdir(dirname):
         fullname = os.path.join(dirname, name)
         if os.path.isdir(fullname) and os.path.split(fullname)[1] != ".svn":
@@ -56,7 +56,10 @@ options = {
     'author_email':     'tb@entropy.me.uk',
     'url':              'http://entropy.me.uk/tilecutter',
     "zipfile":          "python\\library.zip",
-    "data_files":       ["licence.txt", "tc.config", "test.png"] + walk_dir("languages")
+    "data_files":       [
+                         ("", ["licence.txt", "tc.config", "test.png"]),
+                         walk_dir("languages"),
+                         ]
 }
 
 # windows specific
@@ -74,7 +77,7 @@ if len(sys.argv) >= 2 and sys.argv[1] == "py2exe":
         "icon_resources": [(1, "TileCutter icon/tilecutter.ico"),(2, "TileCutter icon/tilecutter_document.ico")],
         },
     ]
-    options["data_files"] += ["../dist/msvcp71.dll", ]
+#    options["data_files"] += [("", ["../dist/msvcp71.dll"]]
     options["options"] = {
         # Bundling of .dlls into the zip results in massively bigger package?!
         # Option 1 creates corrupt zip, option 2 adds dlls and makes them uncompressible

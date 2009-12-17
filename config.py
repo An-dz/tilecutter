@@ -40,7 +40,7 @@ class Config(object):
         "choicelist_dims_z": [1,2,3,4],
         }
     internals = {
-        "version": "0.5.1",
+        "version": "0.5.2",
         "window_minsize": [800,550],
         }
     conf_path = "tc.config"
