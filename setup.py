@@ -2,6 +2,7 @@
 
 from distutils.core import setup
 import sys, os, os.path
+import zipfile
 
 version = "0.5.2"
 
@@ -62,8 +63,12 @@ options = {
                          ]
 }
 
+# Pre-setup actions (py2exe, py2app & source preparation)
+
 # windows specific
 if len(sys.argv) >= 2 and sys.argv[1] == "py2exe":
+    dist_dir = os.path.join("..", "dist", "win_dist_%s" % version)
+    dist_zip = os.path.join("..", "dist", "win_dist_%s.zip" % version) 
     try:
         import py2exe
     except ImportError:
@@ -74,20 +79,34 @@ if len(sys.argv) >= 2 and sys.argv[1] == "py2exe":
         {
         "script":"TileCutter5.pyw",
         "windows":"TileCutter5.pyw",
-        "icon_resources": [(1, "TileCutter icon/tilecutter.ico"),(2, "TileCutter icon/tilecutter_document.ico")],
+        "icon_resources": [(1, "TileCutter icon/tilecutter.ico"),(42, "TileCutter icon/tilecutter_document.ico")],
         },
     ]
 #    options["data_files"] += [("", ["../dist/msvcp71.dll"]]
     options["options"] = {
         # Bundling of .dlls into the zip results in massively bigger package?!
         # Option 1 creates corrupt zip, option 2 adds dlls and makes them uncompressible
-        "py2exe": {"dist_dir": "../dist/win_dist_%s" % version,
+        "py2exe": {"dist_dir": dist_dir,
                    "bundle_files": 3,
                    "excludes": ["difflib", "doctest", "optparse", "calendar", "pdb", "inspect",
                                 "Tkconstants", "Tkinter", "tcl"]
                    },
     }
 
+    # run the setup
+    setup(**options)
+
+    # After building this, run post-setup actions (e.g. creating distribution packages etc.)
+    # Produce .zip file
+    print "Adding distribution files to .zip..."
+    zip = zipfile.ZipFile(dist_zip, "w")
+    for root, dirs, files in os.walk(dist_dir):
+        for name in files:
+            fn = os.path.join(root, name) 
+            rel_fn = os.path.relpath(os.path.join(root, name), dist_dir) 
+            print "  Adding \"%s\" to zip as \"%s\"" % (fn, rel_fn)
+            zip.write(fn, rel_fn)
+    zip.close()
 
 
 # mac specific
@@ -107,6 +126,3 @@ if len(sys.argv) >= 2 and sys.argv[1] == "py2exe":
 ##        }
 ##    }
 
-
-# run the setup
-setup(**options)

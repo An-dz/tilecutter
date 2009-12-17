@@ -8,8 +8,6 @@ rd /s /q build
 REM Create the application using py2exe
 python setup.py py2exe
 
-REM Zip up the folder we just created to produce distribution archive
-
 REM Finally, delete temporary directories created during the build process
 rd /s /q build
 
