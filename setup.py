@@ -4,7 +4,7 @@ from distutils.core import setup
 import sys, os, os.path
 import zipfile
 
-version = "0.5.2"
+version = "0.5.2-alpha"
 
 ### this manifest enables the standard Windows XP-looking theme
 ##manifest = """
@@ -65,10 +65,58 @@ options = {
 
 # Pre-setup actions (py2exe, py2app & source preparation)
 
+
+
+# Source distribution specific
+if len(sys.argv) >= 2 and sys.argv[1] == "source":
+    dist_dir = os.path.join("..", "dist", "src_dist_%s" % version)
+    dist_zip = os.path.join("..", "dist", "TileCutter_src_%s.zip" % version) 
+
+    # Needed files:
+    # trunk/
+    #       translator/*
+    #       languages/*
+    #       tcui/*
+    #       config.py
+    #       imres.py
+    #       licence.txt
+    #       logger.py
+    #       tc.py
+    #       tcproject.py
+    #       test.png
+    #       TileCutter5.pyw
+
+    try:
+        import shutil
+    except ImportError:
+        print "Could not import shutil module. Aborting source distribution creation"
+        sys.exit(0)
+
+    for recdir in ["translator", "languages", "tcui"]:
+        print "Copying contents of: %s/" % recdir
+        shutil.copytree(recdir, os.path.join(dist_dir, recdir), ignore=shutil.ignore_patterns(".svn", "tmp*", "*.pyc", "*.py~"))
+
+    for distfile in ["config.py", "imres.py", "licence.txt", "logger.py", "tc.py", "tcproject.py", "test.png", "TileCutter5.pyw"]:
+        print "Copying file: %s" % distfile
+        shutil.copy(distfile, dist_dir)
+
+    # After building this, run post-setup actions (e.g. creating distribution packages etc.)
+    # Produce .zip file
+    print "Adding distribution files to .zip..."
+    zip = zipfile.ZipFile(dist_zip, "w", zipfile.ZIP_DEFLATED)
+    for root, dirs, files in os.walk(dist_dir):
+        for name in files:
+            fn = os.path.join(root, name) 
+            rel_fn = os.path.relpath(os.path.join(root, name), dist_dir) 
+            print "  Adding \"%s\" to zip as \"%s\"" % (fn, rel_fn)
+            zip.write(fn, rel_fn)
+    zip.close()
+
+
 # windows specific
 if len(sys.argv) >= 2 and sys.argv[1] == "py2exe":
     dist_dir = os.path.join("..", "dist", "win_dist_%s" % version)
-    dist_zip = os.path.join("..", "dist", "win_dist_%s.zip" % version) 
+    dist_zip = os.path.join("..", "dist", "TileCutter_win_%s.zip" % version) 
     try:
         import py2exe
     except ImportError:

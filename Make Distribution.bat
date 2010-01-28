@@ -8,6 +8,9 @@ rd /s /q build
 REM Create the application using py2exe
 python setup.py py2exe
 
+REM Create the source distribution
+python setup.py source
+
 REM Finally, delete temporary directories created during the build process
 rd /s /q build
 
