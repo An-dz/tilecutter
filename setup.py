@@ -99,7 +99,7 @@ if len(sys.argv) >= 2 and sys.argv[1] == "py2exe":
     # After building this, run post-setup actions (e.g. creating distribution packages etc.)
     # Produce .zip file
     print "Adding distribution files to .zip..."
-    zip = zipfile.ZipFile(dist_zip, "w")
+    zip = zipfile.ZipFile(dist_zip, "w", zipfile.ZIP_DEFLATED)
     for root, dirs, files in os.walk(dist_dir):
         for name in files:
             fn = os.path.join(root, name) 
