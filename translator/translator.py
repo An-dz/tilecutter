@@ -27,7 +27,7 @@ class Translator(object):
     PATH_TO_TRANSLATIONS = "languages"
     TRANSLATION_FILE_EXTENSION = ".tab"
     DEFAULT_LANGFILE_ENCODING = "utf-8"
-    default_icon = PATH_TO_TRANSLATIONS + os.path.sep + "tc_default.png"
+##    default_icon = PATH_TO_TRANSLATIONS + os.path.sep + "tc_en.png"
     def __init__(self):
         """Load translation files"""
         if Translator.language_list is None:
@@ -51,7 +51,7 @@ class Translator(object):
             Translator.nametotranslation = self.arraysToDict(Translator.language_names_list, Translator.language_list)
 
             # Should obtain this from the program settings object, similarly, when setting translation need to update program setting
-            self.setActiveTranslation("base_translation")
+            self.setActiveTranslation("english_translation")
 
     def __call__(self, vars):
         """Used so we can do Translator() and call gt()"""

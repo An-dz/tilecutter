@@ -9,8 +9,9 @@
 import re, time, os, codecs
 import translator.w_newlines as w_newlines
 import translator.u_newlines as u_newlines
+import json
 
-VERSION_NUMBER = "0.3"
+VERSION_NUMBER = "0.4"
 COMPAT_VERSION_NUMBER = "0.5"
 # Should duplicate translator entries be outputted to the translation file?
 FILE_ENCODING = "utf-8"
@@ -40,11 +41,37 @@ for c in components:
 
 components = new_components
 
+# Script commands:
+#   scan - scan the source files for translation strings and update DB files
+#          creating duplicates.txt, newstrings.txt etc. for all translations
+#   update - use a newstrings.txt with translation data to update the DB files
+
+# Process:
+#   1. Run scan to update the newstrings_XX.txt files and the XX.db files
+#   2. Submit the newstrings_XX.txt files to community for translation
+#   3. Get back 
+
+# New script:
+#   Scan all the source files to find a list of all translation strings
+#   For each of the .db files in 
+
+
 # Name of output file
-outputfile = "languages" + os.path.sep + "tc_test.tab"
-outputfile = "tc_test.tab"
+dbfile = os.path.join("languages", "tc_en.db")
+outputfile = os.path.join("languages", "tc_en.tab")
+
 if logging:
     logfile = "tct.log"
+
+tdict = {}
+
+# Open existing db file (if this exists)
+try:
+    f = open(dbfile, "r")
+    db = json.loads(f.read())
+    f.close()
+except IOError:
+    db = {}
 
 # This script searches for instances of "gt(", then copies everything from
 # that up to the following non-escaped ")" into the output file. If a duplicate
@@ -62,14 +89,14 @@ if ENCODE_WIN:
 else:
     outfile = f
 if logging:
-    error_file = open(logfile, "w")
+    error_file = open(logfile, "a")
 
-name = u"base_translation"
-name_translated = u"Base Translation"
-language_code = u"XX"
-created_by = u"Auto-Generated"
+name = u"english_translation"
+name_translated = u"English Translation"
+language_code = u"EN"
+created_by = u"Timothy Baldock"
 created_date = time.strftime(u"%d-%m-%Y")
-flag = u"tc_xx.png"
+flag = u"tc_en.png"
 
 outfile.write(u"""[setup]
 name = %s
@@ -81,7 +108,7 @@ icon = %s
 [/setup]
 #
 #
-#	** Base translation file for TileCutter **
+#	** English translation file for TileCutter **
 #	
 #
 #	File Encoding: UTF-8
@@ -103,9 +130,8 @@ icon = %s
 
 
 if logging:
-    error_file.write("-------------------------------------------\n")
+    error_file.write("--------------------------------------------------------------------------\n")
     error_file.write("TileCutterTranslator version %s - log file\n"%VERSION_NUMBER)
-    error_file.write("-------------------------------------------\n\n")
 
 t_array = []
 
@@ -121,18 +147,34 @@ for x in components:
 # Now use regex to find all translation strings in the file
 rawstrings = re.findall("(?<=gt\(\").+?(?=\"\))", block)
 
-# Strip duplicates
 strings = []
-for i in rawstrings:
-    if i not in strings:
-        strings.append(i)
-        # Output these strings to a file
-        outfile.write(unicode(i) + u"\n\n")
-##        outfile.write(i + "\n" + i + "\n")
+dupestrings = []
+# For each entry in rawstrings, check if it's in the DB
+for s in rawstrings:
+    if s not in db.keys():
+        # If there's no key for this, add one
+        if logging:
+            error_file.write("New key found: %s\n" % s)
+        db[s] = ""
+    # Check if this is a duplicate, and add to the list if so
+    if s in strings and s not in dupestrings:
+        if logging:
+            error_file.write("Duplicate found: %s\n" % s)
+        dupestrings.append(s)
+    strings.append(s)
 
-outfile.write(u"#End of File - Total of %i strings" % len(strings))
+# Write out the DB
+f = open(dbfile, "w")
+f.write(json.dumps(db, sort_keys=True, indent=4))
+f.close()
+
+# Next write out all entries in the DB to the translation file
+for k, v in db.items():
+    outfile.write(u"%s\n%s\n" % (unicode(k), unicode(v)))
+
+outfile.write(u"#End of File - Total of %i string pairs\n" % len(db))
 if logging:
-    error_file.write("...Process completed, found %i translation strings" % len(strings))
+    error_file.write("...Process completed, output %i translation string pairs\n" % len(db))
 
 outfile.close()
 if logging:

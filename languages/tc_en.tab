@@ -1,0 +1,284 @@
+[setup]
+name = english_translation
+name_translated = English Translation
+language_code = EN
+created_by = Timothy Baldock
+created_date = 29-01-2010
+icon = tc_en.png
+[/setup]
+#
+#
+#	** English translation file for TileCutter **
+#	
+#
+#	File Encoding: UTF-8
+#
+#	Produced using TileCutterTranslator version 0.4 for TileCutter version 0.5
+#	On (29-January-2010)
+#
+#	* Translation keys are provided, translation string should be on the line below
+#	* Entries with tt before them are tooltips (usually)
+#	* Where "&" appears in a string, the next character will be a control character,
+#	  "%i" indicates a number goes here, "%s" indicates a program-generated string goes here
+#	  these are required!! The key should give an indication of how they work...
+#
+#	"#" indicates line is a comment, you can escape it with "\" in case of lines starting with "#"
+#
+#
+Winter
+Winter
+Choose a location to save project...
+Choose a location to save project...
+tt_seasons_select_summer
+View/modify the Summer image of this object
+tt_menu_file_saveas
+Save this project to a new location
+224
+224
+Cut image
+Cut image
+tt_offset_button_up
+Move the cutting mask up
+Load same image for all
+Load same image for all
+tt_menu_file_save
+Save this project
+tt_menu_help_about
+Information about this application
+.&dat file options
+.&dat File Options
+Created on:
+Created on:
+tt_menu_file_export
+Export a compiled .pak file for this object
+Fine
+Fine
+tt_menu_languages
+Change the application's language settings
+Direction Facing:
+Direction Facing:
+tt_offset_button_down
+Move the cutting mask down
+Created by:
+Created by:
+tt_offset_button_left
+Move the cutting mask left
+Language Details:
+Language Details:
+Choose a location to save .dat file...
+Choose a location to save .dat file...
+Y dimension
+Y dimension
+128
+128
+tt_images_select_back
+View/modify the BackImage of this building
+Summer
+Summer
+&Open Project
+&Open Project
+16
+16
+tt_offset_button_right
+Move the cutting mask right
+tt_menu_tools_dat
+Modify the .dat file information for this object
+Select from the options below:
+Select from the options below:
+Version %s
+Version %s
+&Save Project
+&Save Project
+tt_facing_select_south
+View/modify the South-facing view of this building
+West
+West
+tt_dims_z_select
+Select the height of the object from the dropdown list
+tt_menu_tools_prefs
+Change the application's preference settings
+192
+192
+Project Save Location
+Project Save Location
+Compile pak
+Compile .pak
+tt_seasons_select_winter
+View/modify the Winter image of this object
+112
+112
+80
+80
+East
+East
+&Preferences...
+&Preferences...
+tt_dims_y_select
+Select the dimensions of the object in the East-West direction from the dropdown list
+tt_menu_file_exit
+Quit the application
+Choose a location to export .pak file...
+Choose a location to export .pak file...
+&Smoke options
+&Smoke Options
+Image:
+Image:
+Browse...
+Browse...
+Choose an image file to open...
+Choose an image file to open...
+Here you can enter the datfile properties necessary to produce a building using makeobj
+Here you can enter the datfile properties necessary to produce a building using makeobj
+240
+240
+tt_dims_paksize_select
+Select the paksize of the project from the dropdown list
+tt_facing_select_north
+View/modify the North-facing view of this building
+tt_menu_help_help
+Documentation for using this application
+Dimensions:
+Dimensions:
+About TileCutter
+About TileCutter
+.dat Output Location
+.dat Output Location
+tt_dims_x_select
+Select the dimensions of the object in the North-South direction from the dropdown list
+32
+32
+Number\nof views:
+Number\nof views:
+tt_seasons_enable_winter
+Enable Winter/Summer images for this project. If not enabled the project will have one image for both seasons
+tt_png_file_location
+Shows the location that the .png file will be output to
+tt_images_enable_front
+Enable Front/Back images for this object, useful for stations and other buildings which vehicles can drive on top of
+.pak Output Location
+.pak Output Location
+tt_images_select_front
+View/modify the FrontImage of this building
+64
+64
+176
+176
+tt_browse_pak_file
+Browse for the location of the output .pak file
+Mask Offset:
+Mask Offset:
+North
+North
+&Language
+&Language
+This action will set all images in the project to be the same as this one. Do you wish to proceed?
+This action will set all images in the project to be the same as this one. Do you wish to proceed?
+tt_reload_input_file
+Reloads the input file, displaying changes made since the last time it was loaded (Note: This action is always performed for all input files before the cutting process begins)
+tt_facing_select_east
+View/modify the East-facing view of this building
+Language
+Language
+Simutrans Building Editor
+Simutrans Building Editor
+.png Output Location
+.png Output Location
+Datfile Properties
+Datfile Properties
+Save Project &As
+Save Project &As
+Language:
+Language:
+&New Project
+&New Project
+160
+160
+96
+96
+tt_offset_selector
+Select between paksize increments and single pixel increments for moving the cutting mask
+X dimension
+X dimension
+BackImage
+BackImage
+&Export .pak
+&Export .pak
+Save changes before proceeding?
+Save changes before proceeding?
+Choose a location to save .png file...
+Choose a location to save .png file...
+tt_dat_file_location
+Shows the location of the .dat file for this project relative to the root save location
+TileCutter Online Help
+TileCutter Online Help
+Choose a location to save to...
+Choose a location to save to...
+Close
+Close
+FrontImage
+FrontImage
+tt_facing_enable_select
+Enable multiple building directions, required for non-square buildings
+Current project has changed
+Current project has changed
+&About TileCutter
+&About TileCutter
+tt_menu_file_new
+Create a new project
+offset_button_reset
+Reset the offset position of the cutting mask
+tt_pak_file_location
+Shows the location that the .pak file will be output to
+tt_browse_dat_file
+Browse for the location of the output .dat file
+48
+48
+tt_browse_png_file
+Browse for the location of the output .png file
+tt_browse_input_file
+Browse for the location of this view's input file
+&Cut Image
+&Cut Image
+tt_menu_file_open
+Open an existing project
+TileCutter
+TileCutter
+Enable Winter
+Enable Winter
+144
+144
+208
+208
+Enable FrontImage
+Enable FrontImage
+E&xit
+E&xit
+tt_menu_tools_smoke
+Modify the smoke file information for this object
+Choose a project file to open...
+Choose a project file to open...
+tt_facing_select_west
+View/modify the West-facing view of this building
+South
+South
+Source image location:
+Source image location:
+tt_same_file_for_all
+Loads the currently selected image for all other views of this project. Useful if you have a single image with multiple object views (e.g. from a 3D render)
+Write out .dat file
+Write out .dat file
+tt_menu_file_cut
+Initiate the cutting routine, producing a .dat output file (if required) and a cut .png image
+Season:
+Season:
+Paksize
+Paksize
+tt_image_file_location
+Shows the location of the currently displayed source image
+tt_save_file_location
+Shows the location that the project is saved to. Note: All the other file locations are stored relative to this one and are updated if you change the save location
+tt_browse_save_file
+Browse for a location to save this project to
+Z dimension
+Z dimension
+#End of File - Total of 128 string pairs
