@@ -3,7 +3,7 @@
 # TileCutter User Interface Module - translationDialog
 #
 
-# Copyright © 2008-2009 Timothy Baldock. All Rights Reserved.
+# Copyright © 2008-2010 Timothy Baldock. All Rights Reserved.
 
 import wx, imres
 
@@ -30,8 +30,6 @@ class translationDialog(wx.Dialog):
         # Within the static box
         self.dialog_box = wx.StaticBox(self, wx.ID_ANY, gt("Language Details:"))
         self.s_dialog_box = wx.StaticBoxSizer(self.dialog_box, wx.HORIZONTAL)
-        # Bitmap flag display on the left
-##        self.country_icon = wx.StaticBitmap(self, wx.ID_ANY, wx.Bitmap(gt.default_icon))
         # Three static texts on the right containing information within a vertical sizer
         self.s_dialog_box_right = wx.FlexGridSizer(0,2,0,0)
         self.s_dialog_box_right.AddGrowableCol(1)
@@ -55,7 +53,6 @@ class translationDialog(wx.Dialog):
         self.buttons.Add(self.close_button, 0 ,wx.ALIGN_RIGHT, 0)
 
         # Then add bitmap and texts to the static box sizer
-##        self.s_dialog_box.Add(self.country_icon,0,wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5)
         self.s_dialog_box.Add(self.s_dialog_box_right,1,wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 10)
 
         # And finally add that, the language picker and the other static text to the panel sizer
@@ -88,12 +85,6 @@ class translationDialog(wx.Dialog):
         self.label_createdby_value.SetLabel(gt.active.created_by())
         self.label_createdon.SetLabel(gt("Created on:"))
         self.label_createdon_value.SetLabel(gt.active.created_date())
-        # And finally change the image
-##        self.country_icon.SetBitmap(self.app.tctranslator.active.icon())
-##        if gt.active.icon():
-##            self.country_icon.SetBitmap(wx.Bitmap(gt.active.icon()))
-##        else:
-##            self.country_icon.SetBitmap(wx.Bitmap(gt.default_icon))
         self.Layout()
         self.Refresh()
 

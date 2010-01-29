@@ -1,10 +1,10 @@
 # coding: UTF-8
 #
 # TileCutter translation string finder
-# Version 0.3 for TileCutter v.0.5
+# Version 0.4 for TileCutter v.0.5
 #
 
-# Copyright © 2008-2009 Timothy Baldock. All Rights Reserved.
+# Copyright © 2008-2010 Timothy Baldock. All Rights Reserved.
 
 import re, time, os, codecs
 import translator.w_newlines as w_newlines
@@ -22,7 +22,6 @@ logging = True
 # This script finds translation strings in TileCutter and outputs them
 # in a format SimuTranslator can understand
 
-print os.getcwd()
 # All files and directories to be scanned should be entered in this list (directory scanning is not recursive)
 components = ["TileCutter5.pyw", "tcui", ]
 # For directories, specify a list of valid extensions to scan
@@ -40,21 +39,6 @@ for c in components:
         new_components.append(c)
 
 components = new_components
-
-# Script commands:
-#   scan - scan the source files for translation strings and update DB files
-#          creating duplicates.txt, newstrings.txt etc. for all translations
-#   update - use a newstrings.txt with translation data to update the DB files
-
-# Process:
-#   1. Run scan to update the newstrings_XX.txt files and the XX.db files
-#   2. Submit the newstrings_XX.txt files to community for translation
-#   3. Get back 
-
-# New script:
-#   Scan all the source files to find a list of all translation strings
-#   For each of the .db files in 
-
 
 # Name of output file
 dbfile = os.path.join("languages", "tc_en.db")
@@ -96,20 +80,10 @@ name_translated = u"English Translation"
 language_code = u"EN"
 created_by = u"Timothy Baldock"
 created_date = time.strftime(u"%d-%m-%Y")
-flag = u"tc_en.png"
 
-outfile.write(u"""[setup]
-name = %s
-name_translated = %s
-language_code = %s
-created_by = %s
-created_date = %s
-icon = %s
-[/setup]
-#
+outfile.write(u"""#{"name": "%s", "name_translated": "%s", "language_code": "%s", "created_by": "%s", "created_date": "%s"}
 #
 #	** English translation file for TileCutter **
-#	
 #
 #	File Encoding: UTF-8
 #
@@ -117,15 +91,17 @@ icon = %s
 #	On (%s)
 #
 #	* Translation keys are provided, translation string should be on the line below
-#	* Entries with tt before them are tooltips (usually)
+#       * The information at the head of the file must exist for the translation file to be valid
+#	* Entries with tt before them are tooltips
+#       * Please do not use the "{" or "}" (curly braces) characters in your translations
 #	* Where "&" appears in a string, the next character will be a control character,
-#	  "%s" indicates a number goes here, "%s" indicates a program-generated string goes here
+#	  "%i" indicates a number goes here, "%s" indicates a program-generated string goes here
 #	  these are required!! The key should give an indication of how they work...
 #
 #	"#" indicates line is a comment, you can escape it with "\\" in case of lines starting with "#"
 #
 #
-""" % (name, name_translated, language_code, created_by, created_date, flag,
+""" % (name, name_translated, language_code, created_by, created_date, 
        VERSION_NUMBER, COMPAT_VERSION_NUMBER, time.strftime("%d-%B-%Y"), "%i", "%s"))
 
 

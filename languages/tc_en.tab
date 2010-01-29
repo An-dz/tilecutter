@@ -1,15 +1,6 @@
-[setup]
-name = english_translation
-name_translated = English Translation
-language_code = EN
-created_by = Timothy Baldock
-created_date = 29-01-2010
-icon = tc_en.png
-[/setup]
-#
+#{"name": "english_translation", "name_translated": "English Translation", "language_code": "EN", "created_by": "Timothy Baldock", "created_date": "29-01-2010"}
 #
 #	** English translation file for TileCutter **
-#	
 #
 #	File Encoding: UTF-8
 #

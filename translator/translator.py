@@ -3,15 +3,16 @@
 # TileCutter translation module
 #
 
-# Copyright © 2008-2009 Timothy Baldock. All Rights Reserved.
+# Copyright © 2008-2010 Timothy Baldock. All Rights Reserved.
 
 
 import wx
-import sys, os, ConfigParser, StringIO, re, codecs
+import sys, os, re, codecs
 import imres
 # Custom platform codecs
 import u_newlines
 import w_newlines
+import json
 
 import logger
 debug = logger.Log()
@@ -20,6 +21,12 @@ debug = logger.Log()
 ##    lator = Translator()
 ##    return lator.gt(text)
 
+# Translator is an object which contains a list of all the available translations
+# as well as storing the currently active translation
+
+# translation is an object containing all the information relating to
+# an individual translation set
+
 class Translator(object):
     """Contains all available translations as well as the active translation"""
     language_list = None
@@ -27,7 +34,6 @@ class Translator(object):
     PATH_TO_TRANSLATIONS = "languages"
     TRANSLATION_FILE_EXTENSION = ".tab"
     DEFAULT_LANGFILE_ENCODING = "utf-8"
-##    default_icon = PATH_TO_TRANSLATIONS + os.path.sep + "tc_en.png"
     def __init__(self):
         """Load translation files"""
         if Translator.language_list is None:
@@ -91,72 +97,55 @@ class Translator(object):
         """Set which translation should be used"""
         Translator.active = Translator.nametotranslation[name]
 
+class TranslationLoadError(Exception):
+    """Error class for exceptions raised by translation parser"""
+    pass
+
 class translation:
     """An individual translation file object"""
     def __init__(self, filename):
         """Load translation, translation details and optionally a translation image"""
+        debug("Begin loading translation from file: %s" % filename)
         # Open file & read in contents
-        f = open(filename, "r")
-        block = f.read()
-        f.close()
+        try:
+            f = open(filename, "r")
+            block = f.read()
+            f.close()
+        except IOError:
+            debug("Problem loading information from file, aborting load of translation file")
+            raise TranslationLoadError()
         # Lanuage files should be saved as UTF-8
         block = block.decode("utf-8")
         # Convert newlines to unix style
         block = block.decode("u_newlines")
-        # Init StringIO and ConfigParser
-        sio = StringIO.StringIO()
-        cfgparser = ConfigParser.SafeConfigParser()
-        # Config, everything within [setup][/setup]
-        configitems = re.findall("(?=\[setup\]).+(?=\n\[/setup\])", block, re.DOTALL)[0]
-        configitems_lines = re.split("\n", configitems)
-        for i in configitems_lines:
-            sio.write(i + u"\n")
-        sio.flush()
-        sio.seek(0)
-        cfgparser.readfp(sio)
-        sio.close()
-        # Can now query config items using cfgparser
-        # name and name_translated are the only mandatory values
-        if cfgparser.has_section("setup"):
-            if cfgparser.has_option("setup", "name"):
-                self.name(cfgparser.get("setup", "name"))
+        # Scan document for block between {}, this is our config section
+        dicts = re.findall("(?={).+?(?<=})", block, re.DOTALL)
+        if len(dicts) != 1:
+            debug("Error loading translation file: %s. Too many dicts found, ensure {} characters are not used in translation file" % filename)
+            raise TranslationLoadError()
+        configstring = dicts[0]
+        
+        debug("Translation file config string is: %s" % configstring)
+
+        config = json.loads(configstring)
+        conf_items = ["name", "name_translated", "language_code", "created_by", "created_date"]
+        func_items = [self.name, self.longname, self.language_code, self.created_by, self.created_date]
+        for ci, func in zip(conf_items, func_items):
+            if config.has_key(ci):
+                func(config[ci])
             else:
-                # Translation file invalid
-                pass
-            if cfgparser.has_option("setup", "name_translated"):
-                self.longname(cfgparser.get("setup", "name_translated"))
-            else:
-                # Translation file invalid
-                pass
-            if cfgparser.has_option("setup", "language_code"):
-                self.language_code(cfgparser.get("setup", "language_code"))
-            else:
-                self.language_code("N/A")
-            if cfgparser.has_option("setup", "created_by"):
-                self.created_by(cfgparser.get("setup", "created_by"))
-            else:
-                self.created_by("Unknown")
-            if cfgparser.has_option("setup", "created_date"):
-                self.created_date(cfgparser.get("setup", "created_date"))
-            else:
-                self.created_date("Unknown")
-            if cfgparser.has_option("setup", "icon"):
-                self.icon(cfgparser.get("setup", "icon"))
-            else:
-                self.icon("default")
-        # Remove config section from the block
-        block = re.split("\[/setup\]\n", block, re.DOTALL)[1]
-        # Then split it up into lines
+                # Translation file invalid, error out of read process
+                debug("Error loading translation from %s, %s field not found, aborting load of translation" % (filename, ci))
+                raise TranslationLoadError()
+
+        # Split block up into lines
         block_lines = re.split("\n", block)
-        # Delete all items of block_lines which begin with "#"
         block_lines2 = []
+        # Delete all items of block_lines which begin with "#"
         # Two pass system, first strip out comments
-        for i in range(len(block_lines)):
-            if len(block_lines[i]) != 0:
-                if block_lines[i][0] != "#":
-                    block_lines2.append(block_lines[i])
-            else:
-                block_lines2.append(block_lines[i])
+        for line in block_lines:
+            if len(line) != 0 and line[0] != "#":
+                block_lines2.append(line)
         # Second check for and strip duplicate empty lines, single empty lines should be replaced by the translation key line
         block_lines3 = []
         for i in range(len(block_lines2)):
@@ -220,15 +209,3 @@ class translation:
             self.value_created_date = value
         else:
             return self.value_created_date
-    def icon(self, value=None):
-        """Return the translation's icon image, takes a path as input"""
-        if value != None:
-            if os.path.exists(Translator.PATH_TO_TRANSLATIONS + os.path.sep + value):
-##                self.value_icon = wx.Bitmap(Translator.PATH_TO_TRANSLATIONS + os.path.sep + value)
-                self.value_icon = Translator.PATH_TO_TRANSLATIONS + os.path.sep + value
-            else:
-                self.value_icon = None
-##                self.value_icon = imres.catalog['tc_icon2_48_plain'].getBitmap()
-##                self.value_icon = imres.catalog['tc_icon2_48_plain'].getBitmap()
-        else:
-            return self.value_icon
