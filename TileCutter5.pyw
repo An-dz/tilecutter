@@ -321,6 +321,8 @@ class MainWindow(wx.Frame):
         self.export_button.SetLabel(gt("Compile pak"))
         self.export_dat_toggle.SetLabel(gt("Write out .dat file"))
         # And translate the window's title string
+        # And translate the display window
+        self.display.translate()
         # Then call translate methods of all child controls
         self.control_seasons.translate()
         self.control_images.translate()
