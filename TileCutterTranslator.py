@@ -43,6 +43,7 @@ components = new_components
 # Name of output file
 dbfile = os.path.join("languages", "tc_en.db")
 outputfile = os.path.join("languages", "tc_en.tab")
+stfile = os.path.join("languages", "tc_simutranslator.dat")
 
 if logging:
     logfile = "tct.log"
@@ -67,13 +68,23 @@ except IOError:
 #   stripped if not escaped
 # 
 
+# Open file for english (default) translation output
 f = codecs.open(outputfile, "w", encoding=FILE_ENCODING)
 if ENCODE_WIN:
     outfile = codecs.EncodedFile(f, "w_newlines")
 else:
     outfile = f
+
+# Open log file
 if logging:
     error_file = open(logfile, "a")
+
+# Open file for simutranslator output
+f = codecs.open(stfile, "w", encoding=FILE_ENCODING)
+if ENCODE_WIN:
+    stoutfile = codecs.EncodedFile(f, "w_newlines")
+else:
+    stoutfile = f
 
 name = u"english_translation"
 name_translated = u"English Translation"
@@ -95,7 +106,7 @@ outfile.write(u"""#{"name": "%s", "name_translated": "%s", "language_code": "%s"
 #	* Entries with tt before them are tooltips
 #       * Please do not use the "{" or "}" (curly braces) characters in your translations
 #	* Where "&" appears in a string, the next character will be a control character,
-#	  "%i" indicates a number goes here, "%s" indicates a program-generated string goes here
+#	  "%s" indicates a number goes here, "%s" indicates a program-generated string goes here
 #	  these are required!! The key should give an indication of how they work...
 #
 #	"#" indicates line is a comment, you can escape it with "\\" in case of lines starting with "#"
@@ -148,11 +159,17 @@ f.close()
 for k, v in db.items():
     outfile.write(u"%s\n%s\n" % (unicode(k), unicode(v)))
 
+# Also write them out to the simutranslator file ready for import
+# Include the obj= and name= bits at the start of each one, with a ---- seperator between them
+for k, v in db.items():
+    stoutfile.write(u"obj=program_text\nname=%s\n----------\n" % unicode(k))
+
 outfile.write(u"#End of File - Total of %i string pairs\n" % len(db))
 if logging:
     error_file.write("...Process completed, output %i translation string pairs\n" % len(db))
 
 outfile.close()
+stoutfile.close()
 if logging:
     error_file.close()
 

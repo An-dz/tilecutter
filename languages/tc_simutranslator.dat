@@ -1,0 +1,384 @@
+obj=program_text
+name=Winter
+----------
+obj=program_text
+name=Choose a location to save project...
+----------
+obj=program_text
+name=tt_seasons_select_summer
+----------
+obj=program_text
+name=tt_menu_file_saveas
+----------
+obj=program_text
+name=224
+----------
+obj=program_text
+name=Cut image
+----------
+obj=program_text
+name=tt_offset_button_up
+----------
+obj=program_text
+name=Load same image for all
+----------
+obj=program_text
+name=tt_menu_file_save
+----------
+obj=program_text
+name=tt_menu_help_about
+----------
+obj=program_text
+name=.&dat file options
+----------
+obj=program_text
+name=Created on:
+----------
+obj=program_text
+name=tt_menu_file_export
+----------
+obj=program_text
+name=Fine
+----------
+obj=program_text
+name=tt_menu_languages
+----------
+obj=program_text
+name=Direction Facing:
+----------
+obj=program_text
+name=tt_offset_button_down
+----------
+obj=program_text
+name=Created by:
+----------
+obj=program_text
+name=tt_offset_button_left
+----------
+obj=program_text
+name=Language Details:
+----------
+obj=program_text
+name=Choose a location to save .dat file...
+----------
+obj=program_text
+name=Y dimension
+----------
+obj=program_text
+name=128
+----------
+obj=program_text
+name=tt_images_select_back
+----------
+obj=program_text
+name=Summer
+----------
+obj=program_text
+name=&Open Project
+----------
+obj=program_text
+name=16
+----------
+obj=program_text
+name=tt_offset_button_right
+----------
+obj=program_text
+name=tt_menu_tools_dat
+----------
+obj=program_text
+name=Select from the options below:
+----------
+obj=program_text
+name=Version %s
+----------
+obj=program_text
+name=&Save Project
+----------
+obj=program_text
+name=tt_facing_select_south
+----------
+obj=program_text
+name=West
+----------
+obj=program_text
+name=tt_dims_z_select
+----------
+obj=program_text
+name=tt_menu_tools_prefs
+----------
+obj=program_text
+name=192
+----------
+obj=program_text
+name=Project Save Location
+----------
+obj=program_text
+name=Compile pak
+----------
+obj=program_text
+name=tt_seasons_select_winter
+----------
+obj=program_text
+name=112
+----------
+obj=program_text
+name=80
+----------
+obj=program_text
+name=East
+----------
+obj=program_text
+name=&Preferences...
+----------
+obj=program_text
+name=tt_dims_y_select
+----------
+obj=program_text
+name=tt_menu_file_exit
+----------
+obj=program_text
+name=Choose a location to export .pak file...
+----------
+obj=program_text
+name=&Smoke options
+----------
+obj=program_text
+name=Image:
+----------
+obj=program_text
+name=Browse...
+----------
+obj=program_text
+name=Choose an image file to open...
+----------
+obj=program_text
+name=Here you can enter the datfile properties necessary to produce a building using makeobj
+----------
+obj=program_text
+name=240
+----------
+obj=program_text
+name=tt_dims_paksize_select
+----------
+obj=program_text
+name=tt_facing_select_north
+----------
+obj=program_text
+name=tt_menu_help_help
+----------
+obj=program_text
+name=Dimensions:
+----------
+obj=program_text
+name=About TileCutter
+----------
+obj=program_text
+name=.dat Output Location
+----------
+obj=program_text
+name=tt_dims_x_select
+----------
+obj=program_text
+name=32
+----------
+obj=program_text
+name=Number\nof views:
+----------
+obj=program_text
+name=tt_seasons_enable_winter
+----------
+obj=program_text
+name=tt_png_file_location
+----------
+obj=program_text
+name=tt_images_enable_front
+----------
+obj=program_text
+name=.pak Output Location
+----------
+obj=program_text
+name=tt_images_select_front
+----------
+obj=program_text
+name=64
+----------
+obj=program_text
+name=176
+----------
+obj=program_text
+name=tt_browse_pak_file
+----------
+obj=program_text
+name=Mask Offset:
+----------
+obj=program_text
+name=North
+----------
+obj=program_text
+name=&Language
+----------
+obj=program_text
+name=This action will set all images in the project to be the same as this one. Do you wish to proceed?
+----------
+obj=program_text
+name=tt_reload_input_file
+----------
+obj=program_text
+name=tt_facing_select_east
+----------
+obj=program_text
+name=Language
+----------
+obj=program_text
+name=Simutrans Building Editor
+----------
+obj=program_text
+name=.png Output Location
+----------
+obj=program_text
+name=Datfile Properties
+----------
+obj=program_text
+name=Save Project &As
+----------
+obj=program_text
+name=Language:
+----------
+obj=program_text
+name=&New Project
+----------
+obj=program_text
+name=160
+----------
+obj=program_text
+name=96
+----------
+obj=program_text
+name=tt_offset_selector
+----------
+obj=program_text
+name=X dimension
+----------
+obj=program_text
+name=BackImage
+----------
+obj=program_text
+name=&Export .pak
+----------
+obj=program_text
+name=Save changes before proceeding?
+----------
+obj=program_text
+name=Choose a location to save .png file...
+----------
+obj=program_text
+name=tt_dat_file_location
+----------
+obj=program_text
+name=TileCutter Online Help
+----------
+obj=program_text
+name=Choose a location to save to...
+----------
+obj=program_text
+name=Close
+----------
+obj=program_text
+name=FrontImage
+----------
+obj=program_text
+name=tt_facing_enable_select
+----------
+obj=program_text
+name=Current project has changed
+----------
+obj=program_text
+name=&About TileCutter
+----------
+obj=program_text
+name=tt_menu_file_new
+----------
+obj=program_text
+name=offset_button_reset
+----------
+obj=program_text
+name=tt_pak_file_location
+----------
+obj=program_text
+name=tt_browse_dat_file
+----------
+obj=program_text
+name=48
+----------
+obj=program_text
+name=tt_browse_png_file
+----------
+obj=program_text
+name=tt_browse_input_file
+----------
+obj=program_text
+name=&Cut Image
+----------
+obj=program_text
+name=tt_menu_file_open
+----------
+obj=program_text
+name=TileCutter
+----------
+obj=program_text
+name=Enable Winter
+----------
+obj=program_text
+name=144
+----------
+obj=program_text
+name=208
+----------
+obj=program_text
+name=Enable FrontImage
+----------
+obj=program_text
+name=E&xit
+----------
+obj=program_text
+name=tt_menu_tools_smoke
+----------
+obj=program_text
+name=Choose a project file to open...
+----------
+obj=program_text
+name=tt_facing_select_west
+----------
+obj=program_text
+name=South
+----------
+obj=program_text
+name=Source image location:
+----------
+obj=program_text
+name=tt_same_file_for_all
+----------
+obj=program_text
+name=Write out .dat file
+----------
+obj=program_text
+name=tt_menu_file_cut
+----------
+obj=program_text
+name=Season:
+----------
+obj=program_text
+name=Paksize
+----------
+obj=program_text
+name=tt_image_file_location
+----------
+obj=program_text
+name=tt_save_file_location
+----------
+obj=program_text
+name=tt_browse_save_file
+----------
+obj=program_text
+name=Z dimension
+----------

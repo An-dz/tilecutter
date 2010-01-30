@@ -1,14 +1,16 @@
-#{"name": "english_translation", "name_translated": "English Translation", "language_code": "EN", "created_by": "Timothy Baldock", "created_date": "29-01-2010"}
+#{"name": "english_translation", "name_translated": "English Translation", "language_code": "EN", "created_by": "Timothy Baldock", "created_date": "30-01-2010"}
 #
 #	** English translation file for TileCutter **
 #
 #	File Encoding: UTF-8
 #
 #	Produced using TileCutterTranslator version 0.4 for TileCutter version 0.5
-#	On (29-January-2010)
+#	On (30-January-2010)
 #
 #	* Translation keys are provided, translation string should be on the line below
-#	* Entries with tt before them are tooltips (usually)
+#       * The information at the head of the file must exist for the translation file to be valid
+#	* Entries with tt before them are tooltips
+#       * Please do not use the "{" or "}" (curly braces) characters in your translations
 #	* Where "&" appears in a string, the next character will be a control character,
 #	  "%i" indicates a number goes here, "%s" indicates a program-generated string goes here
 #	  these are required!! The key should give an indication of how they work...
