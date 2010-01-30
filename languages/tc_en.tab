@@ -10,7 +10,6 @@
 #	* Translation keys are provided, translation string should be on the line below
 #       * The information at the head of the file must exist for the translation file to be valid
 #	* Entries with tt before them are tooltips
-#       * Please do not use the "{" or "}" (curly braces) characters in your translations
 #	* Where "&" appears in a string, the next character will be a control character,
 #	  "%i" indicates a number goes here, "%s" indicates a program-generated string goes here
 #	  these are required!! The key should give an indication of how they work...

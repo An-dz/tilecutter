@@ -38,6 +38,7 @@ class Config(object):
         "choicelist_views": [1,2,4],
         "choicelist_dims": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],
         "choicelist_dims_z": [1,2,3,4],
+        "default_language": "english_translation",
         }
     internals = {
         "version": "0.5.2",

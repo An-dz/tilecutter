@@ -138,7 +138,14 @@
 # Aims v.0.7
 # Multi-project support
 
-import wx
+import logger
+debug = logger.Log()
+
+try:
+    import wx
+except ImportError:
+    debug("WXPython not installed, please install module and try again!")
+    raise
 
 import sys, os, StringIO, pickle
 import tcui, tc, tcproject, imres
@@ -149,12 +156,11 @@ gt = translator.Translator()
 # _gt() used where class needs to be fed untranslated string, but we still want TCTranslator
 # script to pick it up for the translation file
 _gt = gt.loop
-import logger
-debug = logger.Log()
 import config
 config = config.Config()
 config.save()
 
+    
 debug("\n--------------------------------------------------------------------------")
 debug(unicode(config))
 

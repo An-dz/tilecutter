@@ -17,6 +17,10 @@ import json
 import logger
 debug = logger.Log()
 
+import config
+config = config.Config()
+config.save()
+
 ##def gt(text):
 ##    lator = Translator()
 ##    return lator.gt(text)
@@ -56,8 +60,14 @@ class Translator(object):
             Translator.longnametoname = self.arraysToDict(Translator.language_longnames_list, Translator.language_names_list)
             Translator.nametotranslation = self.arraysToDict(Translator.language_names_list, Translator.language_list)
 
-            # Should obtain this from the program settings object, similarly, when setting translation need to update program setting
-            self.setActiveTranslation("english_translation")
+            # Activate translation based on user preferences
+            # If preference does not exist, use English instead
+            if config.default_language in Translator.language_names_list:
+                active = config.default_language
+            else:
+                active = "english_translation"
+            debug("Setting active translation to %s" % active)
+            self.setActiveTranslation(active)
 
     def __call__(self, vars):
         """Used so we can do Translator() and call gt()"""
@@ -96,6 +106,8 @@ class Translator(object):
     def setActiveTranslation(self, name):
         """Set which translation should be used"""
         Translator.active = Translator.nametotranslation[name]
+        # Save this preference for the user
+        config.default_language = name
 
 class TranslationLoadError(Exception):
     """Error class for exceptions raised by translation parser"""
