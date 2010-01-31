@@ -405,6 +405,9 @@ class Project(object):
             self.on_change()
         else:
             return self.files.pakfile_location
+    def has_save_location(self):
+        """Return True if project has a save location, False otherwise"""
+        return self.files.saved
     def saved(self, set=None):
         """Set or return whether a save path has been set for this project"""
         if set != None:

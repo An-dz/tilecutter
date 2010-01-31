@@ -394,13 +394,12 @@ class TCApp(wx.App):
         self.projects["default"] = tcproject.Project(self)
         self.activeproject = self.projects["default"]
         # Serialise active project, this string is then checked to see if it needs to be saved
-        self.activepickle = self.PickleProject(self.activeproject)
+        self.activepickle = self.pickle_project(self.activeproject)
 
         # Active project needs a file save location, by default this is set to a default in the new project
         self.active_save_location = self.activeproject.files.save_location
         self.active_save_name = ""
         self.update_title_text()
-
 
         # Create and show main frame
         self.frame = MainWindow(None, self, wx.ID_ANY, "TileCutter", config.window_size, config.window_position, config.window_minsize)
@@ -408,20 +407,22 @@ class TCApp(wx.App):
         self.frame.Bind(wx.EVT_CLOSE, self.OnQuit)
         return True
 
+    # Called by the currently active project
     def project_has_changed(self):
         """Whenever the active project changes, this function is called"""
         # If it has, update the title text
         self.update_title_text()
         self.frame.set_title()
 
+    # Functions concerning the title text of the program window
     def get_title_text(self):
         """Get a string to use for the window's title text"""
         return self.title_text
     def update_title_text(self):
         """Updates the title text with the details of the currently active project"""
-        if self.CheckIfEverSaved(self.activeproject):
+        if self.activeproject.has_save_location():
             # Project has been previously saved
-            if self.CheckIfChanged(self.activeproject):
+            if self.project_changed(self.activeproject):
                 # Project has changed but was previously saved
                 # Title string will be *FileName.tcp - TileCutter
                 self.title_text = "*%s - %s" % (self.activeproject.savefile(), "%s")
@@ -431,7 +432,7 @@ class TCApp(wx.App):
                 self.title_text = "%s - %s" % (self.activeproject.savefile(), "%s")
         else:
             # Project hasn't been saved before
-            if self.CheckIfChanged(self.activeproject):
+            if self.project_changed(self.activeproject):
                 # Unsaved, but changed
                 # Title string will be *(New Project) - TileCutter
                 self.title_text = "*(%s) - %s" % (_gt("New Project"), "%s")
@@ -440,7 +441,8 @@ class TCApp(wx.App):
                 # Title string will be (New Project) - TileCutter
                 self.title_text = "(%s) - %s" % (_gt("New Project"), "%s")
 
-    def ExportProject(self, project, pak_output=False):
+    # Method to invoke cutting engine on a particular project
+    def export_project(self, project, pak_output=False):
         """Trigger exporting of specified project"""
         # First trigger project to generate cut images
         project.cutImages(tc.export_cutter)
@@ -448,43 +450,37 @@ class TCApp(wx.App):
         # Will need a way to report back progress to a progress bar/indicator
         tc.export_writer(project, pak_output)
 
-    def CheckIfChanged(self, project):
-        """Returns true if project is unchanged since last save"""
-        debug("CheckIfChanged")
-        if self.PickleProject(project) == self.activepickle:
+    # Checks on project relative to the active project
+    def project_changed(self, project):
+        """Returns true if project has changed since last save"""
+        debug("project_changed")
+        if self.pickle_project(project) == self.activepickle:
             debug("  Check Project for changes - Project Unchanged")
             return False
         else:
             debug("  Check Project for changes - Project Changed")
             return True
-    def CheckIfEverSaved(self, project):
-        """Returns true if project has ever been saved (i.e. has a save location)"""
-        debug("CheckIfEverSaved")
-        if project.saved():
-            debug("  Project has an existing save location")
-            return True
-        else:
-            debug("  Project does not have an existing save location")
-            return False
-    def PromptToSave(self, project):
+
+    # Dialogs involved in loading/saving
+    def dialog_save_changes(self, project):
         """Prompts user to save file, return wx.ID_YES, wx.ID_NO or wx.ID_CANCEL"""
-        debug("PromptToSave")
+        debug("dialog_save_changes")
         dlg = wx.MessageDialog(self.frame, gt("Save changes before proceeding?"),
                                gt("Current project has changed"),
                                style=wx.YES_NO|wx.CANCEL|wx.YES_DEFAULT|wx.ICON_QUESTION)
         result = dlg.ShowModal()
         dlg.Destroy()
         if result == wx.ID_YES:
-            debug("  PromptToSave - Result YES")
+            debug("  dialog_save_changes - Result YES")
         if result == wx.ID_NO:
-            debug("  PromptToSave - Result NO")
+            debug("  dialog_save_changes - Result NO")
         if result == wx.ID_CANCEL:
-            debug("  PromptToSave - Result CANCEL")
+            debug("  dialog_save_changes - Result CANCEL")
         return result
-    def SaveAsDialog(self, project):
+    def dialog_save_location(self, project):
         """Prompts user to select a location to save project to, returns True if location picked,
         False if cancelled. Sets project's save location to result file"""
-        debug("SaveAsDialog - Grabbing save path from dialog")
+        debug("dialog_save_location - Grabbing save path from dialog")
         filesAllowed = "TileCutter Project files (*.tcp)|*.tcp"
         dialogFlags = wx.FD_SAVE|wx.OVERWRITE_PROMPT
         path = os.path.split(project.savefile())[0]
@@ -499,12 +495,12 @@ class TCApp(wx.App):
             return True
         else:
             # Else cancel was pressed, do nothing
-            debug("  User cancelled SaveAs Dialog")
+            debug("  User cancelled save_location Dialog")
             dlg.Destroy()
             return False
-    def LoadDialog(self):
+    def dialog_load(self):
         """Prompts user to select a location to load a project file from, returns filename or wx.ID_CANCEL"""
-        debug("LoadDialog - Opening Load Dialog to allow location picking")
+        debug("dialog_load - Opening Load Dialog to allow location picking")
         filesAllowed = "TileCutter Project files (*.tcp)|*.tcp"
         dialogFlags = wx.FD_OPEN|wx.FD_FILE_MUST_EXIST
         # This probably needs to be more robust
@@ -524,107 +520,8 @@ class TCApp(wx.App):
             debug("  User cancelled location picking")
             return False
 
-    def SaveToFile(self, project):
-        """Save project to its save location, returns True if success, False if failed"""
-        debug("SaveToFile - Save project out to disk")
-        # Finally update the frame to display changes
-        project.saved(True)
-        self.activepickle = self.PickleProject(app.activeproject)
-        # Pickling the project/unpickling the project should strip all active image info
-        file = app.activeproject.savefile()
-        debug("Save path:%s" % file)
-        output = open(file, "wb")
-        output.write(self.activepickle)
-        output.close()
-        self.frame.update()
-        self.project_has_changed()
-        debug("SaveToFile - Save project success")
-        return True
-    def LoadFromFile(self, location):
-        """Load a project based on a file location"""
-        debug("LoadFromFile - Load project from file: %s" % location)
-        # Needs exception handling for unpickle failure
-        self.activeproject = self.UnPickleProject(location)
-        # Here we need to set the savefile location of the active project to its current location
-        # since this may have changed since it was saved
-        # Do this before making the active pickle, so that this change doesn't count as save-worthy
-        self.activepickle = self.PickleProject(self.activeproject)
-        self.frame.update()
-        self.project_has_changed()
-        debug("  Load Project succeeded")
-        return True
-    def NewProject(self):
-        """Create a new project"""
-        debug("NewProject - Create new project")
-        self.activeproject = tcproject.Project(self)
-        self.activepickle = self.PickleProject(self.activeproject)
-        # Reset project save location/name
-        self.active_save_location = app.activeproject.files.save_location
-        self.active_save_name = ""
-        # Finally update the frame to display changes
-        self.frame.update()
-        self.project_has_changed()
-        debug("  NewProject - Complete!")
-
-    def OnNewProject(self):
-        """Init process of starting a new project"""
-        debug("OnNewProject")
-        project = self.activeproject
-        if self.CheckIfChanged(project):
-            ret = self.PromptToSave(project)
-            if ret == wx.ID_YES:
-                if not self.CheckIfEverSaved(project):
-                    if not self.SaveAsDialog(project):
-                        return False
-                self.SaveToFile(project)
-            elif ret == wx.ID_CANCEL:
-                return False
-        self.NewProject()
-        
-    def OnLoadProject(self):
-        """Init process of loading a project from file"""
-        debug("OnLoadProject")
-        project = self.activeproject
-        if self.CheckIfChanged(project):                    # If project has changed
-            ret = self.PromptToSave(project)                # Prompt to save project
-            if ret == wx.ID_YES:                            # If answer is yes
-                if not self.CheckIfEverSaved(project):      #  Check if file has a save location
-                    if not self.SaveAsDialog(project):      #  If it doesn't, prompt user for one
-                        return False                        #  If user cancels, quit out
-                self.SaveToFile(project)                    #  Otherwise save the project
-            elif ret == wx.ID_CANCEL:                       # If answer is no
-                return False                                # Quit out
-            # else ret is wx.ID_NO, so we don't want to save but can continue
-        ret = self.LoadDialog()                             # Prompt for file to load
-        if ret != wx.ID_CANCEL:                             # If file specified
-            return self.LoadFromFile(ret)                   # Load the project
-        else:                                               # Otherwise
-            return False                                    # Quit out
-
-    def OnSaveProject(self, project):
-        """Init process of saving a project to file"""
-        debug("OnSaveProject")
-        if self.CheckIfChanged(project):
-            if self.CheckIfEverSaved(project):
-                return self.SaveToFile(project)
-            else:
-                if self.SaveAsDialog(project):
-                    return self.SaveToFile(project)
-                return False
-        # Project already saved
-        return True
-    def OnSaveAsProject(self, project):
-        """Init process of saving a project to a new location"""
-        debug("OnSaveAsProject")
-        if self.SaveAsDialog(project):
-            return self.SaveToFile(project)
-        return False
-
-
-
-
-
-    def PickleProject(self, project, picklemode = 0):
+    # Methods for loading/saving projects
+    def pickle_project(self, project, picklemode = 0):
         """Pickle a project, returns a pickled string"""
         # Remove all image information, as this can't be pickled (and doesn't need to be anyway)
         project.delImages()
@@ -634,16 +531,110 @@ class TCApp(wx.App):
         project.set_parent(self)
         pickle_string = outstring.getvalue()
         outstring.close()
-        debug("PickleProject, object type: %s pickle type: %s" % (unicode(project), picklemode))
+        debug("pickle_project, object type: %s pickle type: %s" % (unicode(project), picklemode))
         return pickle_string
-
-    def UnPickleProject(self, filename):
+    def unpickle_project(self, filename):
         """Unpickle a project from file, returning a tcproject object"""
         file = open(filename, "rb")
         project = pickle.load(file)
         project.set_parent(self)
         file.close()
         return project
+    def save_project(self, project):
+        """Save project to its save location, returns True if success, False if failed"""
+        debug("save_project - Save project out to disk")
+        # Finally update the frame to display changes
+        project.saved(True)
+        self.activepickle = self.pickle_project(app.activeproject)
+        # Pickling the project/unpickling the project should strip all active image info
+        file = app.activeproject.savefile()
+        debug("Save path:%s" % file)
+        output = open(file, "wb")
+        output.write(self.activepickle)
+        output.close()
+        self.frame.update()
+        self.project_has_changed()
+        debug("save_project - Save project success")
+        return True
+    def load_project(self, location):
+        """Load a project based on a file location"""
+        debug("load_project - Load project from file: %s" % location)
+        # Needs exception handling for unpickle failure
+        self.activeproject = self.unpickle_project(location)
+        # Here we need to set the savefile location of the active project to its current location
+        # since this may have changed since it was saved
+        # Do this before making the active pickle, so that this change doesn't count as save-worthy
+        self.activepickle = self.pickle_project(self.activeproject)
+        self.frame.update()
+        self.project_has_changed()
+        debug("  Load Project succeeded")
+        return True
+    def new_project(self):
+        """Create a new project"""
+        debug("new_project - Create new project")
+        self.activeproject = tcproject.Project(self)
+        self.activepickle = self.pickle_project(self.activeproject)
+        # Reset project save location/name
+        self.active_save_location = app.activeproject.files.save_location
+        self.active_save_name = ""
+        # Finally update the frame to display changes
+        self.frame.update()
+        self.project_has_changed()
+        debug("  new_project - Complete!")
+
+    def OnNewProject(self):
+        """Init process of starting a new project"""
+        debug("OnNewProject")
+        project = self.activeproject
+        if self.project_changed(project):
+            ret = self.dialog_save_changes(project)
+            if ret == wx.ID_YES:
+                if not project.has_save_location():
+                    if not self.dialog_save_location(project):
+                        return False
+                self.save_project(project)
+            elif ret == wx.ID_CANCEL:
+                return False
+        self.new_project()
+    def OnLoadProject(self):
+        """Init process of loading a project from file"""
+        debug("OnLoadProject")
+        project = self.activeproject
+        if self.project_changed(project):                    # If project has changed
+            ret = self.dialog_save_changes(project)                # Prompt to save project
+            if ret == wx.ID_YES:                            # If answer is yes
+                if not project.has_save_location():      #  Check if file has a save location
+                    if not self.dialog_save_location(project):      #  If it doesn't, prompt user for one
+                        return False                        #  If user cancels, quit out
+                self.save_project(project)                    #  Otherwise save the project
+            elif ret == wx.ID_CANCEL:                       # If answer is no
+                return False                                # Quit out
+            # else ret is wx.ID_NO, so we don't want to save but can continue
+        ret = self.dialog_load()                             # Prompt for file to load
+        if ret != wx.ID_CANCEL:                             # If file specified
+            return self.load_project(ret)                   # Load the project
+        else:                                               # Otherwise
+            return False                                    # Quit out
+    def OnSaveProject(self, project):
+        """Init process of saving a project to file"""
+        debug("OnSaveProject")
+        if self.project_changed(project):
+            if project.has_save_location():
+                return self.save_project(project)
+            else:
+                if self.dialog_save_location(project):
+                    return self.save_project(project)
+                return False
+        # Project already saved
+        return True
+    def OnSaveAsProject(self, project):
+        """Init process of saving a project to a new location"""
+        debug("OnSaveAsProject")
+        if self.dialog_save_location(project):
+            return self.save_project(project)
+        return False
+
+
 
     def Exit(self):
         """Quit the application indirectly"""

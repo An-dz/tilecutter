@@ -119,55 +119,55 @@ class menuObject:
         return menuItem
 
     # Menu event functions
-    def OnNewProject(self,e):
+    def OnNewProject(self, e):
         debug("Menu-File-> New Project")
         # Call app's NewProject method
         self.app.OnNewProject()
-    def OnOpenProject(self,e):
+    def OnOpenProject(self, e):
         debug("Menu-File-> Open Project")
         # Call app's OpenProject method
         self.app.OnLoadProject()
-    def OnSaveProject(self,e):
+    def OnSaveProject(self, e):
         debug("Menu-File-> Save Project")
         # Call app's SaveProject method
         self.app.OnSaveProject(self.app.activeproject)
-    def OnSaveProjectAs(self,e):
+    def OnSaveProjectAs(self, e):
         debug("Menu-File-> Save Project As...")
         # Call app's SaveProject method with saveas set to True
         self.app.OnSaveAsProject(self.app.activeproject)
-    def OnCutProject(self,e):
+    def OnCutProject(self, e):
         debug("Menu-File-> Cut Project")
-        self.app.ExportProject(self.app.activeproject, pak_output=False)
-    def OnExportProject(self,e):
+        self.app.export_project(self.app.activeproject, pak_output=False)
+    def OnExportProject(self, e):
         debug("Menu-File-> Export Project")
-        self.app.ExportProject(self.app.activeproject, pak_output=True)
-    def OnExit(self,e):
+        self.app.export_project(self.app.activeproject, pak_output=True)
+    def OnExit(self, e):
         debug("Menu-File-> Exit Program")
         # Call app's Exit method
         self.app.Exit()
 
-    def OnDatEdit(self,e):
+    def OnDatEdit(self, e):
         debug("Menu-Tools-> Open .dat edit dialog")
         dlg = tcui.DatFileEditDialog(self.parent, self.app)
         if dlg.ShowModal() == wx.ID_OK:
             dlg.Destroy()
 
-    def OnSmokeEdit(self,e):
+    def OnSmokeEdit(self, e):
         debug("Menu-Tools-> Open smoke edit dialog")
         return 1
-    def OnSelectLanguage(self,e):
+    def OnSelectLanguage(self, e):
         debug("Menu-Tools-> Open select language dialog")
         dlg = tcui.translationDialog(self.parent, self.app)
         if dlg.ShowModal() == wx.ID_OK:
             dlg.Destroy()
-    def OnPreferences(self,e):
+    def OnPreferences(self, e):
         debug("Menu-Tools-> Open preferences dialog")
         return 1
 
-    def OnHelp(self,e):
+    def OnHelp(self, e):
         debug("Menu-Help-> Open online help")
         wx.LaunchDefaultBrowser("http://entropy.me.uk/tilecutter/docs")
-    def OnAbout(self,e):
+    def OnAbout(self, e):
         debug("Menu-Help-> Open about dialog")
         dlg = tcui.aboutDialog(self.parent, self.app, config.version)
         if dlg.ShowModal() == wx.ID_OK:
