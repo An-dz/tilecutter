@@ -200,8 +200,7 @@ class Paths(object):
 
     def win_to_unix(self, path):
         """Convert windows style path blah\meh to unix style blah/meh"""
-        trans = string.maketrans("\\", "/")
-        return path.translate(trans)
+        return path.replace("\\", "/")
     
 def export_writer(project, pak_output=False):
     """Write a project's dat and png files"""

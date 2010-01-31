@@ -4,7 +4,7 @@
 # TileCutter, version 0.5
 #
 
-# Copyright © 2008-2009 Timothy Baldock. All Rights Reserved.
+# Copyright © 2008-2010 Timothy Baldock. All Rights Reserved.
 #
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 #
@@ -141,6 +141,8 @@
 import logger
 debug = logger.Log()
 
+debug("\n--------------------------------------------------------------------------")
+
 try:
     import wx
 except ImportError:
@@ -160,8 +162,6 @@ import config
 config = config.Config()
 config.save()
 
-    
-debug("\n--------------------------------------------------------------------------")
 debug(unicode(config))
 
 # Need some kind of auto-generation function for the translator, to produce a range of numbers (0-64, then in 16 increments to 240)
