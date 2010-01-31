@@ -19,6 +19,18 @@
 # THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
 
 
+# Release 0.5.3
+# FIX: Export error with Python character mapping
+# FIX: Translation of strings in image path entry box
+# FIX: Layout of About window incorrect
+# FIX: Default language setting not being saved
+
+# ADD: Filepath of saved file displayed in the title bar, indicates saved/unsaved status
+# ADD: Exception handling for case of no WX being installed
+# ADD: Better integration with SimuTranslator
+
+# DEL: Removed flags for country code - not a good way to indicate language
+
 
 
 # Todo:
@@ -336,9 +348,15 @@ class MainWindow(wx.Frame):
         self.control_pakpath.translate()
         # And the menus
         self.menubar.translate()
+        # Finally translate the application name in title bar
+        self.set_title()
         # Finally re-do the window's layout
         self.panel.Layout()
         self.Thaw()
+
+    def set_title(self):
+        # Set title text of window
+        self.SetTitle(self.app.get_title_text() % _gt("TileCutter"))
 
     def update(self):
         """Update frame and all its children to reflect values in the active project"""
@@ -370,9 +388,10 @@ class TCApp(wx.App):
         # Override wx's mechanism for writing stderr/out
         sys.stderr = debug
         sys.stdout = debug
+
         # Create a default active project
         self.projects = {}
-        self.projects["default"] = tcproject.Project()
+        self.projects["default"] = tcproject.Project(self)
         self.activeproject = self.projects["default"]
         # Serialise active project, this string is then checked to see if it needs to be saved
         self.activepickle = self.PickleProject(self.activeproject)
@@ -380,12 +399,46 @@ class TCApp(wx.App):
         # Active project needs a file save location, by default this is set to a default in the new project
         self.active_save_location = self.activeproject.files.save_location
         self.active_save_name = ""
+        self.update_title_text()
+
 
         # Create and show main frame
         self.frame = MainWindow(None, self, wx.ID_ANY, "TileCutter", config.window_size, config.window_position, config.window_minsize)
         self.SetTopWindow(self.frame)
         self.frame.Bind(wx.EVT_CLOSE, self.OnQuit)
         return True
+
+    def project_has_changed(self):
+        """Whenever the active project changes, this function is called"""
+        # If it has, update the title text
+        self.update_title_text()
+        self.frame.set_title()
+
+    def get_title_text(self):
+        """Get a string to use for the window's title text"""
+        return self.title_text
+    def update_title_text(self):
+        """Updates the title text with the details of the currently active project"""
+        if self.CheckIfEverSaved(self.activeproject):
+            # Project has been previously saved
+            if self.CheckIfChanged(self.activeproject):
+                # Project has changed but was previously saved
+                # Title string will be *FileName.tcp - TileCutter
+                self.title_text = "*%s - %s" % (self.activeproject.savefile(), "%s")
+            else:
+                # Project hasn't changed and is saved
+                # Title string will be FileName.tcp - TileCutter
+                self.title_text = "%s - %s" % (self.activeproject.savefile(), "%s")
+        else:
+            # Project hasn't been saved before
+            if self.CheckIfChanged(self.activeproject):
+                # Unsaved, but changed
+                # Title string will be *(New Project) - TileCutter
+                self.title_text = "*(%s) - %s" % (_gt("New Project"), "%s")
+            else:
+                # Unsaved and unchanged
+                # Title string will be (New Project) - TileCutter
+                self.title_text = "(%s) - %s" % (_gt("New Project"), "%s")
 
     def ExportProject(self, project, pak_output=False):
         """Trigger exporting of specified project"""
@@ -394,8 +447,6 @@ class TCApp(wx.App):
         # Then feed project into outputting routine
         # Will need a way to report back progress to a progress bar/indicator
         tc.export_writer(project, pak_output)
-
-
 
     def CheckIfChanged(self, project):
         """Returns true if project is unchanged since last save"""
@@ -486,6 +537,7 @@ class TCApp(wx.App):
         output.write(self.activepickle)
         output.close()
         self.frame.update()
+        self.project_has_changed()
         debug("SaveToFile - Save project success")
         return True
     def LoadFromFile(self, location):
@@ -498,18 +550,20 @@ class TCApp(wx.App):
         # Do this before making the active pickle, so that this change doesn't count as save-worthy
         self.activepickle = self.PickleProject(self.activeproject)
         self.frame.update()
+        self.project_has_changed()
         debug("  Load Project succeeded")
         return True
     def NewProject(self):
         """Create a new project"""
         debug("NewProject - Create new project")
-        self.activeproject = tcproject.Project()
+        self.activeproject = tcproject.Project(self)
         self.activepickle = self.PickleProject(self.activeproject)
         # Reset project save location/name
         self.active_save_location = app.activeproject.files.save_location
         self.active_save_name = ""
         # Finally update the frame to display changes
         self.frame.update()
+        self.project_has_changed()
         debug("  NewProject - Complete!")
 
     def OnNewProject(self):
@@ -574,8 +628,10 @@ class TCApp(wx.App):
         """Pickle a project, returns a pickled string"""
         # Remove all image information, as this can't be pickled (and doesn't need to be anyway)
         project.delImages()
+        project.del_parent()
         outstring = StringIO.StringIO()
         pickle.dump(project, outstring, picklemode)
+        project.set_parent(self)
         pickle_string = outstring.getvalue()
         outstring.close()
         debug("PickleProject, object type: %s pickle type: %s" % (unicode(project), picklemode))
@@ -585,6 +641,7 @@ class TCApp(wx.App):
         """Unpickle a project from file, returning a tcproject object"""
         file = open(filename, "rb")
         project = pickle.load(file)
+        project.set_parent(self)
         file.close()
         return project
 
@@ -609,7 +666,6 @@ if __name__ == "__main__":
     debug("Init - Creating app")
     app = TCApp()
 
-    display = app.frame.display
     # Init all main frame controls
     app.frame.update()
     # Show the main window frame

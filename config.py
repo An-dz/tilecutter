@@ -41,7 +41,7 @@ class Config(object):
         "default_language": "english_translation",
         }
     internals = {
-        "version": "0.5.2",
+        "version": "0.5.3",
         "window_minsize": [800,550],
         }
     conf_path = "tc.config"
