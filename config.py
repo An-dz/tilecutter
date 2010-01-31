@@ -3,7 +3,7 @@
 # Config Management Utility
 #
 
-# Copyright © 2008-2009 Timothy Baldock. All Rights Reserved.
+# Copyright © 2008-2010 Timothy Baldock. All Rights Reserved.
 
 ##import simplejson as json
 import json
@@ -32,7 +32,7 @@ class Config(object):
         "negative_offset_allowed": False,
         "default_image_path": "test.png",
 
-        "path_to_makeobj": "..\makeobj.exe",
+        "path_to_makeobj": "makeobj.exe",
 
         "choicelist_paksize": [16,32,48,64,80,96,112,128,144,160,176,192,208,224,240],
         "choicelist_views": [1,2,4],
@@ -42,7 +42,7 @@ class Config(object):
         }
     internals = {
         "version": "0.5.3",
-        "window_minsize": [800,550],
+        "window_minsize": [1000,780],
         }
     conf_path = "tc.config"
 

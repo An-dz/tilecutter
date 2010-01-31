@@ -100,8 +100,6 @@
 # Add display/direct edit boxes to the offset control                                   - 0.7
 
 # Needs much better error handling, add try/except clauses in critical places
-# Could also encase entire script in an exception catcher, which can display exception 
-#   and then gracefully shutdown wx, to prevent the flashing box/pythonwin crashing problem
 
 # Add the TileCutter icon                                                               - DONE Icon made, works well in windows
 # Use img2py to compile icon image into the application                                 - DONE
@@ -398,7 +396,6 @@ class TCApp(wx.App):
 
         # Active project needs a file save location, by default this is set to a default in the new project
         self.active_save_location = self.activeproject.files.save_location
-        self.active_save_name = ""
         self.update_title_text()
 
         # Create and show main frame
@@ -420,6 +417,7 @@ class TCApp(wx.App):
         return self.title_text
     def update_title_text(self):
         """Updates the title text with the details of the currently active project"""
+        debug("update_title_text")
         if self.activeproject.has_save_location():
             # Project has been previously saved
             if self.project_changed(self.activeproject):
@@ -440,6 +438,7 @@ class TCApp(wx.App):
                 # Unsaved and unchanged
                 # Title string will be (New Project) - TileCutter
                 self.title_text = "(%s) - %s" % (_gt("New Project"), "%s")
+        debug("  Setting title_text to: %s" % self.title_text)
 
     # Method to invoke cutting engine on a particular project
     def export_project(self, project, pak_output=False):
@@ -576,7 +575,6 @@ class TCApp(wx.App):
         self.activepickle = self.pickle_project(self.activeproject)
         # Reset project save location/name
         self.active_save_location = app.activeproject.files.save_location
-        self.active_save_name = ""
         # Finally update the frame to display changes
         self.frame.update()
         self.project_has_changed()

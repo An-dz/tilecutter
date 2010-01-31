@@ -3,7 +3,7 @@
 # TileCutter User Interface Module - menuObject
 #
 
-# Copyright © 2008-2009 Timothy Baldock. All Rights Reserved.
+# Copyright © 2008-2010 Timothy Baldock. All Rights Reserved.
 
 # This module creates the program's menus
 
