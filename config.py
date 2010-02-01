@@ -26,7 +26,7 @@ class Config(object):
 ##        "PROJECT_FILE_EXTENSION": ".tcp",
         "valid_image_extensions": [".png"],
         "OFFSET_NEGATIVE_ALLOWED": False,
-        "window_size": [800,570],
+        "window_size": [1000,780],
         "window_position": [100,0],
 
         "negative_offset_allowed": False,
@@ -41,8 +41,8 @@ class Config(object):
         "default_language": "english_translation",
         }
     internals = {
-        "version": "0.5.3",
-        "window_minsize": [1000,780],
+        "version": "0.5.3.1",
+        "window_minsize": [800,570],
         }
     conf_path = "tc.config"
 
