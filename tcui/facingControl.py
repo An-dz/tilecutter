@@ -38,26 +38,29 @@ class facingControl(object):
         self.facing_select_north = wx.RadioButton(parent, wx.ID_ANY, "", (-1,-1), (-1,-1))
         self.facing_select_west_im = wx.StaticBitmap(parent, wx.ID_ANY, imres.catalog["ImageWest"].getBitmap())
         self.facing_select_west = wx.RadioButton(parent, wx.ID_ANY, "", (-1,-1), (-1,-1))
-        self.facing_enable_label = wx.StaticText(parent, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
-        self.facing_enable_select = wx.ComboBox(parent, wx.ID_ANY, "", (-1, -1), (54, -1), "", wx.CB_READONLY|wx.ALIGN_CENTER_VERTICAL)
-        # Add to sizers
-        self.s_facing_flex.Add(self.facing_select_south_im, 0, wx.ALIGN_LEFT|wx.RIGHT|wx.LEFT, 2)
-        self.s_facing_flex.Add(self.facing_select_south, 0, wx.ALIGN_LEFT|wx.RIGHT, 0)
-        self.s_facing_flex.Add(self.facing_select_east_im, 0, wx.ALIGN_LEFT|wx.RIGHT|wx.LEFT, 2)
-        self.s_facing_flex.Add(self.facing_select_east, 0, wx.ALIGN_LEFT|wx.RIGHT, 0)
-        self.s_facing_flex.Add(self.facing_select_north_im, 0, wx.ALIGN_LEFT|wx.RIGHT|wx.LEFT, 2)
-        self.s_facing_flex.Add(self.facing_select_north, 0, wx.ALIGN_LEFT|wx.RIGHT, 0)
-        self.s_facing_flex.Add(self.facing_select_west_im, 0, wx.ALIGN_LEFT|wx.RIGHT|wx.LEFT, 2)
-        self.s_facing_flex.Add(self.facing_select_west, 0, wx.ALIGN_LEFT|wx.RIGHT, 0)
 
-        self.s_facing_right.Add(self.facing_enable_label, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.RIGHT, 0)
-        self.s_facing_right.Add(self.facing_enable_select, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.RIGHT, 0)
-        self.s_facing_1.Add(self.s_facing_flex, 0, wx.RIGHT, 0)
-        self.s_facing_1.Add(self.s_facing_right, 1, wx.ALIGN_CENTER_HORIZONTAL, 0)
-        self.s_facing.Add(self.s_facing_1, 1, wx.RIGHT|wx.TOP|wx.BOTTOM, 2)
+        self.facing_enable_label = wx.StaticText(parent, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_CENTER_HORIZONTAL)
+        self.facing_enable_select = wx.ComboBox(parent, wx.ID_ANY, "", (-1, -1), (-1, -1), "", wx.CB_READONLY)
+        # Add to sizers
+        self.s_facing_flex.Add(self.facing_select_south_im, 0, wx.ALIGN_LEFT|wx.RIGHT|wx.LEFT|wx.BOTTOM, 2)
+        self.s_facing_flex.Add(self.facing_select_south, 0, wx.ALIGN_LEFT|wx.BOTTOM, 2)
+        self.s_facing_flex.Add(self.facing_select_east_im, 0, wx.ALIGN_LEFT|wx.RIGHT|wx.LEFT|wx.BOTTOM, 2)
+        self.s_facing_flex.Add(self.facing_select_east, 0, wx.ALIGN_LEFT|wx.BOTTOM, 2)
+        self.s_facing_flex.Add(self.facing_select_north_im, 0, wx.ALIGN_LEFT|wx.RIGHT|wx.LEFT|wx.BOTTOM, 2)
+        self.s_facing_flex.Add(self.facing_select_north, 0, wx.ALIGN_LEFT|wx.BOTTOM, 2)
+        self.s_facing_flex.Add(self.facing_select_west_im, 0, wx.ALIGN_LEFT|wx.RIGHT|wx.LEFT, 2)
+        self.s_facing_flex.Add(self.facing_select_west, 0, wx.ALIGN_LEFT, 0)
+
+        # Adding to vertical sizer
+        self.s_facing_right.Add(self.facing_enable_label, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.BOTTOM, 2)
+        self.s_facing_right.Add(self.facing_enable_select, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND|wx.LEFT|wx.RIGHT, 3)
+        # Adding to horizontal sizer
+        self.s_facing.Add(self.s_facing_flex, 0, wx.RIGHT|wx.TOP|wx.BOTTOM|wx.ALIGN_CENTER_VERTICAL, 2)
+        self.s_facing.Add(self.s_facing_right, 1, wx.RIGHT|wx.TOP|wx.BOTTOM|wx.ALIGN_CENTER_VERTICAL, 2)
         # Add to default sizer with header and line
         self.sizer.Add(self.label, 0, wx.LEFT|wx.TOP|wx.BOTTOM, 2)
-        self.sizer.Add(self.s_facing, 1, wx.TOP|wx.BOTTOM, 2)
+        # Adding to vertical sizer, so expand to use all horizontal space
+        self.sizer.Add(self.s_facing, 0, wx.TOP|wx.BOTTOM|wx.EXPAND, 2)
         self.sizer.Add(wx.StaticLine(parent, wx.ID_ANY, (-1,-1),(-1,-1), wx.LI_HORIZONTAL), 0, wx.EXPAND|wx.TOP|wx.BOTTOM, 2)
         # Bind events
         self.facing_enable_select.Bind(wx.EVT_COMBOBOX, self.OnToggle, self.facing_enable_select)
@@ -67,6 +70,7 @@ class facingControl(object):
         self.facing_select_west.Bind(wx.EVT_RADIOBUTTON, self.OnWest, self.facing_select_west)
 
         # Add element to its parent sizer
+        # Adding elements to vertical sizer, so Expand to take up all horizontal space
         parent_sizer.Add(self.sizer, 0, wx.EXPAND|wx.LEFT|wx.RIGHT, 3)
 
     def translate(self):

@@ -3,7 +3,7 @@
 # TileCutter debugger window
 #
 
-# Copyright © 2008-2009 Timothy Baldock. All Rights Reserved.
+# Copyright © 2008-2010 Timothy Baldock. All Rights Reserved.
 
 # To use:
 # import logger

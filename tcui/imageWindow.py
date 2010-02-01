@@ -3,7 +3,7 @@
 # TileCutter User Interface Module - imageWindow
 #
 
-# Copyright © 2008-2009 Timothy Baldock. All Rights Reserved.
+# Copyright © 2008-2010 Timothy Baldock. All Rights Reserved.
 
 import os, wx, imres, tcui, tc
 
@@ -41,8 +41,8 @@ class imageWindow(wx.ScrolledWindow):
                                                   _gt("Browse..."), _gt("tt_browse_input_file"), parent.get_active_savefile_path,
                                                   wx.FD_OPEN|wx.FD_FILE_MUST_EXIST, self.refresh_if_valid)
 
-        self.impath_entry_reloadfile = wx.BitmapButton(panel, wx.ID_ANY, size=(25,-1), bitmap=imres.catalog["FileReload"].getBitmap())
-        self.impath_entry_sameforall = wx.BitmapButton(panel, wx.ID_ANY, size=(25,-1), bitmap=imres.catalog["FileSameForAll"].getBitmap())
+        self.impath_entry_reloadfile = wx.BitmapButton(panel, wx.ID_ANY, size=(-1,-1), bitmap=imres.catalog["FileReload"].getBitmap())
+        self.impath_entry_sameforall = wx.BitmapButton(panel, wx.ID_ANY, size=(-1,-1), bitmap=imres.catalog["FileSameForAll"].getBitmap())
         # Add them to sizer...
         self.s_panel_flex.Add(self.impath_entry_reloadfile, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 3)
         self.s_panel_flex.Add(self.impath_entry_sameforall, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 3)

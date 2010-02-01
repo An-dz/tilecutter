@@ -3,6 +3,9 @@
 # TileCutter Project Module
 #
 
+# Copyright © 2008-2010 Timothy Baldock. All Rights Reserved.
+
+
 import os, sys
 import wx
 

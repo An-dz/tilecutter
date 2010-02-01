@@ -31,10 +31,10 @@ class imageControl(object):
         self.images_select_front = wx.RadioButton(parent, wx.ID_ANY, "", (-1,-1), (-1,-1))
         self.images_enable_front = wx.CheckBox(parent, wx.ID_ANY, "", (-1,-1), (-1,-1))
         # Add to sizers
-        self.s_images_flex.Add(self.images_select_back_im, 0, wx.ALIGN_LEFT|wx.RIGHT|wx.LEFT, 2)
-        self.s_images_flex.Add(self.images_select_back, 0, wx.ALIGN_LEFT|wx.RIGHT, 2)
-        self.s_images_flex.Add(self.images_select_front_im, 0, wx.ALIGN_LEFT|wx.RIGHT|wx.LEFT, 2)
-        self.s_images_flex.Add(self.images_select_front, 0, wx.ALIGN_LEFT|wx.RIGHT, 2)
+        self.s_images_flex.Add(self.images_select_back_im, 0, wx.ALIGN_LEFT|wx.RIGHT|wx.LEFT|wx.BOTTOM, 2)
+        self.s_images_flex.Add(self.images_select_back, 0, wx.ALIGN_LEFT|wx.RIGHT|wx.BOTTOM, 2)
+        self.s_images_flex.Add(self.images_select_front_im, 0, wx.ALIGN_LEFT|wx.RIGHT|wx.LEFT|wx.BOTTOM, 2)
+        self.s_images_flex.Add(self.images_select_front, 0, wx.ALIGN_LEFT|wx.RIGHT|wx.BOTTOM, 2)
         self.s_images_flex.Add(wx.Size(1,1))
         self.s_images_flex.Add(self.images_enable_front, 0, wx.ALIGN_LEFT|wx.RIGHT, 2)
         # Add to default sizer with header and line
