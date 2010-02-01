@@ -27,13 +27,13 @@ class dimsControl(object):
         self.label = wx.StaticText(parent, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
         # Add items
         self.dims_p_label = wx.StaticText(parent, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
-        self.dims_p_select = wx.ComboBox(parent, wx.ID_ANY, "", (-1, -1), (54, -1), "", wx.CB_READONLY)
+        self.dims_p_select = wx.ComboBox(parent, wx.ID_ANY, "", (-1, -1), (70, -1), "", wx.CB_READONLY)
         self.dims_z_label = wx.StaticText(parent, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
-        self.dims_z_select = wx.ComboBox(parent, wx.ID_ANY, "", (-1, -1), (54, -1), "", wx.CB_READONLY)
+        self.dims_z_select = wx.ComboBox(parent, wx.ID_ANY, "", (-1, -1), (70, -1), "", wx.CB_READONLY)
         self.dims_x_label = wx.StaticText(parent, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
-        self.dims_x_select = wx.ComboBox(parent, wx.ID_ANY, "", (-1, -1), (54, -1), "", wx.CB_READONLY)
+        self.dims_x_select = wx.ComboBox(parent, wx.ID_ANY, "", (-1, -1), (70, -1), "", wx.CB_READONLY)
         self.dims_y_label = wx.StaticText(parent, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
-        self.dims_y_select = wx.ComboBox(parent, wx.ID_ANY, "", (-1, -1), (54, -1), "", wx.CB_READONLY)
+        self.dims_y_select = wx.ComboBox(parent, wx.ID_ANY, "", (-1, -1), (70, -1), "", wx.CB_READONLY)
         # Add to sizers
         self.s_dims_flex.Add(self.dims_p_label, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.RIGHT, 3)
         self.s_dims_flex.Add(self.dims_x_label, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.LEFT, 3)

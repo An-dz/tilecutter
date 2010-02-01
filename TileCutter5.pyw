@@ -19,6 +19,24 @@
 # THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
 
 
+# UI Change suggestions:
+# Move same image for all button to the menu bar under tools
+# Make icon for reload image much bigger or replace with text button
+# Make icons in main menu much bigger (double size)
+# Replace direction facing control with "compass", or depiction of a tile with directions marked
+# Make buttons on the mask offset control 2x bigger with better graphics
+# Move the "fine" selection below the mask offset control
+# Move the paths at the bottom into either a dialog box or into a "pop-up" panel at the bottom of
+#   the image window, which can then be accessed via a button
+# Add a status bar, displaying status information about the program
+# Add a progress indicator for export
+# Move the Cut image and Compile .pak buttons onto a single bottom bar after relocating file paths
+# Have the right/left toolbar run all the way down to the bottom of the screen
+
+
+
+
+
 # Release 0.5.3
 # FIX: Export error with Python character mapping
 # FIX: Translation of strings in image path entry box

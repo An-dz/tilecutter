@@ -40,7 +40,7 @@ class facingControl(object):
         self.facing_select_west = wx.RadioButton(parent, wx.ID_ANY, "", (-1,-1), (-1,-1))
 
         self.facing_enable_label = wx.StaticText(parent, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_CENTER_HORIZONTAL)
-        self.facing_enable_select = wx.ComboBox(parent, wx.ID_ANY, "", (-1, -1), (-1, -1), "", wx.CB_READONLY)
+        self.facing_enable_select = wx.ComboBox(parent, wx.ID_ANY, "", (-1, -1), (70, -1), "", wx.CB_READONLY)
         # Add to sizers
         self.s_facing_flex.Add(self.facing_select_south_im, 0, wx.ALIGN_LEFT|wx.RIGHT|wx.LEFT|wx.BOTTOM, 2)
         self.s_facing_flex.Add(self.facing_select_south, 0, wx.ALIGN_LEFT|wx.BOTTOM, 2)
