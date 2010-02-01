@@ -87,7 +87,7 @@ else:
     stoutfile = f
 
 name = u"english_translation"
-name_translated = u"English Translation"
+name_translated = u"English"
 language_code = u"EN"
 created_by = u"Timothy Baldock"
 created_date = time.strftime(u"%d-%m-%Y")

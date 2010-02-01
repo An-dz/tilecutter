@@ -1,0 +1,257 @@
+#{"name": "Spanish", "name_translated": "Español", "language_code": "es", "created_by": "SimuTranslator", "created_date": "01-02-2010"}
+Winter
+Invierno
+Choose a location to save project...
+Selecciona donde guardar el proyecto
+tt_seasons_select_summer
+Ver/modificar la imagen estival del objeto
+tt_menu_file_saveas
+Guardar el proyecto en un nuevo lugar
+224
+224
+Cut image
+Cortar imagen
+tt_offset_button_up
+Mover la máscara hacia arriba
+Load same image for all
+Misma imagen para todos
+tt_menu_file_save
+Guardar el proyecto
+tt_menu_help_about
+Información acerca de la aplicación
+.&dat file options
+Opciones fichero .&dat
+Created on:
+Creado en:
+tt_menu_file_export
+Exportar fichero pak compilado para este objeto
+Fine
+Fino
+tt_menu_languages
+Cambia los parámetros de idioma de la aplicación
+Direction Facing:
+Dirección Frente:
+tt_offset_button_down
+Mover la máscara hacia abajo
+Created by:
+Creado por:
+tt_offset_button_left
+Mover la máscara a la izquierda
+Language Details:
+Detalles de idioma:
+Choose a location to save .dat file...
+Selecciona donde guardar el fichero dat
+Y dimension
+Eje Y
+128
+128
+tt_images_select_back
+Ver/modificar la BackImage del edificio
+Summer
+Verano
+&Open Project
+&Abrir Proyecto
+16
+16
+tt_offset_button_right
+Mover la máscara a la derecha
+tt_menu_tools_dat
+Modificar la información del fichero dat para este objeto.
+Select from the options below:
+Seleccionar entre siguientes opciones
+Version %s
+Versión %s
+&Save Project
+&Guardar Proyecto
+tt_facing_select_south
+Ver/modificar la vista Sur del edificio
+West
+Oeste
+tt_dims_z_select
+Seleccionar la altura del objeto del menú
+tt_menu_tools_prefs
+Cambia los parámetros de las preferencias de la aplicación
+192
+192
+Project Save Location
+Guardar Proyecto en
+Compile pak
+Compilar pak
+tt_seasons_select_winter
+Ver/modificar la imagen invernal del objeto
+112
+112
+80
+80
+East
+Este
+&Preferences...
+&Preferencias...
+tt_dims_y_select
+Seleccionar las dimensiones del objeto del menú
+tt_menu_file_exit
+Salir de la aplicación
+Choose a location to export .pak file...
+Selecciona donde exportar el fichero pak
+&Smoke options
+&Opciones de Humo
+Image:
+Imagen:
+Browse...
+Examinar...
+Choose an image file to open...
+Abrir imagen desde...
+Here you can enter the datfile properties necessary to produce a building using makeobj
+Aquí puedes insertar los atributos dat necesarios para crear un edificio usando makeobj
+240
+240
+tt_dims_paksize_select
+Seleccionar el tamaño del pakset del proyecto del menú
+tt_facing_select_north
+Ver/modificar la vista Norte del edificio
+tt_menu_help_help
+Documentación para usar la aplicación
+Dimensions:
+Dimensiones:
+About TileCutter
+Acerca de TileCutter
+.dat Output Location
+Salida fichero dat
+tt_dims_x_select
+Seleccionar las dimensiones de la vista Norte-Sur del objeto del menú
+32
+32
+Number\nof views:
+Número\nde vistas:
+tt_seasons_enable_winter
+Habilita las imágenes invernales/estivales para este proyecto. Si no está habilitado, el proyecto tendrá una imagen para ambas estaciones.
+tt_png_file_location
+Muestra donde será guardado el fichero png
+tt_images_enable_front
+Habilita imágenes frontal/trasera del objeto, útil para estaciones u otros edificios donde los vehículos tengan que pasar a través de los mismos.
+.pak Output Location
+Salida fichero pak
+tt_images_select_front
+Ver/modificar la FrontImage del edificio
+64
+64
+176
+176
+tt_browse_pak_file
+Examinar localización para el fichero pak resultante
+Mask Offset:
+Desp. Máscara:
+North
+Norte
+&Language
+&Idioma
+This action will set all images in the project to be the same as this one. Do you wish to proceed?
+Esta acción establecerá la misma imagen en todo el proyecto ¿deseas continuar?
+tt_reload_input_file
+Recargar fichero original, mostrando los cambios realizados desde que se cargó. Nota: Esta acción se lleva a cabo para todos los ficheros originales previamente al proceso de troceado
+tt_facing_select_east
+Ver/modificar la vista Este del edificio
+Language
+Idioma
+Simutrans Building Editor
+Editor de Edificios de Simutrans
+.png Output Location
+Salida fichero png
+Datfile Properties
+Atributos .dat
+Save Project &As
+Guardar Proyecto &Como
+Language:
+Idioma
+&New Project
+&Nuevo Proyecto
+160
+160
+96
+96
+tt_offset_selector
+Selecciona entre incremento por unidad o por tamaño del pakset para mover la máscara
+X dimension
+Eje X
+BackImage
+BackImage
+&Export .pak
+&Exportar .pak
+Save changes before proceeding?
+¿Guardar cambios antes de continuar?
+Choose a location to save .png file...
+Selecciona donde guardar el fichero png
+tt_dat_file_location
+Muestra la localización del fichero dat del proyecto relativamente a la dirección base
+TileCutter Online Help
+Ayuda en línea de TileCutter
+Choose a location to save to...
+Guardar como...
+Close
+Cerrar
+FrontImage
+FrontImage
+tt_facing_enable_select
+Habilitar direcciones múltiples, necesarias para edificios no cuadrados
+Current project has changed
+Hay cambios en el proyecto actual
+&About TileCutter
+&Acerca de TileCutter
+tt_menu_file_new
+Crear un nuevo proyecto
+offset_button_reset
+Resetear la posición de la máscara
+tt_pak_file_location
+Muestra el lugar donde se guardará el fichero pak
+tt_browse_dat_file
+Examinar localización para el fichero dat resultante
+48
+48
+tt_browse_png_file
+Examinar localización para el fichero png resultante
+tt_browse_input_file
+Examinar localización para el fichero base de las vistas
+&Cut Image
+&Trocear Imagen
+tt_menu_file_open
+Abrir un proyecto existente
+TileCutter
+TileCutter
+Enable Winter
+Habilitar Invierno
+144
+144
+208
+208
+Enable FrontImage
+Habilitar FrontImage
+E&xit
+Salir
+tt_menu_tools_smoke
+Modificar la información del fichero del humo para este objeto
+Choose a project file to open...
+Abrir proyecto desde...
+tt_facing_select_west
+Ver/modificar la vista Oeste del edificio
+South
+Sur
+Source image location:
+Localización de la imagen base:
+tt_same_file_for_all
+Carga la imagen actualmente seleccionada para el resto de vistas del proyecto. Útil si tienes una sola imagen con múltiples vistas del objeto (imagen 3D renderizada)
+Write out .dat file
+Fichero .dat de salida
+tt_menu_file_cut
+Iniciar rutina de corte, produciendo un fichero dat (si es necesario) y una imagen png troceada
+Season:
+Estación:
+Paksize
+Tamaño
+tt_image_file_location
+Muestra localización de la imagen actualmente mostrada
+tt_save_file_location
+Muestra donde está guardado el proyecto. Nota: el resto de rutas son almacenadas relativamente a este y son actualizadas si cambias la localización.
+tt_browse_save_file
+Examinar la localización donde guardar el proyecto
+Z dimension
+Eje Z

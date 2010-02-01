@@ -1,22 +1,4 @@
-#{"name": "english_translation", "name_translated": "English", "language_code": "EN", "created_by": "Timothy Baldock", "created_date": "30-01-2010"}
-#
-#	** English translation file for TileCutter **
-#
-#	File Encoding: UTF-8
-#
-#	Produced using TileCutterTranslator version 0.4 for TileCutter version 0.5
-#	On (30-January-2010)
-#
-#	* Translation keys are provided, translation string should be on the line below
-#       * The information at the head of the file must exist for the translation file to be valid
-#	* Entries with tt before them are tooltips
-#	* Where "&" appears in a string, the next character will be a control character,
-#	  "%i" indicates a number goes here, "%s" indicates a program-generated string goes here
-#	  these are required!! The key should give an indication of how they work...
-#
-#	"#" indicates line is a comment, you can escape it with "\" in case of lines starting with "#"
-#
-#
+#{"name": "Portuguese", "name_translated": "Português", "language_code": "pt", "created_by": "SimuTranslator", "created_date": "01-02-2010"}
 Winter
 Winter
 Choose a location to save project...
@@ -52,7 +34,7 @@ Direction Facing:
 tt_offset_button_down
 Move the cutting mask down
 Created by:
-Created by:
+Criado por:
 tt_offset_button_left
 Move the cutting mask left
 Language Details:
@@ -68,7 +50,7 @@ View/modify the BackImage of this building
 Summer
 Summer
 &Open Project
-&Open Project
+&Abrir Projeto
 16
 16
 tt_offset_button_right
@@ -162,7 +144,7 @@ Mask Offset:
 North
 North
 &Language
-&Language
+&Língua
 This action will set all images in the project to be the same as this one. Do you wish to proceed?
 This action will set all images in the project to be the same as this one. Do you wish to proceed?
 tt_reload_input_file
@@ -182,7 +164,7 @@ Save Project &As
 Language:
 Language:
 &New Project
-&New Project
+&Novo Projeto
 160
 160
 96
@@ -194,7 +176,7 @@ X dimension
 BackImage
 BackImage
 &Export .pak
-&Export .pak
+&Exportar .pak
 Save changes before proceeding?
 Save changes before proceeding?
 Choose a location to save .png file...
@@ -214,7 +196,7 @@ Enable multiple building directions, required for non-square buildings
 Current project has changed
 Current project has changed
 &About TileCutter
-&About TileCutter
+&Sobre TileCutter
 tt_menu_file_new
 Create a new project
 offset_button_reset
@@ -230,7 +212,7 @@ Browse for the location of the output .png file
 tt_browse_input_file
 Browse for the location of this view's input file
 &Cut Image
-&Cut Image
+&Cortar Imagem
 tt_menu_file_open
 Open an existing project
 TileCutter
@@ -273,4 +255,3 @@ tt_browse_save_file
 Browse for a location to save this project to
 Z dimension
 Z dimension
-#End of File - Total of 128 string pairs

@@ -1,22 +1,4 @@
-#{"name": "english_translation", "name_translated": "English", "language_code": "EN", "created_by": "Timothy Baldock", "created_date": "30-01-2010"}
-#
-#	** English translation file for TileCutter **
-#
-#	File Encoding: UTF-8
-#
-#	Produced using TileCutterTranslator version 0.4 for TileCutter version 0.5
-#	On (30-January-2010)
-#
-#	* Translation keys are provided, translation string should be on the line below
-#       * The information at the head of the file must exist for the translation file to be valid
-#	* Entries with tt before them are tooltips
-#	* Where "&" appears in a string, the next character will be a control character,
-#	  "%i" indicates a number goes here, "%s" indicates a program-generated string goes here
-#	  these are required!! The key should give an indication of how they work...
-#
-#	"#" indicates line is a comment, you can escape it with "\" in case of lines starting with "#"
-#
-#
+#{"name": "Russian", "name_translated": "Русский", "language_code": "ru", "created_by": "SimuTranslator", "created_date": "01-02-2010"}
 Winter
 Winter
 Choose a location to save project...
@@ -273,4 +255,3 @@ tt_browse_save_file
 Browse for a location to save this project to
 Z dimension
 Z dimension
-#End of File - Total of 128 string pairs
