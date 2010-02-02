@@ -44,6 +44,8 @@ class menuObject:
         self.menu_tools_smoke = self.AddMenuItem(self.toolsMenu, self.OnSmokeEdit)
         self.menu_tools_smoke.Enable(False)
         self.toolsMenu.AppendSeparator()
+        self.menu_tools_sameforall = self.AddMenuItem(self.toolsMenu, self.OnSameForAll)
+        self.toolsMenu.AppendSeparator()
         self.menu_tools_language = self.AddMenuItem(self.toolsMenu, self.OnSelectLanguage)
         self.menu_tools_prefs = self.AddMenuItem(self.toolsMenu, self.OnPreferences, id=wx.ID_PREFERENCES)
         self.menu_tools_prefs.Enable(False)
@@ -85,6 +87,10 @@ class menuObject:
         self.menu_tools_dat.SetHelp(gt("tt_menu_tools_dat"))
         self.menu_tools_smoke.SetItemLabel(gt("&Smoke options") + self.gsc("menu_tools_smoke", "Ctrl-M"))
         self.menu_tools_smoke.SetHelp(gt("tt_menu_tools_smoke"))
+
+        self.menu_tools_sameforall.SetItemLabel(gt("Same File For All &Images") + self.gsc("menu_tools_sameforall", ""))
+        self.menu_tools_sameforall.SetHelp(gt("tt_same_file_for_all"))
+
         self.menu_tools_language.SetItemLabel(gt("&Language") + self.gsc("menu_tools_language", "Ctrl-L"))
         self.menu_tools_language.SetHelp(gt("tt_menu_languages"))
         self.menu_tools_prefs.SetItemLabel(gt("&Preferences...") + self.gsc("menu_tools_prefs", "Ctrl-P"))
@@ -151,10 +157,24 @@ class menuObject:
         dlg = tcui.DatFileEditDialog(self.parent, self.app)
         if dlg.ShowModal() == wx.ID_OK:
             dlg.Destroy()
-
     def OnSmokeEdit(self, e):
         debug("Menu-Tools-> Open smoke edit dialog")
         return 1
+
+    def OnSameForAll(self, e):
+        """When "load same image for all" button is clicked"""
+        debug("Load active image for all images")
+        dlg = wx.MessageDialog(self.parent, gt("This action will set all images in the project to be the same as this one. Do you wish to proceed?"),
+                               gt("Load same image for all"),
+                               style=wx.YES_NO|wx.YES_DEFAULT|wx.ICON_QUESTION)
+        result = dlg.ShowModal()
+        dlg.Destroy()
+        if result == wx.ID_YES:
+            debug("  LoadImageForAll - Result YES")
+            self.app.activeproject.set_all_images(self.app.activeproject.active_image_path())
+        else:
+            debug("  LoadImageForAll - Result NO")
+
     def OnSelectLanguage(self, e):
         debug("Menu-Tools-> Open select language dialog")
         dlg = tcui.translationDialog(self.parent, self.app)

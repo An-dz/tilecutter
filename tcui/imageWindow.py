@@ -31,7 +31,7 @@ class imageWindow(wx.ScrolledWindow):
         self.parent = parent
         wx.ScrolledWindow.__init__(self, panel, id, (0, 0), size=size, style=wx.SUNKEN_BORDER)
         # Make controls for the image path entry box
-        self.s_panel_flex = wx.FlexGridSizer(0,6,0,0)
+        self.s_panel_flex = wx.FlexGridSizer(0,5,0,0)
             # Make controls
         # tcproject image class does some additional checking on the path to source images
         # which break this control
@@ -41,15 +41,13 @@ class imageWindow(wx.ScrolledWindow):
                                                   _gt("Browse..."), _gt("tt_browse_input_file"), parent.get_active_savefile_path,
                                                   wx.FD_OPEN|wx.FD_FILE_MUST_EXIST, self.refresh_if_valid)
 
-        self.impath_entry_reloadfile = wx.BitmapButton(panel, wx.ID_ANY, size=(-1,-1), bitmap=imres.catalog["FileReload"].getBitmap())
-        self.impath_entry_sameforall = wx.BitmapButton(panel, wx.ID_ANY, size=(-1,-1), bitmap=imres.catalog["FileSameForAll"].getBitmap())
+        self.impath_entry_reloadfile = wx.Button(self.panel, wx.ID_ANY)
+        self.impath_entry_reloadfile.Bind(wx.EVT_BUTTON, self.OnReloadImage, self.impath_entry_reloadfile)
+
         # Add them to sizer...
         self.s_panel_flex.Add(self.impath_entry_reloadfile, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 3)
-        self.s_panel_flex.Add(self.impath_entry_sameforall, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 3)
         self.s_panel_flex.AddGrowableCol(1)
         # Bind them to events
-        self.impath_entry_reloadfile.Bind(wx.EVT_BUTTON, self.OnReloadImage, self.impath_entry_reloadfile)
-        self.impath_entry_sameforall.Bind(wx.EVT_BUTTON, self.OnLoadImageForAll, self.impath_entry_sameforall)
         # Add element to its parent sizer
         parent_sizer.Add(self.s_panel_flex, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND|wx.ALL, 4)
 
@@ -93,8 +91,8 @@ class imageWindow(wx.ScrolledWindow):
     def translate(self):
         """Update the text of all controls to reflect a new translation"""
         self.control_imagepath.translate()
+        self.impath_entry_reloadfile.SetLabel(gt("Reload Image"))
         self.impath_entry_reloadfile.SetToolTipString(gt("tt_reload_input_file"))
-        self.impath_entry_sameforall.SetToolTipString(gt("tt_same_file_for_all"))
 
     # Update refreshes both textbox (if it's changed) and the device context
     def update(self):
@@ -230,17 +228,4 @@ class imageWindow(wx.ScrolledWindow):
         debug("Reload active image...")
         self.app.activeproject.activeImage().reloadImage()
         self.update()
-    def OnLoadImageForAll(self,e):
-        """When "load same image for all" button is clicked"""
-        debug("Load active image for all images")
-        dlg = wx.MessageDialog(self, gt("This action will set all images in the project to be the same as this one. Do you wish to proceed?"),
-                               gt("Load same image for all"),
-                               style=wx.YES_NO|wx.YES_DEFAULT|wx.ICON_QUESTION)
-        result = dlg.ShowModal()
-        dlg.Destroy()
-        if result == wx.ID_YES:
-            debug("  LoadImageForAll - Result YES")
-            self.app.activeproject.set_all_images(self.app.activeproject.active_image_path())
-        else:
-            debug("  LoadImageForAll - Result NO")
 
