@@ -140,7 +140,7 @@ Select the dimensions of the object in the North-South direction from the dropdo
 32
 32
 Number\nof views:
-Number\nof views:
+Number of views:
 tt_seasons_enable_winter
 Enable Winter/Summer images for this project. If not enabled the project will have one image for both seasons
 tt_png_file_location

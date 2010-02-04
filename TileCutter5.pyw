@@ -20,12 +20,12 @@
 
 
 # UI Change suggestions:
-# Move same image for all button to the menu bar under tools            - Moved to tools
-# Make icon for reload image much bigger or replace with text button    - Replaced with text
+# Move same image for all button to the menu bar under tools                                        - Moved to tools
+# Make icon for reload image much bigger or replace with text button                                - Replaced with text
 # Make icons in main menu much bigger (double size)
-# Replace direction facing control with "compass", or depiction of a tile with directions marked
-# Make buttons on the mask offset control 2x bigger with better graphics
-# Move the "fine" selection below the mask offset control
+# Replace direction facing control with "compass", or depiction of a tile with directions marked    - Added tile graphic with directions
+# Make buttons on the mask offset control 2x bigger with better graphics                            - Bigger, need new graphics
+# Move the "fine" selection below the mask offset control                                           - Done
 # Move the paths at the bottom into either a dialog box or into a "pop-up" panel at the bottom of
 #   the image window, which can then be accessed via a button
 # Add a status bar, displaying status information about the program

@@ -3,7 +3,7 @@
 # TileCutter User Interface Module - facingControl
 #
 
-# Copyright © 2008-2009 Timothy Baldock. All Rights Reserved.
+# Copyright © 2008-2010 Timothy Baldock. All Rights Reserved.
 
 import wx, imres
 
@@ -22,16 +22,14 @@ class facingControl(object):
         self.app = app
         # Setup sizers
         self.sizer = wx.BoxSizer(wx.VERTICAL)
-        self.s_facing_flex = wx.FlexGridSizer(0,3,0,0)
-
-
         self.s_facing = wx.BoxSizer(wx.HORIZONTAL)
+        self.s_facing_flex = wx.FlexGridSizer(0,3,0,0)
         self.s_facing_flex.AddGrowableCol(0)
         self.s_facing_flex.AddGrowableCol(2)
-        self.s_facing_right = wx.BoxSizer(wx.VERTICAL)
-        self.s_facing_1 = wx.BoxSizer(wx.HORIZONTAL)
+
         # Header text
         self.label = wx.StaticText(parent, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
+        # Components which make up the tile graphic
         self.facing_tile_left = wx.StaticBitmap(parent, wx.ID_ANY, imres.catalog["tilegraphic_left"].getBitmap())
         self.facing_tile_right = wx.StaticBitmap(parent, wx.ID_ANY, imres.catalog["tilegraphic_right"].getBitmap())
         self.facing_tile_middle = wx.StaticBitmap(parent, wx.ID_ANY, imres.catalog["tilegraphic_middle"].getBitmap())
@@ -39,7 +37,6 @@ class facingControl(object):
         self.facing_tile_top = wx.StaticBitmap(parent, wx.ID_ANY, imres.catalog["tilegraphic_top"].getBitmap())
 
         # Add items
-
         self.s_facing_select_south = wx.BoxSizer(wx.HORIZONTAL)
         self.facing_select_south_label = wx.StaticText(parent, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_RIGHT)
         self.facing_select_south = wx.RadioButton(parent, wx.ID_ANY, "", (-1,-1), (-1,-1), wx.RB_GROUP)
@@ -78,27 +75,23 @@ class facingControl(object):
         self.s_facing_flex.Add(self.facing_tile_bottom, 0, wx.ALIGN_TOP)
         self.s_facing_flex.Add(self.s_facing_select_east, 0, wx.ALIGN_LEFT|wx.ALIGN_TOP)
 
-        # Adding to vertical sizer
-        self.s_facing_right.Add(self.facing_enable_label, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.BOTTOM, 2)
-        self.s_facing_right.Add(self.facing_enable_select, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND|wx.LEFT|wx.RIGHT, 3)
-        # Adding to horizontal sizer
-        self.s_facing.Add(self.s_facing_flex, 0, wx.RIGHT|wx.TOP|wx.BOTTOM|wx.ALIGN_CENTER_VERTICAL, 2)
-        self.s_facing.Add(self.s_facing_right, 1, wx.RIGHT|wx.TOP|wx.BOTTOM|wx.ALIGN_CENTER_VERTICAL, 2)
         # Add to default sizer with header and line
-        self.sizer.Add(self.label, 0, wx.LEFT|wx.TOP|wx.BOTTOM, 2)
         # Adding to vertical sizer, so expand to use all horizontal space
-        self.sizer.Add(self.s_facing, 0, wx.TOP|wx.BOTTOM|wx.EXPAND, 2)
+        self.sizer.Add(self.label, 0, wx.LEFT|wx.TOP|wx.BOTTOM, 2)
+        self.sizer.Add(self.s_facing_flex, 0, wx.TOP|wx.BOTTOM|wx.EXPAND, 2)
+        self.sizer.Add(self.facing_enable_label, 0, wx.ALIGN_CENTER_HORIZONTAL)
+        self.sizer.Add(self.facing_enable_select, 0, wx.ALIGN_CENTER_HORIZONTAL)
         self.sizer.Add(wx.StaticLine(parent, wx.ID_ANY, (-1,-1),(-1,-1), wx.LI_HORIZONTAL), 0, wx.EXPAND|wx.TOP|wx.BOTTOM, 2)
         # Bind events
         self.facing_enable_select.Bind(wx.EVT_COMBOBOX, self.OnToggle, self.facing_enable_select)
         self.facing_select_south.Bind(wx.EVT_RADIOBUTTON, self.OnSouth, self.facing_select_south)
-        self.facing_select_south.Bind(wx.EVT_RADIOBUTTON, self.OnSouth, self.facing_select_south)
+        self.facing_select_south_label.Bind(wx.EVT_LEFT_DOWN, self.OnSouth, self.facing_select_south_label)
         self.facing_select_east.Bind(wx.EVT_RADIOBUTTON, self.OnEast, self.facing_select_east)
-        self.facing_select_east.Bind(wx.EVT_RADIOBUTTON, self.OnEast, self.facing_select_east)
+        self.facing_select_east_label.Bind(wx.EVT_LEFT_DOWN, self.OnEast, self.facing_select_east_label)
         self.facing_select_north.Bind(wx.EVT_RADIOBUTTON, self.OnNorth, self.facing_select_north)
-        self.facing_select_north.Bind(wx.EVT_RADIOBUTTON, self.OnNorth, self.facing_select_north)
+        self.facing_select_north_label.Bind(wx.EVT_LEFT_DOWN, self.OnNorth, self.facing_select_north_label)
         self.facing_select_west.Bind(wx.EVT_RADIOBUTTON, self.OnWest, self.facing_select_west)
-        self.facing_select_west.Bind(wx.EVT_RADIOBUTTON, self.OnWest, self.facing_select_west)
+        self.facing_select_west_label.Bind(wx.EVT_LEFT_DOWN, self.OnWest, self.facing_select_west_label)
 
         # Add element to its parent sizer
         # Adding elements to vertical sizer, so Expand to take up all horizontal space
@@ -162,30 +155,39 @@ class facingControl(object):
         # Update the combobox
         self.facing_enable_select.SetStringSelection(self.choicelist_views[config.choicelist_views.index(self.app.activeproject.views())])
 
-    def OnToggle(self,e):
+    def OnToggle(self, e):
         """Changing the value in the selection box"""
         self.app.activeproject.views(config.choicelist_views[self.choicelist_views.index(self.facing_enable_select.GetValue())])
         self.update()
-    def OnSouth(self,e):
+
+    def OnSouth(self, e):
         """Toggle South direction"""
+        # If called from the label, ensure radio button is selected
+        self.facing_select_south.SetValue(True)
         # Set active image to South
         self.app.activeproject.activeImage(direction = 0)
         # Redraw active image
         self.app.frame.display.update()
-    def OnEast(self,e):
+    def OnEast(self, e):
         """Toggle East direction"""
+        # If called from the label, ensure radio button is selected
+        self.facing_select_east.SetValue(True)
         # Set active image to East
         self.app.activeproject.activeImage(direction = 1)
         # Redraw active image
         self.app.frame.display.update()
-    def OnNorth(self,e):
+    def OnNorth(self, e):
         """Toggle North direction"""
+        # If called from the label, ensure radio button is selected
+        self.facing_select_north.SetValue(True)
         # Set active image to North
         self.app.activeproject.activeImage(direction = 2)
         # Redraw active image
         self.app.frame.display.update()
-    def OnWest(self,e):
+    def OnWest(self, e):
         """Toggle West direction"""
+        # If called from the label, ensure radio button is selected
+        self.facing_select_west.SetValue(True)
         # Set active image to West
         self.app.activeproject.activeImage(direction = 3)
         # Redraw active image
