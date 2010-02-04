@@ -220,51 +220,46 @@ class MainWindow(wx.Frame):
         self.panel = wx.Panel(self, wx.ID_ANY)
 
         # Overall panel sizer
-        self.s_panel = wx.BoxSizer(wx.VERTICAL)
+        self.sizer = wx.BoxSizer(wx.VERTICAL)
+        self.s_panel = wx.BoxSizer(wx.HORIZONTAL)
 
-        # Two vertical divisions
-        self.s_panel_top = wx.BoxSizer(wx.HORIZONTAL)
         # Within the top panel, two horizontal divisions, one for the controls, one for the image window
-        self.s_panel_controls = wx.BoxSizer(wx.VERTICAL)                # Left side
-
-        self.s_panel_imagewindow_container = wx.BoxSizer(wx.VERTICAL)   # Right side
-
-        self.s_panel_bottom = wx.BoxSizer(wx.HORIZONTAL)
-        self.s_panel_bottom_right = wx.BoxSizer(wx.VERTICAL)            # Contains cut/export buttons
+        self.s_panel_left = wx.BoxSizer(wx.VERTICAL)        # Left side - Main controls
+        self.s_panel_right = wx.BoxSizer(wx.VERTICAL)       # Right side - Image window and controls
 
         # LEFT SIDE CONTROLS
         # Season controls
-        self.control_seasons    = tcui.seasonControl(self.panel, app, self.s_panel_controls)
+        self.control_seasons    = tcui.seasonControl(self.panel, app, self.s_panel_left)
         # Image controls
-        self.control_images     = tcui.imageControl(self.panel, app, self.s_panel_controls)
+        self.control_images     = tcui.imageControl(self.panel, app, self.s_panel_left)
         # Facing controls
-        self.control_facing     = tcui.facingControl(self.panel, app, self.s_panel_controls)
+        self.control_facing     = tcui.facingControl(self.panel, app, self.s_panel_left)
         # Dimension controls
-        self.control_dims       = tcui.dimsControl(self.panel, app, self.s_panel_controls)
+        self.control_dims       = tcui.dimsControl(self.panel, app, self.s_panel_left)
         # Offset/mask controls
-        self.control_offset     = tcui.offsetControl(self.panel, app, self.s_panel_controls)
+        self.control_offset     = tcui.offsetControl(self.panel, app, self.s_panel_left)
 
         # Create Image display window and image path entry control, which adds itself to the sizer
-        self.display = tcui.imageWindow(self, self.panel, app, self.s_panel_imagewindow_container, config.transparent)
+        self.display = tcui.imageWindow(self, self.panel, app, self.s_panel_right, config.transparent)
 
         # Save, Dat, Image and Pak output paths
-        self.s_panel_flex = wx.FlexGridSizer(0,4,3,0)
+        self.s_panel_export_paths = wx.FlexGridSizer(0,4,3,0)
         # Passing through reference to app.activeproject.XXXfile doesn't work here when we make a new
         # project/load a project, since it still points to the old one! needs to access these values
         # some other way...
-        self.control_savepath = tcui.FileControl(self.panel, app, self.s_panel_flex, self.get_active_savefile_path,
+        self.control_savepath = tcui.FileControl(self.panel, app, self.s_panel_export_paths, self.get_active_savefile_path,
                                                  _gt("Project Save Location"), _gt("tt_save_file_location"),
                                                  _gt("Choose a location to save project..."), "TCP files (*.tcp)|*.tcp",
                                                  _gt("Browse..."), _gt("tt_browse_save_file"), None)
-        self.control_datpath = tcui.FileControl(self.panel, app, self.s_panel_flex, self.get_active_datfile_path,
+        self.control_datpath = tcui.FileControl(self.panel, app, self.s_panel_export_paths, self.get_active_datfile_path,
                                                 _gt(".dat Output Location"), _gt("tt_dat_file_location"),
                                                 _gt("Choose a location to save .dat file..."), "DAT files (*.dat)|*.dat",
                                                 _gt("Browse..."), _gt("tt_browse_dat_file"), self.get_active_savefile_path)
-        self.control_pngpath = tcui.FileControl(self.panel, app, self.s_panel_flex, self.get_active_pngfile_path,
+        self.control_pngpath = tcui.FileControl(self.panel, app, self.s_panel_export_paths, self.get_active_pngfile_path,
                                                 _gt(".png Output Location"), _gt("tt_png_file_location"),
                                                 _gt("Choose a location to save .png file..."), "PNG files (*.png)|*.png",
                                                 _gt("Browse..."), _gt("tt_browse_png_file"), self.get_active_savefile_path)
-        self.control_pakpath = tcui.FileControl(self.panel, app, self.s_panel_flex, self.get_active_pakfile_path,
+        self.control_pakpath = tcui.FileControl(self.panel, app, self.s_panel_export_paths, self.get_active_pakfile_path,
                                                 _gt(".pak Output Location"), _gt("tt_pak_file_location"),
                                                 _gt("Choose a location to export .pak file..."), "PAK files (*.pak)|*.pak",
                                                 _gt("Browse..."), _gt("tt_browse_pak_file"), self.get_active_savefile_path)
@@ -272,55 +267,52 @@ class MainWindow(wx.Frame):
         # Set controls that savepath also alters (ones which are relative to it)
         self.control_savepath.SetDependants([self.control_datpath, self.control_pngpath, self.control_pakpath])
 
-        self.s_panel_flex.AddGrowableCol(1)
-
-        self.s_panel_bottom.Add(self.s_panel_flex, 1, wx.EXPAND|wx.ALL, 4)
-
-        self.s_panel_bottom.Add(wx.StaticLine(self.panel, wx.ID_ANY, (-1,-1),(-1,-1), wx.LI_VERTICAL), 0, wx.EXPAND|wx.LEFT, 2)
-
-        self.cut_button_sizer = wx.BoxSizer(wx.HORIZONTAL)
-        self.cut_button_sizer2 = wx.BoxSizer(wx.VERTICAL)
-        self.export_button_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        self.s_panel_export_paths.AddGrowableCol(1)
 
         # CUT/EXPORT BUTTONS
-        # Cut button
-        self.cut_button = wx.Button(self.panel, wx.ID_ANY)
-        self.cut_button.Bind(wx.EVT_BUTTON, self.menubar.OnCutProject, self.cut_button)
-        self.cut_button_sizer2.Add(self.cut_button, 0, wx.EXPAND|wx.ALIGN_CENTER_HORIZONTAL, 0)
         # Export .dat checkbox
         self.export_dat_toggle = wx.CheckBox(self.panel, wx.ID_ANY, "", (-1,-1), (-1,-1))
         self.export_dat_toggle.SetValue(1)
         self.export_dat_toggle.Enable(False)
         self.export_dat_toggle.Bind(wx.EVT_CHECKBOX, self.OnToggleDatExport, self.export_dat_toggle)
-        self.cut_button_sizer2.Add(self.export_dat_toggle, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.TOP, 6)
-
-        self.cut_button_sizer.Add(self.cut_button_sizer2, 0, wx.ALIGN_CENTER_VERTICAL)
-
+        # Cut button
+        self.cut_button = wx.Button(self.panel, wx.ID_ANY)
+        self.cut_button.Bind(wx.EVT_BUTTON, self.menubar.OnCutProject, self.cut_button)
         # Export button
         self.export_button = wx.Button(self.panel, wx.ID_ANY)
         self.export_button.Bind(wx.EVT_BUTTON, self.menubar.OnExportProject, self.export_button)
-        self.export_button_sizer.Add(self.export_button, 1, wx.ALIGN_CENTER_VERTICAL, 0)
 
-        self.s_panel_bottom_right.Add(self.cut_button_sizer, 1, wx.ALIGN_CENTER_HORIZONTAL|wx.ALL, 4)
-        self.s_panel_bottom_right.Add(wx.StaticLine(self.panel, wx.ID_ANY, (-1,-1),(-1,-1), wx.LI_HORIZONTAL), 0, wx.EXPAND|wx.ALIGN_CENTER_HORIZONTAL, 4)
-        self.s_panel_bottom_right.Add(self.export_button_sizer, 1, wx.EXPAND|wx.ALIGN_CENTER_HORIZONTAL|wx.ALL, 4)
+        # Sizers
+        # Bottom section of the right-hand side requires some more sizers
+        self.s_panel_rb = wx.BoxSizer(wx.HORIZONTAL)
+        self.s_panel_rb_inner = wx.BoxSizer(wx.VERTICAL)
+        self.s_panel_export_buttons = wx.BoxSizer(wx.HORIZONTAL)
+        # Bar containing cut, export buttons etc.
+        self.s_panel_export_buttons.Add(self.export_dat_toggle, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 4)
+        self.s_panel_export_buttons.Add(self.cut_button, 0, wx.ALL, 4)
+        self.s_panel_export_buttons.Add(self.export_button, 0, wx.ALL, 4)
 
-        # Add these buttons to the bottom-right panel container
-        self.s_panel_bottom.Add(self.s_panel_bottom_right, 0, wx.EXPAND|wx.ALIGN_CENTER|wx.LEFT, 2)
+        # Add export buttons, horizontal line and path bars to vertical sizer
+        self.s_panel_rb_inner.Add(self.s_panel_export_buttons, 0, wx.ALIGN_RIGHT, 0)
+        self.s_panel_rb_inner.Add(wx.StaticLine(self.panel, wx.ID_ANY, (-1,-1),(-1,-1), wx.LI_HORIZONTAL), 0, wx.EXPAND|wx.LEFT, 2)
+        self.s_panel_rb_inner.Add(self.s_panel_export_paths, 0, wx.EXPAND|wx.ALL, 4)
+
+        # Add that vertical sizer to a horizontal one, with a vertical line on the left
+        self.s_panel_rb.Add(wx.StaticLine(self.panel, wx.ID_ANY, (-1,-1),(-1,-1), wx.LI_VERTICAL), 0, wx.EXPAND, 2)
+        self.s_panel_rb.Add(self.s_panel_rb_inner, 1, wx.LEFT, 0)
+        # Add that horizontal sizer to the right-side of the application
+        self.s_panel_right.Add(self.s_panel_rb, 0, wx.EXPAND)
 
         # SIZERS
         # Add the remaining sizers to each other
-        # Top panel, left side controls and right side image window added
-        self.s_panel_top.Add(self.s_panel_controls,0,wx.EXPAND|wx.RIGHT, 1)
-        self.s_panel_top.Add(self.s_panel_imagewindow_container,1,wx.EXPAND, 0)
         # Line under menu bar
-        self.s_panel.Add(wx.StaticLine(self.panel, wx.ID_ANY, (-1,-1),(-1,-1), wx.LI_HORIZONTAL), 0, wx.EXPAND, 0)
-        # Add bottom and top parts to overall panel
-        self.s_panel.Add(self.s_panel_top,1,wx.EXPAND|wx.BOTTOM, 4)
-        self.s_panel.Add(self.s_panel_bottom,0,wx.EXPAND|wx.BOTTOM, 2)
-
+        self.sizer.Add(wx.StaticLine(self.panel, wx.ID_ANY, (-1,-1),(-1,-1), wx.LI_HORIZONTAL), 0, wx.EXPAND, 0)
+        # Left and right panels added
+        self.s_panel.Add(self.s_panel_left, 0, wx.EXPAND|wx.RIGHT, 1)
+        self.s_panel.Add(self.s_panel_right, 1, wx.EXPAND, 0)
+        self.sizer.Add(self.s_panel, 1, wx.EXPAND, 0)
         # Layout sizers
-        self.panel.SetSizer(self.s_panel)
+        self.panel.SetSizer(self.sizer)
         self.panel.SetAutoLayout(1)
         self.panel.Layout()
 
