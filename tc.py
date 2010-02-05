@@ -43,13 +43,14 @@ class TCMaskSet:
         self.masks = {}
         self.masks[-1] = self.makeMaskFromPoints([], p)
         self.masks[0] = self.makeMaskFromPoints(
-            [(p/2,p),(0,p/4+p/2),(p/2-1,p/2+1),(p/2,p/2+1),(p-1,p/4+p/2),(p/2,p-1)], p)
+            [(p/2-1,p-1),(0,p/4+p/2),(p/2-1,p/2+1),(p/2,p/2+1),(p-1,p/4+p/2),(p/2,p-1)], p)
         self.masks[1] = self.makeMaskFromPoints(
-            [(p/2,p),(0,p/4+p/2),(p/2-1,p/2+1),(p/2,p/2+1),(p/2,0),(p-1,0),(p-1,p/4+p/2),(p/2,p-1)], p)
+            [(p/2-1,p-1),(0,p/4+p/2),(p/2-1,p/2+1),(p/2,p/2+1),(p/2,0),(p-1,0),(p-1,p/4+p/2),(p/2,p-1)], p)
         self.masks[2] = self.makeMaskFromPoints(
-            [(p/2,p),(0,p/4+p/2),(0,0),(p/2-1,0),(p/2-1,p/2+1),(p/2,p/2+1),(p-1,p/4+p/2),(p/2,p-1)], p)
+            [(p/2-1,p-1),(0,p/4+p/2),(0,0),(p/2-1,0),(p/2-1,p/2+1),(p/2,p/2+1),(p-1,p/4+p/2),(p/2,p-1)], p)
         self.masks[3] = self.makeMaskFromPoints(
-            [(p/2,p),(0,p/4+p/2),(0,0),(p-1,0),(p-1,p/4+p/2),(p/2,p-1)], p)
+            [(p/2-1,p-1),(0,p/4+p/2),(0,0),(p-1,0),(p-1,p/4+p/2),(p/2,p-1)], p)
+
         self.masks[4] = self.makeMaskFromPoints(
             [(p-1,0),(p-1,p-1),(p/2,p-1),(p/2,0)], p)
         self.masks[5] = self.makeMaskFromPoints(
