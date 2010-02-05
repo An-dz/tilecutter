@@ -304,8 +304,6 @@ def export_writer(project, pak_output=False):
     debug("e_w: Image output complete")
 
 
-    filename = "test_output"
-
     output_text = StringIO.StringIO()
     # Test text
     output_text.write(project.temp_dat_properties() + "\n")
@@ -412,14 +410,14 @@ def export_cutter(bitmap, dims, offset, p):
                     else:
                         submap.SetMask(masks.mask[-1])
 
-                tdc = wx.MemoryDC()
-                kk = wx.EmptyBitmap(p,p)
-                tdc.SelectObject(kk)
-                tdc.DrawBitmap(submap, 0, 0, True)
-                tdc.SelectObject(wx.NullBitmap)
-                tdc = 0
-                kk.SaveFile("test_%s%s%s.png" % (x,y, z), wx.BITMAP_TYPE_PNG)
-                kk = 0
+##                tdc = wx.MemoryDC()
+##                kk = wx.EmptyBitmap(p,p)
+##                tdc.SelectObject(kk)
+##                tdc.DrawBitmap(submap, 0, 0, True)
+##                tdc.SelectObject(wx.NullBitmap)
+##                tdc = 0
+##                kk.SaveFile("test_%s%s%s.png" % (x,y, z), wx.BITMAP_TYPE_PNG)
+##                kk = 0
 
                 # submap = Bitmap+Mask, Second variable stores location of this tile within
                 #                       the output image as a tuple

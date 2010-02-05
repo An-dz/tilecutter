@@ -30,10 +30,13 @@
 #   the image window, which can then be accessed via a button
 # Add a status bar, displaying status information about the program
 # Add a progress indicator for export
-# Move the Cut image and Compile .pak buttons onto a single bottom bar after relocating file paths
-# Have the right/left toolbar run all the way down to the bottom of the screen
+# Move the Cut image and Compile .pak buttons onto a single bottom bar after relocating file paths  - Done
+# Have the right/left toolbar run all the way down to the bottom of the screen                      - Done
 
 
+# Release 0.5.4
+# FIX: Better controls layout
+# FIX: Bug with mask production on wxGTK
 
 
 
@@ -143,6 +146,7 @@
 # Dynamic mask generation + caching                                                     - DONE
 # New cutting engine able to cope with all settings except frames                       - DONE
 #   -> Test this cutting engine in all circumstances                                    
+#   -> Add unit tests for cutting engine
 # Ability to add a copyright text notice to bottom of outputted image                   - 0.6
 # Full .dat editing capability                                                          - 0.6
 # "Pretty" output mode                                                                  - 0.6
@@ -393,6 +397,7 @@ class TCApp(wx.App):
 
     def OnInit(self):
         """Called after app has been initialised"""
+        self.start_directory = os.getcwd()
         # Override wx's mechanism for writing stderr/out
         sys.stderr = debug
         sys.stdout = debug
@@ -499,6 +504,7 @@ class TCApp(wx.App):
         result = dlg.ShowModal()
         if result == wx.ID_OK:
             project.savefile(os.path.join(dlg.GetDirectory(), dlg.GetFilename()))
+            config.last_save_path = dlg.GetDirectory()
             debug("  New savefile for project is: %s" % project.savefile())
             dlg.Destroy()
             return True
@@ -597,7 +603,7 @@ class TCApp(wx.App):
         if self.project_changed(project):
             ret = self.dialog_save_changes(project)
             if ret == wx.ID_YES:
-                if not project.has_save_location():
+                if not project.saved():
                     if not self.dialog_save_location(project):
                         return False
                 self.save_project(project)
@@ -608,31 +614,30 @@ class TCApp(wx.App):
         """Init process of loading a project from file"""
         debug("OnLoadProject")
         project = self.activeproject
-        if self.project_changed(project):                    # If project has changed
-            ret = self.dialog_save_changes(project)                # Prompt to save project
-            if ret == wx.ID_YES:                            # If answer is yes
-                if not project.has_save_location():      #  Check if file has a save location
+        if self.project_changed(project):                           # If project has changed
+            ret = self.dialog_save_changes(project)                 # Prompt to save project
+            if ret == wx.ID_YES:                                    # If answer is yes
+                if not project.saved():                             #  Check if file has a save location
                     if not self.dialog_save_location(project):      #  If it doesn't, prompt user for one
-                        return False                        #  If user cancels, quit out
-                self.save_project(project)                    #  Otherwise save the project
-            elif ret == wx.ID_CANCEL:                       # If answer is no
-                return False                                # Quit out
+                        return False                                #  If user cancels, quit out
+                self.save_project(project)                          #  Otherwise save the project
+            elif ret == wx.ID_CANCEL:                               # If answer is no
+                return False                                        # Quit out
             # else ret is wx.ID_NO, so we don't want to save but can continue
-        ret = self.dialog_load()                             # Prompt for file to load
-        if ret != wx.ID_CANCEL:                             # If file specified
-            return self.load_project(ret)                   # Load the project
-        else:                                               # Otherwise
-            return False                                    # Quit out
+        ret = self.dialog_load()                                    # Prompt for file to load
+        if ret != wx.ID_CANCEL:                                     # If file specified
+            return self.load_project(ret)                           # Load the project
+        else:                                                       # Otherwise
+            return False                                            # Quit out
     def OnSaveProject(self, project):
         """Init process of saving a project to file"""
         debug("OnSaveProject")
-        if self.project_changed(project):
-            if project.has_save_location():
+        if project.saved():
+            return self.save_project(project)
+        else:
+            if self.dialog_save_location(project):
                 return self.save_project(project)
-            else:
-                if self.dialog_save_location(project):
-                    return self.save_project(project)
-                return False
+            return False
         # Project already saved
         return True
     def OnSaveAsProject(self, project):

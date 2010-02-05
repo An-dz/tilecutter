@@ -442,15 +442,22 @@ class Project(object):
 class ProjectFiles(object):
     """Information relating to file paths"""
     def __init__(self, parent):
+        self.parent = parent
         # Location of save file, by default this is the user's home directory
-        if "HOME" in os.environ:
-            self.save_location = os.path.join(os.environ["HOME"], "new_project.tcp")
-        elif "USERPROFILE" in os.environ:
-            self.save_location = os.path.join(os.environ["USERPROFILE"], "new_project.tcp")
+        # If user has previously selected a place to save project files to, use this as the default save path
+        # Whenever the user does a Save-As this config directive should be updated
+        if config.last_save_path != "" and os.path.exists(config.last_save_path):
+            self.save_location = self.test_path(config.last_save_path)
+        elif "HOME" in os.environ and os.path.exists(os.environ["HOME"]):
+            self.save_location = self.test_path(os.environ["HOME"])
+        elif "USERPROFILE" in os.environ and os.path.exists(os.environ["USERPROFILE"]):
+            self.save_location = self.test_path(os.environ["USERPROFILE"])
         else:   # Otherwise use location of program
-            self.save_location = os.path.join(start_directory, "new_project.tcp")
+            self.save_location = self.test_path(self.parent.parent.start_directory)
+
         # As initialised, project is unsaved, so other paths relative to the default value
         self.saved = False
+
         # Location of .dat file output (relative to save location)
         self.datfile_location = "output.dat"
         self.writedat = True
@@ -465,6 +472,17 @@ class ProjectFiles(object):
                                                                                                        self.datfile_location,
                                                                                                        self.pngfile_location,
                                                                                                        self.pakfile_location))
+    def test_path(self, path):
+        """Test a file for existence, if it exists add a number and try again"""
+        if os.path.exists(os.path.join(path, "new_project.tcp")):
+            i = 1
+            while True:
+                if not os.path.exists(os.path.join(path, "new_project%s.tcp" % i)):
+                    return os.path.join(path, "new_project%s.tcp" % i)
+                i += 1
+        else:
+            return os.path.join(path, "new_project.tcp") 
+
 
 class ActiveImage(object):
     """Details of the active image"""

@@ -29,6 +29,8 @@ class Config(object):
         "window_size": [1000,780],
         "window_position": [100,0],
 
+        "last_save_path": "",
+
         "negative_offset_allowed": False,
         "default_image_path": "test.png",
 
