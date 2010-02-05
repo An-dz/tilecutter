@@ -61,10 +61,13 @@ class TCMaskSet:
         """Make a mask from a sequence of points"""
         # Init the DC, for monochrome bitmap/mask white pen/brush draws the bits which are see-through
         dc = wx.MemoryDC()
-        dc.SetPen(wx.WHITE_PEN)
-        dc.SetBrush(wx.WHITE_BRUSH)
         b = wx.EmptyBitmap(p,p)
         dc.SelectObject(b)
+        dc.SetPen(wx.BLACK_PEN)
+        dc.SetBrush(wx.BLACK_BRUSH)
+        dc.DrawPolygon([(0,0),(p,0),(p,p),(0,p)])
+        dc.SetPen(wx.WHITE_PEN)
+        dc.SetBrush(wx.WHITE_BRUSH)
         dc.DrawPolygon(points)
         dc.SelectObject(wx.NullBitmap)
         return b
@@ -408,14 +411,14 @@ def export_cutter(bitmap, dims, offset, p):
                     else:
                         submap.SetMask(masks.mask[-1])
 
-##                tdc = wx.MemoryDC()
-##                kk = wx.EmptyBitmap(p,p)
-##                tdc.SelectObject(kk)
-##                tdc.DrawBitmap(submap, 0, 0, True)
-##                tdc.SelectObject(wx.NullBitmap)
-##                tdc = 0
-##                kk.SaveFile("test_%s%s%s.png" % (x,y, z), wx.BITMAP_TYPE_PNG)
-##                kk = 0
+                tdc = wx.MemoryDC()
+                kk = wx.EmptyBitmap(p,p)
+                tdc.SelectObject(kk)
+                tdc.DrawBitmap(submap, 0, 0, True)
+                tdc.SelectObject(wx.NullBitmap)
+                tdc = 0
+                kk.SaveFile("test_%s%s%s.png" % (x,y, z), wx.BITMAP_TYPE_PNG)
+                kk = 0
 
                 # submap = Bitmap+Mask, Second variable stores location of this tile within
                 #                       the output image as a tuple
