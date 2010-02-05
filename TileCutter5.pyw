@@ -37,7 +37,14 @@
 # Release 0.5.4
 # FIX: Better controls layout
 # FIX: Bug with mask production on wxGTK
+# FIX: Better handling of save locations, caching of last save location
 
+# TO ADD: Proper selection of path to makeobj, and per-project selection of a makeobj binary
+# TO ADD: Better handling of window sizing on program start up:
+#         Fit to size of contents on start
+#         Scrolling left-hand pane if contents larger than vertical size
+#         Dialog boxes positioned centered on application, not centered on window
+#         If minimum size of main window is close to the size of the screen, start maximised
 
 
 # Release 0.5.3
