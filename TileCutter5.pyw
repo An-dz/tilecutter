@@ -38,13 +38,10 @@
 # FIX: Better controls layout
 # FIX: Bug with mask production on wxGTK
 # FIX: Better handling of save locations, caching of last save location
+# FIX: Dialog boxes positioned centered on application, not centered on window
+# ADD: Application window fits to size of contents on start
 
 # TO ADD: Proper selection of path to makeobj, and per-project selection of a makeobj binary
-# TO ADD: Better handling of window sizing on program start up:
-#         Fit to size of contents on start
-#         Scrolling left-hand pane if contents larger than vertical size
-#         Dialog boxes positioned centered on application, not centered on window
-#         If minimum size of main window is close to the size of the screen, start maximised
 
 
 # Release 0.5.3
@@ -208,8 +205,8 @@ debug(unicode(config))
 
 class MainWindow(wx.Frame):
     """Main frame window inside which all else is put"""
-    def __init__(self, parent, app, id, title, windowsize, windowposition):
-        wx.Frame.__init__(self, parent, wx.ID_ANY, title, windowposition, windowsize,
+    def __init__(self, parent, app, id, title):
+        wx.Frame.__init__(self, parent, wx.ID_ANY, title, (-1,-1), (-1,-1),
                                         style=wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL)
         self.app = app
         # Init stuff
@@ -405,30 +402,34 @@ class TCApp(wx.App):
 
     def OnInit(self):
         """Called after app has been initialised"""
+        debug("App OnInit: Starting...")
         self.start_directory = os.getcwd()
         # Override wx's mechanism for writing stderr/out
         sys.stderr = debug
         sys.stdout = debug
 
         # Create a default active project
+        debug("App OnInit: Create default project")
         self.projects = {}
         self.projects["default"] = tcproject.Project(self)
         self.activeproject = self.projects["default"]
         # Serialise active project, this string is then checked to see if it needs to be saved
         self.activepickle = self.pickle_project(self.activeproject)
-
         # Active project needs a file save location, by default this is set to a default in the new project
         self.active_save_location = self.activeproject.files.save_location
         self.update_title_text()
 
+        debug("App OnInit: Create + Show main frame")
         # Create and show main frame
-        self.frame = MainWindow(None, self, wx.ID_ANY, "TileCutter", config.window_size, (0,0))
+        self.frame = MainWindow(None, self, wx.ID_ANY, "TileCutter")
         self.SetTopWindow(self.frame)
 
+        debug("App OnInit: Bind Quit Event")
         # Bind quit event
         self.frame.Bind(wx.EVT_CLOSE, self.OnQuit)
         self.frame.Bind(wx.EVT_CLOSE, self.OnQuit)
 
+        debug("App OnInit: Init window sizes")
         # Window inits itself to its minimum size
         # If a larger size is specified in config, set to this instead
         if config.window_size[0] > self.frame.GetBestSize().GetWidth() and config.window_size[1] > self.frame.GetBestSize().GetHeight():
@@ -436,6 +437,7 @@ class TCApp(wx.App):
         else:
             # Otherwise just use the minimum size
             self.frame.Fit()
+        debug("App OnInit: Init window position")
         # If a window position is saved, place the window there
         if config.window_position != [-1,-1]:
             self.frame.SetPosition(config.window_position)
@@ -443,6 +445,7 @@ class TCApp(wx.App):
             # Otherwise center window on the screen
             self.frame.CentreOnScreen(wx.BOTH)
 
+        debug("App OnInit: Completed!")
         return True
 
     # Called by the currently active project
