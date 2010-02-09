@@ -208,12 +208,11 @@ debug(unicode(config))
 
 class MainWindow(wx.Frame):
     """Main frame window inside which all else is put"""
-    def __init__(self, parent, app, id, title, windowsize, windowposition, windowminsize):
+    def __init__(self, parent, app, id, title, windowsize, windowposition):
         wx.Frame.__init__(self, parent, wx.ID_ANY, title, windowposition, windowsize,
                                         style=wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL)
         self.app = app
         # Init stuff
-        self.SetMinSize(windowminsize)
 
         # Set the program's icon
         self.icons = wx.IconBundle()
@@ -324,8 +323,6 @@ class MainWindow(wx.Frame):
         self.sizer.Add(self.s_panel, 1, wx.EXPAND, 0)
         # Layout sizers
         self.panel.SetSizer(self.sizer)
-        self.panel.SetAutoLayout(1)
-        self.panel.Layout()
 
         self.translate()
 
@@ -371,6 +368,10 @@ class MainWindow(wx.Frame):
         self.set_title()
         # Finally re-do the window's layout
         self.panel.Layout()
+        self.panel.Fit()
+        self.Fit()
+        self.SetMinSize(wx.Size(int(self.GetBestSize().GetHeight() * 1.4),
+                                self.GetBestSize().GetHeight()))
         self.Thaw()
 
     def set_title(self):
@@ -421,9 +422,27 @@ class TCApp(wx.App):
         self.update_title_text()
 
         # Create and show main frame
-        self.frame = MainWindow(None, self, wx.ID_ANY, "TileCutter", config.window_size, config.window_position, config.window_minsize)
+        self.frame = MainWindow(None, self, wx.ID_ANY, "TileCutter", config.window_size, (0,0))
         self.SetTopWindow(self.frame)
+
+        # Bind quit event
         self.frame.Bind(wx.EVT_CLOSE, self.OnQuit)
+        self.frame.Bind(wx.EVT_CLOSE, self.OnQuit)
+
+        # Window inits itself to its minimum size
+        # If a larger size is specified in config, set to this instead
+        if config.window_size[0] > self.frame.GetBestSize().GetWidth() and config.window_size[1] > self.frame.GetBestSize().GetHeight():
+            self.frame.SetSize(config.window_size)
+        else:
+            # Otherwise just use the minimum size
+            self.frame.Fit()
+        # If a window position is saved, place the window there
+        if config.window_position != [-1,-1]:
+            self.frame.SetPosition(config.window_position)
+        else:
+            # Otherwise center window on the screen
+            self.frame.CentreOnScreen(wx.BOTH)
+
         return True
 
     # Called by the currently active project
@@ -665,7 +684,12 @@ class TCApp(wx.App):
         """Close the debugging window and quit the application on a quit event in the main window
         closing the debugging window doesn't do anything"""
         debug("Application quitting...")
+        debug("Saving current application window size and position for next time")
+        config.window_position = self.frame.GetPositionTuple()
+        config.window_size = self.frame.GetSizeTuple()
+        debug("Destroying frame...")
         self.frame.Destroy()
+        debug("End")
 
 
 if __name__ == "__main__":

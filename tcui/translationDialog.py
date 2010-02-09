@@ -16,11 +16,11 @@ debug = logger.Log()
 
 class translationDialog(wx.Dialog):
     """Dialog for choosing which translation to use"""
-    def __init__(self,parent,app):
+    def __init__(self, parent, app):
         """Initialise the dialog and populate lists"""
         self.app = app
         size = (300,200)
-        wx.Dialog.__init__(self,parent,wx.ID_ANY, "", (-1,-1), size)
+        wx.Dialog.__init__(self, parent, wx.ID_ANY, "", (-1,-1), size)
 
         # Overall panel sizer
         self.s_panel = wx.BoxSizer(wx.VERTICAL)
@@ -65,10 +65,10 @@ class translationDialog(wx.Dialog):
         self.language_picker.Bind(wx.EVT_COMBOBOX, self.OnSelection, self.language_picker)
         self.close_button.Bind(wx.EVT_BUTTON, self.OnClose, self.close_button)
 
+        self.SetEscapeId(self.close_button.GetId())
+
         # Layout sizers
         self.SetSizer(self.s_panel)
-        self.SetAutoLayout(1)
-        self.Layout()
 
         self.translate()    # Load the initial translation
 ##        self.update()
@@ -86,15 +86,23 @@ class translationDialog(wx.Dialog):
         self.label_createdon.SetLabel(gt("Created on:"))
         self.label_createdon_value.SetLabel(gt.active.created_date())
         self.Layout()
+        self.CentreOnParent()
         self.Refresh()
 
     def update(self):
         """Set the values of the controls in this group to the values in the model"""
 
-    def OnClose(self,e):
+    def OnKeyDown(self, e):
+        """On a keypress not handled by UI controls"""
+        debug("keydown event")
+        if e.GetKeyCode() == wx.K_ESCAPE:
+            self.OnClose(e)
+        else:
+            e.Skip()
+    def OnClose(self, e):
         """On click of the close button"""
         self.EndModal(wx.ID_OK)
-    def OnSelection(self,e):
+    def OnSelection(self, e):
         """When user changes the language selection"""
         # Set active translation to the one specified
         gt.setActiveTranslation(gt.longnameToName(self.language_picker.GetValue()))

@@ -71,10 +71,11 @@ class aboutDialog(wx.Dialog):
         # Bind events
         self.close_button.Bind(wx.EVT_BUTTON, self.OnClose, self.close_button)
 
+        # Pressing escape anywhere in the dialog triggers the action of the close button
+        self.SetEscapeId(self.close_button.GetId())
+
         # Layout sizers
         self.SetSizer(self.vbox)
-        self.SetAutoLayout(1)
-##        self.Layout()
 
         self.translate()
 
@@ -94,6 +95,7 @@ class aboutDialog(wx.Dialog):
         self.Layout()
         self.Fit()
         self.Refresh()
+        self.CentreOnParent(wx.BOTH)
 
     def update(self):
         """Set the values of the controls in this group to the values in the model"""
