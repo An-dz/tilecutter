@@ -125,9 +125,13 @@ class facingControl(object):
             self.facing_enable_select.SetValue(self.choicelist_views[0])
             # Update controls
             self.facing_select_south.Enable()
+            self.facing_select_south_label.Enable()
             self.facing_select_east.Disable()
+            self.facing_select_east_label.Disable()
             self.facing_select_north.Disable()
+            self.facing_select_north_label.Disable()
             self.facing_select_west.Disable()
+            self.facing_select_west_label.Disable()
             if self.facing_select_east.GetValue() == True or self.facing_select_north.GetValue() == True or self.facing_select_west.GetValue() == True:
                 self.facing_select_south.SetValue(1)
                 # Modify active image to only available option
@@ -137,9 +141,13 @@ class facingControl(object):
         elif self.app.activeproject.views() == 2:
             self.facing_enable_select.SetValue(self.choicelist_views[1])
             self.facing_select_south.Enable()
+            self.facing_select_south_label.Enable()
             self.facing_select_east.Enable()
+            self.facing_select_east_label.Enable()
             self.facing_select_north.Disable()
+            self.facing_select_north_label.Disable()
             self.facing_select_west.Disable()
+            self.facing_select_west_label.Disable()
             if self.facing_select_north.GetValue() == True or self.facing_select_west.GetValue() == True:
                 self.facing_select_east.SetValue(1)
                 # Modify active image to available option
@@ -149,9 +157,13 @@ class facingControl(object):
         else:
             self.facing_enable_select.SetValue(self.choicelist_views[2])
             self.facing_select_south.Enable()
+            self.facing_select_south_label.Enable()
             self.facing_select_east.Enable()
+            self.facing_select_east_label.Enable()
             self.facing_select_north.Enable()
+            self.facing_select_north_label.Enable()
             self.facing_select_west.Enable()
+            self.facing_select_west_label.Enable()
         # Update the combobox
         self.facing_enable_select.SetStringSelection(self.choicelist_views[config.choicelist_views.index(self.app.activeproject.views())])
 

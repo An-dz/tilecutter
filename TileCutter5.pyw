@@ -33,6 +33,8 @@
 # Move the Cut image and Compile .pak buttons onto a single bottom bar after relocating file paths  - Done
 # Have the right/left toolbar run all the way down to the bottom of the screen                      - Done
 
+# 0.5.5
+# TO ADD: Proper selection of path to makeobj, and per-project selection of a makeobj binary
 
 # Release 0.5.4
 # FIX: Better controls layout
@@ -40,9 +42,7 @@
 # FIX: Better handling of save locations, caching of last save location
 # FIX: Dialog boxes positioned centered on application, not centered on window
 # ADD: Application window fits to size of contents on start
-
-# TO ADD: Proper selection of path to makeobj, and per-project selection of a makeobj binary
-
+# ADD: Updated translations
 
 # Release 0.5.3
 # FIX: Export error with Python character mapping
@@ -363,12 +363,20 @@ class MainWindow(wx.Frame):
         self.menubar.translate()
         # Finally translate the application name in title bar
         self.set_title()
+
+        # Store previous size of window
+        prev_size = self.GetSizeTuple()
         # Finally re-do the window's layout
         self.panel.Layout()
+        self.Layout()
         self.panel.Fit()
         self.Fit()
+
         self.SetMinSize(wx.Size(int(self.GetBestSize().GetHeight() * 1.4),
                                 self.GetBestSize().GetHeight()))
+        self.SetSize(prev_size)
+        self.panel.Layout()
+        self.Layout()
         self.Thaw()
 
     def set_title(self):

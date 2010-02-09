@@ -43,7 +43,7 @@ class Config(object):
         "default_language": "english_translation",
         }
     internals = {
-        "version": "0.5.3.1",
+        "version": "0.5.4",
         }
     conf_path = "tc.config"
 

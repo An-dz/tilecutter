@@ -1,8 +1,8 @@
-#{"name": "Swedish", "name_translated": "Svenska", "language_code": "sv", "created_by": "SimuTranslator", "created_date": "01-02-2010"}
+#{"name": "Swedish", "name_translated": "Svenska", "language_code": "sv", "created_by": "SimuTranslator", "created_date": "09-02-2010"}
 Winter
-Winter
+Vinter
 Choose a location to save project...
-Choose a location to save project...
+Välj en plats att spara projektet till...
 tt_seasons_select_summer
 View/modify the Summer image of this object
 tt_menu_file_saveas
@@ -10,19 +10,19 @@ Save this project to a new location
 224
 224
 Cut image
-Cut image
+Skär bild
 tt_offset_button_up
 Move the cutting mask up
 Load same image for all
-Load same image for all
+Läs in samma bild för alla
 tt_menu_file_save
 Save this project
 tt_menu_help_about
 Information about this application
 .&dat file options
-.&dat File Options
+Alternativ för .&dat-filer
 Created on:
-Created on:
+Skapad den:
 tt_menu_file_export
 Export a compiled .pak file for this object
 Fine
@@ -34,23 +34,23 @@ Direction Facing:
 tt_offset_button_down
 Move the cutting mask down
 Created by:
-Created by:
+Skapad av:
 tt_offset_button_left
 Move the cutting mask left
 Language Details:
-Language Details:
+Språkdetaljer
 Choose a location to save .dat file...
-Choose a location to save .dat file...
+Välj en plats att spara .dat-filer till...
 Y dimension
-Y dimension
+Storlek i y-axeln
 128
 128
 tt_images_select_back
 View/modify the BackImage of this building
 Summer
-Summer
+Sommar
 &Open Project
-&Open Project
+&Öppna projekt
 16
 16
 tt_offset_button_right
@@ -58,25 +58,25 @@ Move the cutting mask right
 tt_menu_tools_dat
 Modify the .dat file information for this object
 Select from the options below:
-Select from the options below:
+Välj ett av nedanstående alternativ:
 Version %s
 Version %s
 &Save Project
-&Save Project
+&Spara projekt
 tt_facing_select_south
 View/modify the South-facing view of this building
 West
-West
+Väst
 tt_dims_z_select
-Select the height of the object from the dropdown list
+Välj objektets höjd från rullgardinsmenyn
 tt_menu_tools_prefs
 Change the application's preference settings
 192
 192
 Project Save Location
-Project Save Location
+Plats att spara projekt på
 Compile pak
-Compile .pak
+Kompilera .pak
 tt_seasons_select_winter
 View/modify the Winter image of this object
 112
@@ -84,25 +84,25 @@ View/modify the Winter image of this object
 80
 80
 East
-East
+Öster
 &Preferences...
-&Preferences...
+&Inställningar...
 tt_dims_y_select
-Select the dimensions of the object in the East-West direction from the dropdown list
+Välj objektets storlek i öst-västlig utsträckning från rullgardinsmenyn
 tt_menu_file_exit
 Quit the application
 Choose a location to export .pak file...
-Choose a location to export .pak file...
+Välj en plats att exportera .pak-filer till...
 &Smoke options
-&Smoke Options
+Alternativ för &Rök
 Image:
-Image:
+Bild:
 Browse...
-Browse...
+Bläddra...
 Choose an image file to open...
-Choose an image file to open...
+Välj en bildfil att öppna...
 Here you can enter the datfile properties necessary to produce a building using makeobj
-Here you can enter the datfile properties necessary to produce a building using makeobj
+Här kan du ange de värden för dat-filen som krävs för att makeobj skall kunna skapa en pak-fil för en byggnad
 240
 240
 tt_dims_paksize_select
@@ -112,17 +112,17 @@ View/modify the North-facing view of this building
 tt_menu_help_help
 Documentation for using this application
 Dimensions:
-Dimensions:
+Storlek:
 About TileCutter
-About TileCutter
+Om TileCutter
 .dat Output Location
-.dat Output Location
+Plats att spara .dat-filer på
 tt_dims_x_select
-Select the dimensions of the object in the North-South direction from the dropdown list
+Välj objektets storlek i nord-sydlig utsträckning från rullgardinsmenyn
 32
 32
 Number\nof views:
-Number\nof views:
+Antal\nvinklar:
 tt_seasons_enable_winter
 Enable Winter/Summer images for this project. If not enabled the project will have one image for both seasons
 tt_png_file_location
@@ -130,7 +130,7 @@ Shows the location that the .png file will be output to
 tt_images_enable_front
 Enable Front/Back images for this object, useful for stations and other buildings which vehicles can drive on top of
 .pak Output Location
-.pak Output Location
+Plats att spara .pak-filer på
 tt_images_select_front
 View/modify the FrontImage of this building
 64
@@ -140,31 +140,31 @@ View/modify the FrontImage of this building
 tt_browse_pak_file
 Browse for the location of the output .pak file
 Mask Offset:
-Mask Offset:
+Maskoffset:
 North
-North
+Norr
 &Language
-&Language
+S&pråk
 This action will set all images in the project to be the same as this one. Do you wish to proceed?
-This action will set all images in the project to be the same as this one. Do you wish to proceed?
+Detta kommer att sätta alla projektets bilder till samma bild som den här. Vill du fortsätta?
 tt_reload_input_file
 Reloads the input file, displaying changes made since the last time it was loaded (Note: This action is always performed for all input files before the cutting process begins)
 tt_facing_select_east
 View/modify the East-facing view of this building
 Language
-Language
+Språk
 Simutrans Building Editor
-Simutrans Building Editor
+Simutrans byggnadsredigerare
 .png Output Location
-.png Output Location
+Plats att spara .png-filer på
 Datfile Properties
-Datfile Properties
+Värden för dat-fil
 Save Project &As
-Save Project &As
+Spara projektet so&m
 Language:
-Language:
+Språk:
 &New Project
-&New Project
+&Nytt projekt
 160
 160
 96
@@ -172,39 +172,39 @@ Language:
 tt_offset_selector
 Select between paksize increments and single pixel increments for moving the cutting mask
 X dimension
-X dimension
+Storlek i x-axeln
 BackImage
-BackImage
+Bakgrund
 &Export .pak
-&Export .pak
+&Exportera som .pak
 Save changes before proceeding?
-Save changes before proceeding?
+Spara ändringar innan du fortsätter?
 Choose a location to save .png file...
-Choose a location to save .png file...
+Välj en plats att spara .png-filer till...
 tt_dat_file_location
 Shows the location of the .dat file for this project relative to the root save location
 TileCutter Online Help
-TileCutter Online Help
+Online-hjälp för TileCutter
 Choose a location to save to...
-Choose a location to save to...
+Välj en plats att spara till...
 Close
-Close
+Stäng
 FrontImage
-FrontImage
+Framkantsbild
 tt_facing_enable_select
 Enable multiple building directions, required for non-square buildings
 Current project has changed
-Current project has changed
+Nuvarande projekt har ändrats
 &About TileCutter
-&About TileCutter
+&Om TileCutter
 tt_menu_file_new
 Create a new project
 offset_button_reset
-Reset the offset position of the cutting mask
+Återställ skärmaskens offsetposition
 tt_pak_file_location
 Shows the location that the .pak file will be output to
 tt_browse_dat_file
-Browse for the location of the output .dat file
+Bläddra efter var .dat-filens sparas
 48
 48
 tt_browse_png_file
@@ -212,41 +212,41 @@ Browse for the location of the output .png file
 tt_browse_input_file
 Browse for the location of this view's input file
 &Cut Image
-&Cut Image
+S&kär bild
 tt_menu_file_open
 Open an existing project
 TileCutter
 TileCutter
 Enable Winter
-Enable Winter
+Aktivera vinterbilder
 144
 144
 208
 208
 Enable FrontImage
-Enable FrontImage
+Aktivera framkantsbild (FrontImage)
 E&xit
-E&xit
+&Avsluta
 tt_menu_tools_smoke
 Modify the smoke file information for this object
 Choose a project file to open...
-Choose a project file to open...
+Välj en projektfil att öppna...
 tt_facing_select_west
 View/modify the West-facing view of this building
 South
-South
+Söder
 Source image location:
-Source image location:
+Källbildens plats:
 tt_same_file_for_all
 Loads the currently selected image for all other views of this project. Useful if you have a single image with multiple object views (e.g. from a 3D render)
 Write out .dat file
-Write out .dat file
+Skriv .dat-fil
 tt_menu_file_cut
 Initiate the cutting routine, producing a .dat output file (if required) and a cut .png image
 Season:
-Season:
+Årstid:
 Paksize
-Paksize
+Objektmodulsstorlek (paksize)
 tt_image_file_location
 Shows the location of the currently displayed source image
 tt_save_file_location
@@ -254,4 +254,4 @@ Shows the location that the project is saved to. Note: All the other file locati
 tt_browse_save_file
 Browse for a location to save this project to
 Z dimension
-Z dimension
+Storlek i z-axeln

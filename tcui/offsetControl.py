@@ -48,8 +48,8 @@ class offsetControl(wx.StaticBox):
         self.sizer.Add(self.label, 0, wx.LEFT|wx.BOTTOM|wx.TOP, 2)
         self.sizer.Add(self.s_offset_flex, 1, wx.ALIGN_CENTER_HORIZONTAL|wx.TOP|wx.BOTTOM, 2)
         # Add fine button to vertical sizer
-        self.sizer.Add(self.offset_selector, 0, wx.TOP|wx.ALIGN_CENTER_HORIZONTAL, 5)
-        self.sizer.Add(wx.StaticLine(parent, wx.ID_ANY, (-1,-1),(-1,-1), wx.LI_HORIZONTAL), 0, wx.EXPAND|wx.TOP|wx.BOTTOM, 2)
+        self.sizer.Add(self.offset_selector, 0, wx.TOP|wx.ALIGN_CENTER_HORIZONTAL|wx.BOTTOM, 5)
+        #self.sizer.Add(wx.StaticLine(parent, wx.ID_ANY, (-1,-1),(-1,-1), wx.LI_HORIZONTAL), 0, wx.EXPAND|wx.TOP|wx.BOTTOM, 2)
         # Add element to its parent sizer
         parent_sizer.Add(self.sizer, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND|wx.LEFT|wx.RIGHT, 3)
         # Bind functions
