@@ -473,8 +473,9 @@ class TCApp(wx.App):
     def project_has_changed(self):
         """Whenever the active project changes, this function is called"""
         # If it has, update the title text
-        self.update_title_text()
-        self.frame.set_title()
+        if self.gui:
+            self.update_title_text()
+            self.frame.set_title()
 
     # Functions concerning the title text of the program window
     def get_title_text(self):
@@ -630,8 +631,9 @@ class TCApp(wx.App):
         # since this may have changed since it was saved
         # Do this before making the active pickle, so that this change doesn't count as save-worthy
         self.activepickle = self.pickle_project(self.activeproject)
-        self.frame.update()
-        self.project_has_changed()
+        if self.gui:
+            self.frame.update()
+            self.project_has_changed()
         debug("  Load Project succeeded")
         return True
     def new_project(self):
@@ -757,25 +759,27 @@ if __name__ == "__main__":
         from optparse import OptionParser
         usage = "usage: %prog [options] filename [filename ... ]"
         parser = OptionParser(usage=usage)
-        # -f = filename(s) to process
-        # -i = directory override for output images
-        # -d = directory override for output dat files
-        # -m = if this flag is set, trigger makeobj to compile all output files
-        # -p = directory override for output pak files (needs to be used with m if you want it to do anything)
-        # Command line of form:
-        # tilecutter(.py|.exe) [-i ...] [-d ...] [-m -p ...] <list of files to process...>
+
         parser.set_defaults(png_filename=None, dat_filename=None, pak_output=False, pak_filename=None, verbose=None)
 
-        parser.add_option("-i", "--png", dest="png_filename",
-                          help="override .png file output location to PATH", metavar="PATH")
+        parser.add_option("-i", "--png-dir", dest="png_directory",
+                          help="override .png file output location to DIRECTORY", metavar="DIRECTORY")
+        parser.add_option("-I", "--png-file", dest="png_filename",
+                          help="override .png file output name to FILENAME", metavar="FILENAME")
 
-        parser.add_option("-d", "--dat", dest="dat_filename",
-                          help="override .dat file output location to PATH", metavar="PATH")
+        parser.add_option("-d", "--dat-dir", dest="dat_directory",
+                          help="override .dat file output location to DIRECTORY", metavar="DIRECTORY")
+        parser.add_option("-D", "--dat-file", dest="dat_filename",
+                          help="override .dat file output name to FILENAME", metavar="FILENAME")
 
-        parser.add_option("-m", action="store_true", dest="pak_output",
+        parser.add_option("-m", "--makeobj", action="store_true", dest="pak_output",
                           help="enable .pak file output (requires Makeobj)")
-        parser.add_option("-p", "--pak", dest="pak_filename",
-                          help="override .pak file output location to PATH", metavar="PATH")
+        parser.add_option("-M", "--makeobj-location", dest="makeobj_directory",
+                          help="override object specific makeobj with PATH", metavar="PATH")
+        parser.add_option("-p", "--pak-dir", dest="pak_directory",
+                          help="override .pak file output location to DIRECTORY", metavar="DIRECTORY")
+        parser.add_option("-P", "--pak-file", dest="pak_filename",
+                          help="override .pak file output name to FILENAME", metavar="FILENAME")
 
         parser.add_option("-v", action="store_true", dest="verbose",
                           help="enable verbose output")
@@ -784,9 +788,51 @@ if __name__ == "__main__":
 
         # options are the defined options, args are the list of files to process
         options, args = parser.parse_args()
+        print "options: %s" % str(options)
+        print "args: %s" % str(args)
+        # Another good option would be to support "stub" datfiles
+        # produced as part of a pakset, which would have some kind of
+        # marker to allow inserting the image array matrix in a particular location
 
-        print options
-        print args
+        # Check through all args for directories, and expand these to list
+        # all contained .tcp files for processing
+
+        for file in args:
+            # For every filename specified by the user, perform export
+            app.load_project(file)
+            # Apply any command line overrides specified by user
+            # For PNG file
+            if options.png_directory is not None:
+            	png_dir = options.png_directory
+            else:
+            	png_dir = os.path.split(app.activeproject.pngfile())[0]
+            if options.png_filename is not None:
+            	png_file = options.png_filename
+            else:
+            	png_file = os.path.split(app.activeproject.pngfile())[1]
+            app.activeproject.pngfile(os.path.join(png_dir, png_file))
+            # For DAT file
+            if options.dat_directory is not None:
+            	dat_dir = options.dat_directory
+            else:
+            	dat_dir = os.path.split(app.activeproject.datfile())[0]
+            if options.dat_filename is not None:
+            	dat_file = options.dat_filename
+            else:
+            	dat_file = os.path.split(app.activeproject.datfile())[1]
+            app.activeproject.datfile(os.path.join(dat_dir, dat_file))
+            # For PAK file
+            if options.pak_directory is not None:
+            	pak_dir = options.pak_directory
+            else:
+            	pak_dir = os.path.split(app.activeproject.pakfile())[0]
+            if options.pak_filename is not None:
+            	pak_file = options.pak_filename
+            else:
+            	pak_file = os.path.split(app.activeproject.pakfile())[1]
+            app.activeproject.pakfile(os.path.join(pak_dir, pak_file))
+
+            app.export_project(app.activeproject, pak_output=options.pak_output)
 
         # Finally destroy app
         app.Destroy()
