@@ -35,6 +35,8 @@
 
 # 0.5.5
 # TO ADD: Proper selection of path to makeobj, and per-project selection of a makeobj binary
+# TO ADD: Command line scriptability, specify path to multiple .tcp files,
+#         override output location of dat/png, specify makeobj building if required
 
 # Release 0.5.4
 # FIX: Better controls layout
@@ -404,17 +406,23 @@ class MainWindow(wx.Frame):
 
 class TCApp(wx.App):
     """The main application, pre-window launch stuff should go here"""
-    def __init__(self):
+    def __init__(self, gui):
+        self.gui = gui
         self.start_directory = os.getcwd()
         wx.App.__init__(self)
 
     def OnInit(self):
         """Called after app has been initialised"""
+        # Wx also overrides stderr/stdout, override this
+        if self.gui:
+            sys.stderr = debug
+            sys.stdout = debug
+        else:
+        	sys.stderr = sys.__stderr__
+        	sys.stdout = sys.__stdout__
+
         debug("App OnInit: Starting...")
         self.start_directory = os.getcwd()
-        # Override wx's mechanism for writing stderr/out
-        sys.stderr = debug
-        sys.stdout = debug
 
         # Create a default active project
         debug("App OnInit: Create default project")
@@ -427,31 +435,36 @@ class TCApp(wx.App):
         self.active_save_location = self.activeproject.files.save_location
         self.update_title_text()
 
-        debug("App OnInit: Create + Show main frame")
-        # Create and show main frame
-        self.frame = MainWindow(None, self, wx.ID_ANY, "TileCutter")
-        self.SetTopWindow(self.frame)
+        if self.gui:
+            debug("App OnInit: Create + Show main frame")
+            # Create and show main frame
+            self.frame = MainWindow(None, self, wx.ID_ANY, "TileCutter")
+            self.SetTopWindow(self.frame)
 
-        debug("App OnInit: Bind Quit Event")
-        # Bind quit event
-        self.frame.Bind(wx.EVT_CLOSE, self.OnQuit)
-        self.frame.Bind(wx.EVT_CLOSE, self.OnQuit)
+            debug("App OnInit: Bind Quit Event")
+            # Bind quit event
+            self.frame.Bind(wx.EVT_CLOSE, self.OnQuit)
+            self.frame.Bind(wx.EVT_CLOSE, self.OnQuit)
 
-        debug("App OnInit: Init window sizes")
-        # Window inits itself to its minimum size
-        # If a larger size is specified in config, set to this instead
-        if config.window_size[0] > self.frame.GetBestSize().GetWidth() and config.window_size[1] > self.frame.GetBestSize().GetHeight():
-            self.frame.SetSize(config.window_size)
+            debug("App OnInit: Init window sizes")
+            # Window inits itself to its minimum size
+            # If a larger size is specified in config, set to this instead
+            if config.window_size[0] > self.frame.GetBestSize().GetWidth() and config.window_size[1] > self.frame.GetBestSize().GetHeight():
+                self.frame.SetSize(config.window_size)
+            else:
+                # Otherwise just use the minimum size
+                self.frame.Fit()
+            debug("App OnInit: Init window position")
+            # If a window position is saved, place the window there
+            if config.window_position != [-1,-1]:
+                self.frame.SetPosition(config.window_position)
+            else:
+                # Otherwise center window on the screen
+                self.frame.CentreOnScreen(wx.BOTH)
         else:
-            # Otherwise just use the minimum size
-            self.frame.Fit()
-        debug("App OnInit: Init window position")
-        # If a window position is saved, place the window there
-        if config.window_position != [-1,-1]:
-            self.frame.SetPosition(config.window_position)
-        else:
-            # Otherwise center window on the screen
-            self.frame.CentreOnScreen(wx.BOTH)
+            debug("App OnInit: Command line mode, not creating GUI")
+
+
 
         debug("App OnInit: Completed!")
         return True
@@ -704,22 +717,80 @@ class TCApp(wx.App):
 
 
 if __name__ == "__main__":
-    # Redirect stdout/err to internal logging mechanism
-    sys.stderr = debug
-    sys.stdout = debug
+
+    # Create app, but don't show the frame if command line being used
+    # For each file in the input list, load the file (abort if load fails),
+    # then do a standard export, plus compilation if needed
+    # If any override flags are set, modify the output paths of the project before continuing
+    # Don't save changes, move onto the next one
+
+    # Any command line arguments turn off the GUI
+    if len(sys.argv) == 1:
+    	gui = True
+    else:
+    	gui = False
     start_directory = os.getcwd()
-    # Create the application
-    debug("Init - Creating app")
-    app = TCApp()
+    if gui:
+        # Redirect stdout/err to internal logging mechanism
+        # Only do this redirection if running in GUI mode
+        # Needs tweaks to the debug module for -q option etc., different logging levels?
+        sys.stderr = debug
+        sys.stdout = debug
+        # Create the application with GUI
+        debug("Init - Creating app with GUI")
+        app = TCApp(gui=True)
+        # Init all main frame controls
+        app.frame.update()
+        # Show the main window frame
+        app.frame.Show(1)
+        # Launch into application's main loop
+        app.MainLoop()
+        app.Destroy()
+    else:
+        # Create the application without GUI
+        debug("Init - Creating app without GUI")
+        app = TCApp(gui=False)
+        # Not making use of app's event handling loop etc., so don't start it
+        #app.MainLoop()
 
-    # Init all main frame controls
-    app.frame.update()
-    # Show the main window frame
-    app.frame.Show(1)
+        # Do command line stuff here...
+        from optparse import OptionParser
+        usage = "usage: %prog [options] filename [filename ... ]"
+        parser = OptionParser(usage=usage)
+        # -f = filename(s) to process
+        # -i = directory override for output images
+        # -d = directory override for output dat files
+        # -m = if this flag is set, trigger makeobj to compile all output files
+        # -p = directory override for output pak files (needs to be used with m if you want it to do anything)
+        # Command line of form:
+        # tilecutter(.py|.exe) [-i ...] [-d ...] [-m -p ...] <list of files to process...>
+        parser.set_defaults(png_filename=None, dat_filename=None, pak_output=False, pak_filename=None, verbose=None)
 
-    # Launch into application's main loop
-    app.MainLoop()
-    app.Destroy()
+        parser.add_option("-i", "--png", dest="png_filename",
+                          help="override .png file output location to PATH", metavar="PATH")
+
+        parser.add_option("-d", "--dat", dest="dat_filename",
+                          help="override .dat file output location to PATH", metavar="PATH")
+
+        parser.add_option("-m", action="store_true", dest="pak_output",
+                          help="enable .pak file output (requires Makeobj)")
+        parser.add_option("-p", "--pak", dest="pak_filename",
+                          help="override .pak file output location to PATH", metavar="PATH")
+
+        parser.add_option("-v", action="store_true", dest="verbose",
+                          help="enable verbose output")
+        parser.add_option("-q", action="store_false", dest="verbose",
+                          help="suppress stdout")
+
+        # options are the defined options, args are the list of files to process
+        options, args = parser.parse_args()
+
+        print options
+        print args
+
+        # Finally destroy app
+        app.Destroy()
+
 
 
 
