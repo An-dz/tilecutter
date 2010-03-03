@@ -34,7 +34,7 @@ class Config(object):
         "negative_offset_allowed": False,
         "default_image_path": "test.png",
 
-        "path_to_makeobj": "makeobj.exe",
+        "path_to_makeobj": "makeobj",
 
         "choicelist_paksize": [16,32,48,64,80,96,112,128,144,160,176,192,208,224,240],
         "choicelist_views": [1,2,4],

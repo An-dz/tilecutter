@@ -5,7 +5,7 @@
 # This class provides additional methods for filename input controls, including highlighting
 #
 
-# Copyright © 2008-2009 Timothy Baldock. All Rights Reserved.
+# Copyright © 2008-2010 Timothy Baldock. All Rights Reserved.
 
 import wx, os
 
@@ -40,7 +40,15 @@ class fileTextBox(object):
                                      a, b, dialogFilesAllowed, dialogFlags)
         if pickerDialog.ShowModal() == wx.ID_OK:
             # This needs to calculate a relative path between the location of the output png and the location of the output dat
-            value = os.path.join(pickerDialog.GetDirectory(), pickerDialog.GetFilename())
+            debug("File picker dialog, ID_OK, Directory is: %s, Filename is: %s" % (pickerDialog.GetDirectory(), pickerDialog.GetFilename()))
+            drivesplit = os.path.splitdrive(pickerDialog.GetDirectory())
+            if drivesplit[0] != "" and drivesplit[1] == "":
+                # There is a drive specified in the string, and nothing else in the path
+                # If this directory was joined to the filename we'd get "D:filename.tcp" rather than "D:\filename.tcp"
+                # So add an additional os.path.sep between the two
+                value = os.path.join(pickerDialog.GetDirectory() + os.path.sep, pickerDialog.GetFilename())
+            else:
+                value = os.path.join(pickerDialog.GetDirectory(), pickerDialog.GetFilename())
             relative = self.comparePaths(value, path2)
             pickerDialog.Destroy()
             return relative

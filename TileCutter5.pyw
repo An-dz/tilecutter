@@ -33,10 +33,14 @@
 # Move the Cut image and Compile .pak buttons onto a single bottom bar after relocating file paths  - Done
 # Have the right/left toolbar run all the way down to the bottom of the screen                      - Done
 
-# 0.5.5
-# TO ADD: Proper selection of path to makeobj, and per-project selection of a makeobj binary
-# TO ADD: Command line scriptability, specify path to multiple .tcp files,
-#         override output location of dat/png, specify makeobj building if required
+# Release 0.5.5 (beta)
+# ADD: Proper selection of path to makeobj via GUI
+# ADD: Command line scriptability: 
+#      Specify path to multiple .tcp files for automatic processing
+#      Override output location of .dat/.png
+#      Specify .pak output if required
+#      Usage: "TileCutter5 -h" will give command line usage info
+# FIX: Selecting a file at the root of a drive on Windows leads to wrong path display
 
 # Release 0.5.4
 # FIX: Better controls layout
@@ -66,10 +70,9 @@
 #       segment as filename
 # BUG - Season select does not set to summer when enable winter is unchecked            - FIXED
 # BUG - Translation for static boxes in UI components                                   - DONE
-# BUG - Active image isn't set to the correct one after project load                    
+# BUG - Active image isn't set to the correct one after project load                    - FIXED
 # BUG - Translation file with windows newlines on unix doesn't work			
-# BUG - When changing root drive on windows (e.g. from c:\ to d:\) in the 
-#       Project Save Location box, path isn't correctly set, missing first \
+# BUG - Selecting a file at the root of a drive on Windows leads to wrong path display  - FIXED 0.5.5
 # BUG - Source image locations do not update to reflect changes to the project save path
 # BUG - Unicode filenames causing logging to break, due to str() rather than unicode()
 #       and also due to incorrect codec used in logging module                          - FIXED 0.5.2
@@ -143,7 +146,6 @@
 # Import only bits of wx needed, to reduce py2exe package?                              
 # Look into producing more mac-native package                                           - 0.6
 # Mac drag + drop support                                                               - 0.6
-# Linux just the script                                                                 
 # Test with Linux, Mac OSX, Windows (xp), try and have the same code across all platforms!
 # Produce help documentation                                                            
 # -> Quick start guide (interface should be fairly self-explanatory though)             
@@ -253,7 +255,7 @@ class MainWindow(wx.Frame):
         self.display = tcui.imageWindow(self, self.panel, app, self.s_panel_right, config.transparent)
 
         # Save, Dat, Image and Pak output paths
-        self.s_panel_export_paths = wx.FlexGridSizer(0,4,3,0)
+        self.s_panel_export_paths = wx.FlexGridSizer(0,3,3,0)
         # Passing through reference to app.activeproject.XXXfile doesn't work here when we make a new
         # project/load a project, since it still points to the old one! needs to access these values
         # some other way...
@@ -725,7 +727,6 @@ if __name__ == "__main__":
     # For each file in the input list, load the file (abort if load fails),
     # then do a standard export, plus compilation if needed
     # If any override flags are set, modify the output paths of the project before continuing
-    # Don't save changes, move onto the next one
 
     # Any command line arguments turn off the GUI
     if len(sys.argv) == 1:
@@ -758,7 +759,7 @@ if __name__ == "__main__":
 
         # Do command line stuff here...
         from optparse import OptionParser
-        usage = "usage: %prog [options] filename [filename ... ]"
+        usage = "usage: %prog [options] filename1 [filename2 ... ]"
         parser = OptionParser(usage=usage)
 
         parser.set_defaults(png_filename=None, dat_filename=None, pak_output=False, pak_filename=None, verbose=None)
