@@ -23,6 +23,7 @@ from imageWindow import imageWindow
 
 # Dialogs
 from translationDialog import translationDialog
+from preferencesDialog import preferencesDialog
 from aboutDialog import aboutDialog
 from DatFileEditDialog import DatFileEditDialog
 

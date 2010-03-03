@@ -3,7 +3,7 @@
 # TileCutter User Interface Module - FileControl
 #
 
-# Copyright © 2008-2009 Timothy Baldock. All Rights Reserved.
+# Copyright © 2008-2010 Timothy Baldock. All Rights Reserved.
 
 
 # FileControl is a combination of controls and methods:
@@ -121,35 +121,3 @@ class FileControl(tcui.fileTextBox):
         self.path_box.SetValue(value)
 
 
-
-
-
-
-
-
-##    # These methods are obsolete now...
-##
-##    # Image path entry events and methods
-##    def OnTextChange2(self,e):                               # Obsolete!
-##        """When text changes in the entry box"""
-##        # If text has actually changed (i.e. it's different to that set in the image's info)
-##        if self.impath_entry_box.GetValue() != self.app.activeproject.activeImage().path() and self.impath_entry_box.GetValue() != self.app.activeproject.activeImage().lastpath():
-##            debug("Text changed in image path box, new text: " + self.impath_entry_box.GetValue())
-##            # Check whether the entered path exists or not, if it does update the value in the activeproject (which will cause
-##            # that new image to be loaded & displayed) if not don't set this value
-##            if os.path.isfile(self.impath_entry_box.GetValue()) and os.path.splitext(self.impath_entry_box.GetValue())[1] in config.valid_image_extensions:
-##                # Is a valid file, display green tick icon
-##                debug("...new text is a valid file")
-##                self.impath_entry_icon.SetBitmap(wx.ArtProvider.GetBitmap(wx.ART_TICK_MARK))
-##                # Update the active image with the new path
-##                self.app.activeproject.activeImage().path(self.impath_entry_box.GetValue())
-##                # Then redraw the image
-##                self.update()
-##            else:
-##                # Not a valid file, display red cross icon
-##                self.impath_entry_icon.SetBitmap(wx.ArtProvider.GetBitmap(wx.ART_CROSS_MARK))
-##                debug("...but new text not a valid file!")
-##                # Highlight text function only needed if it isn't a valid file, obviously
-##                self.highlightText(self.impath_entry_box, self.impath_entry_box.GetValue())
-##            # Update the last path
-##            self.app.activeproject.activeImage().lastpath(self.impath_entry_box.GetValue())

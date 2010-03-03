@@ -92,13 +92,6 @@ class translationDialog(wx.Dialog):
     def update(self):
         """Set the values of the controls in this group to the values in the model"""
 
-    def OnKeyDown(self, e):
-        """On a keypress not handled by UI controls"""
-        debug("keydown event")
-        if e.GetKeyCode() == wx.K_ESCAPE:
-            self.OnClose(e)
-        else:
-            e.Skip()
     def OnClose(self, e):
         """On click of the close button"""
         self.EndModal(wx.ID_OK)

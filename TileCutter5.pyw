@@ -196,6 +196,7 @@ gt = translator.Translator()
 # _gt() used where class needs to be fed untranslated string, but we still want TCTranslator
 # script to pick it up for the translation file
 _gt = gt.loop
+
 import config
 config = config.Config()
 config.save()
@@ -418,8 +419,8 @@ class TCApp(wx.App):
             sys.stderr = debug
             sys.stdout = debug
         else:
-        	sys.stderr = sys.__stderr__
-        	sys.stdout = sys.__stdout__
+            sys.stderr = sys.__stderr__
+            sys.stdout = sys.__stdout__
 
         debug("App OnInit: Starting...")
         self.start_directory = os.getcwd()
@@ -762,23 +763,23 @@ if __name__ == "__main__":
 
         parser.set_defaults(png_filename=None, dat_filename=None, pak_output=False, pak_filename=None, verbose=None)
 
-        parser.add_option("-i", "--png-dir", dest="png_directory",
+        parser.add_option("-i", dest="png_directory",
                           help="override .png file output location to DIRECTORY", metavar="DIRECTORY")
-        parser.add_option("-I", "--png-file", dest="png_filename",
+        parser.add_option("-I", dest="png_filename",
                           help="override .png file output name to FILENAME", metavar="FILENAME")
 
-        parser.add_option("-d", "--dat-dir", dest="dat_directory",
+        parser.add_option("-d", dest="dat_directory",
                           help="override .dat file output location to DIRECTORY", metavar="DIRECTORY")
-        parser.add_option("-D", "--dat-file", dest="dat_filename",
+        parser.add_option("-D", dest="dat_filename",
                           help="override .dat file output name to FILENAME", metavar="FILENAME")
 
-        parser.add_option("-m", "--makeobj", action="store_true", dest="pak_output",
+        parser.add_option("-m", action="store_true", dest="pak_output",
                           help="enable .pak file output (requires Makeobj)")
-        parser.add_option("-M", "--makeobj-location", dest="makeobj_directory",
-                          help="override object specific makeobj with PATH", metavar="PATH")
-        parser.add_option("-p", "--pak-dir", dest="pak_directory",
+#        parser.add_option("-M", dest="makeobj_directory",
+#                          help="override object specific makeobj with PATH", metavar="PATH")
+        parser.add_option("-p", dest="pak_directory",
                           help="override .pak file output location to DIRECTORY", metavar="DIRECTORY")
-        parser.add_option("-P", "--pak-file", dest="pak_filename",
+        parser.add_option("-P", dest="pak_filename",
                           help="override .pak file output name to FILENAME", metavar="FILENAME")
 
         parser.add_option("-v", action="store_true", dest="verbose",
@@ -788,8 +789,9 @@ if __name__ == "__main__":
 
         # options are the defined options, args are the list of files to process
         options, args = parser.parse_args()
-        print "options: %s" % str(options)
-        print "args: %s" % str(args)
+        if options.verbose is True:
+            print "options: %s" % str(options)
+            print "args: %s" % str(args)
         # Another good option would be to support "stub" datfiles
         # produced as part of a pakset, which would have some kind of
         # marker to allow inserting the image array matrix in a particular location
@@ -798,6 +800,8 @@ if __name__ == "__main__":
         # all contained .tcp files for processing
 
         for file in args:
+            if options.verbose is not False:
+                print "processing file: %s" % file
             # For every filename specified by the user, perform export
             app.load_project(file)
             # Apply any command line overrides specified by user
@@ -833,6 +837,8 @@ if __name__ == "__main__":
             app.activeproject.pakfile(os.path.join(pak_dir, pak_file))
 
             app.export_project(app.activeproject, pak_output=options.pak_output)
+            if options.verbose is not False:
+                print "...Done!"
 
         # Finally destroy app
         app.Destroy()

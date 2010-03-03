@@ -48,7 +48,6 @@ class menuObject:
         self.toolsMenu.AppendSeparator()
         self.menu_tools_language = self.AddMenuItem(self.toolsMenu, self.OnSelectLanguage)
         self.menu_tools_prefs = self.AddMenuItem(self.toolsMenu, self.OnPreferences, id=wx.ID_PREFERENCES)
-        self.menu_tools_prefs.Enable(False)
         # Help menu
         self.helpMenu = wx.Menu()
         self.menu_help_help = self.AddMenuItem(self.helpMenu, self.OnHelp, id=wx.ID_HELP)
@@ -182,7 +181,9 @@ class menuObject:
             dlg.Destroy()
     def OnPreferences(self, e):
         debug("Menu-Tools-> Open preferences dialog")
-        return 1
+        dlg = tcui.preferencesDialog(self.parent, self.app)
+        if dlg.ShowModal() == wx.ID_OK:
+            dlg.Destroy()
 
     def OnHelp(self, e):
         debug("Menu-Help-> Open online help")
