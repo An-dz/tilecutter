@@ -284,8 +284,6 @@ class MainWindow(wx.Frame):
         # CUT/EXPORT BUTTONS
         # Export .dat checkbox
         self.export_dat_toggle = wx.CheckBox(self.panel, wx.ID_ANY, "", (-1,-1), (-1,-1))
-        self.export_dat_toggle.SetValue(1)
-        self.export_dat_toggle.Enable(False)
         self.export_dat_toggle.Bind(wx.EVT_CHECKBOX, self.OnToggleDatExport, self.export_dat_toggle)
         # Cut button
         self.cut_button = wx.Button(self.panel, wx.ID_ANY)
@@ -391,6 +389,7 @@ class MainWindow(wx.Frame):
     def update(self):
         """Update frame and all its children to reflect values in the active project"""
         self.Freeze()
+        self.export_dat_toggle.SetValue(config.write_dat)
         self.control_seasons.update()
         self.control_images.update()
         self.control_facing.update()
@@ -406,6 +405,10 @@ class MainWindow(wx.Frame):
     def OnToggleDatExport(self, e):
         """Toggle whether .dat file info should be exported, or just the cut image
         if .dat file exporting is disabled the .dat file will be displayed in a dialog"""
+        if config.write_dat != self.export_dat_toggle.GetValue():
+            config.write_dat = self.export_dat_toggle.GetValue()
+            debug("OnToggleDatExport: Set config.write_dat to %s" % config.write_dat)
+
 
 class TCApp(wx.App):
     """The main application, pre-window launch stuff should go here"""
@@ -510,13 +513,20 @@ class TCApp(wx.App):
         debug("  Setting title_text to: %s" % self.title_text)
 
     # Method to invoke cutting engine on a particular project
-    def export_project(self, project, pak_output=False):
+    def export_project(self, project, pak_output=False, return_dat=None, write_dat=None):
         """Trigger exporting of specified project"""
+        if return_dat is None:
+            return_dat = not config.write_dat
+        if write_dat is None:
+            write_dat = config.write_dat
         # First trigger project to generate cut images
         project.cutImages(tc.export_cutter)
         # Then feed project into outputting routine
         # Will need a way to report back progress to a progress bar/indicator
-        tc.export_writer(project, pak_output)
+        ret = tc.export_writer(project, pak_output, return_dat, write_dat)
+        if self.gui and ret != True:
+            # Pop up a modal dialog box to display the .dat file info
+            pass
 
     # Checks on project relative to the active project
     def project_changed(self, project):
@@ -762,13 +772,15 @@ if __name__ == "__main__":
         usage = "usage: %prog [options] filename1 [filename2 ... ]"
         parser = OptionParser(usage=usage)
 
-        parser.set_defaults(png_filename=None, dat_filename=None, pak_output=False, pak_filename=None, verbose=None)
+        parser.set_defaults(pak_output=False, dat_output=True)
 
         parser.add_option("-i", dest="png_directory",
                           help="override .png file output location to DIRECTORY", metavar="DIRECTORY")
         parser.add_option("-I", dest="png_filename",
                           help="override .png file output name to FILENAME", metavar="FILENAME")
 
+        parser.add_option("-n", action="store_false", dest="dat_output",
+                          help="disable .dat file output (if -m specified, dat info will be output to tempfile)")
         parser.add_option("-d", dest="dat_directory",
                           help="override .dat file output location to DIRECTORY", metavar="DIRECTORY")
         parser.add_option("-D", dest="dat_filename",
@@ -837,7 +849,7 @@ if __name__ == "__main__":
             	pak_file = os.path.split(app.activeproject.pakfile())[1]
             app.activeproject.pakfile(os.path.join(pak_dir, pak_file))
 
-            app.export_project(app.activeproject, pak_output=options.pak_output)
+            app.export_project(app.activeproject, pak_output=options.pak_output, return_dat=False, write_dat=options.dat_output)
             if options.verbose is not False:
                 print "...Done!"
 

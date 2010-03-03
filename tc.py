@@ -7,7 +7,7 @@
 
 
 import wx
-import sys, os, string
+import sys, os, string, tempfile
 import pickle, copy, math, StringIO
 
 import logger
@@ -15,7 +15,6 @@ debug = logger.Log()
 
 import config
 config = config.Config()
-
 
 class TCMasks:
     """Generates and contains cutting masks for various paksizes"""
@@ -104,8 +103,8 @@ class Makeobj:
         """Calls makeobj with appropriate arguments for generating a pakfile"""
         # path_to_makeobj pak[paksize] path_to_pak path_to_dat
         # Paths to pak and dat are absolute paths (or relative to makeobj)
-        args = "\"%s\" pak%s \"%s\" \"%s\"" % (self.path_to_makeobj, paksize, path_to_pak, path_to_dat)
-        debug("Activating Makeobj with arguments: %s" % args)
+        args = [self.path_to_makeobj, "pak%s" % paksize, path_to_pak, path_to_dat]
+        debug("Activating Makeobj with arguments: %s" % str(args))
         process = subprocess.Popen(args, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
         process.wait()
         # Write out makeobj log information to main log
@@ -323,23 +322,34 @@ def export_writer(project, pak_output=False, return_dat=False, write_dat=True):
 
     # Write out to files if required
     if write_dat:
-        # Dat file
+        debug("e_w: Writing out .dat file to %s" % dat_path)
         f = open(dat_path, "w")
-        f.write(dat_text)
-        f.close()
-    # Image file
+    else:
+        debug("e_w: Writing out .dat file to temporary file")
+        tempfile.tempdir = os.path.split(dat_path)[0]
+        f = tempfile.NamedTemporaryFile("w", suffix=".tmp", delete=False)
+        dat_path = f.name
+
+    # Write .dat file
+    f.write(dat_text)
+    f.close()
+
+    # Write out .png file
     output_bitmap.SaveFile(png_path, wx.BITMAP_TYPE_PNG)
 
     if pak_output:
-        if not write_dat:
-            # Cannot output .pak file if .dat file hasn't been written
-            debug("e_w: Makeobj output selected, but no dat file written! Aborting Makeobj stage")
-        else:
-            # Output .pak file using makeobj if required
-            debug("e_w: Use makeobj to output pak file")
-            path_to_makeobj = paths.join_paths(os.getcwd(), config.path_to_makeobj)
-            makeobj = Makeobj(path_to_makeobj)
-            makeobj.pak(project.paksize(), paths.win_to_unix(pak_path), paths.win_to_unix(dat_path))
+        # Output .pak file using makeobj if required
+        debug("e_w: Use makeobj to output pak file")
+        path_to_makeobj = paths.join_paths(os.getcwd(), config.path_to_makeobj)
+        makeobj = Makeobj(path_to_makeobj)
+        print repr(pak_path)
+        print repr(dat_path)
+        makeobj.pak(project.paksize(), paths.win_to_unix(pak_path), paths.win_to_unix(dat_path))
+
+    # Delete temporary file if needed
+    if not write_dat:
+        debug("e_w: deleting temporary file used: %s" % dat_path)
+        os.remove(dat_path)
 
     # Log .dat file generated
     debug("e_w: .dat file text is:")
@@ -347,6 +357,8 @@ def export_writer(project, pak_output=False, return_dat=False, write_dat=True):
     # Return dat file text (e.g. for output within the program in a dialog box etc.)
     if return_dat:
         return dat_text
+    else:
+        return True
 
 def export_cutter(bitmap, dims, offset, p):
     """Takes a bitmap and dimensions, and returns an array of masked bitmaps"""

@@ -35,6 +35,7 @@ class Config(object):
         "default_image_path": "test.png",
 
         "path_to_makeobj": "makeobj",
+        "write_dat": True,
 
         "choicelist_paksize": [16,32,48,64,80,96,112,128,144,160,176,192,208,224,240],
         "choicelist_views": [1,2,4],
