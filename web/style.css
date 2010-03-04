@@ -1,80 +1,51 @@
 body {
+font: 12px/1.2 Verdana, Arial, Helvetica, sans-serif;
 margin: 0;
 }
 
-.abs {
-position: absolute;
-top: 0;
-left: 0;
-height: 100%;
-width: 100%;
-background-color: #00FF00;
-}
-.contbg {
-background-color: #FFFFCC;
-height: 100%;
-min-height: 100%;
-margin-left: 12em;
-}
-
-.main {
-position: relative;
-}
-.header {
-background-color: #1111FF;
-padding: 1em;
-}
-
-.left {
-background-color: #FF00FF;
-float: left;
-width: 12em;
-}
-
-.left ul {
-padding: 0;
+h1 {
+background-color: #c4d4d4;
+padding: 0.5em;
 margin: 0;
+background-image: url("tc_icon2_128_plain.png");
+background-repeat: no-repeat;
+background-position: center right;
+min-height: 128px;
 }
-.left li {
-background-color: #FFCC00;
+
+h2 {
+background-color: #78a16f;
+padding: 0.5em;
 }
-.left li:hover {
-background-color: #FFCCFF;
+
+h2.menu {
+margin-top: 0;
 }
-.left li a {
+
+h2 a, h3 a {
+font-size: xx-small;
 display: block;
-text-decoration: none;
-color: #000000;
-padding: 0.2ex;
-padding-left: 0.5em;
-}
-.left ul ul li {
-background-color: #999999;
-}
-.left ul ul li a {
-padding-left: 1em;
+float: right;
+text-align: right;
+color: black;
 }
 
-.right {
-background-color: #FFFF00;
-margin-left: 12em;
+h3 {
+background-color: #89b87f;
+margin: 0 0.5em;
+padding: 0.5em;
 }
 
-.right p {
-margin: 0;
-padding: 0.2em 0.3em;
-}
-.right h1 {
-background-color: #BF1498;
-margin: 0;
-padding: 0.2em 0.3em;
-}
-.right h2 {
-background-color: #EF1498;
-margin: 0;
-padding: 0.2em 0.3em;
+p {
+margin: 1em;
 }
 
+p.monospace {
+font-family: monospace;
+}
 
-
-
+pre {
+margin: 1em 2em;
+padding: 0.5em;
+background-color: #d5e6e6;
+}
