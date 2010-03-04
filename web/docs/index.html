@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-GB" lang="en-GB">
+	
+<head>
+
+<link rel="stylesheet" type="text/css" href="style.css" />
+
+<title>TileCutter Online Documentation</title>
+
+</head>
+	
+<body>
+
+<h1>TileCutter Online Documentation</h1>
+
+<h2>Contents</h2>
+<ol>
+<li><a href="#Introduction">Introduction</a></li>
+<li><a href="#Interface">Interface</a></li>
+<li><a href="#BasicUsage">Basic Usage</a></li>
+<li><a href="#CommandLineUsage">Command Line Usage</a></li>
+<li><a href="#AnyOtherQuestions">Any Other Questions</a></li>
+<li><a href="#TileCutterLicence">TileCutter Licence</a></li>
+</ol>
+
+<h2><a name="Introduction">Introduction</a></h2>
+
+<p>TileCutter is a tool designed to allow easy creation of multi-tile, or multi-view building graphics for use with Simutrans. Its primary purpose is to take an image (or set of images) of a building and cut them into the individual paksize tiles used by the game to display the building. It can output source files (.dat and .png), a .pak file (by integrating with the Simutrans Makeobj utility) or both.</p>
+
+<h2><a name="Interface">Interface</a></h2>
+
+<p>TileCutter has two interfaces, a cross-platform graphical user interface (GUI) provided by wxWidgets and a command line interface (CLI). The GUI is used to configure all of the attributes of a cutting operation, and the CLI can then be used to "compile" the .tcp file and source images into either Simutrans object source files, or a compiled .pak file.</p>
+
+<h3>GUI</h3>
+
+<p>The GUI is laid out around the image display viewport. This displays the currently selected image. You can tell which image is currently selected by observing the settings in the left-hand image selection pane. Simutrans objects can have a number of different "views", for Front and Back Image, Facing Direction and Seasons. See the Basic Usage section for more info.</p>
+
+<p>Above the image display viewport are controls to select an image file for this view, there is also a button to allow you to reload the source image (this is done automatically at export, TileCutter does not store the source images so you are free to edit them in another application). Below the image display viewport there are controls for the various paths associated with a project. The Project Save Location is the current location of the project's save file, all other paths are relative to this one. This allows you to move the project save file and stil keep the same relative paths for exporting files, and reading source files. Below this there are three output locations, for .dat, .png and .pak files. If the .pak output is left blank, or is set to a directory (with a trailing slash) then the default .pak file naming scheme is used by Makeobj.</p>
+
+<p>TileCutter also has a menu bar with the standard functions for saving/loading etc. project files. Under the Tools menu you can set up the .dat file parameters for the project, change the language of the GUI and configure preferences. There is also a function to load the currently selected image for all views in the project - this is useful if you have one source image with multiple views of the building, and want to quickly load it.</p>
+
+<h3>CLI</h3>
+
+<p>TileCutter's CLI is designed only to allow the scripted processing of .tcp files into .dat/.png and/or .pak files. It permits you to set up many projects, and then rebuild them all at once (e.g. for pakset maintainers). It also allows for platform-specific build scripts to be produced, e.g. as part of an automated process for outputting rendered building images. See the <a href="#CommandLineUsage">Command Line Usage</a> section for more</p>
+
+<p>If TileCutter is run with any command line arguments it suppresses the GUI. The available options can be found by running the command:</p>
+
+<pre>tilecutter5 -h</pre>
+
+<p>For example:</p>
+
+<pre>
+Usage: tilecutter5 [options] filename1 [filename2 ... ]
+
+Options:
+  -h, --help    show this help message and exit
+  -i DIRECTORY  override .png file output location to DIRECTORY
+  -I FILENAME   override .png file output name to FILENAME
+  -n            disable .dat file output (if -m specified, dat info will be
+                output to tempfile)
+  -d DIRECTORY  override .dat file output location to DIRECTORY
+  -D FILENAME   override .dat file output name to FILENAME
+  -m            enable .pak file output (requires Makeobj)
+  -p DIRECTORY  override .pak file output location to DIRECTORY
+  -P FILENAME   override .pak file output name to FILENAME
+  -v            enable verbose output
+  -q            suppress stdout
+</pre>
+
+<p>You can override the per-project settings for output directories if needed, this is useful when working with other people's project files.</p>
+
+<h2><a name="BasicUsage">Basic Usage</a></h2>
+
+<p>This step-by-step guide will take you over the basics of project creation with TileCutter</p>
+
+<ol>
+<li>After opening TileCutter the first thing we need to do is add our source images. You do this either by typing the location of the image in the top bar, or by clicking the Browse button next to it. This will open a standard platform-specific file picker dialog. Select the source image (this must be in .png format) and select Open.</li>
+<li>You should see your source image loaded into the viewport window. The path to the specific image is displayed in the top bar.</li>
+<li>For most projects you will want to specify multiple image views, these could be for a simple purpose like having a different image for the building in the Winter season (or the Snow climate), or more complex needs like Front/BackImages which can be used when creating buildings which vehicles interact with. You can also configure multiple direction views (which is mandatory for odd-shaped buildings, more on this later) so the building looks right when rotated. All of these views are cumulative, so you can have both Summer and Winter images for each rotation, for example.</li>
+<li>To use these additional views, check the "Enable Winter" or "Enable FrontImage" buttons. To enable multiple direction views, select the number of views from the dropdown menu. This will enable the radio buttons which can be used to switch views. Notice that switching views causes the image to vanish from the viewport display. This is normal, and if you move back to the original view the image will come back.</li>
+<li>If you have one source image with multiple views of an object you may wish to load this one source image for all views. Rather than doing this manually for each view there is a menu item provided under the Tools menu which can do this for you. Simply load one view with your source image and then select "Same File For All Images" from the menu. The image will be loaded for all views, active or not.</li>
+<li>For multi-tile buildings it is of course necessary to configure the size and offset. On the main window displayport you may have noticed the red line. This is the cutting mask. Everything inside the red shape will appear in the object when it is compiled and inserted into the game. By default the cutting mask is set to 1 tile by 1 tile. You can change this using the Dimensions control. Key controls here are: 
+<ul>
+<li>Paksize - this alters the pixel dimensions of an individual tile, commonly used settings in paksets are 64, 96 and 128 - this must be set to the same as the pakset you are developing an object for</li>
+<li>X dimension - this alters the number of tiles this building takes up in the "North-South" direction (from bottom left to top right of the game screen)</li>
+<li>Y dimension - as for the X dimension, but for the "East-West" direction (from top left to bottom right of the game screen)</li>
+<li>Z dimension - the height of the building</li>
+</ul>
+</li>
+<li>You can also use the Mask Offset to move the mask around the image. This is useful to correct minor alignment errors in the output image, or to select one of multiple views in a source image. The Fine checkbox switches between paksize adjustments and pixel adjustments.</li>
+<li>Once you have your views configured you may wish to alter the .dat file properties for your project. This can be done using the .dat File Options menu item (or by pressing shortcut Ctrl+D). At present this is just a text entry box where you can specify any object properties you need to. In future a proper editor will be provided. You can find out about the various options at the <a href="http://wiki.simutrans.com">Simutrans Wiki</a>. The .dat file properties are saved in the project file, so no seperate .dat file is required.</li>
+<li>You should be ready to export your project now. Please check the output locations at the bottom of the screen. All three output locations are relative paths from the Project Save Location. You may wish to change these depending on your environment. On Windows, path sections highlighted in Yellow are ones which do not exist. Please ensure that all directories exist since TileCutter will not create them and will give an error. If you leave the .pak Output Location blank, or specify a directory (with a trailing slash) then the default pakfile naming system of Makeobj will be used. You can override this with your own name if you wish.</li>
+<li>Once you've configured the output paths you can click on "Cut Image" to export the .dat and .png files to the locations selected. If you don't want to export the .dat file you can deselect the "Write out .dat file" option.</li>
+<li>If you wish to have TileCutter compile a .pak file for you as part of the export process you can click on the "Compile .pak" button. Please note that you need to have Makeobj available since TileCutter uses this to make .pak files. By default TileCutter will look for a copy of Makeobj in its installation directory, but you can specify an alternative location using the Preferences dialog accessed from the Tools menu.</li>
+
+
+</ol>
+
+
+<h2><a name="CommandLineUsage">Command Line Usage</a></h2>
+
+<p>The CLI interface to TileCutter is designed to allow scripted processing of pre-produced .tcp project files. It does not support direct project creation (use the GUI for that). After creating your project file you can feed it into TileCutter at the command line by running a command such as:</p>
+
+<pre>tilecutter5 my_project.tcp</pre>
+
+<p>This will then process the project file, producing .dat and .png output as defined by the paths specified in the project.</p>
+
+<p>If you wish to run the output through Makeobj, suppress .dat creation, override the creation directories etc. you can do so by running the command with flags. For example, the following command switches on .pak file creation and redirects pak file creation to "/home/timothy/tilecutter/" for processing the two projects "my_project.tcp" and "my_second_project.tcp":</p>
+
+<pre>tilecutter5 -m -p /home/timothy/tilecutter/ my_project.tcp my_second_project.tcp</pre>
+
+<p>This interface can be used as part of scripted pakset generation, as part of a workflow for automatically creating rendered objects (e.g. render, post-processing, cutting, Makeobj export) or just to allow one-click object creation as part of an OS-specific script (e.g. Windows Batch file, or Unix Shell Script). If you have a suggestion for an extension to the script interface please let me know.</p>
+
+
+<h2><a name="AnyOtherQuestions">Any Other Questions</a></h2>
+
+<p>If you have any questions about using TileCutter please feel free to ask on the <a href="http://forum.simutrans.com/index.php?board=40.0">Simutrans Forum</a>, or PM me (username: Timothy). I can also be contacted by email: "tb {at} entropy [dot] me (dot) uk"</p>
+
+<h2><a name="TileCutterLicence">TileCutter Licence</a></h2>
+
+<p>A reproduction of the TileCutter Licence, for your conveniance</p>
+
+<p class="monospace">Copyright &copy; 2008-2009 Timothy Baldock. All Rights Reserved.</p>
+
+<p class="monospace">Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:</p>
+
+<p class="monospace">1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.</p>
+
+<p class="monospace">2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.</p>
+
+<p class="monospace">3. The name of the author may not be used to endorse or promote products derived from this software without specific prior written permission from the author.</p>
+
+<p class="monospace">4. Products derived from this software may not be called "TileCutter" nor may "TileCutter" appear in their names without specific prior written permission from the author.</p>
+
+<p class="monospace">THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. </p>
+
+
+</body>
+	
+</html>
+
+
