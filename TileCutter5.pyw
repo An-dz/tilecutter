@@ -40,7 +40,9 @@
 #      Override output location of .dat/.png
 #      Specify .pak output if required
 #      Usage: "TileCutter5 -h" will give command line usage info
+# ADD: Ability to select .dat file output via UI checkbox
 # FIX: Selecting a file at the root of a drive on Windows leads to wrong path display
+# ADD: Basic documentation now available on website (via Online Help link in menu)
 
 # Release 0.5.4
 # FIX: Better controls layout
