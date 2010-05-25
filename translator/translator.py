@@ -8,7 +8,6 @@
 
 import wx
 import sys, os, re, codecs
-import imres
 # Custom platform codecs
 import u_newlines
 import w_newlines
