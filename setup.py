@@ -96,7 +96,7 @@ if len(sys.argv) >= 2 and sys.argv[1] == "source":
         print "Copying contents of: %s/" % recdir
         shutil.copytree(recdir, os.path.join(dist_dir, recdir), ignore=shutil.ignore_patterns(".svn", "tmp*", "*.pyc", "*.py~"))
 
-    for distfile in ["config.py", "imres.py", "licence.txt", "logger.py", "tc.py", "tcproject.py", "test.png", "TileCutter5.pyw"]:
+    for distfile in ["config.py", "imres.py", "licence.txt", "logger.py", "tc.py", "tcproject.py", "test.png", "main.py"]:
         print "Copying file: %s" % distfile
         shutil.copy(distfile, dist_dir)
 
@@ -125,8 +125,8 @@ if len(sys.argv) >= 2 and sys.argv[1] == "py2exe":
     # windows-specific options
     options["windows"] = [
         {
-        "script":"TileCutter5.pyw",
-        "windows":"TileCutter5.pyw",
+        "script":"main.py",
+        "windows":"main.py",
         "icon_resources": [(1, "TileCutter icon/tilecutter.ico"),(42, "TileCutter icon/tilecutter_document.ico")],
         },
     ]
