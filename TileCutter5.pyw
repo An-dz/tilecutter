@@ -4,7 +4,7 @@
 # TileCutter, version 0.5
 #
 
-# Copyright © 2008-2010 Timothy Baldock. All Rights Reserved.
+# Copyright Â© 2008-2010 Timothy Baldock. All Rights Reserved.
 #
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 #
@@ -190,6 +190,8 @@ try:
 except ImportError:
     debug("WXPython not installed, please install module and try again!")
     raise
+
+debug("WX version is: %s" % wx.version())
 
 import sys, os, StringIO, pickle
 import tcui, tc, tcproject, imres

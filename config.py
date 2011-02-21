@@ -3,10 +3,11 @@
 # Config Management Utility
 #
 
-# Copyright � 2008-2010 Timothy Baldock. All Rights Reserved.
+# Copyright © 2008-2010 Timothy Baldock. All Rights Reserved.
 
 ##import simplejson as json
 import json
+import codecs
 
 # Better to use json module in python 2.6 here
 # Tuples probably need to be converted to arrays here
@@ -20,33 +21,33 @@ class Config(object):
     # Internals will always be checked before config
     defaults = {
         "debug_on": True,
-        "logfile": "tilecutter.log",
+        "logfile": u"tilecutter.log",
         "transparent": [231,255,255],
         "default_paksize": 64,
-##        "PROJECT_FILE_EXTENSION": ".tcp",
-        "valid_image_extensions": [".png"],
+##        "PROJECT_FILE_EXTENSION": unicode(".tcp"),
+        "valid_image_extensions": [u".png"],
         "OFFSET_NEGATIVE_ALLOWED": False,
         "window_size": [-1,-1],
         "window_position": [-1,-1],
 
-        "last_save_path": "",
+        "last_save_path": u"C:\\Users\\timothy.baldock\\someã",
 
         "negative_offset_allowed": False,
-        "default_image_path": "test.png",
+        "default_image_path": u"test.png",
 
-        "path_to_makeobj": "makeobj",
+        "path_to_makeobj": u"makeobj",
         "write_dat": True,
 
         "choicelist_paksize": [16,32,48,64,80,96,112,128,144,160,176,192,208,224,240],
         "choicelist_views": [1,2,4],
         "choicelist_dims": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],
         "choicelist_dims_z": [1,2,3,4],
-        "default_language": "english_translation",
+        "default_language": u"english_translation",
         }
     internals = {
-        "version": "0.5.5",
+        "version": u"0.5.5",
         }
-    conf_path = "tc.config"
+    conf_path = u"tc.config"
 
     def __init__(self):
         """"""
@@ -56,7 +57,7 @@ class Config(object):
         # re-read settings from file etc.
         if Config.config == {}:
             try:
-                f = open(self.conf_path, "r")
+                f = codecs.open(self.conf_path, "r", "UTF-8")
                 file_config = json.loads(f.read())
                 f.close()
             except IOError:
@@ -71,7 +72,7 @@ class Config(object):
                     Config.config[k] = Config.defaults[k]
     def __str__(self):
         """Return a string representing this object"""
-        return unicode(Config.config)
+        return unicode(str(Config.config), "UTF-8")
     def __getattr__(self, name):
         """Lookup method by . access e.g. z = x.y"""
         if Config.internals.has_key(name):
@@ -110,12 +111,7 @@ class Config(object):
             raise KeyError(key)
     def save(self):
         """Save the current config out to the config file"""
-        f = open(self.conf_path, "w")
-        f.write(json.dumps(Config.config, sort_keys=True, indent=4))
+        f = codecs.open(self.conf_path, "w", "UTF-8")
+        f.write(json.dumps(Config.config, ensure_ascii=False, sort_keys=True, indent=4))
         f.close()
-
-
-
-
-
 

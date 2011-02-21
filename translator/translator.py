@@ -36,7 +36,7 @@ class Translator(object):
     # Translation setup
     PATH_TO_TRANSLATIONS = "languages"
     TRANSLATION_FILE_EXTENSION = ".tab"
-    DEFAULT_LANGFILE_ENCODING = "utf-8"
+    DEFAULT_LANGFILE_ENCODING = "UTF-8"
     def __init__(self):
         """Load translation files"""
         if Translator.language_list is None:
@@ -63,9 +63,10 @@ class Translator(object):
             # If preference does not exist, use English instead
             if config.default_language in Translator.language_names_list:
                 active = config.default_language
+                debug("Language setting found in config file - Setting active translation to %s" % active)
             else:
                 active = "english_translation"
-            debug("Setting active translation to %s" % active)
+            debug("Using default language - Setting active translation to %s" % active)
             self.setActiveTranslation(active)
 
     def __call__(self, vars):
@@ -119,21 +120,21 @@ class translation:
         debug("Begin loading translation from file: %s" % filename)
         # Open file & read in contents
         try:
-            f = open(filename, "r")
+            # Language files should be saved as UTF-8 - this conversation done now by directly reading as UTF-8
+            f = codecs.open(filename, "r", "UTF-8")
             block = f.read()
             f.close()
         except IOError:
             debug("Problem loading information from file, aborting load of translation file")
             raise TranslationLoadError()
-        # Lanuage files should be saved as UTF-8
-        block = block.decode("utf-8")
+        # Language files should be saved as UTF-8 - this conversation done now by directly reading as UTF-8
+        #block = block.decode("UTF-8")
         # Convert newlines to unix style
         block = block.decode("u_newlines")
         # Scan document for block between {}, this is our config section
         dicts = re.findall("(?={).+?(?<=})", block, re.DOTALL)
-        if len(dicts) != 1:
-            debug("Error loading translation file: %s. Too many dicts found, ensure {} characters are not used in translation file" % filename)
-            raise TranslationLoadError()
+        if len(dicts) > 1:
+            debug("Found more than one dict-like structure (e.g. pair of \"{}\") in file: \"%s\" - assuming config is the first one" % filename)
         configstring = dicts[0]
         
         debug("Translation file config string is: %s" % configstring)
