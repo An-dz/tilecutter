@@ -65,7 +65,7 @@ class Translator(object):
                 active = config.default_language
                 debug(u"Language setting found in config file - Setting active translation to %s" % active)
             else:
-                active = "english_translation"
+                active = "English"
             debug(u"Using default language - Setting active translation to %s" % active)
             self.setActiveTranslation(active)
 

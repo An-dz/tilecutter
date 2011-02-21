@@ -56,6 +56,9 @@ class Log(object):
             outline = dt + u" | " + s
         else:
             outline = u" " * len(dt) + u" | " + s
+        # Check last character of line is a newline
+        if outline[-1] != u"\n":
+            outline = outline + u"\n"
         Log.file.write(outline)
         Log.file.flush()
 

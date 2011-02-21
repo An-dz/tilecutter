@@ -13,6 +13,8 @@ from menuObject import menuObject
 
 from FileControl import FileControl
 
+from mainwindow import MainWindow
+
 # Controls
 from seasonControl import seasonControl
 from imageControl import imageControl
