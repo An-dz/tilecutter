@@ -1,257 +1,257 @@
-#{"name": "Croatian", "name_translated": "Hrvatski", "language_code": "hr", "created_by": "SimuTranslator", "created_date": "09-02-2010"}
+#{"name": "Croatian", "name_translated": "Hrvatski", "language_code": "hr", "created_by": "SimuTranslator", "created_date": "21-02-2011"}
 Winter
-Winter
+Zima
 Choose a location to save project...
-Choose a location to save project...
+Odabrati lokaciju za spremanje projekta...
 tt_seasons_select_summer
-View/modify the Summer image of this object
+Prikaz/promjena Ljetne slike ovoga objekta
 tt_menu_file_saveas
-Save this project to a new location
+Spremiti ovaj projekt na novu lokaciju
 224
 224
 Cut image
-Cut image
+Izrezati sliku
 tt_offset_button_up
-Move the cutting mask up
+Pomicanje maske rezanja gore
 Load same image for all
-Load same image for all
+Ucitati istu sliku za sve
 tt_menu_file_save
-Save this project
+Spremiti ovaj projekt
 tt_menu_help_about
-Information about this application
+Informacija o ovoj aplikaciji
 .&dat file options
-.&dat File Options
+.&dat Opcije Datoteke
 Created on:
-Created on:
+Stvoreno na:
 tt_menu_file_export
-Export a compiled .pak file for this object
+Izvoz kompajlirane .dat datoteke za ovaj objekt
 Fine
-Fine
+Fino
 tt_menu_languages
-Change the application's language settings
+Promjena jezicnih postavki aplikacije
 Direction Facing:
-Direction Facing:
+Direkcija Smjera:
 tt_offset_button_down
-Move the cutting mask down
+Pomicanje maske rezanja dolje
 Created by:
-Created by:
+Stvoreno od:
 tt_offset_button_left
-Move the cutting mask left
+Pomicanje maske rezanja ulijevo
 Language Details:
-Language Details:
+Detalji Jezika:
 Choose a location to save .dat file...
-Choose a location to save .dat file...
+Odabrati lokaciju za spremanje .dat datoteke...
 Y dimension
-Y dimension
+X dimenzija
 128
 128
 tt_images_select_back
-View/modify the BackImage of this building
+Prikaz/promjena BackImage za ovu zgradu
 Summer
-Summer
+Ljeto
 &Open Project
-&Open Project
+&Otvoriti Projekt
 16
 16
 tt_offset_button_right
-Move the cutting mask right
+Pomicanje maske rezanja udesno
 tt_menu_tools_dat
-Modify the .dat file information for this object
+Promjena informacija .dat datoteke za ovaj objekt
 Select from the options below:
-Select from the options below:
+Odabrati od doljnih mogucnosti:
 Version %s
-Version %s
+Inacica %s
 &Save Project
-&Save Project
+&Spremiti Project
 tt_facing_select_south
-View/modify the South-facing view of this building
+Prikaz/promjena Juzno usmjerenog pogleda ove zgrade
 West
-West
+Zapad
 tt_dims_z_select
-Select the height of the object from the dropdown list
+Odabrati velicinu objekta iz liste izbora
 tt_menu_tools_prefs
-Change the application's preference settings
+Promjena svojstava postavki aplikacije
 192
 192
 Project Save Location
-Project Save Location
+Lokacija Spremanje Projekta
 Compile pak
-Compile .pak
+Kompajlirati .pak
 tt_seasons_select_winter
-View/modify the Winter image of this object
+Prikaz/promjena Zimske slike ovoga objekta
 112
 112
 80
 80
 East
-East
+Istok
 &Preferences...
-&Preferences...
+&Svojstva...
 tt_dims_y_select
-Select the dimensions of the object in the East-West direction from the dropdown list
+Odabrati dimenzije objekta u Istok-Zapad smjeru iz liste izbora
 tt_menu_file_exit
-Quit the application
+Izlaz iz aplikacije
 Choose a location to export .pak file...
-Choose a location to export .pak file...
+Odabir lokacije za izvoz .pak datoteke...
 &Smoke options
-&Smoke Options
+&Dimne Opcije
 Image:
-Image:
+Slika:
 Browse...
-Browse...
+Pretrazi...
 Choose an image file to open...
-Choose an image file to open...
+Odabrati datoteku slike za otvoriti...
 Here you can enter the datfile properties necessary to produce a building using makeobj
-Here you can enter the datfile properties necessary to produce a building using makeobj
+Ovdje mozete unijeti datfile svojstva potrebna za stvaranje zgrade koristeci makeobj
 240
 240
 tt_dims_paksize_select
-Select the paksize of the project from the dropdown list
+Odabrati velicinu pak-a projekta iz liste popisa
 tt_facing_select_north
-View/modify the North-facing view of this building
+Prikaz/promjena sjeverno usmjerenog pogleda ove zgrade
 tt_menu_help_help
-Documentation for using this application
+Dokumentacija za koristenje aplikacije
 Dimensions:
-Dimensions:
+Dimenzije:
 About TileCutter
-About TileCutter
+O TileCutter-u
 .dat Output Location
-.dat Output Location
+.dat Izlazna Lokacija
 tt_dims_x_select
-Select the dimensions of the object in the North-South direction from the dropdown list
+Odabrati dimenzije objekta iz Sjevero-Juznog smjera iz liste izbora
 32
 32
 Number\nof views:
-Number\nof views:
+Broj\npregleda:
 tt_seasons_enable_winter
-Enable Winter/Summer images for this project. If not enabled the project will have one image for both seasons
+Omogucavanje Zimskih/Ljetnih slika ovoga projekta. Ako nije omoguceno projekt ce imati jednu sliku za oba godisnja doba
 tt_png_file_location
-Shows the location that the .png file will be output to
+Prikazuje lokaciju na koju ce se spremiti .png datoteka
 tt_images_enable_front
-Enable Front/Back images for this object, useful for stations and other buildings which vehicles can drive on top of
+Omoguciti Prednju/Zadnju sliku za ovaj objekt, korisno za stanice i druge zgrade na cijem vrhu mogu voziti vozila
 .pak Output Location
-.pak Output Location
+.pak Izlazna Lokacija
 tt_images_select_front
-View/modify the FrontImage of this building
+Prikaz/promjena FrontImage ove zgrade
 64
 64
 176
 176
 tt_browse_pak_file
-Browse for the location of the output .pak file
+Pretraga za lokacijom izlazne .pak datoteke
 Mask Offset:
-Mask Offset:
+Offset Maska:
 North
-North
+Sjever
 &Language
-&Language
+&Jezik
 This action will set all images in the project to be the same as this one. Do you wish to proceed?
-This action will set all images in the project to be the same as this one. Do you wish to proceed?
+Ova akcija ce postaviti sve sloke u projektu jednakima kao i ova. Zelite li nastaviti?
 tt_reload_input_file
-Reloads the input file, displaying changes made since the last time it was loaded (Note: This action is always performed for all input files before the cutting process begins)
+Ponovno ucitava ulaznu datiteku, prikazujuci promjene nacinjene od prethodnog vremena ucitavanja (Biljeska: Ova akcija se uvijek primjeni za sve ulazne datoteke prije nego pocne proces rezanja)
 tt_facing_select_east
-View/modify the East-facing view of this building
+Prikaz/promjena Istocno usmjerenog pogleda ove zgrade
 Language
-Language
+Jezik
 Simutrans Building Editor
-Simutrans Building Editor
+Simutrans Editor Zgrada
 .png Output Location
-.png Output Location
+.png Izlazna Lokacija
 Datfile Properties
-Datfile Properties
+Datfile svojstva
 Save Project &As
-Save Project &As
+Spremiti Projekt &Kao
 Language:
-Language:
+Jezik:
 &New Project
-&New Project
+&Novi Projekt
 160
 160
 96
 96
 tt_offset_selector
-Select between paksize increments and single pixel increments for moving the cutting mask
+Odabrati izmedju velicine pak-ovih povecanja i povecanja jednog piksela za pomicanje maske rezanja
 X dimension
-X dimension
+X dimenzija
 BackImage
-BackImage
+PovratnaSlika
 &Export .pak
-&Export .pak
+&Izvesti .pak
 Save changes before proceeding?
-Save changes before proceeding?
+Spremiti promjene prije nastavka?
 Choose a location to save .png file...
-Choose a location to save .png file...
+Odabrati lokaciju ta spremanje .png datoteke...
 tt_dat_file_location
-Shows the location of the .dat file for this project relative to the root save location
+Prikazuje lokaciju .dat datoteke za ovaj projekt relativno prema korijenskoj lokaciji spremanja
 TileCutter Online Help
-TileCutter Online Help
+TileCutter Online Pomoc
 Choose a location to save to...
-Choose a location to save to...
+Odabrati lokaciju za spremanju u...
 Close
-Close
+Zatvoriti
 FrontImage
 FrontImage
 tt_facing_enable_select
-Enable multiple building directions, required for non-square buildings
+Omoguciti visestruke smjerove zgrada, potrebne za ne-kvadratne zgrade
 Current project has changed
-Current project has changed
+Trenutni projekt je promijenjen
 &About TileCutter
 &About TileCutter
 tt_menu_file_new
-Create a new project
+Stvoriti novi projekt
 offset_button_reset
-Reset the offset position of the cutting mask
+Rezetiranje offset pozicije maske rezanja
 tt_pak_file_location
-Shows the location that the .pak file will be output to
+Prikazuje lokaciju na koju ce se spremiti .pak datoteka
 tt_browse_dat_file
-Browse for the location of the output .dat file
+Pretraga za lokacijom izlazne .dat datoteke
 48
 48
 tt_browse_png_file
-Browse for the location of the output .png file
+Pretraga za lokacijom izlazne .png datoteke
 tt_browse_input_file
-Browse for the location of this view's input file
+Pretraga za lokacijom od ulazne datoteke ovoga pogleda
 &Cut Image
-&Cut Image
+&Izrezati Sliku
 tt_menu_file_open
-Open an existing project
+Otvoriti postojeci projekt
 TileCutter
 TileCutter
 Enable Winter
-Enable Winter
+Omoguciti Zimu
 144
 144
 208
 208
 Enable FrontImage
-Enable FrontImage
+Omoguciti FrontImage
 E&xit
-E&xit
+I&zlaz
 tt_menu_tools_smoke
-Modify the smoke file information for this object
+Promijeniti informaciju datoteke dima za ovaj objekt
 Choose a project file to open...
-Choose a project file to open...
+Odabrati projektnu datoteku za otvoriti...
 tt_facing_select_west
-View/modify the West-facing view of this building
+Pregled/promjena zapadno usmjerenog pogleda ove zgrade
 South
-South
+Jug
 Source image location:
-Source image location:
+Lokacija izvorisne slike:
 tt_same_file_for_all
-Loads the currently selected image for all other views of this project. Useful if you have a single image with multiple object views (e.g. from a 3D render)
+Ucitava trenutno odabranu sliku za druge poglede ovoga projekta. Korisno ako imate jednu sliku sa visestrukim objektim pogledima (npr. iz 3D renderera)
 Write out .dat file
-Write out .dat file
+Zapisati .dat datoteku
 tt_menu_file_cut
-Initiate the cutting routine, producing a .dat output file (if required) and a cut .png image
+Pokretanje rutine rezanja, proizvodnja .dat izlazne datoteke (ako potrebno) i rezanje .cut datoteke
 Season:
-Season:
+Godisnje doba:
 Paksize
-Paksize
+Velicina pak-a
 tt_image_file_location
-Shows the location of the currently displayed source image
+Prikazuje lokaciju trenutno prikazane izvorne slike
 tt_save_file_location
-Shows the location that the project is saved to. Note: All the other file locations are stored relative to this one and are updated if you change the save location
+Prikazuje lokaciju na koju ce se spremiti projekt. Biljeska: Sve druge lokacije datoteke se spremaju relativno prema ovoj i osvjezavaju se ako promijenite lokaciju spremanja
 tt_browse_save_file
-Browse for a location to save this project to
+Pretraga za lokacijom za spremanje projekta u
 Z dimension
-Z dimension
+Z dimenzija

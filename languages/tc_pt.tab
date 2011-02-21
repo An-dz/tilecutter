@@ -1,168 +1,168 @@
-#{"name": "Portuguese", "name_translated": "Português", "language_code": "pt", "created_by": "SimuTranslator", "created_date": "09-02-2010"}
+#{"name": "Portuguese", "name_translated": "Português", "language_code": "pt", "created_by": "SimuTranslator", "created_date": "21-02-2011"}
 Winter
-Winter
+Inverno
 Choose a location to save project...
-Choose a location to save project...
+Escolha o lugar para salvar o projeto...
 tt_seasons_select_summer
-View/modify the Summer image of this object
+Ver/modificar a imagem de verão deste objeto
 tt_menu_file_saveas
-Save this project to a new location
+Salvar o projeto em um novo lugar
 224
 224
 Cut image
-Cut image
+Cortar Imagem
 tt_offset_button_up
-Move the cutting mask up
+Mover a máscara para cima
 Load same image for all
-Load same image for all
+Carregar mesma imagem para todas as direções
 tt_menu_file_save
-Save this project
+Salvar projeto
 tt_menu_help_about
-Information about this application
+Informação sobre o programa
 .&dat file options
-.&dat File Options
+Opções do arquivo .&dat
 Created on:
-Created on:
+Data de criação:
 tt_menu_file_export
-Export a compiled .pak file for this object
+Exportar arquivo pak compilado para este objeto
 Fine
-Fine
+Ajuste fino
 tt_menu_languages
-Change the application's language settings
+Muda os parâmetros de idioma do programa
 Direction Facing:
-Direction Facing:
+Direção da frente:
 tt_offset_button_down
-Move the cutting mask down
+Mover a máscara para baixo
 Created by:
 Criado por:
 tt_offset_button_left
-Move the cutting mask left
+Mover a máscara para esquerda
 Language Details:
-Language Details:
+Detalhes do Idioma:
 Choose a location to save .dat file...
-Choose a location to save .dat file...
+Escolha o lugar para salvar o arquivo dat...
 Y dimension
-Y dimension
+Distância Y
 128
 128
 tt_images_select_back
-View/modify the BackImage of this building
+Ver/modificar a imagem BackImage deste objeto
 Summer
-Summer
+Verão
 &Open Project
 &Abrir Projeto
 16
 16
 tt_offset_button_right
-Move the cutting mask right
+Mover a máscara para direita
 tt_menu_tools_dat
-Modify the .dat file information for this object
+Modificar a informação do arquivo dat para este objeto.
 Select from the options below:
-Select from the options below:
+Escolha um idioma:
 Version %s
-Version %s
+Versão %s
 &Save Project
-&Save Project
+&Salvar Projeto
 tt_facing_select_south
-View/modify the South-facing view of this building
+Ver/modificar a vista Sul do edifício
 West
-West
+Oeste
 tt_dims_z_select
-Select the height of the object from the dropdown list
+Selecione a altura do objeto na lista
 tt_menu_tools_prefs
-Change the application's preference settings
+Muda os parâmetros das preferências do programa
 192
 192
 Project Save Location
-Project Save Location
+Salvar Projeto em
 Compile pak
-Compile .pak
+Compilar .pak
 tt_seasons_select_winter
-View/modify the Winter image of this object
+Ver/modificar a imagem de inverno deste objeto
 112
 112
 80
 80
 East
-East
+Leste
 &Preferences...
-&Preferences...
+&Preferências...
 tt_dims_y_select
-Select the dimensions of the object in the East-West direction from the dropdown list
+Selecione a distância na direção Leste-Oeste do objeto na lista
 tt_menu_file_exit
-Quit the application
+Sair do programa
 Choose a location to export .pak file...
-Choose a location to export .pak file...
+Escolha o lugar para exportar o arquivo pak...
 &Smoke options
-&Smoke Options
+&Opções de fumaça
 Image:
-Image:
+Imagem:
 Browse...
-Browse...
+Procurar...
 Choose an image file to open...
-Choose an image file to open...
+Abrir imagem...
 Here you can enter the datfile properties necessary to produce a building using makeobj
-Here you can enter the datfile properties necessary to produce a building using makeobj
+Aqui se insere os atributos dat necessários para se criar um edifício usando makeobj
 240
 240
 tt_dims_paksize_select
-Select the paksize of the project from the dropdown list
+Selecione o tamanho do pak na lista
 tt_facing_select_north
-View/modify the North-facing view of this building
+Ver/modificar a vista Norte do edifício
 tt_menu_help_help
-Documentation for using this application
+Documentação para usar o programa
 Dimensions:
-Dimensions:
+Dimensões:
 About TileCutter
-About TileCutter
+Sobre o TileCutter
 .dat Output Location
-.dat Output Location
+Salvar .dat na pasta
 tt_dims_x_select
-Select the dimensions of the object in the North-South direction from the dropdown list
+Selecione a distância na direção Norte-Sul do objeto na lista
 32
 32
 Number\nof views:
-Number\nof views:
+Número\nde vistas:
 tt_seasons_enable_winter
-Enable Winter/Summer images for this project. If not enabled the project will have one image for both seasons
+Habilita imagens para o inverno neste projeto. Se ficar desabilitado a imagem de verão será utilizada nas duas estações.
 tt_png_file_location
-Shows the location that the .png file will be output to
+Mostra a pasta que a imagem .png cortada vai ser salva relativo com a pasta escolhida do projeto
 tt_images_enable_front
-Enable Front/Back images for this object, useful for stations and other buildings which vehicles can drive on top of
+Habilita a FrontImage para este objeto, útil para estações e outros edifícios que os veículos possam passar sobre a imagem
 .pak Output Location
-.pak Output Location
+Salvar .pak na pasta
 tt_images_select_front
-View/modify the FrontImage of this building
+Ver/modificar a imagem FrontImage deste objeto
 64
 64
 176
 176
 tt_browse_pak_file
-Browse for the location of the output .pak file
+Procure a pasta para salvar o .pak criado
 Mask Offset:
-Mask Offset:
+Deslocamento da Máscara:
 North
-North
+Norte
 &Language
-&Língua
+&Idioma
 This action will set all images in the project to be the same as this one. Do you wish to proceed?
-This action will set all images in the project to be the same as this one. Do you wish to proceed?
+Esta ação estabelecerá a mesma imagem em todo o projeto. Deseja continuar?
 tt_reload_input_file
 Reloads the input file, displaying changes made since the last time it was loaded (Note: This action is always performed for all input files before the cutting process begins)
 tt_facing_select_east
-View/modify the East-facing view of this building
+Ver/modificar a vista Leste do edifício
 Language
-Language
+Idioma
 Simutrans Building Editor
-Simutrans Building Editor
+Editor de Construções do Simutrans
 .png Output Location
-.png Output Location
+Salvar .png na pasta
 Datfile Properties
-Datfile Properties
+Atributos .dat
 Save Project &As
-Save Project &As
+S&alvar projeto como...
 Language:
-Language:
+Idioma:
 &New Project
 &Novo Projeto
 160
@@ -172,86 +172,86 @@ Language:
 tt_offset_selector
 Select between paksize increments and single pixel increments for moving the cutting mask
 X dimension
-X dimension
+Distância X
 BackImage
 BackImage
 &Export .pak
 &Exportar .pak
 Save changes before proceeding?
-Save changes before proceeding?
+Salvar alterações antes de continuar?
 Choose a location to save .png file...
-Choose a location to save .png file...
+Escolha o lugar para salvar o arquivo png...
 tt_dat_file_location
-Shows the location of the .dat file for this project relative to the root save location
+Mostra a pasta que o .dat vai ser salvo relativo com a pasta escolhida do projeto
 TileCutter Online Help
-TileCutter Online Help
+Ajuda &Online do TileCutter
 Choose a location to save to...
-Choose a location to save to...
+Salvar como..
 Close
-Close
+Fechar
 FrontImage
 FrontImage
 tt_facing_enable_select
-Enable multiple building directions, required for non-square buildings
+Habilitar direções múltiplas, necessárias para edifícios não quadrados
 Current project has changed
-Current project has changed
+O projeto atual foi alterado
 &About TileCutter
-&Sobre TileCutter
+&Sobre o TileCutter
 tt_menu_file_new
-Create a new project
+Criar um novo projeto
 offset_button_reset
-Reset the offset position of the cutting mask
+Redefinir a posição da máscara
 tt_pak_file_location
-Shows the location that the .pak file will be output to
+Mostra a pasta que o objeto compilado (.pak) vai ser salvo relativo com a pasta escolhida do projeto
 tt_browse_dat_file
-Browse for the location of the output .dat file
+Procure a pasta para salvar o .dat criado
 48
 48
 tt_browse_png_file
-Browse for the location of the output .png file
+Procure a pasta para salvar a imagem PNG quando for cortada
 tt_browse_input_file
-Browse for the location of this view's input file
+Procurar a localização do arquivo base das vistas
 &Cut Image
 &Cortar Imagem
 tt_menu_file_open
-Open an existing project
+Abrir um projeto existente
 TileCutter
 TileCutter
 Enable Winter
-Enable Winter
+Habilitar Inverno
 144
 144
 208
 208
 Enable FrontImage
-Enable FrontImage
+Habilitar FrontImage
 E&xit
-E&xit
+&Sair
 tt_menu_tools_smoke
-Modify the smoke file information for this object
+Modificar a informação do arquivo de fumaça para este objeto
 Choose a project file to open...
-Choose a project file to open...
+Abrir projeto...
 tt_facing_select_west
-View/modify the West-facing view of this building
+Ver/modificar a vista Oeste do edifício
 South
-South
+Sul
 Source image location:
-Source image location:
+Localização da imagem base:
 tt_same_file_for_all
 Loads the currently selected image for all other views of this project. Useful if you have a single image with multiple object views (e.g. from a 3D render)
 Write out .dat file
-Write out .dat file
+Arquivo .dat de saída
 tt_menu_file_cut
-Initiate the cutting routine, producing a .dat output file (if required) and a cut .png image
+Iniciar processo de corte, produzindo um arquivo dat (se necessário) e uma imagem png recordada
 Season:
-Season:
+Estação:
 Paksize
-Paksize
+Tamanho Pak
 tt_image_file_location
-Shows the location of the currently displayed source image
+Mostra a localização da imagem mostrada agora
 tt_save_file_location
-Shows the location that the project is saved to. Note: All the other file locations are stored relative to this one and are updated if you change the save location
+Mostra a pasta que o projeto vai ser salvo. Nota: Todos os outros arquivos vão ser gravados relativo com esta pasta e são atualizados se você troca a pasta
 tt_browse_save_file
-Browse for a location to save this project to
+Procure a pasta para salvar este projeto
 Z dimension
-Z dimension
+Distância Z

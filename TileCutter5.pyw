@@ -18,13 +18,35 @@
 #
 # THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
 
+# TODO 1.0
+# Make icons in main menu much bigger (double size)
+# Make buttons on the mask offset control 2x bigger with better graphics                            - Bigger, need new graphics
+# Padding/general layout optimisation                                                   
+# -> Layout optimisation for mac                                                        
+# -> Use platform-specific layout file with offset/padding per-platform?
+# -> Implement UI for each platform seperately to allow for complete control over layout?
+# Implement use of special menu IDs to make menus work properly on, e.g., mac osx       
+# Add tick/cross functionality to input boxes                                           
+# Replace current yellow text-highlighting on windows with tick/cross function
+# Extend tick/cross functionality to provide more info                                  - POSTPONE 0.6
+
+# -> Produce msi installer for windows                                                  - 0.6
+# Make py2app distribution template                                                     - 0.6
+# -> Make .dmg distribution of the py2app application (automated if possible)           - 0.6
+
+#   -> Add unit tests for cutting engine
+# Ability to add a copyright text notice to bottom of outputted image                   - 0.6
+
+# JSON serialisation of project information with forward-compatible scheme for representing data
+
+# Fix bugs!
+
+
 
 # UI Change suggestions:
 # Move same image for all button to the menu bar under tools                                        - Moved to tools
 # Make icon for reload image much bigger or replace with text button                                - Replaced with text
-# Make icons in main menu much bigger (double size)
 # Replace direction facing control with "compass", or depiction of a tile with directions marked    - Added tile graphic with directions
-# Make buttons on the mask offset control 2x bigger with better graphics                            - Bigger, need new graphics
 # Move the "fine" selection below the mask offset control                                           - Done
 # Move the paths at the bottom into either a dialog box or into a "pop-up" panel at the bottom of
 #   the image window, which can then be accessed via a button
@@ -86,8 +108,6 @@
 # Find some way to eliminate flickering on translation update/initial load              - DONE
 # Text entry boxes visible position at end, or cursor, rather than beginning            - 0.7
 #   - needs full revamp of text entry box class to deal with special stuff really       - 0.7
-# Padding/general layout optimisation                                                   
-# -> Layout optimisation for mac                                                        
 # Cutting mask display based on dimensions                                              - DONE
 # Make .dat and input images relative to save location path                             - DONE
 # Speed optimisations - switching views seems really sluggish!                          
@@ -105,7 +125,6 @@
 # Program settings, load from a config file (using json)                                - DONE
 # Dialog to set program options                                                         - 0.7
 # Move all static variables and program option variables into config class              - DONE
-# Implement use of special menu IDs to make menus work properly on, e.g., mac osx       
 # Produce frames picker control                                                         - POSTPONE 0.6
 # Offset/Mask control - internal functions, click modifies model & triggers redrawing   - DONE
 # Dims control - click modifies model & triggers redrawing                              - DONE
@@ -124,8 +143,6 @@
 # -> Allow text entry, highlight in red if file does not exist??                        - DONE
 # -> Implement modal confirmation dialog for "open same file for all" button            - DONE
 # -> Function to reload the current view's image                                        - DONE
-# Add tick/cross functionality to input boxes                                           
-# Extend tick/cross functionality to provide more info                                  - POSTPONE 0.6
 
 # UI
 # Move UI classes into a module to enhance loading speed                                - DONE
@@ -142,22 +159,17 @@
 
 # Distribution
 # Make py2exe, look into producing smaller packages                                     - DONE
-# -> Produce msi installer for windows                                                  - 0.6
-# Make py2app distribution template                                                     - 0.6
-# -> Make .dmg distribution of the py2app application (automated if possible)           - 0.6
 # Import only bits of wx needed, to reduce py2exe package?                              
 # Look into producing more mac-native package                                           - 0.6
 # Mac drag + drop support                                                               - 0.6
 # Test with Linux, Mac OSX, Windows (xp), try and have the same code across all platforms!
-# Produce help documentation                                                            
+# Produce help documentation                                                            - Web documentation available
 # -> Quick start guide (interface should be fairly self-explanatory though)             
 
 # Cutting engine                                                                        
 # Dynamic mask generation + caching                                                     - DONE
 # New cutting engine able to cope with all settings except frames                       - DONE
 #   -> Test this cutting engine in all circumstances                                    
-#   -> Add unit tests for cutting engine
-# Ability to add a copyright text notice to bottom of outputted image                   - 0.6
 # Full .dat editing capability                                                          - 0.6
 # "Pretty" output mode                                                                  - 0.6
 
@@ -175,7 +187,6 @@
 # Aims v.0.6
 # Extend UI, include dat editor
 # Project save/load functions
-#   - Change to use more robust system (maybe XML?)
 
 # Aims v.0.7
 # Multi-project support
