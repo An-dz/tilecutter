@@ -39,8 +39,8 @@ class Log(object):
         splits = s.split(u"\n")
         writedate = True
         for k in splits:
-            outline = datetime.now().replace(microsecond=0).isoformat(" ") + " | " + k + "\n"
-            Log.file.write(outline, date=writedate)
+            outline = k + "\n"
+            self.write(outline, date=writedate)
             writedate = False
         Log.file.flush()
     def write(self, s, date=False):
