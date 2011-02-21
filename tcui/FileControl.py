@@ -3,7 +3,7 @@
 # TileCutter User Interface Module - FileControl
 #
 
-# Copyright © 2008-2010 Timothy Baldock. All Rights Reserved.
+# Copyright Â© 2008-2010 Timothy Baldock. All Rights Reserved.
 
 
 # FileControl is a combination of controls and methods:

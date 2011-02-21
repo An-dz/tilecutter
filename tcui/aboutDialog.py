@@ -3,7 +3,7 @@
 # TileCutter, User Interface Module - aboutDialog
 #
 
-# Copyright © 2008-2010 Timothy Baldock. All Rights Reserved.
+# Copyright Â© 2008-2010 Timothy Baldock. All Rights Reserved.
 
 import wx, imres
 

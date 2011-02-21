@@ -4,7 +4,7 @@
 # Version 0.4 for TileCutter v.0.5
 #
 
-# Copyright © 2008-2010 Timothy Baldock. All Rights Reserved.
+# Copyright Â© 2008-2010 Timothy Baldock. All Rights Reserved.
 
 import re, time, os, codecs
 import translator.w_newlines as w_newlines

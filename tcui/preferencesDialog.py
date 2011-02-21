@@ -3,7 +3,7 @@
 # TileCutter User Interface Module - preferencesDialog
 #
 
-# Copyright © 2010 Timothy Baldock. All Rights Reserved.
+# Copyright Â© 2010 Timothy Baldock. All Rights Reserved.
 
 import wx, imres
 

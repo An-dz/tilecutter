@@ -3,7 +3,7 @@
 # TileCutter, User Interface Module - DatFileEditDialog
 #
 
-# Copyright © 2008-2009 Timothy Baldock. All Rights Reserved.
+# Copyright Â© 2008-2009 Timothy Baldock. All Rights Reserved.
 
 import wx, imres
 

@@ -3,7 +3,7 @@
 # TileCutter debugger window
 #
 
-# Copyright © 2008-2010 Timothy Baldock. All Rights Reserved.
+# Copyright Â© 2008-2011 Timothy Baldock. All Rights Reserved.
 
 # To use:
 # import logger
@@ -35,6 +35,10 @@ class Log(object):
         self.out(s)
     def out(self, s):
         """Write a string to file, stripping newlines and reformatting"""
+        # If it's a unicode string don't convert it
+        if type(s) != type(u""):
+            s = unicode(s, "UTF-8")
+            s = u"Converted to unicode:\n" + s
         s = s.replace(u"\r", u"")
         splits = s.split(u"\n")
         writedate = True
@@ -42,7 +46,6 @@ class Log(object):
             outline = k + "\n"
             self.write(outline, date=writedate)
             writedate = False
-        Log.file.flush()
     def write(self, s, date=False):
         """Write a string to file, preserving newlines fed in"""
         # Check string, if it's entirely whitespace or just a newline, or blank do nothing

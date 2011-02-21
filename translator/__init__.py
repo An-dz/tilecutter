@@ -3,7 +3,7 @@
 # TileCutter, Translation module
 #
 
-# Copyright © 2008-2009 Timothy Baldock. All Rights Reserved.
+# Copyright Â© 2008-2009 Timothy Baldock. All Rights Reserved.
 
 import codecs
 

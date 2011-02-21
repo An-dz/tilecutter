@@ -5,7 +5,7 @@
 # This class provides additional methods for filename input controls, including highlighting
 #
 
-# Copyright © 2008-2010 Timothy Baldock. All Rights Reserved.
+# Copyright Â© 2008-2010 Timothy Baldock. All Rights Reserved.
 
 import wx, os
 

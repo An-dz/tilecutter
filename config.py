@@ -30,7 +30,7 @@ class Config(object):
         "window_size": [-1,-1],
         "window_position": [-1,-1],
 
-        "last_save_path": u"C:\\Users\\timothy.baldock\\someã",
+        "last_save_path": u"",
 
         "negative_offset_allowed": False,
         "default_image_path": u"test.png",

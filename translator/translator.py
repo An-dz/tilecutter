@@ -3,7 +3,7 @@
 # TileCutter translation module
 #
 
-# Copyright © 2008-2010 Timothy Baldock. All Rights Reserved.
+# Copyright Â© 2008-2010 Timothy Baldock. All Rights Reserved.
 
 
 import wx
@@ -63,10 +63,10 @@ class Translator(object):
             # If preference does not exist, use English instead
             if config.default_language in Translator.language_names_list:
                 active = config.default_language
-                debug("Language setting found in config file - Setting active translation to %s" % active)
+                debug(u"Language setting found in config file - Setting active translation to %s" % active)
             else:
                 active = "english_translation"
-            debug("Using default language - Setting active translation to %s" % active)
+            debug(u"Using default language - Setting active translation to %s" % active)
             self.setActiveTranslation(active)
 
     def __call__(self, vars):
@@ -117,7 +117,7 @@ class translation:
     """An individual translation file object"""
     def __init__(self, filename):
         """Load translation, translation details and optionally a translation image"""
-        debug("Begin loading translation from file: %s" % filename)
+        debug(u"Begin loading translation from file: %s" % filename)
         # Open file & read in contents
         try:
             # Language files should be saved as UTF-8 - this conversation done now by directly reading as UTF-8
@@ -125,7 +125,7 @@ class translation:
             block = f.read()
             f.close()
         except IOError:
-            debug("Problem loading information from file, aborting load of translation file")
+            debug(u"Problem loading information from file, aborting load of translation file")
             raise TranslationLoadError()
         # Language files should be saved as UTF-8 - this conversation done now by directly reading as UTF-8
         #block = block.decode("UTF-8")
@@ -134,10 +134,10 @@ class translation:
         # Scan document for block between {}, this is our config section
         dicts = re.findall("(?={).+?(?<=})", block, re.DOTALL)
         if len(dicts) > 1:
-            debug("Found more than one dict-like structure (e.g. pair of \"{}\") in file: \"%s\" - assuming config is the first one" % filename)
+            debug(u"Found more than one dict-like structure (e.g. pair of \"{}\") in file: \"%s\" - assuming config is the first one" % filename)
         configstring = dicts[0]
         
-        debug("Translation file config string is: %s" % configstring)
+        debug(u"Translation file config string is: %s" % configstring)
 
         config = json.loads(configstring)
         conf_items = ["name", "name_translated", "language_code", "created_by", "created_date"]
@@ -147,7 +147,7 @@ class translation:
                 func(config[ci])
             else:
                 # Translation file invalid, error out of read process
-                debug("Error loading translation from %s, %s field not found, aborting load of translation" % (filename, ci))
+                debug(u"Error loading translation from %s, %s field not found, aborting load of translation" % (filename, ci))
                 raise TranslationLoadError()
 
         # Split block up into lines
