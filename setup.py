@@ -184,7 +184,7 @@ if len(sys.argv) >= 2 and sys.argv[1] == "py2app":
     options["options"] = {
         "py2app": {
             "argv_emulation": True,
-            "iconfile": "TileCutter icon/tc_icon2.icns",
+            "iconfile": "TileCutter icon/tc_icon2_plain.icns",
             "packages": ["wx",],
             "site_packages": True,
             "resources": ["todo.txt",],
