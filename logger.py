@@ -1,6 +1,6 @@
 # coding: UTF-8
 #
-# TileCutter debugger window
+# Logger - logging utility
 #
 
 # Copyright © 2008-2011 Timothy Baldock. All Rights Reserved.
