@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 
 from distutils.core import setup
+#from setuptools import setup
 import sys, os, os.path
 import zipfile
 
-version = "0.5.5-beta"
+version = "0.5.6"
 
 ### this manifest enables the standard Windows XP-looking theme
 ##manifest = """
@@ -49,13 +50,13 @@ def walk_dir(dirname):
 
 # Generic options
 options = {
-    'name':             'TileCutter',
-    'version':          version,
-    'description':      'Simutrans Building Editor',
-    'long_description': '',
-    'author':           'Timothy Baldock',
-    'author_email':     'tb@entropy.me.uk',
-    'url':              'http://entropy.me.uk/tilecutter',
+    "name":             "TileCutter",
+    "version":          version,
+    "description":      "Simutrans Building Editor",
+    "long_description": "",
+    "author":           "Timothy Baldock",
+    "author_email":     "tb@entropy.me.uk",
+    "url":              "http://entropy.me.uk/tilecutter",
     "zipfile":          "python\\library.zip",
     "data_files":       [
                          ("", ["licence.txt", "tc.config", "test.png"]),
@@ -157,20 +158,39 @@ if len(sys.argv) >= 2 and sys.argv[1] == "py2exe":
     zip.close()
 
 
+#APP = ["main.py"]
+#DATA_FILES = []
+#OPTIONS = {"argv_emulation": True}
+#
+#setup(
+#    app=APP,
+#    data_files=DATA_FILES,
+#    options={"py2app": OPTIONS},
+#    setup_requires=["py2app"],
+#)
+
+
 # mac specific
-##if len(sys.argv) >= 2 and sys.argv[1] == 'py2app':
-##    try:
-##        import py2app
-##    except ImportError:
-##        print 'Could not import py2app.   Mac bundle could not be built.'
-##    sys.exit(0)
-##    # mac-specific options
-##    options['app'] = ['rur_start.py']
-##    options['options'] = {
-##    'py2app': {
-##        'argv_emulation': True,
-##        'iconfile': 'rur_images/icon_mac.icns',
-##        'packages': [],
-##        }
-##    }
+if len(sys.argv) >= 2 and sys.argv[1] == "py2app":
+    print "Running py2app distribution"
+    dist_dir = os.path.join("..", "dist", "win_dist_%s" % version)
+    dist_zip = os.path.join("..", "dist", "TileCutter_win_%s.zip" % version) 
+    try:
+        import py2app
+    except ImportError:
+        print "Could not import py2app.   Mac bundle could not be built."
+    # mac-specific options
+    options["app"] = ["main.py"]
+    options["options"] = {
+        "py2app": {
+            "argv_emulation": True,
+            "iconfile": "TileCutter icon/tc_icon2.icns",
+            "packages": ["wx",],
+            "site_packages": True,
+            "resources": ["todo.txt",],
+            }
+    }
+    options["setup_requires"] = ["py2app"]
+    # run the setup
+    setup(**options)
 
