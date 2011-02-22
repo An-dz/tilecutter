@@ -455,23 +455,43 @@ class ProjectFiles(object):
         else:   # Otherwise use location of program
             self.save_location = self.test_path(self.parent.parent.start_directory)
 
+        self.save_location = unicode(self.save_location)
+
         # As initialised, project is unsaved, so other paths relative to the default value
         self.saved = False
 
         # Location of .dat file output (relative to save location)
-        self.datfile_location = "output.dat"
+        self.datfile_location = u"output.dat"
         self.writedat = True
         # Location of .png file output (relative to dat file)
-        self.pngfile_location = os.path.join("images", "output.png")
+        self.pngfile_location = os.path.join(u"images", u"output.png")
 
         # Location of .pak output file (relative to save location)
         # Blank by default so that pak file name is produced by building type/name
         self.pakfile_location = ""
 
-        debug(u"save_location: %s, datfile_location: %s, pngfile_location: %s, pakfile_location: %s" % (self.save_location,
-                                                                                                       self.datfile_location,
-                                                                                                       self.pngfile_location,
-                                                                                                       self.pakfile_location))
+        try:
+            debug("save_location: %s" % self.save_location)
+            debug("datfile_location: %s" % self.datfile_location)
+            debug("pngfile_location: %s" % self.pngfile_location)
+            debug("pakfile_location: %s" % self.pakfile_location)
+
+            debug(u"save_location: %s" % self.save_location)
+            debug(u"datfile_location: %s" % self.datfile_location)
+            debug(u"pngfile_location: %s" % self.pngfile_location)
+            debug(u"pakfile_location: %s" % self.pakfile_location)
+
+            debug(u"save_location: %s, datfile_location: %s, pngfile_location: %s, pakfile_location: %s" % (self.save_location,
+                                                                                                           self.datfile_location,
+                                                                                                           self.pngfile_location,
+                                                                                                           self.pakfile_location))
+        except UnicodeDecodeError:
+            debug(u"Unicode Decode Error")
+            debug(self.save_location)
+            debug(self.datfile_location)
+            debug(self.pngfile_location)
+            debug(self.pakfile_location)
+
     def test_path(self, path):
         """Test a file for existence, if it exists add a number and try again"""
         if os.path.exists(os.path.join(path, "new_project.tcp")):
