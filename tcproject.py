@@ -448,14 +448,19 @@ class ProjectFiles(object):
         # Whenever the user does a Save-As this config directive should be updated
         if config.last_save_path != "" and os.path.exists(config.last_save_path):
             self.save_location = self.test_path(config.last_save_path)
-        elif "HOME" in os.environ and os.path.exists(os.environ["HOME"]):
-            self.save_location = self.test_path(os.environ["HOME"])
-        elif "USERPROFILE" in os.environ and os.path.exists(os.environ["USERPROFILE"]):
-            self.save_location = self.test_path(os.environ["USERPROFILE"])
+
+        # HOME is on Unix-style systems
+        elif u"HOME" in os.environ and os.path.exists(os.environ[u"HOME"]):
+            self.save_location = self.test_path(os.environ[u"HOME"])
+
+        # USERPROFILE is on Windows
+        elif u"USERPROFILE" in os.environ and os.path.exists(os.environ[u"USERPROFILE"]):
+            self.save_location = self.test_path(os.environ[u"USERPROFILE"])
+            # Convert from native windows codepage if non-ASCII chars involved
+            self.save_location = unicode(self.save_location, sys.getfilesystemencoding())
+
         else:   # Otherwise use location of program
             self.save_location = self.test_path(self.parent.parent.start_directory)
-
-        self.save_location = unicode(self.save_location)
 
         # As initialised, project is unsaved, so other paths relative to the default value
         self.saved = False

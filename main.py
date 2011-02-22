@@ -54,7 +54,7 @@ class App(wx.App):
     """The main application, pre-window launch stuff should go here"""
     def __init__(self, gui):
         self.gui = gui
-        self.start_directory = os.getcwd()
+        self.start_directory = os.getcwdu()
         wx.App.__init__(self)
 
     def OnInit(self):

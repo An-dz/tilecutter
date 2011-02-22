@@ -45,7 +45,7 @@ class Config(object):
         "default_language": u"English",
         }
     internals = {
-        "version": u"0.5.6.1",
+        "version": u"0.5.6.2",
         }
     conf_path = u"tc.config"
 
