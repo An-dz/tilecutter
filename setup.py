@@ -95,9 +95,9 @@ if len(sys.argv) >= 2 and sys.argv[1] == "source":
 
     for recdir in ["translator", "languages", "tcui"]:
         print "Copying contents of: %s/" % recdir
-        shutil.copytree(recdir, os.path.join(dist_dir, recdir), ignore=shutil.ignore_patterns(".svn", "tmp*", "*.pyc", "*.py~"))
+        shutil.copytree(recdir, os.path.join(dist_dir, recdir), ignore=shutil.ignore_patterns(".svn", "tmp*", "*.pyc", "*.py~", "*.tab~"))
 
-    for distfile in ["config.py", "imres.py", "licence.txt", "logger.py", "tc.py", "tcproject.py", "test.png", "main.py"]:
+    for distfile in ["config.py", "imres.py", "licence.txt", "logger.py", "tc.py", "tcproject.py", "test.png", "tilecutter.py", "tilecutter.pyw", "main.py"]:
         print "Copying file: %s" % distfile
         shutil.copy(distfile, dist_dir)
 
@@ -126,8 +126,8 @@ if len(sys.argv) >= 2 and sys.argv[1] == "py2exe":
     # windows-specific options
     options["windows"] = [
         {
-        "script":"main.py",
-        "windows":"main.py",
+        "script":"tilecutter.py",
+        "windows":"tilecutter.py",
         "icon_resources": [(1, "TileCutter icon/tilecutter.ico"),(42, "TileCutter icon/tilecutter_document.ico")],
         },
     ]
@@ -158,18 +158,6 @@ if len(sys.argv) >= 2 and sys.argv[1] == "py2exe":
     zip.close()
 
 
-#APP = ["main.py"]
-#DATA_FILES = []
-#OPTIONS = {"argv_emulation": True}
-#
-#setup(
-#    app=APP,
-#    data_files=DATA_FILES,
-#    options={"py2app": OPTIONS},
-#    setup_requires=["py2app"],
-#)
-
-
 # mac specific
 if len(sys.argv) >= 2 and sys.argv[1] == "py2app":
     print "Running py2app distribution"
@@ -180,7 +168,7 @@ if len(sys.argv) >= 2 and sys.argv[1] == "py2app":
     except ImportError:
         print "Could not import py2app.   Mac bundle could not be built."
     # mac-specific options
-    options["app"] = ["main.py"]
+    options["app"] = ["tilecutter.py"]
     options["options"] = {
         "py2app": {
             "argv_emulation": True,

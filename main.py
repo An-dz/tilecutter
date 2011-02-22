@@ -369,8 +369,9 @@ class App(wx.App):
         debug("End")
 
 
-if __name__ == "__main__":
 
+def run():
+    """Initialise the application in either GUI or CLI mode"""
     # Create app, but don't show the frame if command line being used
     # For each file in the input list, load the file (abort if load fails),
     # then do a standard export, plus compilation if needed
@@ -495,9 +496,8 @@ if __name__ == "__main__":
         app.Destroy()
 
 
-
+if __name__ == "__main__":
+    run()
 
 # BackImage[direction][ydim][xdim][zdim][frame][season]=path.ypos.xpos
-
-
 
