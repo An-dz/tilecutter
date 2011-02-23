@@ -3,7 +3,7 @@
 # TileCutter User Interface Module - menuObject
 #
 
-# Copyright © 2008-2010 Timothy Baldock. All Rights Reserved.
+# Copyright © 2008-2011 Timothy Baldock. All Rights Reserved.
 
 # This module creates the program's menus
 
@@ -65,7 +65,7 @@ class menuObject:
     def translate(self):
         """Update the text of all menu items to reflect a new translation"""
         # File menu
-        self.menu.SetMenuLabel(0,"&File")
+        self.menu.SetMenuLabel(0,gt("&File"))
         self.menu_file_new.SetItemLabel(gt("&New Project") + self.gsc("menu_file_new", "Ctrl-N"))
         self.menu_file_new.SetHelp(gt("tt_menu_file_new"))
         self.menu_file_open.SetItemLabel(gt("&Open Project") + self.gsc("menu_file_open", "Ctrl-O"))
@@ -81,7 +81,7 @@ class menuObject:
         self.menu_file_exit.SetItemLabel(gt("E&xit") + self.gsc("menu_file_exit", "Alt-Q"))
         self.menu_file_exit.SetHelp(gt("tt_menu_file_exit"))
         # Tools menu
-        self.menu.SetMenuLabel(1,"&Tools")
+        self.menu.SetMenuLabel(1,gt("&Tools"))
         self.menu_tools_dat.SetItemLabel(gt(".&dat file options") + self.gsc("menu_tools_dat", "Ctrl-D"))
         self.menu_tools_dat.SetHelp(gt("tt_menu_tools_dat"))
         self.menu_tools_smoke.SetItemLabel(gt("&Smoke options") + self.gsc("menu_tools_smoke", "Ctrl-M"))
@@ -95,7 +95,7 @@ class menuObject:
         self.menu_tools_prefs.SetItemLabel(gt("&Preferences...") + self.gsc("menu_tools_prefs", "Ctrl-P"))
         self.menu_tools_prefs.SetHelp(gt("tt_menu_tools_prefs"))
         # Help menu
-        self.menu.SetMenuLabel(2,"&Help")
+        self.menu.SetMenuLabel(2,gt("&Help"))
         self.menu_help_help.SetItemLabel(gt("TileCutter Online Help") + self.gsc("", ""))
         self.menu_help_help.SetHelp(gt("tt_menu_help_help"))
         self.menu_help_about.SetItemLabel(gt("&About TileCutter") + self.gsc("", ""))
@@ -125,71 +125,71 @@ class menuObject:
 
     # Menu event functions
     def OnNewProject(self, e):
-        debug("Menu-File-> New Project")
+        debug(u"Menu-File-> New Project")
         # Call app's NewProject method
         self.app.OnNewProject()
     def OnOpenProject(self, e):
-        debug("Menu-File-> Open Project")
+        debug(u"Menu-File-> Open Project")
         # Call app's OpenProject method
         self.app.OnLoadProject()
     def OnSaveProject(self, e):
-        debug("Menu-File-> Save Project")
+        debug(u"Menu-File-> Save Project")
         # Call app's SaveProject method
         self.app.OnSaveProject(self.app.activeproject)
     def OnSaveProjectAs(self, e):
-        debug("Menu-File-> Save Project As...")
+        debug(u"Menu-File-> Save Project As...")
         # Call app's SaveProject method with saveas set to True
         self.app.OnSaveAsProject(self.app.activeproject)
     def OnCutProject(self, e):
-        debug("Menu-File-> Cut Project")
+        debug(u"Menu-File-> Cut Project")
         self.app.export_project(self.app.activeproject, pak_output=False)
     def OnExportProject(self, e):
-        debug("Menu-File-> Export Project")
+        debug(u"Menu-File-> Export Project")
         self.app.export_project(self.app.activeproject, pak_output=True)
     def OnExit(self, e):
-        debug("Menu-File-> Exit Program")
+        debug(u"Menu-File-> Exit Program")
         # Call app's Exit method
         self.app.Exit()
 
     def OnDatEdit(self, e):
-        debug("Menu-Tools-> Open .dat edit dialog")
+        debug(u"Menu-Tools-> Open .dat edit dialog")
         dlg = tcui.DatFileEditDialog(self.parent, self.app)
         if dlg.ShowModal() == wx.ID_OK:
             dlg.Destroy()
     def OnSmokeEdit(self, e):
-        debug("Menu-Tools-> Open smoke edit dialog")
+        debug(u"Menu-Tools-> Open smoke edit dialog")
         return 1
 
     def OnSameForAll(self, e):
         """When "load same image for all" button is clicked"""
-        debug("Load active image for all images")
+        debug(u"Load active image for all images")
         dlg = wx.MessageDialog(self.parent, gt("This action will set all images in the project to be the same as this one. Do you wish to proceed?"),
                                gt("Load same image for all"),
                                style=wx.YES_NO|wx.YES_DEFAULT|wx.ICON_QUESTION)
         result = dlg.ShowModal()
         dlg.Destroy()
         if result == wx.ID_YES:
-            debug("  LoadImageForAll - Result YES")
+            debug(u"  LoadImageForAll - Result YES")
             self.app.activeproject.set_all_images(self.app.activeproject.active_image_path())
         else:
-            debug("  LoadImageForAll - Result NO")
+            debug(u"  LoadImageForAll - Result NO")
 
     def OnSelectLanguage(self, e):
-        debug("Menu-Tools-> Open select language dialog")
+        debug(u"Menu-Tools-> Open select language dialog")
         dlg = tcui.translationDialog(self.parent, self.app)
         if dlg.ShowModal() == wx.ID_OK:
             dlg.Destroy()
     def OnPreferences(self, e):
-        debug("Menu-Tools-> Open preferences dialog")
+        debug(u"Menu-Tools-> Open preferences dialog")
         dlg = tcui.preferencesDialog(self.parent, self.app)
         if dlg.ShowModal() == wx.ID_OK:
             dlg.Destroy()
 
     def OnHelp(self, e):
-        debug("Menu-Help-> Open online help")
+        debug(u"Menu-Help-> Open online help")
         wx.LaunchDefaultBrowser("http://entropy.me.uk/tilecutter/docs")
     def OnAbout(self, e):
-        debug("Menu-Help-> Open about dialog")
+        debug(u"Menu-Help-> Open about dialog")
         dlg = tcui.aboutDialog(self.parent, self.app, config.version)
         if dlg.ShowModal() == wx.ID_OK:
             dlg.Destroy()

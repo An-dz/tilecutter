@@ -3,7 +3,7 @@
 # TileCutter User Interface Module - FileControl
 #
 
-# Copyright © 2008-2010 Timothy Baldock. All Rights Reserved.
+# Copyright © 2008-2011 Timothy Baldock. All Rights Reserved.
 
 
 # FileControl is a combination of controls and methods:
@@ -77,7 +77,7 @@ class FileControl(tcui.fileTextBox):
         """Set the values of the controls in this group to the values in the model"""
         # Setting these values should also cause text highlighting to occur
         self.path_box.ChangeValue(self.linked())
-        debug("update file control")
+        debug(u"update file control")
         self.highlight()
 
     def SetDependants(self, list):
@@ -87,15 +87,15 @@ class FileControl(tcui.fileTextBox):
 
     def highlight(self):
         """Highlight entry box text"""
-        debug("highlighting %s entry box" % self.label)
+        debug(u"highlighting %s entry box" % self.label)
         if self.relative != None:
-            debug("highlight with relative, %s | %s" % (self.linked(), self.relative()))
+            debug(u"highlight with relative, %s | %s" % (self.linked(), self.relative()))
             self.highlightText(self.path_box, self.linked(), self.relative())
         else:
-            debug("highlight without relative, %s" % self.linked())
+            debug(u"highlight without relative, %s" % self.linked())
             self.highlightText(self.path_box, self.linked())
         if self.dependants:
-            debug("highlighting dependants: %s" % (unicode(self.dependants)))
+            debug(u"highlighting dependants: %s" % (unicode(self.dependants)))
             for i in self.dependants:
                 i.highlight()
 
@@ -104,7 +104,7 @@ class FileControl(tcui.fileTextBox):
         """Triggered when the text in the path box is changed"""
         if self.linked() != self.path_box.GetValue():
             self.linked(self.path_box.GetValue())
-            debug("Text changed in %s entry box, new text: %s" % (self.label, unicode(self.path_box.GetValue())))
+            debug(u"Text changed in %s entry box, new text: %s" % (self.label, unicode(self.path_box.GetValue())))
             self.highlight()
             # Optionally trigger some action in the parent when the text is updated
             if self.parent_change_function != None:
@@ -116,7 +116,7 @@ class FileControl(tcui.fileTextBox):
             rel = self.relative()
         else:
             rel = ""
-        value = self.filePickerDialog(self.linked(), rel, self.filepicker_title,
+        value = self.filePickerDialog(self.linked(), rel, gt(self.filepicker_title),
                                       self.filepicker_allowed, self.filepicker_flags)
         self.path_box.SetValue(value)
 

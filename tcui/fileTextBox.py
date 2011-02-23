@@ -5,7 +5,7 @@
 # This class provides additional methods for filename input controls, including highlighting
 #
 
-# Copyright © 2008-2010 Timothy Baldock. All Rights Reserved.
+# Copyright © 2008-2011 Timothy Baldock. All Rights Reserved.
 
 import wx, os
 
@@ -40,7 +40,7 @@ class fileTextBox(object):
                                      a, b, dialogFilesAllowed, dialogFlags)
         if pickerDialog.ShowModal() == wx.ID_OK:
             # This needs to calculate a relative path between the location of the output png and the location of the output dat
-            debug("File picker dialog, ID_OK, Directory is: %s, Filename is: %s" % (pickerDialog.GetDirectory(), pickerDialog.GetFilename()))
+            debug(u"File picker dialog, ID_OK, Directory is: %s, Filename is: %s" % (pickerDialog.GetDirectory(), pickerDialog.GetFilename()))
             drivesplit = os.path.splitdrive(pickerDialog.GetDirectory())
             if drivesplit[0] != "" and drivesplit[1] == "":
                 # There is a drive specified in the string, and nothing else in the path
@@ -75,7 +75,7 @@ class fileTextBox(object):
 
     def highlightText(self, box, p1, p2=None):
         """Update the highlighting in a text entry box"""
-##        debug("highlightText, p1: %s, p2: %s" % (p1, p2))
+##        debug(u"highlightText, p1: %s, p2: %s" % (p1, p2))
         # Path value, optionally relative to a second path
         a = self.splitPath(p1, p2)
 ##        debug(str(a))
@@ -109,8 +109,8 @@ class fileTextBox(object):
         while os.path.split(p1)[1] != "":
             n = os.path.split(p1)
             # Add at front, text,   offset,             length,     exists or not,      File or Directory?
-##            debug("path1: %s, path2: %s" % (p1, p2))
-##            debug("exists? %s, %s" % (self.joinPaths(p2, p1), os.path.exists(self.joinPaths(p2, p1))))
+##            debug(u"path1: %s, path2: %s" % (p1, p2))
+##            debug(u"exists? %s, %s" % (self.joinPaths(p2, p1), os.path.exists(self.joinPaths(p2, p1))))
             a.insert(0,    [n[1],  len(p1)-len(n[1]),   len(n[1]),  os.path.exists(self.joinPaths(p2, p1))])#, existsAsType(p)])
             p1 = n[0]
         return a

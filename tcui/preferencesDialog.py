@@ -3,7 +3,7 @@
 # TileCutter User Interface Module - preferencesDialog
 #
 
-# Copyright © 2010 Timothy Baldock. All Rights Reserved.
+# Copyright © 2010-2011 Timothy Baldock. All Rights Reserved.
 
 import wx, imres
 
@@ -73,5 +73,5 @@ class preferencesDialog(wx.Dialog):
         """When user changes the makeobj path text"""
         if config.path_to_makeobj != self.makeobj_box.GetValue():
             config.path_to_makeobj = self.makeobj_box.GetValue()
-            debug("Preferences: Text changed in makeobj path entry box, new text: %s" % unicode(self.makeobj_box.GetValue()))
+            debug(u"Preferences: Text changed in makeobj path entry box, new text: %s" % unicode(self.makeobj_box.GetValue()))
 

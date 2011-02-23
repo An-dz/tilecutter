@@ -3,7 +3,7 @@
 # TileCutter User Interface Module - imageWindow
 #
 
-# Copyright © 2008-2010 Timothy Baldock. All Rights Reserved.
+# Copyright © 2008-2011 Timothy Baldock. All Rights Reserved.
 
 import os, wx, imres, tcui, tc
 
@@ -103,14 +103,14 @@ class imageWindow(wx.ScrolledWindow):
     def refresh_if_valid(self):
         """Called when child impath entry box text changes
         Only updates the displayed image if a new valid file has been entered"""
-        debug("valid: %s, path: %s" % (self.app.activeproject.activeImage().valid_path(),self.app.activeproject.activeImage().path()))
+        debug(u"valid: %s, path: %s" % (self.app.activeproject.activeImage().valid_path(),self.app.activeproject.activeImage().path()))
         if self.app.activeproject.activeImage().valid_path() == self.app.activeproject.activeImage().path():
             # If valid_path and path are same, then refresh screen
             self.refresh_screen()
 
     def refresh_screen(self):
         """Refresh the screen display"""
-        debug("imageWindow - refresh_screen")
+        debug(u"imageWindow - refresh_screen")
         # Redraw the active image in the window, with mask etc.
         bitmap = self.app.activeproject.activeImage().bitmap()
 
@@ -225,7 +225,7 @@ class imageWindow(wx.ScrolledWindow):
 
     def OnReloadImage(self,e):
         """When reload image button clicked"""
-        debug("Reload active image...")
+        debug(u"Reload active image...")
         self.app.activeproject.activeImage().reloadImage()
         self.update()
 

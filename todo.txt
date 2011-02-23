@@ -39,6 +39,22 @@
 # Move the Cut image and Compile .pak buttons onto a single bottom bar after relocating file paths  - Done
 # Have the right/left toolbar run all the way down to the bottom of the screen                      - Done
 
+
+# Release 0.5.7
+# FIX: Many unicode issues relating to information passed into program
+# FIX: Logger now handles multiline output properly
+# FIX: Proper handling of UTF-8 files
+# FIX: Translations for file dialogs now work properly
+# CHANGE: tilecutter.py/tilecutter.pyw are now wrapper scripts that call main.py - 
+#         should be a small speed boost from bytecode compilation of main program
+# CHANGE: Now known as "tilecutter.exe" rather than "tilecutter5.exe"
+# FIX: Issues relating to scope in main.py/mainwindow.py
+# ADD: Basis for Mac-specific distribution via py2app
+# ADD: New translations imported from SimuTranslator
+# ADD: Some new translation strings added to SimuTranslator:
+#      "&File", "&Tools", "&Help"
+
+
 # Release 0.5.5 (beta)
 # ADD: Proper selection of path to makeobj via GUI
 # ADD: Command line scriptability: 

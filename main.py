@@ -22,17 +22,17 @@
 import logger
 debug = logger.Log()
 
-debug("\n--------------------------------------------------------------------------")
+debug(u"\n--------------------------------------------------------------------------")
 
 import sys, os
 
 try:
     import wx
 except ImportError:
-    debug("WXPython not installed, please install module and try again!")
+    debug(u"WXPython not installed, please install module and try again!")
     raise
 
-debug("WX version is: %s" % wx.version())
+debug(u"WX version is: %s" % wx.version())
 
 import StringIO, pickle
 import tcui, tc, tcproject, imres
@@ -67,11 +67,11 @@ class App(wx.App):
             sys.stderr = sys.__stderr__
             sys.stdout = sys.__stdout__
 
-        debug("App OnInit: Starting...")
+        debug(u"App OnInit: Starting...")
         self.start_directory = os.getcwd()
 
         # Create a default active project
-        debug("App OnInit: Create default project")
+        debug(u"App OnInit: Create default project")
         self.projects = {}
         self.projects["default"] = tcproject.Project(self)
         self.activeproject = self.projects["default"]
@@ -82,17 +82,17 @@ class App(wx.App):
         self.update_title_text()
 
         if self.gui:
-            debug("App OnInit: Create + Show main frame")
+            debug(u"App OnInit: Create + Show main frame")
             # Create and show main frame
             self.frame = tcui.MainWindow(None, self, wx.ID_ANY, "TileCutter")
             self.SetTopWindow(self.frame)
 
-            debug("App OnInit: Bind Quit Event")
+            debug(u"App OnInit: Bind Quit Event")
             # Bind quit event
             self.frame.Bind(wx.EVT_CLOSE, self.OnQuit)
             self.frame.Bind(wx.EVT_CLOSE, self.OnQuit)
 
-            debug("App OnInit: Init window sizes")
+            debug(u"App OnInit: Init window sizes")
             # Window inits itself to its minimum size
             # If a larger size is specified in config, set to this instead
             if config.window_size[0] > self.frame.GetBestSize().GetWidth() and config.window_size[1] > self.frame.GetBestSize().GetHeight():
@@ -100,7 +100,7 @@ class App(wx.App):
             else:
                 # Otherwise just use the minimum size
                 self.frame.Fit()
-            debug("App OnInit: Init window position")
+            debug(u"App OnInit: Init window position")
             # If a window position is saved, place the window there
             if config.window_position != [-1,-1]:
                 self.frame.SetPosition(config.window_position)
@@ -108,9 +108,9 @@ class App(wx.App):
                 # Otherwise center window on the screen
                 self.frame.CentreOnScreen(wx.BOTH)
         else:
-            debug("App OnInit: Command line mode, not creating GUI")
+            debug(u"App OnInit: Command line mode, not creating GUI")
 
-        debug("App OnInit: Completed!")
+        debug(u"App OnInit: Completed!")
         return True
 
     # Called by the currently active project
@@ -127,7 +127,7 @@ class App(wx.App):
         return self.title_text
     def update_title_text(self):
         """Updates the title text with the details of the currently active project"""
-        debug("update_title_text")
+        debug(u"update_title_text")
         if self.activeproject.has_save_location():
             # Project has been previously saved
             if self.project_changed(self.activeproject):
@@ -148,7 +148,7 @@ class App(wx.App):
                 # Unsaved and unchanged
                 # Title string will be (New Project) - TileCutter
                 self.title_text = "(%s) - %s" % (_gt("New Project"), "%s")
-        debug("  Setting title_text to: %s" % self.title_text)
+        debug(u"  Setting title_text to: %s" % (self.title_text % _gt("TileCutter")))
 
     # Method to invoke cutting engine on a particular project
     def export_project(self, project, pak_output=False, return_dat=None, write_dat=None):
@@ -169,34 +169,34 @@ class App(wx.App):
     # Checks on project relative to the active project
     def project_changed(self, project):
         """Returns true if project has changed since last save"""
-        debug("project_changed")
+        debug(u"project_changed")
         if self.pickle_project(project) == self.activepickle:
-            debug("  Check Project for changes - Project Unchanged")
+            debug(u"  Check Project for changes - Project Unchanged")
             return False
         else:
-            debug("  Check Project for changes - Project Changed")
+            debug(u"  Check Project for changes - Project Changed")
             return True
 
     # Dialogs involved in loading/saving
     def dialog_save_changes(self, project):
         """Prompts user to save file, return wx.ID_YES, wx.ID_NO or wx.ID_CANCEL"""
-        debug("dialog_save_changes")
+        debug(u"dialog_save_changes")
         dlg = wx.MessageDialog(self.frame, gt("Save changes before proceeding?"),
                                gt("Current project has changed"),
                                style=wx.YES_NO|wx.CANCEL|wx.YES_DEFAULT|wx.ICON_QUESTION)
         result = dlg.ShowModal()
         dlg.Destroy()
         if result == wx.ID_YES:
-            debug("  dialog_save_changes - Result YES")
+            debug(u"  dialog_save_changes - Result YES")
         if result == wx.ID_NO:
-            debug("  dialog_save_changes - Result NO")
+            debug(u"  dialog_save_changes - Result NO")
         if result == wx.ID_CANCEL:
-            debug("  dialog_save_changes - Result CANCEL")
+            debug(u"  dialog_save_changes - Result CANCEL")
         return result
     def dialog_save_location(self, project):
         """Prompts user to select a location to save project to, returns True if location picked,
         False if cancelled. Sets project's save location to result file"""
-        debug("dialog_save_location - Grabbing save path from dialog")
+        debug(u"dialog_save_location - Grabbing save path from dialog")
         filesAllowed = "TileCutter Project files (*.tcp)|*.tcp"
         dialogFlags = wx.FD_SAVE|wx.OVERWRITE_PROMPT
         path = os.path.split(project.savefile())[0]
@@ -207,34 +207,34 @@ class App(wx.App):
         if result == wx.ID_OK:
             project.savefile(os.path.join(dlg.GetDirectory(), dlg.GetFilename()))
             config.last_save_path = dlg.GetDirectory()
-            debug("  New savefile for project is: %s" % project.savefile())
+            debug(u"  New savefile for project is: %s" % project.savefile())
             dlg.Destroy()
             return True
         else:
             # Else cancel was pressed, do nothing
-            debug("  User cancelled save_location Dialog")
+            debug(u"  User cancelled save_location Dialog")
             dlg.Destroy()
             return False
     def dialog_load(self):
         """Prompts user to select a location to load a project file from, returns filename or wx.ID_CANCEL"""
-        debug("dialog_load - Opening Load Dialog to allow location picking")
+        debug(u"dialog_load - Opening Load Dialog to allow location picking")
         filesAllowed = "TileCutter Project files (*.tcp)|*.tcp"
         dialogFlags = wx.FD_OPEN|wx.FD_FILE_MUST_EXIST
         # This probably needs to be more robust
-        path = os.path.split(app.activeproject.savefile())[0]
-        file = os.path.split(app.activeproject.savefile())[1]
+        path = os.path.split(self.activeproject.savefile())[0]
+        file = os.path.split(self.activeproject.savefile())[1]
         dlg = wx.FileDialog(self.frame, gt("Choose a project file to open..."),
                             path, file, filesAllowed, dialogFlags)
         result = dlg.ShowModal()
         if result == wx.ID_OK:
             load_location = os.path.join(dlg.GetDirectory(), dlg.GetFilename())
             dlg.Destroy()
-            debug("  User picked location: %s" % load_location)
+            debug(u"  User picked location: %s" % load_location)
             return load_location
         else:
             # Else cancel was pressed, do nothing
             dlg.Destroy()
-            debug("  User cancelled location picking")
+            debug(u"  User cancelled location picking")
             return False
 
     # Methods for loading/saving projects
@@ -248,7 +248,7 @@ class App(wx.App):
         project.set_parent(self)
         pickle_string = outstring.getvalue()
         outstring.close()
-        debug("pickle_project, object type: %s pickle type: %s" % (unicode(project), picklemode))
+        debug(u"pickle_project, object type: %s pickle type: %s" % (unicode(project), picklemode))
         return pickle_string
     def unpickle_project(self, filename):
         """Unpickle a project from file, returning a tcproject object"""
@@ -259,23 +259,23 @@ class App(wx.App):
         return project
     def save_project(self, project):
         """Save project to its save location, returns True if success, False if failed"""
-        debug("save_project - Save project out to disk")
+        debug(u"save_project - Save project out to disk")
         # Finally update the frame to display changes
         project.saved(True)
-        self.activepickle = self.pickle_project(app.activeproject)
+        self.activepickle = self.pickle_project(self.activeproject)
         # Pickling the project/unpickling the project should strip all active image info
-        file = app.activeproject.savefile()
-        debug("Save path:%s" % file)
+        file = self.activeproject.savefile()
+        debug(u"Save path:%s" % file)
         output = open(file, "wb")
         output.write(self.activepickle)
         output.close()
         self.frame.update()
         self.project_has_changed()
-        debug("save_project - Save project success")
+        debug(u"save_project - Save project success")
         return True
     def load_project(self, location):
         """Load a project based on a file location"""
-        debug("load_project - Load project from file: %s" % location)
+        debug(u"load_project - Load project from file: %s" % location)
         # Needs exception handling for unpickle failure
         self.activeproject = self.unpickle_project(location)
         # Here we need to set the savefile location of the active project to its current location
@@ -285,23 +285,23 @@ class App(wx.App):
         if self.gui:
             self.frame.update()
             self.project_has_changed()
-        debug("  Load Project succeeded")
+        debug(u"  Load Project succeeded")
         return True
     def new_project(self):
         """Create a new project"""
-        debug("new_project - Create new project")
+        debug(u"new_project - Create new project")
         self.activeproject = tcproject.Project(self)
         self.activepickle = self.pickle_project(self.activeproject)
         # Reset project save location/name
-        self.active_save_location = app.activeproject.files.save_location
+        self.active_save_location = self.activeproject.files.save_location
         # Finally update the frame to display changes
         self.frame.update()
         self.project_has_changed()
-        debug("  new_project - Complete!")
+        debug(u"  new_project - Complete!")
 
     def OnNewProject(self):
         """Init process of starting a new project"""
-        debug("OnNewProject")
+        debug(u"OnNewProject")
         project = self.activeproject
         if self.project_changed(project):
             ret = self.dialog_save_changes(project)
@@ -315,7 +315,7 @@ class App(wx.App):
         self.new_project()
     def OnLoadProject(self):
         """Init process of loading a project from file"""
-        debug("OnLoadProject")
+        debug(u"OnLoadProject")
         project = self.activeproject
         if self.project_changed(project):                           # If project has changed
             ret = self.dialog_save_changes(project)                 # Prompt to save project
@@ -334,7 +334,7 @@ class App(wx.App):
             return False                                            # Quit out
     def OnSaveProject(self, project):
         """Init process of saving a project to file"""
-        debug("OnSaveProject")
+        debug(u"OnSaveProject")
         if project.saved():
             return self.save_project(project)
         else:
@@ -345,7 +345,7 @@ class App(wx.App):
         return True
     def OnSaveAsProject(self, project):
         """Init process of saving a project to a new location"""
-        debug("OnSaveAsProject")
+        debug(u"OnSaveAsProject")
         if self.dialog_save_location(project):
             return self.save_project(project)
         return False
@@ -354,19 +354,19 @@ class App(wx.App):
 
     def Exit(self):
         """Quit the application indirectly"""
-        debug("app.Exit -> app.OnQuit()")
+        debug(u"self.Exit -> self.OnQuit()")
         self.OnQuit(None)
 
     def OnQuit(self, e):
         """Close the debugging window and quit the application on a quit event in the main window
         closing the debugging window doesn't do anything"""
-        debug("Application quitting...")
-        debug("Saving current application window size and position for next time")
+        debug(u"Application quitting...")
+        debug(u"Saving current application window size and position for next time")
         config.window_position = self.frame.GetPositionTuple()
         config.window_size = self.frame.GetSizeTuple()
-        debug("Destroying frame...")
+        debug(u"Destroying frame...")
         self.frame.Destroy()
-        debug("End")
+        debug(u"End")
 
 
 
@@ -390,7 +390,7 @@ def run():
         sys.stderr = debug
         sys.stdout = debug
         # Create the application with GUI
-        debug("Init - Creating app with GUI")
+        debug(u"Init - Creating app with GUI")
         app = App(gui=True)
         # Init all main frame controls
         app.frame.update()
@@ -401,7 +401,7 @@ def run():
         app.Destroy()
     else:
         # Create the application without GUI
-        debug("Init - Creating app without GUI")
+        debug(u"Init - Creating app without GUI")
         app = App(gui=False)
         # Not making use of app's event handling loop etc., so don't start it
         #app.MainLoop()

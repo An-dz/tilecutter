@@ -12,8 +12,9 @@ debug = logger.Log()
 
 try:
     import wx
+    debug(u"WX version is: %s" % wx.version())
 except ImportError:
-    debug("WXPython not installed, please install module and try again!")
+    debug(u"WXPython not installed, please install module and try again!")
     raise
 
 import translator
@@ -22,7 +23,6 @@ gt = translator.Translator()
 # script to pick it up for the translation file
 _gt = gt.loop
 
-debug("WX version is: %s" % wx.version())
 
 import tcui, tc, tcproject, imres
 
@@ -232,4 +232,4 @@ class MainWindow(wx.Frame):
         if .dat file exporting is disabled the .dat file will be displayed in a dialog"""
         if config.write_dat != self.export_dat_toggle.GetValue():
             config.write_dat = self.export_dat_toggle.GetValue()
-            debug("OnToggleDatExport: Set config.write_dat to %s" % config.write_dat)
+            debug(u"OnToggleDatExport: Set config.write_dat to %s" % config.write_dat)

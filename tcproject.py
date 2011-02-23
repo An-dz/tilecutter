@@ -128,7 +128,8 @@ class ProjectFrameset(object):
     """Contains a sequence of ProjectFrame objects for each animation frame of this direction/season combination"""
     def __init__(self, parent, season):
         self.parent = parent
-        self.season = season    # 0 for summer, 1 for winter
+        # 0 for summer, 1 for winter
+        self.season = season
         self.frames = []
         self.frames.append(ProjectFrame(self))
     def __getitem__(self, key):
@@ -141,7 +142,7 @@ class ProjectFrameset(object):
         self.parent.on_change()
 
 class Project(object):
-    """The project is our model, it contains all information about a project."""
+    """Model containing all information about a project."""
     def __init__(self, parent):
         """Initialise this project, and set default values"""
         self.parent = parent
@@ -160,7 +161,7 @@ class Project(object):
         self.files = ProjectFiles(self)
         self.active = ActiveImage(self)
 
-        self.val_temp_dat = "Obj=building\nName=test_1\nType=cur\nPassengers=100\nintro_year=1900\nchance=100"
+        self.val_temp_dat = u"Obj=building\nName=test_1\nType=cur\nPassengers=100\nintro_year=1900\nchance=100"
 
     def on_change(self):
         # When something in the project has changed, notify containing app to
@@ -473,19 +474,9 @@ class ProjectFiles(object):
 
         # Location of .pak output file (relative to save location)
         # Blank by default so that pak file name is produced by building type/name
-        self.pakfile_location = ""
+        self.pakfile_location = u""
 
         try:
-            debug("save_location: %s" % self.save_location)
-            debug("datfile_location: %s" % self.datfile_location)
-            debug("pngfile_location: %s" % self.pngfile_location)
-            debug("pakfile_location: %s" % self.pakfile_location)
-
-            debug(u"save_location: %s" % self.save_location)
-            debug(u"datfile_location: %s" % self.datfile_location)
-            debug(u"pngfile_location: %s" % self.pngfile_location)
-            debug(u"pakfile_location: %s" % self.pakfile_location)
-
             debug(u"save_location: %s, datfile_location: %s, pngfile_location: %s, pakfile_location: %s" % (self.save_location,
                                                                                                            self.datfile_location,
                                                                                                            self.pngfile_location,
@@ -535,10 +526,4 @@ class ProjectDims(object):
         self.views = 1
         self.winter = 0
         self.frontimage = 0
-
-
-
-
-
-
 

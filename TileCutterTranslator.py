@@ -1,20 +1,20 @@
 # coding: UTF-8
 #
 # TileCutter translation string finder
-# Version 0.4 for TileCutter v.0.5
+# Version 0.4.1 for TileCutter v.0.5.7
 #
 
-# Copyright © 2008-2010 Timothy Baldock. All Rights Reserved.
+# Copyright © 2008-2011 Timothy Baldock. All Rights Reserved.
 
 import re, time, os, codecs
 import translator.w_newlines as w_newlines
 import translator.u_newlines as u_newlines
 import json
 
-VERSION_NUMBER = "0.4"
-COMPAT_VERSION_NUMBER = "0.5"
+VERSION_NUMBER = "0.4.1"
+COMPAT_VERSION_NUMBER = "0.5.7"
 # Should duplicate translator entries be outputted to the translation file?
-FILE_ENCODING = "utf-8"
+FILE_ENCODING = "UTF-8"
 ENCODE_WIN = False
 
 logging = True
@@ -23,7 +23,7 @@ logging = True
 # in a format SimuTranslator can understand
 
 # All files and directories to be scanned should be entered in this list (directory scanning is not recursive)
-components = ["TileCutter5.pyw", "tcui", ]
+components = ["tilecutter.pyw", "tilecutter.py", "main.py", "tcui", ]
 # For directories, specify a list of valid extensions to scan
 component_valid_extensions = [".py"]
 
