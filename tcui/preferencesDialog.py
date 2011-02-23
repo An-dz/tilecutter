@@ -31,8 +31,8 @@ class preferencesDialog(wx.Dialog):
         self.makeobj_box = wx.TextCtrl(self, wx.ID_ANY, value=config.path_to_makeobj)
 
         # Add close button at the bottom
+        self.close_button = wx.Button(self, wx.ID_OK, "", (-1,-1), (-1,-1), wx.ALIGN_RIGHT)
         self.buttons = wx.BoxSizer(wx.HORIZONTAL)
-        self.close_button = wx.Button(self, wx.ID_ANY, "", (-1,-1), (-1,-1), wx.ALIGN_RIGHT)
         self.buttons.Add(self.close_button, 0 ,wx.ALIGN_RIGHT, 0)
 
         # And finally add that, the language picker and the other static text to the panel sizer
@@ -43,8 +43,6 @@ class preferencesDialog(wx.Dialog):
         # Bind events
         self.makeobj_box.Bind(wx.EVT_TEXT, self.OnMakeobjTextChange, self.makeobj_box)
         self.close_button.Bind(wx.EVT_BUTTON, self.OnClose, self.close_button)
-
-        self.SetEscapeId(self.close_button.GetId())
 
         # Layout sizers
         self.SetSizer(self.s_panel)
@@ -57,7 +55,7 @@ class preferencesDialog(wx.Dialog):
         self.SetLabel(gt("Preferences"))
         self.makeobj_label.SetLabel(gt("Path to makeobj binary:"))
         self.makeobj_box.SetToolTipString(gt("Relative paths are interpreted relative to TileCutter's start location"))
-        self.close_button.SetLabel(gt("Close"))
+        self.close_button.SetLabel(gt("OK"))
 
         self.Layout()
         self.CentreOnParent()

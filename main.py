@@ -328,7 +328,7 @@ class App(wx.App):
                 return False                                        # Quit out
             # else ret is wx.ID_NO, so we don't want to save but can continue
         ret = self.dialog_load()                                    # Prompt for file to load
-        if ret != wx.ID_CANCEL:                                     # If file specified
+        if ret != wx.ID_CANCEL and ret != False:                    # If file specified
             return self.load_project(ret)                           # Load the project
         else:                                                       # Otherwise
             return False                                            # Quit out

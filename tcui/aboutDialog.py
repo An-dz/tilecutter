@@ -3,7 +3,7 @@
 # TileCutter, User Interface Module - aboutDialog
 #
 
-# Copyright © 2008-2010 Timothy Baldock. All Rights Reserved.
+# Copyright © 2008-2011 Timothy Baldock. All Rights Reserved.
 
 import wx, imres
 
@@ -49,7 +49,7 @@ class aboutDialog(wx.Dialog):
         self.copyright_text = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_CENTER_HORIZONTAL)
 
         # Add close button at the bottom
-        self.close_button = wx.Button(self, wx.ID_ANY, "", (-1,-1), (-1,-1), wx.ALIGN_RIGHT)
+        self.close_button = wx.Button(self, wx.ID_OK, "", (-1,-1), (-1,-1), wx.ALIGN_RIGHT)
 
         # Add all items to horizontal sizers, to get horizontal centering and expansion
         self.hbox1.Add(self.icon,           0, wx.TOP|wx.BOTTOM, 15)
@@ -58,6 +58,7 @@ class aboutDialog(wx.Dialog):
         self.hbox4.Add(self.version_text,   0, wx.BOTTOM, 10)
         self.hbox5.Add(self.copyright_text, 0, wx.BOTTOM|wx.RIGHT|wx.LEFT, 10)
         self.hbox6.Add(self.close_button,   1, wx.ALIGN_RIGHT, 0)
+        #self.hbox6 = self.CreateButtonSizer(wx.OK)
 
         # Add horizontal sizers to the vertical one (along with a static line)
         self.vbox.Add(self.hbox1, 0, wx.ALIGN_CENTER)
@@ -70,9 +71,6 @@ class aboutDialog(wx.Dialog):
 
         # Bind events
         self.close_button.Bind(wx.EVT_BUTTON, self.OnClose, self.close_button)
-
-        # Pressing escape anywhere in the dialog triggers the action of the close button
-        self.SetEscapeId(self.close_button.GetId())
 
         # Layout sizers
         self.SetSizer(self.vbox)

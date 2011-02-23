@@ -48,8 +48,8 @@ class translationDialog(wx.Dialog):
         self.s_dialog_box_right.Add(self.label_createdon_value,0,wx.EXPAND|wx.LEFT, 3)
         
         # Add close button at the bottom
+        self.close_button = wx.Button(self, wx.ID_OK, "", (-1,-1), (-1,-1), wx.ALIGN_RIGHT)
         self.buttons = wx.BoxSizer(wx.HORIZONTAL)
-        self.close_button = wx.Button(self, wx.ID_ANY, "", (-1,-1), (-1,-1), wx.ALIGN_RIGHT)
         self.buttons.Add(self.close_button, 0 ,wx.ALIGN_RIGHT, 0)
 
         # Then add bitmap and texts to the static box sizer
@@ -64,8 +64,6 @@ class translationDialog(wx.Dialog):
         # Bind events
         self.language_picker.Bind(wx.EVT_COMBOBOX, self.OnSelection, self.language_picker)
         self.close_button.Bind(wx.EVT_BUTTON, self.OnClose, self.close_button)
-
-        self.SetEscapeId(self.close_button.GetId())
 
         # Layout sizers
         self.SetSizer(self.s_panel)

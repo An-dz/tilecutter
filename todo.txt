@@ -53,6 +53,8 @@
 # ADD: New translations imported from SimuTranslator
 # ADD: Some new translation strings added to SimuTranslator:
 #      "&File", "&Tools", "&Help"
+# FIX: Improper action when load dialog closed with X rather than cancel
+# FIX: Close button on dialog didn't work (language, about and preferences)
 
 
 # Release 0.5.5 (beta)
