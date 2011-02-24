@@ -102,7 +102,6 @@ class imageWindow(wx.ScrolledWindow):
         """Set the values of the controls in this group to the values in the model"""
         self.control_imagepath.update()
         self.Refresh()
-#        self.refresh_screen()
 
     def refresh_if_valid(self):
         """Called when child impath entry box text changes

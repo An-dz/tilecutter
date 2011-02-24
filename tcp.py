@@ -1,7 +1,10 @@
 # coding: UTF-8
 #
-# TileCutter - tcp file reading/writing functions
+# TileCutter - .tcp file reading/writing functions
 #
+
+# Copyright © 2011 Timothy Baldock. All Rights Reserved.
+
 
 import logger
 debug = logger.Log()
@@ -11,9 +14,9 @@ import sys, os
 import pickle
 import tcproject
 
-import config
-config = config.Config()
-config.save()
+#import config
+#config = config.Config()
+#config.save()
 
 class tcp_writer(object):
     """"""

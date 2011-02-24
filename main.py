@@ -246,11 +246,11 @@ class App(wx.App):
             debug(u"  User cancelled location picking")
             return False
 
-    # Methods for loading/saving projects
 
     # Used for checking if project has changed (compare pickled strings to one another)
+
     def pickle_project(self, project, picklemode = 2):
-        """Pickle a project, returns a pickled string"""
+        """Use pickle to return a string which can be compared against a previous one to tell if the project has changed"""
         # Remove all image information, as this can't be pickled (and doesn't need to be anyway)
         params = project.prep_serialise()
 
@@ -262,6 +262,9 @@ class App(wx.App):
         debug(u"pickle_project, object type: %s pickle type: %s" % (unicode(project), picklemode))
         return pickle_string
 
+
+    # Methods for loading/saving projects
+
     def save_project(self, project):
         """Save project to its save location, returns True if success, False if failed"""
         debug(u"save_project - Save project out to disk")
@@ -270,26 +273,31 @@ class App(wx.App):
         t_writer = tcp_writer(self.activeproject.savefile(), "pickle")
 
         # Check parent before + after
-        debug(u"before - parent of project: %s is: %s" % (str(project), str(project.parent)))
+        debug(u"  before - parent of project: %s is: %s" % (str(project), str(project.parent)))
 
         # Write out project
         ret = t_writer.write(project)
 
         # Check parent before + after
-        debug(u"after - parent of project: %s is: %s" % (str(project), str(project.parent)))
+        debug(u"  after - parent of project: %s is: %s" % (str(project), str(project.parent)))
 
         # If saving worked, update current status
-        project.saved(ret)
-        self.activepickle = self.pickle_project(project)
+        if ret:
+            project.saved(ret)
+            self.activepickle = self.pickle_project(project)
 
-        debug(u"typeof activepickle: %s" % type(self.activepickle))
+            debug(u"  typeof activepickle: %s" % type(self.activepickle))
 
-        # Update frame to reflect change to active project
-        if self.gui:
-            self.frame.update()
-            self.project_has_changed()
-        debug(u"save_project - Save project success")
-        return True
+            # Update frame to reflect change to active project
+            if self.gui:
+                self.frame.update()
+                self.project_has_changed()
+            debug(u"  save_project - Save project success")
+            return True
+        else:
+            # Saving failed for some reason
+            debug(u"  ERROR: save_project - Saving failed!")
+            return False
 
     def load_project(self, location):
         """Load a project based on a file location"""
