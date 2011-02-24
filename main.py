@@ -22,19 +22,18 @@
 import logger
 debug = logger.Log()
 
-debug(u"\n--------------------------------------------------------------------------")
+debug(u"--------------------------------------------------------------------------")
 
 import sys, os
 
 try:
     import wx
+    debug(u"WX version is: %s" % wx.version())
 except ImportError:
     debug(u"WXPython not installed, please install module and try again!")
     raise
 
-debug(u"WX version is: %s" % wx.version())
-
-import StringIO, pickle
+import pickle
 import tcui, tc, tcproject, imres, codecs
 
 # Classes to read/write TileCutter files
@@ -52,6 +51,7 @@ import config
 config = config.Config()
 config.save()
 
+debug(u"configuration loaded from default file:")
 debug(unicode(config))
 
 class App(wx.App):
@@ -212,7 +212,8 @@ class App(wx.App):
                             path, filename, filesAllowed, dialogFlags)
         result = dlg.ShowModal()
         if result == wx.ID_OK:
-            project.savefile(os.path.join(dlg.GetDirectory(), dlg.GetFilename()))
+            #project.savefile(os.path.join(dlg.GetDirectory(), dlg.GetFilename()))
+            project.savefile(dlg.GetPath())
             config.last_save_path = dlg.GetDirectory()
             debug(u"  New savefile for project is: %s" % project.savefile())
             dlg.Destroy()

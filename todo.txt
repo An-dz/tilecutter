@@ -64,7 +64,8 @@
 # CHANGE: TCP load/save functions moved into seperate module - tcp.py
 # CHANGE: Objects to be pickled/unpickled have standard prep_serialise/post_serialise functions to handle stuff that shouldn't be passed to pickle
 # ADD: Framework for addition of JSON-based save format
-# FIX: Loading files at root of drives on Windows now works
+# FIX: Loading files at root of drives on Windows now works (.tcp files and .png files)
+# ADD: If directories in a save path do not exist (for .tcp and .dat/.png export) the directories will be created
 
 
 # Release 0.5.5 (beta)

@@ -328,6 +328,9 @@ def export_writer(project, pak_output=False, return_dat=False, write_dat=True):
     # Write out to files if required
     if write_dat:
         debug(u"e_w: Writing out .dat file to %s" % dat_path)
+        # Check that each component in dat_path exists, create directories if needed
+        if not os.path.isdir(os.path.split(dat_path)[0]):
+            os.makedirs(os.path.split(dat_path)[0])
         f = open(dat_path, "w")
     else:
         debug(u"e_w: Writing out .dat file to temporary file")
@@ -338,6 +341,10 @@ def export_writer(project, pak_output=False, return_dat=False, write_dat=True):
     # Write .dat file
     f.write(dat_text)
     f.close()
+
+    # Check that each component in png_path exists, create directories if needed
+    if not os.path.isdir(os.path.split(png_path)[0]):
+        os.makedirs(os.path.split(png_path)[0])
 
     # Write out .png file
     output_bitmap.SaveFile(png_path, wx.BITMAP_TYPE_PNG)

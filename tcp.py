@@ -23,6 +23,11 @@ class tcp_writer(object):
     def __init__(self, filename, mode):
         """"""
         debug(u"Initialising new tcp_writer, file: %s, mode: %s" % (filename, mode))
+
+        # Confirm if path exists, create directories if needed
+        if not os.path.isdir(os.path.split(filename)[0]):
+            os.makedirs(os.path.split(filename)[0])
+
         self.file = open(filename, "wb")
         self.mode = mode
 
