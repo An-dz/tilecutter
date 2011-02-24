@@ -208,6 +208,19 @@ class Project(object):
                     for i in range(len(self.images[d][s][f])):
                         self.images[d][s][f][i].delImage()
 
+    def prep_serialise(self):
+        """Prepare this object for serialisation"""
+        # Remove images as we cannot pickle these and do not want to
+        self.delImages()
+        # Return parent reference so it can be added back by post_serialise
+        parent = self.parent
+        self.del_parent()
+        return [parent, ]
+
+    def post_serialise(self, params):
+        """After serialisation re-add parameters removed by prep_serialise"""
+        self.set_parent(params[0])
+
     def del_parent(self):
         """Delete the parent reference ready for pickling"""
         self.parent = None

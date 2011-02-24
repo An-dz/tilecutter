@@ -37,6 +37,10 @@ debug(u"WX version is: %s" % wx.version())
 import StringIO, pickle
 import tcui, tc, tcproject, imres, codecs
 
+# Classes to read/write TileCutter files
+from tcp import tcp_writer
+from tcp import tcp_reader
+
 # Utility functions
 import translator
 gt = translator.Translator()
@@ -230,7 +234,9 @@ class App(wx.App):
                             path, file, filesAllowed, dialogFlags)
         result = dlg.ShowModal()
         if result == wx.ID_OK:
-            load_location = os.path.join(dlg.GetDirectory(), dlg.GetFilename())
+            debug(u"  directory: %s, filename: %s" % (dlg.GetDirectory(), dlg.GetFilename()))
+            #load_location = os.path.join(dlg.GetDirectory(), dlg.GetFilename())
+            load_location = dlg.GetPath()
             dlg.Destroy()
             debug(u"  User picked location: %s" % load_location)
             return load_location
@@ -241,56 +247,47 @@ class App(wx.App):
             return False
 
     # Methods for loading/saving projects
+
+    # Used for checking if project has changed (compare pickled strings to one another)
     def pickle_project(self, project, picklemode = 2):
         """Pickle a project, returns a pickled string"""
         # Remove all image information, as this can't be pickled (and doesn't need to be anyway)
-        project.delImages()
-        project.del_parent()
+        params = project.prep_serialise()
 
         pickle_string = pickle.dumps(project, picklemode)
 
-        project.set_parent(self)
+        # Restore parent information
+        project.post_serialise(params)
+
         debug(u"pickle_project, object type: %s pickle type: %s" % (unicode(project), picklemode))
         return pickle_string
-
-    def unpickle_project(self, filename):
-        """Unpickle a project from file, returning a tcproject object"""
-        debug(u"unpickle_project: opening file: %s" % filename)
-
-        file = open(filename, "rb")
-
-        project = pickle.load(file)
-        project.set_parent(self)
-        file.close()
-        return project
-
-    def unpickle_project_fromstring(self, projectstring):
-        """"""
-        debug(u"unpickle_project_fromstring: unpickling from a string")
-
-        project = pickle.loads(projectstring)
-        project.set_parent(self)
-        return project
 
     def save_project(self, project):
         """Save project to its save location, returns True if success, False if failed"""
         debug(u"save_project - Save project out to disk")
-        # Finally update the frame to display changes
-        project.saved(True)
-        self.activepickle = self.pickle_project(self.activeproject)
 
-        # Pickling the project/unpickling the project should strip all active image info
-        file = self.activeproject.savefile()
+        # Create new writer
+        t_writer = tcp_writer(self.activeproject.savefile(), "pickle")
 
-        debug(u"Save path:%s" % file)
-        output = open(file, "wb")
+        # Check parent before + after
+        debug(u"before - parent of project: %s is: %s" % (str(project), str(project.parent)))
+
+        # Write out project
+        ret = t_writer.write(project)
+
+        # Check parent before + after
+        debug(u"after - parent of project: %s is: %s" % (str(project), str(project.parent)))
+
+        # If saving worked, update current status
+        project.saved(ret)
+        self.activepickle = self.pickle_project(project)
 
         debug(u"typeof activepickle: %s" % type(self.activepickle))
-        output.write(self.activepickle)
-        output.close()
 
-        self.frame.update()
-        self.project_has_changed()
+        # Update frame to reflect change to active project
+        if self.gui:
+            self.frame.update()
+            self.project_has_changed()
         debug(u"save_project - Save project success")
         return True
 
@@ -298,29 +295,21 @@ class App(wx.App):
         """Load a project based on a file location"""
         debug(u"load_project - Load project from file: %s" % location)
 
-        f = open(location, "rb")
-        data = f.read()
-        f.close()
+        t_reader = tcp_reader(location)
 
-        self.activeproject = self.unpickle_project_fromstring(data)
+        # Load project, passing reference to self which will be set as project's parent in its post_serialisation method
+        project = t_reader.load([self,])
+
+        # Check parent after
+        debug(u"after - parent of project: %s is: %s" % (str(project), str(project.parent)))
+
+        self.activeproject = project
         self.activepickle = self.pickle_project(self.activeproject)
         if self.gui:
             self.frame.update()
             self.project_has_changed()
         debug(u"  Load Project succeeded")
         return True
-
-#        # Needs exception handling for unpickle failure
-#        self.activeproject = self.unpickle_project(location)
-#        # Here we need to set the savefile location of the active project to its current location
-#        # since this may have changed since it was saved
-#        # Do this before making the active pickle, so that this change doesn't count as save-worthy
-#        self.activepickle = self.pickle_project(self.activeproject)
-#        if self.gui:
-#            self.frame.update()
-#            self.project_has_changed()
-#        debug(u"  Load Project succeeded")
-#        return True
 
     def new_project(self):
         """Create a new project"""
@@ -364,6 +353,7 @@ class App(wx.App):
             # else ret is wx.ID_NO, so we don't want to save but can continue
         ret = self.dialog_load()                                    # Prompt for file to load
         if ret != wx.ID_CANCEL and ret != False:                    # If file specified
+            debug(u"Load dialog returned a path: %s" % ret)
             return self.load_project(ret)                           # Load the project
         else:                                                       # Otherwise
             return False                                            # Quit out

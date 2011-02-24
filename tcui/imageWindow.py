@@ -30,6 +30,10 @@ class imageWindow(wx.ScrolledWindow):
         self.panel = panel
         self.parent = parent
         wx.ScrolledWindow.__init__(self, panel, id, (0, 0), size=size, style=wx.SUNKEN_BORDER)
+
+        # Required for wx.AutoBufferedPaintDC to work
+        self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
+
         # Make controls for the image path entry box
         self.s_panel_flex = wx.FlexGridSizer(0,5,0,0)
             # Make controls
@@ -84,7 +88,8 @@ class imageWindow(wx.ScrolledWindow):
     def OnPaint(self, e):
         """Event handler for scrolled window repaint requests"""
         debug(u"onPaint event for imageWindow triggered")
-        self.refresh_screen()
+        dc = wx.AutoBufferedPaintDC(self)
+        self.refresh_screen(dc)
 
     def translate(self):
         """Update the text of all controls to reflect a new translation"""
@@ -105,9 +110,9 @@ class imageWindow(wx.ScrolledWindow):
         debug(u"valid: %s, path: %s" % (self.app.activeproject.activeImage().valid_path(),self.app.activeproject.activeImage().path()))
         if self.app.activeproject.activeImage().valid_path() == self.app.activeproject.activeImage().path():
             # If valid_path and path are same, then refresh screen
-            self.refresh_screen()
+            self.Refresh()
 
-    def refresh_screen(self):
+    def refresh_screen(self, dc):
         """Refresh the screen display"""
         debug(u"imageWindow - refresh_screen")
         # Redraw the active image in the window, with mask etc.
@@ -153,13 +158,13 @@ class imageWindow(wx.ScrolledWindow):
         # -ve offset values for mask should count as positive for this calculation!
         self.SetVirtualSize((max(bitmap.GetWidth(),mask_width_off), max(bitmap.GetHeight(),mask_height_off)))
 
-        if self.IsDoubleBuffered():
-            dc = wx.ClientDC(self)
-            self.DoPrepareDC(dc)            
-        else:
-            cdc = wx.ClientDC(self)
-            self.DoPrepareDC(cdc)            
-            dc = wx.BufferedDC(cdc, self.buffer)
+#        if self.IsDoubleBuffered():
+#            dc = pdc
+#        else:
+#            #cdc = wx.ClientDC(self)
+#            dc = wx.BufferedDC(pdc, self.buffer)
+
+        self.DoPrepareDC(dc)            
 
         # Setup default brushes
         dc.SetBackground(wx.Brush(self.bgcolor))
