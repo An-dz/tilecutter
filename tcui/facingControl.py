@@ -122,6 +122,7 @@ class facingControl(object):
         """Set the values of the controls in this group to the values in the model"""
         # Set value of the toggle control (to set number of directions)
         if self.app.activeproject.views() == 1:
+            debug(u"self.app.activeproject.views = 1")
             self.facing_enable_select.SetValue(self.choicelist_views[0])
             # Update controls
             self.facing_select_south.Enable()
@@ -139,6 +140,7 @@ class facingControl(object):
                 # Redraw active image
                 self.app.frame.display.update()
         elif self.app.activeproject.views() == 2:
+            debug(u"self.app.activeproject.views = 2")
             self.facing_enable_select.SetValue(self.choicelist_views[1])
             self.facing_select_south.Enable()
             self.facing_select_south_label.Enable()
@@ -155,6 +157,7 @@ class facingControl(object):
                 # Redraw active image
                 self.app.frame.display.update()
         else:
+            debug(u"self.app.activeproject.views = 4")
             self.facing_enable_select.SetValue(self.choicelist_views[2])
             self.facing_select_south.Enable()
             self.facing_select_south_label.Enable()
@@ -169,7 +172,9 @@ class facingControl(object):
 
     def OnToggle(self, e):
         """Changing the value in the selection box"""
+        debug(u"facing_control: OnToggle - Updating model")
         self.app.activeproject.views(config.choicelist_views[self.choicelist_views.index(self.facing_enable_select.GetValue())])
+        debug(u"facing_control: OnToggle - Updating self")
         self.update()
 
     def OnSouth(self, e):

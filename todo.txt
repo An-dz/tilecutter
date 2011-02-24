@@ -55,6 +55,10 @@
 #      "&File", "&Tools", "&Help"
 # FIX: Improper action when load dialog closed with X rather than cancel
 # FIX: Close button on dialog didn't work (language, about and preferences)
+# CHANGE: TCP load/save now uses the string versions of pickle/unpickle, rather than working on files directly
+# FIX: Display refreshing on OSX - no OnPaint method defined for window
+# WORKAROUND: Bug where setting title of parent window causes child windows to need a refresh
+#             Solved by adding OnPaint method to child window and calling this via update() method
 
 
 # Release 0.5.5 (beta)

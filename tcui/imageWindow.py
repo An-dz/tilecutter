@@ -83,10 +83,8 @@ class imageWindow(wx.ScrolledWindow):
     # Device Context events and methods
     def OnPaint(self, e):
         """Event handler for scrolled window repaint requests"""
-        if self.IsDoubleBuffered():
-            wx.PaintDC(self)
-        else:
-            wx.BufferedPaintDC(self, self.buffer, wx.BUFFER_VIRTUAL_AREA)
+        debug(u"onPaint event for imageWindow triggered")
+        self.refresh_screen()
 
     def translate(self):
         """Update the text of all controls to reflect a new translation"""
@@ -98,7 +96,8 @@ class imageWindow(wx.ScrolledWindow):
     def update(self):
         """Set the values of the controls in this group to the values in the model"""
         self.control_imagepath.update()
-        self.refresh_screen()
+        self.Refresh()
+#        self.refresh_screen()
 
     def refresh_if_valid(self):
         """Called when child impath entry box text changes
@@ -156,10 +155,10 @@ class imageWindow(wx.ScrolledWindow):
 
         if self.IsDoubleBuffered():
             dc = wx.ClientDC(self)
-            self.PrepareDC(dc)            
+            self.DoPrepareDC(dc)            
         else:
             cdc = wx.ClientDC(self)
-            self.PrepareDC(cdc)            
+            self.DoPrepareDC(cdc)            
             dc = wx.BufferedDC(cdc, self.buffer)
 
         # Setup default brushes
@@ -205,6 +204,7 @@ class imageWindow(wx.ScrolledWindow):
             # Then the bottom ones
             pos = self.tileToScreen((x, yy, 1), (x,y,z), (mask_offset_x,mask_offset_y), p, bitmap.GetHeight() + bmp_offset_y)
             dc.DrawLine(pos[0],pos[1] - p4, pos[0]+p2,pos[1])
+        debug(u"imageWindow - refresh_screen - Done")
 
     # Take tile coords and convert into screen coords
     # This function is replicated in tc, and references to it should be made there!

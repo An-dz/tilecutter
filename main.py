@@ -120,6 +120,9 @@ class App(wx.App):
         if self.gui:
             self.update_title_text()
             self.frame.set_title()
+            # On Mac OSX due to bug with wx 2.8 we need to refresh the display window
+            # this is due to the SetTitle method forcibly refreshing all child windows
+            self.frame.update()
 
     # Functions concerning the title text of the program window
     def get_title_text(self):
@@ -246,6 +249,7 @@ class App(wx.App):
 
         pickle_string = pickle.dumps(project, picklemode)
 
+        project.set_parent(self)
         debug(u"pickle_project, object type: %s pickle type: %s" % (unicode(project), picklemode))
         return pickle_string
 
