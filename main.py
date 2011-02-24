@@ -35,7 +35,7 @@ except ImportError:
 debug(u"WX version is: %s" % wx.version())
 
 import StringIO, pickle
-import tcui, tc, tcproject, imres
+import tcui, tc, tcproject, imres, codecs
 
 # Utility functions
 import translator
@@ -238,55 +238,86 @@ class App(wx.App):
             return False
 
     # Methods for loading/saving projects
-    def pickle_project(self, project, picklemode = 0):
+    def pickle_project(self, project, picklemode = 2):
         """Pickle a project, returns a pickled string"""
         # Remove all image information, as this can't be pickled (and doesn't need to be anyway)
         project.delImages()
         project.del_parent()
-        outstring = StringIO.StringIO()
-        pickle.dump(project, outstring, picklemode)
-        project.set_parent(self)
-        pickle_string = outstring.getvalue()
-        outstring.close()
+
+        pickle_string = pickle.dumps(project, picklemode)
+
         debug(u"pickle_project, object type: %s pickle type: %s" % (unicode(project), picklemode))
         return pickle_string
+
     def unpickle_project(self, filename):
         """Unpickle a project from file, returning a tcproject object"""
+        debug(u"unpickle_project: opening file: %s" % filename)
+
         file = open(filename, "rb")
+
         project = pickle.load(file)
         project.set_parent(self)
         file.close()
         return project
+
+    def unpickle_project_fromstring(self, projectstring):
+        """"""
+        debug(u"unpickle_project_fromstring: unpickling from a string")
+
+        project = pickle.loads(projectstring)
+        project.set_parent(self)
+        return project
+
     def save_project(self, project):
         """Save project to its save location, returns True if success, False if failed"""
         debug(u"save_project - Save project out to disk")
         # Finally update the frame to display changes
         project.saved(True)
         self.activepickle = self.pickle_project(self.activeproject)
+
         # Pickling the project/unpickling the project should strip all active image info
         file = self.activeproject.savefile()
+
         debug(u"Save path:%s" % file)
         output = open(file, "wb")
+
+        debug(u"typeof activepickle: %s" % type(self.activepickle))
         output.write(self.activepickle)
         output.close()
+
         self.frame.update()
         self.project_has_changed()
         debug(u"save_project - Save project success")
         return True
+
     def load_project(self, location):
         """Load a project based on a file location"""
         debug(u"load_project - Load project from file: %s" % location)
-        # Needs exception handling for unpickle failure
-        self.activeproject = self.unpickle_project(location)
-        # Here we need to set the savefile location of the active project to its current location
-        # since this may have changed since it was saved
-        # Do this before making the active pickle, so that this change doesn't count as save-worthy
+
+        f = open(location, "rb")
+        data = f.read()
+        f.close()
+
+        self.activeproject = self.unpickle_project_fromstring(data)
         self.activepickle = self.pickle_project(self.activeproject)
         if self.gui:
             self.frame.update()
             self.project_has_changed()
         debug(u"  Load Project succeeded")
         return True
+
+#        # Needs exception handling for unpickle failure
+#        self.activeproject = self.unpickle_project(location)
+#        # Here we need to set the savefile location of the active project to its current location
+#        # since this may have changed since it was saved
+#        # Do this before making the active pickle, so that this change doesn't count as save-worthy
+#        self.activepickle = self.pickle_project(self.activeproject)
+#        if self.gui:
+#            self.frame.update()
+#            self.project_has_changed()
+#        debug(u"  Load Project succeeded")
+#        return True
+
     def new_project(self):
         """Create a new project"""
         debug(u"new_project - Create new project")
