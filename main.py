@@ -60,6 +60,8 @@ class App(wx.App):
         self.gui = gui
         self.start_directory = os.getcwdu()
         wx.App.__init__(self)
+        # Catch activate events from other applications (OSX)
+        self.Bind(wx.EVT_ACTIVATE_APP, self.OnActivate)
 
     def OnInit(self):
         """Called after app has been initialised"""
@@ -116,6 +118,27 @@ class App(wx.App):
 
         debug(u"App OnInit: Completed!")
         return True
+
+
+    # Mac-specific stuff
+    def OnActivate(self, e):
+        # if this is an activate event, rather than something else, like iconize.
+        if e.GetActive():
+            self.BringWindowToFront()
+        e.Skip()
+    def BringWindowToFront(self):
+        try: # it's possible for this event to come when the frame is closed
+            self.GetTopWindow().Raise()
+        except:
+            pass
+    def MacOpenFile(self, filename):
+        """Called for files droped on dock icon, or opened via finders context menu"""
+        debug(u"%s dropped on app" % (filename))
+        self.OnLoadProject(self, filename)
+    def MacReopenApp(self):
+        """Called when the doc icon is clicked, and for other reasons that need to focus the application"""
+        self.BringWindowToFront()
+
 
     # Called by the currently active project
     def project_has_changed(self):
@@ -346,8 +369,8 @@ class App(wx.App):
             elif ret == wx.ID_CANCEL:
                 return False
         self.new_project()
-    def OnLoadProject(self):
-        """Init process of loading a project from file"""
+    def OnLoadProject(self, loadpath=None):
+        """Init process of loading a project from file, if optional savepath is specified then skip the load file dialog"""
         debug(u"OnLoadProject")
         project = self.activeproject
         if self.project_changed(project):                           # If project has changed
@@ -360,8 +383,9 @@ class App(wx.App):
             elif ret == wx.ID_CANCEL:                               # If answer is no
                 return False                                        # Quit out
             # else ret is wx.ID_NO, so we don't want to save but can continue
-        ret = self.dialog_load()                                    # Prompt for file to load
-        if ret != wx.ID_CANCEL and ret != False:                    # If file specified
+        if loadpath is None:                                        # Check if a load path was passed into this function
+            loadpath = self.dialog_load()                           # If not prompt for file to load
+        if loadpath != wx.ID_CANCEL and loadpath != False:          # If user picked a file and didn't cancel the dialog
             debug(u"Load dialog returned a path: %s" % ret)
             return self.load_project(ret)                           # Load the project
         else:                                                       # Otherwise

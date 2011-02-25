@@ -128,7 +128,7 @@ if len(sys.argv) >= 2 and sys.argv[1] == "py2exe":
         {
         "script":"tilecutter.py",
         "windows":"tilecutter.py",
-        "icon_resources": [(1, "TileCutter icon/tilecutter.ico"),(42, "TileCutter icon/tilecutter_document.ico")],
+        "icon_resources": [(1, "TileCutter icon/tilecutter.ico"),(42, "TileCutter icon/tcp.ico")],
         },
     ]
 #    options["data_files"] += [("", ["../dist/msvcp71.dll"]]
@@ -161,8 +161,43 @@ if len(sys.argv) >= 2 and sys.argv[1] == "py2exe":
 # mac specific
 if len(sys.argv) >= 2 and sys.argv[1] == "py2app":
     print "Running py2app distribution"
-    dist_dir = os.path.join("..", "dist", "win_dist_%s" % version)
-    dist_zip = os.path.join("..", "dist", "TileCutter_win_%s.zip" % version) 
+    dist_dir = os.path.join("..", "dist", "osx_dist_%s" % version)
+    dist_dmg = os.path.join("..", "dist", "TileCutter_osx_%s.dmg" % version) 
+
+    # See: http://developer.apple.com/library/mac/#documentation/FileManagement/Conceptual/understanding_utis/understand_utis_conc/understand_utis_conc.html
+    # http://stackoverflow.com/questions/1771601/registering-an-icon-for-my-applications-document-type
+    
+
+    # Bindings to allow drag+drop of project files onto icon
+    # Also registers filetype with OSX
+    plist = {
+                "CFBundleIdentifier": "uk.me.entropy.tilecutter",
+                "CFBundleGetInfoString": "Simutrans Building Editor",
+                "CFBundleDocumentTypes": [
+                    {
+                        "CFBundleTypeName": "TileCutter Project Document", 
+                        "CFBundleTypeRole": "Editor", 
+                        "CFBundleTypeExtensions": ["tcp",],
+                        "LSItemContentTypes": ["uk.me.entropy.tcp",],
+                        "CFBundleTypeIconFile": "tcp.icns",
+                    },
+                ],
+                "UTExportedTypeDeclarations": [
+                    {
+                        "UTTypeIdentifier": "uk.me.entropy.tcp", 
+                        "UTTypeReferenceURL": "http://entropy.me.uk/tilecutter/docs/tcpformat/",
+                        "UTTypeDescription": "TileCutter Project File",
+                        "UTTypeIconFile": "tcp.icns",
+                        "UTTypeConformsTo": ["public.data",],
+                        "UTTypeTagSpecification": {
+                            "com.apple.ostype": "TCPF",
+                            "public.filename-extension": ["tcp",],
+                            "public.mimetype": "application/x-tilecutter-project",
+                        },
+                    },
+                ],
+            }
+
     try:
         import py2app
     except ImportError:
@@ -171,14 +206,28 @@ if len(sys.argv) >= 2 and sys.argv[1] == "py2app":
     options["app"] = ["tilecutter.py"]
     options["options"] = {
         "py2app": {
+            "dist_dir": dist_dir,
             "argv_emulation": True,
-            "iconfile": "TileCutter icon/tc_icon2_plain.icns",
+            "iconfile": "TileCutter icon/tilecutter.icns",
             "packages": ["wx",],
+            "excludes": [],
             "site_packages": True,
-            "resources": ["todo.txt",],
+            "resources": ["TileCutter icon/tcp.icns",],
+            "plist": plist,
             }
     }
     options["setup_requires"] = ["py2app"]
     # run the setup
     setup(**options)
+
+    # See: http://digital-sushi.org/entry/how-to-create-a-disk-image-installer-for-apple-mac-os-x/
+
+    # Next run shell commands to interact with the .dmg package
+    # Copy .dmg from location in source control to dist directory
+    # Convert to sparseimage
+    # Remove .dmg from dist
+    # Mount sparseimage
+    # Copy application bundle into sparseimage (to replace placeholder)
+    # Unmount sparseimage
+    # Convert to .dmg + compress
 
