@@ -70,28 +70,15 @@ options = {
 
 # Source distribution specific
 if len(sys.argv) >= 2 and sys.argv[1] == "source":
-    dist_dir = os.path.join("..", "dist", "src_dist_%s" % version)
-    dist_zip = os.path.join("..", "dist", "TileCutter_src_%s.zip" % version) 
-
-    # Needed files:
-    # trunk/
-    #       translator/*
-    #       languages/*
-    #       tcui/*
-    #       config.py
-    #       imres.py
-    #       licence.txt
-    #       logger.py
-    #       tc.py
-    #       tcproject.py
-    #       test.png
-    #       TileCutter5.pyw
-
+    print "Running source distribution"
     try:
         import shutil
     except ImportError:
         print "Could not import shutil module. Aborting source distribution creation"
-        sys.exit(0)
+        sys.exit(1)
+
+    dist_dir = os.path.join("..", "dist", "src_dist_%s" % version)
+    dist_zip = os.path.join("..", "dist", "TileCutter_src_%s.zip" % version) 
 
     for recdir in ["translator", "languages", "tcui"]:
         print "Copying contents of: %s/" % recdir
@@ -114,16 +101,19 @@ if len(sys.argv) >= 2 and sys.argv[1] == "source":
     zip.close()
 
 
-# windows specific
+# Windows specific
 if len(sys.argv) >= 2 and sys.argv[1] == "py2exe":
-    dist_dir = os.path.join("..", "dist", "win_dist_%s" % version)
-    dist_zip = os.path.join("..", "dist", "TileCutter_win_%s.zip" % version) 
+    print "Running py2exe distribution"
     try:
         import py2exe
     except ImportError:
         print "Could not import py2exe. Aborting windows exe output"
-        sys.exit(0)
-    # windows-specific options
+        sys.exit(1)
+
+    dist_dir = os.path.join("..", "dist", "win_dist_%s" % version)
+    dist_zip = os.path.join("..", "dist", "TileCutter_win_%s.zip" % version)
+    dist_msi = os.path.join("..", "dist", "TileCutter_win_%s.msi" % version)
+
     options["windows"] = [
         {
         "script":"tilecutter.py",
@@ -157,10 +147,18 @@ if len(sys.argv) >= 2 and sys.argv[1] == "py2exe":
             zip.write(fn, rel_fn)
     zip.close()
 
+    # Next, create MSI distribution
 
-# mac specific
+
+# OSX specific
 if len(sys.argv) >= 2 and sys.argv[1] == "py2app":
     print "Running py2app distribution"
+    try:
+        import py2app
+    except ImportError:
+        print "Could not import py2app.   Mac bundle could not be built."
+        sys.exit(1)
+
     dist_dir = os.path.join("..", "dist", "osx_dist_%s" % version)
     dist_dmg = os.path.join("..", "dist", "TileCutter_osx_%s.dmg" % version) 
 
@@ -198,10 +196,6 @@ if len(sys.argv) >= 2 and sys.argv[1] == "py2app":
                 ],
             }
 
-    try:
-        import py2app
-    except ImportError:
-        print "Could not import py2app.   Mac bundle could not be built."
     # mac-specific options
     options["app"] = ["tilecutter.py"]
     options["options"] = {
@@ -210,7 +204,8 @@ if len(sys.argv) >= 2 and sys.argv[1] == "py2app":
             "argv_emulation": True,
             "iconfile": "TileCutter icon/tilecutter.icns",
             "packages": ["wx",],
-            "excludes": [],
+            "excludes": ["difflib", "doctest", "optparse", "calendar", "pdb", "inspect",
+                        "Tkconstants", "Tkinter", "tcl"],
             "site_packages": True,
             "resources": ["TileCutter icon/tcp.icns",],
             "plist": plist,

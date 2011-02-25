@@ -47,6 +47,10 @@ class Config(object):
     internals = {
         "version": u"0.5.6.4",
         }
+
+    # On Windows config should be stored per-user in %APPDATA%/tilecutter/tilecutter.config
+    # On OSX config should be stored per-user in ~/.tilecutter/tilecutter.config (or should this be under ~/Library/tilecutter/ ???
+    # On other Unix platforms config should be stored per-user in ~/.tilecutter/tilecutter.config
     conf_path = u"tc.config"
 
     def __init__(self):

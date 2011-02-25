@@ -25,6 +25,13 @@ class Log(object):
     def __init__(self, file=None):
         """"""
         if Log.file == None:
+            # If we are on Windows, logs go to application's directory (for now)
+                # These *should* go to %PROGRAMDATA%/tilecutter/tilecutter.log (which replaces %ALLUSERSPROFILE%/Application Data/) (one log per system)
+                # Or on XP to %ALLUSERSPROFILE%/Application Data/tilecutter/tilecutter.log (one log per system)
+                # OR they should just go to %APPDATA%/tilecutter/tilecutter.log (one log per user)
+            # If we are on OSX, logs go to ~/Library/logs/tilecutter.log (one log per user)
+            # If we are on Unix, logs go to application's directory (for now)
+                # They should go to $HOME/.tilecutter/tilecutter.log (one log per user)
             if file == None:
                 # Appends this session's log info to the logging file
                 Log.file = codecs.open(config.logfile, "a", "UTF-8")
