@@ -6,6 +6,7 @@
 rm -R build
 
 # Create the application using py2app
+python setup.py py2app
 
 # Create the source distribution
 python setup.py source

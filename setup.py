@@ -203,7 +203,7 @@ if len(sys.argv) >= 2 and sys.argv[1] == "py2app":
             "dist_dir": dist_dir,
             "argv_emulation": True,
             "iconfile": "TileCutter icon/tilecutter.icns",
-            "packages": ["wx",],
+            "packages": [],
             "excludes": ["difflib", "doctest", "optparse", "calendar", "pdb", "inspect",
                         "Tkconstants", "Tkinter", "tcl"],
             "site_packages": True,
