@@ -40,6 +40,7 @@ class facingControl(object):
         self.s_facing_select_south = wx.BoxSizer(wx.HORIZONTAL)
         self.facing_select_south_label = wx.StaticText(parent, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_RIGHT)
         self.facing_select_south = wx.RadioButton(parent, wx.ID_ANY, "", (-1,-1), (-1,-1), wx.RB_GROUP)
+        self.facing_select_south.SetValue(True)
         self.s_facing_select_south.Add(self.facing_select_south_label, 0)
         self.s_facing_select_south.Add(self.facing_select_south, 0)
 

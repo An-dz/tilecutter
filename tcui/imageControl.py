@@ -27,6 +27,7 @@ class imageControl(object):
         # Add items
         self.images_select_back_im = wx.StaticBitmap(parent, wx.ID_ANY, imres.catalog["ImageBack"].getBitmap())
         self.images_select_back = wx.RadioButton(parent, wx.ID_ANY, "", (-1,-1), (-1,-1), wx.RB_GROUP)
+        self.images_select_back.SetValue(True)
         self.images_select_front_im = wx.StaticBitmap(parent, wx.ID_ANY, imres.catalog["ImageFront"].getBitmap())
         self.images_select_front = wx.RadioButton(parent, wx.ID_ANY, "", (-1,-1), (-1,-1))
         self.images_enable_front = wx.CheckBox(parent, wx.ID_ANY, "", (-1,-1), (-1,-1))

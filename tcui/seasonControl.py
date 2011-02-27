@@ -27,6 +27,7 @@ class seasonControl(object):
         # Add items
         self.seasons_select_summer_im = wx.StaticBitmap(parent, wx.ID_ANY, imres.catalog["ImageSummer"].getBitmap())
         self.seasons_select_summer = wx.RadioButton(parent, wx.ID_ANY, "", (-1,-1), (-1,-1), wx.RB_GROUP)
+        self.seasons_select_summer.SetValue(True)
         self.seasons_select_winter_im = wx.StaticBitmap(parent, wx.ID_ANY, imres.catalog["ImageWinter"].getBitmap())
         self.seasons_select_winter = wx.RadioButton(parent, wx.ID_ANY, "", (-1,-1), (-1,-1))
         self.seasons_enable_winter = wx.CheckBox(parent, wx.ID_ANY, "", (-1,-1), (-1,-1))
@@ -62,18 +63,18 @@ class seasonControl(object):
     def update(self):
         """Set the values of the controls in this group to the values in the model"""
         if self.app.activeproject.winter() == 0:  # Turn winter image off
-            self.seasons_enable_winter.SetValue(0)
+            self.seasons_enable_winter.SetValue(False)
             # If currently have winter image selected, switch to summer image
             if self.seasons_select_winter.GetValue() == True:
                 # Update model
                 self.app.activeproject.activeImage(season = 0)
-                self.seasons_select_summer.SetValue(1)
+                self.seasons_select_summer.SetValue(True)
                 # As active season changed, need to redraw display
                 self.app.frame.display.update()
             # Then disable the control
             self.seasons_select_winter.Disable()
         else:
-            self.seasons_enable_winter.SetValue(1)
+            self.seasons_enable_winter.SetValue(True)
             # User must select the winter image if they wish to view it, so just enable the control
             self.seasons_select_winter.Enable()
 

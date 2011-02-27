@@ -55,6 +55,8 @@ context-menu option in explorer (via file handler in registry)
 Logging - correct place                                                                             - Done
 Config - correct place                                                                              - Done
 
+Replace methods for finding default file locations with os.path.expanduser()
+
 
 ## Release 0.5.7 ##
 FIX: Many unicode issues relating to information passed into program
