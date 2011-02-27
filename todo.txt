@@ -43,7 +43,7 @@
 Mac
 Need to make file drop on icon work properly                                                        - Done
 Need to allow for .png file drop on icon (replace active image)
-Fix initial state of radio buttons on mac
+Fix initial state of radio buttons on mac                                                           - Done
 Logging - must log to correct places on OSX                                                         - Done
 Config - must read/write config from correct places on OSX                                          - Done
 
@@ -55,7 +55,6 @@ context-menu option in explorer (via file handler in registry)
 Logging - correct place                                                                             - Done
 Config - correct place                                                                              - Done
 
-Replace methods for finding default file locations with os.path.expanduser()
 
 
 ## Release 0.5.7 ##
@@ -97,6 +96,8 @@ CHANGE: Default logging behaviour is to log to a platform-dependant location (yo
         On Windows default logging location is: %USERPROFILE$\Application Data\tilecutter\tilecutter.log
         On all other platforms default logging location is: ~/.tilecutter/tilecutter.log
 ADD: If directories in the config file path don't exist they will be created as needed
+FIX: Start state of radio buttons on OSX
+ADD: Replace methods for finding default file locations with os.path.expanduser()
 
 
 # Release 0.5.5 (beta)

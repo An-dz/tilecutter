@@ -460,21 +460,30 @@ class ProjectFiles(object):
         # Location of save file, by default this is the user's home directory
         # If user has previously selected a place to save project files to, use this as the default save path
         # Whenever the user does a Save-As this config directive should be updated
-        if config.last_save_path != "" and os.path.exists(config.last_save_path):
-            self.save_location = self.test_path(config.last_save_path)
 
-        # HOME is on Unix-style systems
-        elif u"HOME" in os.environ and os.path.exists(os.environ[u"HOME"]):
-            self.save_location = self.test_path(os.environ[u"HOME"])
+#        if config.last_save_path != "" and os.path.exists(config.last_save_path):
+#            self.save_location = self.test_path(config.last_save_path)
+#
+#        # HOME is on Unix-style systems
+#        elif u"HOME" in os.environ and os.path.exists(os.environ[u"HOME"]):
+#            self.save_location = self.test_path(os.environ[u"HOME"])
+#
+#        # USERPROFILE is on Windows
+#        elif u"USERPROFILE" in os.environ and os.path.exists(os.environ[u"USERPROFILE"]):
+#            self.save_location = self.test_path(os.environ[u"USERPROFILE"])
+#            # Convert from native windows codepage if non-ASCII chars involved
+#            self.save_location = unicode(self.save_location, sys.getfilesystemencoding())
 
-        # USERPROFILE is on Windows
-        elif u"USERPROFILE" in os.environ and os.path.exists(os.environ[u"USERPROFILE"]):
-            self.save_location = self.test_path(os.environ[u"USERPROFILE"])
-            # Convert from native windows codepage if non-ASCII chars involved
-            self.save_location = unicode(self.save_location, sys.getfilesystemencoding())
+        # Use userprofile on all platforms as default
+        location = os.path.expanduser(u"~")
+        # Convert from native windows codepage if non-ASCII chars involved
+        location = unicode(location, sys.getfilesystemencoding())
 
-        else:   # Otherwise use location of program
+        # Otherwise use location of program
+        if location == u"~":
             self.save_location = self.test_path(self.parent.parent.start_directory)
+        else:
+            self.save_location = self.test_path(location)
 
         # As initialised, project is unsaved, so other paths relative to the default value
         self.saved = False
