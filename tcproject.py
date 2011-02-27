@@ -477,9 +477,12 @@ class ProjectFiles(object):
         # Use userprofile on all platforms as default
         location = os.path.expanduser(u"~")
         # Convert from native windows codepage if non-ASCII chars involved
-        location = unicode(location, sys.getfilesystemencoding())
+        # This may not be needed since os.path.expanduser may return unicode in all situations
+        if type(location) == type(""):
+            location = unicode(location, sys.getfilesystemencoding())
 
         # Otherwise use location of program
+        # Depending on how/when os.path.expanduser can fail this may not be needed but just in case!
         if location == u"~":
             self.save_location = self.test_path(self.parent.parent.start_directory)
         else:
