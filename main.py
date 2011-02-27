@@ -35,6 +35,7 @@ except ImportError:
 
 import pickle
 import tcui, tc, tcproject, imres, codecs
+from optparse import OptionParser
 
 # Classes to read/write TileCutter files
 from tcp import tcp_writer
@@ -328,6 +329,9 @@ class App(wx.App):
         debug(u"load_project - Load project from file: %s" % location)
 
         t_reader = tcp_reader(location)
+        if t_reader.file is None:
+            # Loading file failed for some reason, abort this process
+            return False
 
         # Load project, passing reference to self which will be set as project's parent in its post_serialisation method
         project = t_reader.load([self,])
@@ -435,70 +439,57 @@ def run():
     # then do a standard export, plus compilation if needed
     # If any override flags are set, modify the output paths of the project before continuing
 
-    # Any command line arguments turn off the GUI
-    if len(sys.argv) == 1:
-    	gui = True
-    else:
-    	gui = False
+    # Command line arguments could indicate files to open (if they are the only things)
+    # Use of the "-c" option will invoke the CLI operation mode
+    debug(str(sys.argv))
+    # Parse command line arguments (if any)
+    usage = "usage: %prog [options] filename1 [filename2 ... ]"
+    parser = OptionParser(usage=usage)
+
+    parser.set_defaults(pak_output=False, dat_output=True, cli=False)
+
+    parser.add_option("-c", action="store_true", dest="cli",
+                      help="run program in CLI mode (must be specified or program will run in GUI mode and load the first file specified on the command line)")
+
+    parser.add_option("-i", dest="png_directory",
+                      help="override .png file output location to DIRECTORY", metavar="DIRECTORY")
+    parser.add_option("-I", dest="png_filename",
+                      help="override .png file output name to FILENAME", metavar="FILENAME")
+
+    parser.add_option("-n", action="store_false", dest="dat_output",
+                      help="disable .dat file output (if -m specified, dat info will be output to tempfile)")
+    parser.add_option("-d", dest="dat_directory",
+                      help="override .dat file output location to DIRECTORY", metavar="DIRECTORY")
+    parser.add_option("-D", dest="dat_filename",
+                      help="override .dat file output name to FILENAME", metavar="FILENAME")
+
+    parser.add_option("-m", action="store_true", dest="pak_output",
+                      help="enable .pak file output (requires Makeobj)")
+#        parser.add_option("-M", dest="makeobj_directory",
+#                          help="override object specific makeobj with PATH", metavar="PATH")
+    parser.add_option("-p", dest="pak_directory",
+                      help="override .pak file output location to DIRECTORY", metavar="DIRECTORY")
+    parser.add_option("-P", dest="pak_filename",
+                      help="override .pak file output name to FILENAME", metavar="FILENAME")
+
+    parser.add_option("-v", action="store_true", dest="verbose",
+                      help="enable verbose output")
+    parser.add_option("-q", action="store_false", dest="verbose",
+                      help="suppress stdout")
+
+    # options are the defined options, args are the list of files to process
+    options, args = parser.parse_args()
+
     start_directory = os.getcwd()
-    if gui:
-        # Redirect stdout/err to internal logging mechanism
-        # Only do this redirection if running in GUI mode
-        # Needs tweaks to the debug module for -q option etc., different logging levels?
-        sys.stderr = debug
-        sys.stdout = debug
-        # Create the application with GUI
-        debug(u"Init - Creating app with GUI")
-        app = App(gui=True)
-        # Init all main frame controls
-        app.frame.update()
-        # Show the main window frame
-        app.frame.Show(1)
-        # Launch into application's main loop
-        app.MainLoop()
-        app.Destroy()
-    else:
+
+    # Use of command line argument "-c" disables GUI and uses command line parsing instead
+    if options.cli:
         # Create the application without GUI
         debug(u"Init - Creating app without GUI")
         app = App(gui=False)
         # Not making use of app's event handling loop etc., so don't start it
         #app.MainLoop()
 
-        # Do command line stuff here...
-        from optparse import OptionParser
-        usage = "usage: %prog [options] filename1 [filename2 ... ]"
-        parser = OptionParser(usage=usage)
-
-        parser.set_defaults(pak_output=False, dat_output=True)
-
-        parser.add_option("-i", dest="png_directory",
-                          help="override .png file output location to DIRECTORY", metavar="DIRECTORY")
-        parser.add_option("-I", dest="png_filename",
-                          help="override .png file output name to FILENAME", metavar="FILENAME")
-
-        parser.add_option("-n", action="store_false", dest="dat_output",
-                          help="disable .dat file output (if -m specified, dat info will be output to tempfile)")
-        parser.add_option("-d", dest="dat_directory",
-                          help="override .dat file output location to DIRECTORY", metavar="DIRECTORY")
-        parser.add_option("-D", dest="dat_filename",
-                          help="override .dat file output name to FILENAME", metavar="FILENAME")
-
-        parser.add_option("-m", action="store_true", dest="pak_output",
-                          help="enable .pak file output (requires Makeobj)")
-#        parser.add_option("-M", dest="makeobj_directory",
-#                          help="override object specific makeobj with PATH", metavar="PATH")
-        parser.add_option("-p", dest="pak_directory",
-                          help="override .pak file output location to DIRECTORY", metavar="DIRECTORY")
-        parser.add_option("-P", dest="pak_filename",
-                          help="override .pak file output name to FILENAME", metavar="FILENAME")
-
-        parser.add_option("-v", action="store_true", dest="verbose",
-                          help="enable verbose output")
-        parser.add_option("-q", action="store_false", dest="verbose",
-                          help="suppress stdout")
-
-        # options are the defined options, args are the list of files to process
-        options, args = parser.parse_args()
         if options.verbose is True:
             print "options: %s" % str(options)
             print "args: %s" % str(args)
@@ -513,45 +504,77 @@ def run():
             if options.verbose is not False:
                 print "processing file: %s" % file
             # For every filename specified by the user, perform export
-            app.load_project(file)
-            # Apply any command line overrides specified by user
-            # For PNG file
-            if options.png_directory is not None:
-            	png_dir = options.png_directory
-            else:
-            	png_dir = os.path.split(app.activeproject.pngfile())[0]
-            if options.png_filename is not None:
-            	png_file = options.png_filename
-            else:
-            	png_file = os.path.split(app.activeproject.pngfile())[1]
-            app.activeproject.pngfile(os.path.join(png_dir, png_file))
-            # For DAT file
-            if options.dat_directory is not None:
-            	dat_dir = options.dat_directory
-            else:
-            	dat_dir = os.path.split(app.activeproject.datfile())[0]
-            if options.dat_filename is not None:
-            	dat_file = options.dat_filename
-            else:
-            	dat_file = os.path.split(app.activeproject.datfile())[1]
-            app.activeproject.datfile(os.path.join(dat_dir, dat_file))
-            # For PAK file
-            if options.pak_directory is not None:
-            	pak_dir = options.pak_directory
-            else:
-            	pak_dir = os.path.split(app.activeproject.pakfile())[0]
-            if options.pak_filename is not None:
-            	pak_file = options.pak_filename
-            else:
-            	pak_file = os.path.split(app.activeproject.pakfile())[1]
-            app.activeproject.pakfile(os.path.join(pak_dir, pak_file))
+            # Try to load in project, if this fails skip this filename and print an error
+            if app.load_project(file):
+                if options.verbose is not False:
+                    print "loaded file, preparing to export"
+                # Apply any command line overrides specified by user
+                # For PNG file
+                if options.png_directory is not None:
+                    png_dir = options.png_directory
+                else:
+                    png_dir = os.path.split(app.activeproject.pngfile())[0]
+                if options.png_filename is not None:
+                    png_file = options.png_filename
+                else:
+                    png_file = os.path.split(app.activeproject.pngfile())[1]
+                app.activeproject.pngfile(os.path.join(png_dir, png_file))
+                # For DAT file
+                if options.dat_directory is not None:
+                    dat_dir = options.dat_directory
+                else:
+                    dat_dir = os.path.split(app.activeproject.datfile())[0]
+                if options.dat_filename is not None:
+                    dat_file = options.dat_filename
+                else:
+                    dat_file = os.path.split(app.activeproject.datfile())[1]
+                app.activeproject.datfile(os.path.join(dat_dir, dat_file))
+                # For PAK file
+                if options.pak_directory is not None:
+                    pak_dir = options.pak_directory
+                else:
+                    pak_dir = os.path.split(app.activeproject.pakfile())[0]
+                if options.pak_filename is not None:
+                    pak_file = options.pak_filename
+                else:
+                    pak_file = os.path.split(app.activeproject.pakfile())[1]
+                app.activeproject.pakfile(os.path.join(pak_dir, pak_file))
 
-            app.export_project(app.activeproject, pak_output=options.pak_output, return_dat=False, write_dat=options.dat_output)
-            if options.verbose is not False:
-                print "...Done!"
+                app.export_project(app.activeproject, pak_output=options.pak_output, return_dat=False, write_dat=options.dat_output)
+                if options.verbose is not False:
+                    print "...Done!"
+            else:
+                if options.verbose is not False:
+                    print "loading file failed, skipping: %s" % file
 
         # Finally destroy app
         app.Destroy()
+    else:
+        # Create the application with GUI
+        # Redirect stdout/err to internal logging mechanism
+        # Only do this redirection if running in GUI mode
+        # Needs tweaks to the debug module for -q option etc., different logging levels?
+        debug(u"options: %s" % str(options))
+        debug(u"args: %s" % str(args))
+        sys.stderr = debug
+        sys.stdout = debug
+        # Create the application with GUI
+        debug(u"Init - Creating app with GUI")
+        app = App(gui=True)
+
+        # If a project was specified on the command line, open it for editing (open the first one)
+        if len(args) > 0:
+            debug(u"Activating load_project based on CLI args (in GUI mode)")
+            app.load_project(args[0])
+
+        # Init all main frame controls
+        app.frame.update()
+        # Show the main window frame
+        app.frame.Show(1)
+        # Launch into application's main loop
+        app.MainLoop()
+        app.Destroy()
+
 
 
 if __name__ == "__main__":

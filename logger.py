@@ -12,6 +12,8 @@
 # Then debug(<string to output>)
 # Time/newline added automatically
 
+import sys, os
+
 import config
 config = config.Config()
 
@@ -25,16 +27,18 @@ class Log(object):
     def __init__(self, file=None):
         """"""
         if Log.file == None:
-            # If we are on Windows, logs go to application's directory (for now)
-                # These *should* go to %PROGRAMDATA%/tilecutter/tilecutter.log (which replaces %ALLUSERSPROFILE%/Application Data/) (one log per system)
-                # Or on XP to %ALLUSERSPROFILE%/Application Data/tilecutter/tilecutter.log (one log per system)
-                # OR they should just go to %APPDATA%/tilecutter/tilecutter.log (one log per user)
-            # If we are on OSX, logs go to ~/Library/logs/tilecutter.log (one log per user)
-            # If we are on Unix, logs go to application's directory (for now)
-                # They should go to $HOME/.tilecutter/tilecutter.log (one log per user)
             if file == None:
-                # Appends this session's log info to the logging file
-                Log.file = codecs.open(config.logfile, "a", "UTF-8")
+                # Default for config is to specify log file as platform_default
+                if config.logfile == "platform_default":
+                    if sys.platform == "darwin":
+                        Log.file = codecs.open(os.path.expanduser(u"~/Library/Logs/tilecutter.log"), "a", "UTF-8")
+                    elif sys.platform == "win32":
+                        Log.file = codecs.open(os.path.expanduser(u"~/Application Data/tilecutter/tilecutter.log"), "a", "UTF-8")
+                    else:
+                        Log.file = codecs.open(os.path.expanduser(u"~/.tilecutter/tilecutter.log"), "a", "UTF-8")
+                else:
+                    # Appends this session's log info to the logging file
+                    Log.file = codecs.open(config.logfile, "a", "UTF-8")
             else:
                 Log.file = codecs.open(file, "a", "UTF-8")
     def __call__(self, s):

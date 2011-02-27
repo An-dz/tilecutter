@@ -41,45 +41,60 @@
 
 
 Mac
-Need to make file drop on icon work properly
+Need to make file drop on icon work properly                                                        - Done
 Need to allow for .png file drop on icon (replace active image)
 Fix initial state of radio buttons on mac
-Logging - must log to correct places on OSX
-Config - must read/write config from correct places on OSX
+Logging - must log to correct places on OSX                                                         - Done
+Config - must read/write config from correct places on OSX                                          - Done
 
 Windows
 msi installer, simple + command line capable
 register file types via installer or script
 drag+drop support for files onto main window or via argvals (e.g. drag+drop onto .exe)
 context-menu option in explorer (via file handler in registry)
-Logging - correct place
-Config - correct place
+Logging - correct place                                                                             - Done
+Config - correct place                                                                              - Done
 
 
-# Release 0.5.7
-# FIX: Many unicode issues relating to information passed into program
-# FIX: Logger now handles multiline output properly
-# FIX: Proper handling of UTF-8 files
-# FIX: Translations for file dialogs now work properly
-# CHANGE: tilecutter.py/tilecutter.pyw are now wrapper scripts that call main.py - 
-#         should be a small speed boost from bytecode compilation of main program
-# CHANGE: Now known as "tilecutter.exe" rather than "tilecutter5.exe"
-# FIX: Issues relating to scope in main.py/mainwindow.py
-# ADD: Basis for Mac-specific distribution via py2app
-# ADD: New translations imported from SimuTranslator
-# ADD: Some new translation strings added to SimuTranslator:
-#      "&File", "&Tools", "&Help"
-# FIX: Improper action when load dialog closed with X rather than cancel
-# FIX: Close button on dialog didn't work (language, about and preferences)
-# CHANGE: TCP load/save now uses the string versions of pickle/unpickle, rather than working on files directly
-# FIX: Display refreshing on OSX - no OnPaint method defined for window
-# WORKAROUND: Bug where setting title of parent window causes child windows to need a refresh
-#             Solved by adding OnPaint method to child window and calling this via update() method
-# CHANGE: TCP load/save functions moved into seperate module - tcp.py
-# CHANGE: Objects to be pickled/unpickled have standard prep_serialise/post_serialise functions to handle stuff that shouldn't be passed to pickle
-# ADD: Framework for addition of JSON-based save format
-# FIX: Loading files at root of drives on Windows now works (.tcp files and .png files)
-# ADD: If directories in a save path do not exist (for .tcp and .dat/.png export) the directories will be created
+## Release 0.5.7 ##
+FIX: Many unicode issues relating to information passed into program
+FIX: Logger now handles multiline output properly
+FIX: Proper handling of UTF-8 files
+FIX: Translations for file dialogs now work properly
+CHANGE: tilecutter.py/tilecutter.pyw are now wrapper scripts that call main.py - 
+        should be a small speed boost from bytecode compilation of main program
+CHANGE: Now known as "tilecutter.exe" rather than "tilecutter5.exe"
+FIX: Issues relating to scope in main.py/mainwindow.py
+ADD: Basis for Mac-specific distribution via py2app
+ADD: New translations imported from SimuTranslator
+ADD: Some new translation strings added to SimuTranslator:
+     "&File", "&Tools", "&Help"
+FIX: Improper action when load dialog closed with X rather than cancel
+FIX: Close button on dialog didn't work (language, about and preferences)
+CHANGE: TCP load/save now uses the string versions of pickle/unpickle, rather than working on files directly
+FIX: Display refreshing on OSX - no OnPaint method defined for window
+WORKAROUND: Bug where setting title of parent window causes child windows to need a refresh
+            Solved by adding OnPaint method to child window and calling this via update() method
+CHANGE: TCP load/save functions moved into seperate module - tcp.py
+CHANGE: Objects to be pickled/unpickled have standard prep_serialise/post_serialise functions to handle stuff that shouldn't be passed to pickle
+ADD: Framework for addition of JSON-based save format
+FIX: Loading files at root of drives on Windows now works (.tcp files and .png files)
+ADD: If directories in a save path do not exist (for .tcp and .dat/.png export) the directories will be created
+FIX: Robustness for file opening, fails nicely if file doesn't exist now
+CHANGE: To allow files to be opened with the GUI from the command line (argv emulation on OSX for example) the CLI must
+        now be invoked explicitly. You *must* specify the -c flag to invoke the command line processing. Any existing automation
+        scripts which make use of TileCutter for command line processing will likely need to change.
+ADD: Drag and drop of .tcp files onto dock icon opens file both while running and not
+ADD: Should be able to double-click on .tcp files on OSX to open them automatically
+CHANGE: Configuration is now stored per-user under user-specific directories
+        On OSX config is stored at: ~/.tilecutter/tilecutter.config
+        On Windows config is stored at: %USERPROFILE%\Application Data\tilecutter\tilecutter.config
+        On all other platforms config is stored at: ~/.tilecutter/tilecutter.config
+CHANGE: Default logging behaviour is to log to a platform-dependant location (you can still override this by changing the logfile setting in the config)
+        On OSX default logging location is: ~/Library/logs/tilecutter.log
+        On Windows default logging location is: %USERPROFILE$\Application Data\tilecutter\tilecutter.log
+        On all other platforms default logging location is: ~/.tilecutter/tilecutter.log
+ADD: If directories in the config file path don't exist they will be created as needed
 
 
 # Release 0.5.5 (beta)

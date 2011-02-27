@@ -60,7 +60,11 @@ class tcp_reader(object):
     def __init__(self, filename):
         """"""
         debug(u"Initialising new tcp_reader, file: %s" % filename)
-        self.file = open(filename, "rb")
+        try:
+            self.file = open(filename, "rb")
+        except IOError:
+            debug(u"Opening file for reading failed, file probably does not exist!")
+            self.file = None
 
     def load(self, params):
         """Load object from file, return deserialised object"""

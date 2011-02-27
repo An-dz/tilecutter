@@ -3,11 +3,13 @@
 # Config Management Utility
 #
 
-# Copyright © 2008-2010 Timothy Baldock. All Rights Reserved.
+# Copyright © 2008-2011 Timothy Baldock. All Rights Reserved.
 
 ##import simplejson as json
 import json
 import codecs
+
+import sys, os
 
 # Better to use json module in python 2.6 here
 # Tuples probably need to be converted to arrays here
@@ -21,7 +23,7 @@ class Config(object):
     # Internals will always be checked before config
     defaults = {
         "debug_on": True,
-        "logfile": u"tilecutter.log",
+        "logfile": u"platform_default",
         "transparent": [231,255,255],
         "default_paksize": 64,
 ##        "PROJECT_FILE_EXTENSION": unicode(".tcp"),
@@ -48,10 +50,13 @@ class Config(object):
         "version": u"0.5.6.4",
         }
 
-    # On Windows config should be stored per-user in %APPDATA%/tilecutter/tilecutter.config
-    # On OSX config should be stored per-user in ~/.tilecutter/tilecutter.config (or should this be under ~/Library/tilecutter/ ???
-    # On other Unix platforms config should be stored per-user in ~/.tilecutter/tilecutter.config
-    conf_path = u"tc.config"
+    if sys.platform == "darwin":
+        conf_path = os.path.expanduser(u"~/.tilecutter/tilecutter.config")
+    elif sys.platform == "win32":
+        conf_path = os.path.expanduser(u"~/Application Data/tilecutter/tilecutter.config")
+    else:
+        conf_path = os.path.expanduser(u"~/.tilecutter/tilecutter.config")
+#    conf_path = u"tc.config"
 
     def __init__(self):
         """"""
@@ -115,7 +120,15 @@ class Config(object):
             raise KeyError(key)
     def save(self):
         """Save the current config out to the config file"""
-        f = codecs.open(self.conf_path, "w", "UTF-8")
-        f.write(json.dumps(Config.config, ensure_ascii=False, sort_keys=True, indent=4))
-        f.close()
+        # Confirm if path exists, create directories if needed
+        if not os.path.isdir(os.path.split(self.conf_path)[0]):
+            os.makedirs(os.path.split(self.conf_path)[0])
+        try:
+            f = codecs.open(self.conf_path, "w", "UTF-8")
+            f.write(json.dumps(Config.config, ensure_ascii=False, sort_keys=True, indent=4))
+            f.close()
+        except IOError:
+            debug(u"IOError working with file %s, likely this path doesn't exist or the user I am running as doesn't have permission to write to it" % self.conf_path)
+            return False
+        return True
 

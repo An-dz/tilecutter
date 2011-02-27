@@ -212,7 +212,7 @@ if len(sys.argv) >= 2 and sys.argv[1] == "py2app":
             "argv_emulation": True,
             "iconfile": "TileCutter icon/tilecutter.icns",
             "packages": [],
-            "excludes": ["difflib", "doctest", "optparse", "calendar", "pdb", "inspect",
+            "excludes": ["difflib", "doctest", "calendar", "pdb", "inspect",
                         "Tkconstants", "Tkinter", "tcl"],
             "site_packages": True,
             "resources": ["TileCutter icon/tcp.icns",],
