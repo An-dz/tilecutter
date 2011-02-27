@@ -1,4 +1,11 @@
 #!/usr/bin/env python
+# coding: UTF-8
+#
+# TileCutter - Distribution build tools
+#
+
+# Copyright © 2008-2011 Timothy Baldock. All Rights Reserved.
+#
 
 from distutils.core import setup
 #from setuptools import setup
@@ -50,13 +57,13 @@ def walk_dir(dirname):
 
 # Generic options
 options = {
-    "name":             "TileCutter",
+    "name":             u"TileCutter",
     "version":          version,
-    "description":      "Simutrans Building Editor",
+    "description":      u"Simutrans Building Editor",
     "long_description": "",
-    "author":           "Timothy Baldock",
-    "author_email":     "tb@entropy.me.uk",
-    "url":              "http://entropy.me.uk/tilecutter",
+    "author":           u"Timothy Baldock",
+    "author_email":     u"tb@entropy.me.uk",
+    "url":              u"http://entropy.me.uk/tilecutter",
     "zipfile":          "python\\library.zip",
     "data_files":       [
                          ("", ["licence.txt", "tc.config", "test.png"]),
@@ -169,28 +176,29 @@ if len(sys.argv) >= 2 and sys.argv[1] == "py2app":
     # Bindings to allow drag+drop of project files onto icon
     # Also registers filetype with OSX
     plist = {
-                "CFBundleIdentifier": "uk.me.entropy.tilecutter",
-                "CFBundleGetInfoString": "Simutrans Building Editor",
+                "CFBundleIdentifier": u"uk.me.entropy.tilecutter",
+                "CFBundleGetInfoString": u"Simutrans Building Editor",
+                "NSHumanReadableCopyright": u"Copyright © 2008-2011 Timothy Baldock. All Rights Reserved.",
                 "CFBundleDocumentTypes": [
                     {
-                        "CFBundleTypeName": "TileCutter Project Document", 
-                        "CFBundleTypeRole": "Editor", 
-                        "CFBundleTypeExtensions": ["tcp",],
-                        "LSItemContentTypes": ["uk.me.entropy.tcp",],
-                        "CFBundleTypeIconFile": "tcp.icns",
+                        "CFBundleTypeName": u"TileCutter Project Document", 
+                        "CFBundleTypeRole": u"Editor", 
+                        "CFBundleTypeExtensions": [u"tcp",],
+                        "LSItemContentTypes": [u"uk.me.entropy.tcp",],
+                        "CFBundleTypeIconFile": u"tcp.icns",
                     },
                 ],
                 "UTExportedTypeDeclarations": [
                     {
-                        "UTTypeIdentifier": "uk.me.entropy.tcp", 
-                        "UTTypeReferenceURL": "http://entropy.me.uk/tilecutter/docs/tcpformat/",
-                        "UTTypeDescription": "TileCutter Project File",
-                        "UTTypeIconFile": "tcp.icns",
-                        "UTTypeConformsTo": ["public.data",],
+                        "UTTypeIdentifier": u"uk.me.entropy.tcp", 
+                        "UTTypeReferenceURL": u"http://entropy.me.uk/tilecutter/docs/tcpformat/",
+                        "UTTypeDescription": u"TileCutter Project File",
+                        "UTTypeIconFile": u"tcp.icns",
+                        "UTTypeConformsTo": [u"public.data",],
                         "UTTypeTagSpecification": {
-                            "com.apple.ostype": "TCPF",
-                            "public.filename-extension": ["tcp",],
-                            "public.mimetype": "application/x-tilecutter-project",
+                            "com.apple.ostype": u"TCPF",
+                            "public.filename-extension": [u"tcp",],
+                            "public.mimetype": u"application/x-tilecutter-project",
                         },
                     },
                 ],

@@ -40,7 +40,21 @@
 # Have the right/left toolbar run all the way down to the bottom of the screen                      - Done
 
 
-# BUG: Load file at root of drive doesn't construct path correctly, e.g. C:somefile.tcp rather than C:/somefile.tcp
+Mac
+Need to make file drop on icon work properly
+Need to allow for .png file drop on icon (replace active image)
+Fix initial state of radio buttons on mac
+Logging - must log to correct places on OSX
+Config - must read/write config from correct places on OSX
+
+Windows
+msi installer, simple + command line capable
+register file types via installer or script
+drag+drop support for files onto main window or via argvals (e.g. drag+drop onto .exe)
+context-menu option in explorer (via file handler in registry)
+Logging - correct place
+Config - correct place
+
 
 # Release 0.5.7
 # FIX: Many unicode issues relating to information passed into program
