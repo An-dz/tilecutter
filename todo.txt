@@ -1,43 +1,35 @@
 # TODO 1.0
-# Make icons in main menu much bigger (double size)
-# Make buttons on the mask offset control 2x bigger with better graphics                            - Bigger, need new graphics
-# Padding/general layout optimisation                                                   
-# -> Layout optimisation for mac                                                        
-# -> Use platform-specific layout file with offset/padding per-platform?
-# -> Implement UI for each platform seperately to allow for complete control over layout?
-# Implement use of special menu IDs to make menus work properly on, e.g., mac osx       
-# Add tick/cross functionality to input boxes                                           
-# Replace current yellow text-highlighting on windows with tick/cross function
-# Extend tick/cross functionality to provide more info                                  - POSTPONE 0.6
+Padding/general layout optimisation                                                   
+-> Layout optimisation for mac                                                        
+-> Use platform-specific layout file with offset/padding per-platform?
+-> Implement UI for each platform seperately to allow for complete control over layout?
+Add tick/cross functionality to input boxes                                           
+Replace current yellow text-highlighting on windows with tick/cross function
+Extend tick/cross functionality to provide more info                                  - POSTPONE 0.6
 
-# -> Produce msi installer for windows                                                  - 0.6
-# Make py2app distribution template                                                     - 0.6
-# -> Make .dmg distribution of the py2app application (automated if possible)           - 0.6
+Produce msi installer for windows                                                  - 0.6
+Add unit tests for cutting engine
 
-#   -> Add unit tests for cutting engine
-# Ability to add a copyright text notice to bottom of outputted image                   - 0.6
+JSON serialisation of project information with forward-compatible scheme for representing data
 
-# JSON serialisation of project information with forward-compatible scheme for representing data
-
-# Completely remove dependancy on wx for running in CLI mode
-#  Need to split App into tcproject/tc.py bits and the UI part
-#  Allow for much quicker running of the core application when UI not needed
+Completely remove dependancy on wx for running in CLI mode
+ Need to split App into tcproject/tc.py bits and the UI part
+ Allow for much quicker running of the core application when UI not needed
 
 # Fix bugs!
 
 
 
-# UI Change suggestions:
-# Move same image for all button to the menu bar under tools                                        - Moved to tools
-# Make icon for reload image much bigger or replace with text button                                - Replaced with text
-# Replace direction facing control with "compass", or depiction of a tile with directions marked    - Added tile graphic with directions
-# Move the "fine" selection below the mask offset control                                           - Done
-# Move the paths at the bottom into either a dialog box or into a "pop-up" panel at the bottom of
-#   the image window, which can then be accessed via a button
-# Add a status bar, displaying status information about the program
-# Add a progress indicator for export
-# Move the Cut image and Compile .pak buttons onto a single bottom bar after relocating file paths  - Done
-# Have the right/left toolbar run all the way down to the bottom of the screen                      - Done
+## UI Change suggestions: ##
+Move same image for all button to the menu bar under tools                                        - Moved to tools
+Make icon for reload image much bigger or replace with text button                                - Replaced with text
+Replace direction facing control with "compass", or depiction of a tile with directions marked    - Added tile graphic with directions
+Move the "fine" selection below the mask offset control                                           - Done
+Move the paths at the bottom into either a dialog box or into a "pop-up" panel at the bottom of
+  the image window, which can then be accessed via a button
+Add a progress indicator for export
+Move the Cut image and Compile .pak buttons onto a single bottom bar after relocating file paths  - Done
+Have the right/left toolbar run all the way down to the bottom of the screen                      - Done
 
 
 Mac
@@ -46,6 +38,7 @@ Need to allow for .png file drop on icon (replace active image)
 Fix initial state of radio buttons on mac                                                           - Done
 Logging - must log to correct places on OSX                                                         - Done
 Config - must read/write config from correct places on OSX                                          - Done
+Make .dmg distribution of the py2app application (automated if possible)                            - Partially done
 
 Windows
 msi installer, simple + command line capable
@@ -55,9 +48,16 @@ context-menu option in explorer (via file handler in registry)
 Logging - correct place                                                                             - Done
 Config - correct place                                                                              - Done
 
+Copyright notice for images
+Should be able to show up to 4 lines on a paksize height black border at bottom
+Saved in tcp file
+Edited via another window
 
+Add a status bar, displaying status information about the program
+Make icons in main menu much bigger (double size)
+New graphics for the offset control buttons that look nicer/are bigger
 
-## Release 0.5.7 ##
+# Release 0.5.7
 FIX: Many unicode issues relating to information passed into program
 FIX: Logger now handles multiline output properly
 FIX: Proper handling of UTF-8 files
@@ -101,137 +101,133 @@ ADD: Replace methods for finding default file locations with os.path.expanduser(
 
 
 # Release 0.5.5 (beta)
-# ADD: Proper selection of path to makeobj via GUI
-# ADD: Command line scriptability: 
-#      Specify path to multiple .tcp files for automatic processing
-#      Override output location of .dat/.png
-#      Specify .pak output if required
-#      Usage: "TileCutter5 -h" will give command line usage info
-# ADD: Ability to select .dat file output via UI checkbox
-# FIX: Selecting a file at the root of a drive on Windows leads to wrong path display
-# ADD: Basic documentation now available on website (via Online Help link in menu)
+ADD: Proper selection of path to makeobj via GUI
+ADD: Command line scriptability: 
+     Specify path to multiple .tcp files for automatic processing
+     Override output location of .dat/.png
+     Specify .pak output if required
+     Usage: "TileCutter5 -h" will give command line usage info
+ADD: Ability to select .dat file output via UI checkbox
+FIX: Selecting a file at the root of a drive on Windows leads to wrong path display
+ADD: Basic documentation now available on website (via Online Help link in menu)
 
 # Release 0.5.4
-# FIX: Better controls layout
-# FIX: Bug with mask production on wxGTK
-# FIX: Better handling of save locations, caching of last save location
-# FIX: Dialog boxes positioned centered on application, not centered on window
-# ADD: Application window fits to size of contents on start
-# ADD: Updated translations
+FIX: Better controls layout
+FIX: Bug with mask production on wxGTK
+FIX: Better handling of save locations, caching of last save location
+FIX: Dialog boxes positioned centered on application, not centered on window
+ADD: Application window fits to size of contents on start
+ADD: Updated translations
 
 # Release 0.5.3
-# FIX: Export error with Python character mapping
-# FIX: Translation of strings in image path entry box
-# FIX: Layout of About window incorrect
-# FIX: Default language setting not being saved
-
-# ADD: Filepath of saved file displayed in the title bar, indicates saved/unsaved status
-# ADD: Exception handling for case of no WX being installed
-# ADD: Better integration with SimuTranslator
-
-# DEL: Removed flags for country code - not a good way to indicate language
+FIX: Export error with Python character mapping
+FIX: Translation of strings in image path entry box
+FIX: Layout of About window incorrect
+FIX: Default language setting not being saved
+ADD: Filepath of saved file displayed in the title bar, indicates saved/unsaved status
+ADD: Exception handling for case of no WX being installed
+ADD: Better integration with SimuTranslator
+DEL: Removed flags for country code - not a good way to indicate language
 
 
 
 # Todo:
 
-# BUG - If abs path to save doesn't have slash at the end, browse dialog uses end path
-#       segment as filename
-# BUG - Season select does not set to summer when enable winter is unchecked            - FIXED
-# BUG - Translation for static boxes in UI components                                   - DONE
-# BUG - Active image isn't set to the correct one after project load                    - FIXED
-# BUG - Translation file with windows newlines on unix doesn't work			
-# BUG - Selecting a file at the root of a drive on Windows leads to wrong path display  - FIXED 0.5.5
-# BUG - Source image locations do not update to reflect changes to the project save path
-# BUG - Unicode filenames causing logging to break, due to str() rather than unicode()
-#       and also due to incorrect codec used in logging module                          - FIXED 0.5.2
+BUG - Source image locations do not update to reflect changes to the project save path
+BUG - Translation file with windows newlines on unix doesn't work			
+BUG - If abs path to save doesn't have slash at the end, browse dialog uses end path
+      segment as filename
+BUG - Season select does not set to summer when enable winter is unchecked            - FIXED
+BUG - Translation for static boxes in UI components                                   - DONE
+BUG - Active image isn't set to the correct one after project load                    - FIXED
+BUG - Selecting a file at the root of a drive on Windows leads to wrong path display  - FIXED 0.5.5
+BUG - Unicode filenames causing logging to break, due to str() rather than unicode()
+      and also due to incorrect codec used in logging module                          - FIXED 0.5.2
 
-# Move debug into own module, to allow it to be easily accessed by other modules        - DONE
-# Fix debug so that it logs to a file instead                                           - DONE
-# Remove debug frame                                                                    - DONE
+Move debug into own module, to allow it to be easily accessed by other modules        - DONE
+Fix debug so that it logs to a file instead                                           - DONE
+Remove debug frame                                                                    - DONE
 
-# Find some way to eliminate flickering on translation update/initial load              - DONE
-# Text entry boxes visible position at end, or cursor, rather than beginning            - 0.7
-#   - needs full revamp of text entry box class to deal with special stuff really       - 0.7
-# Cutting mask display based on dimensions                                              - DONE
-# Make .dat and input images relative to save location path                             - DONE
-# Speed optimisations - switching views seems really sluggish!                          
-# Optimise code for generating lists in comboboxes (translation slowing this?)          
+Text entry boxes visible position at end, or cursor, rather than beginning            - 0.7
+  - needs full revamp of text entry box class to deal with special stuff really       - 0.7
+Speed optimisations - switching views seems really sluggish!                          
+Optimise code for generating lists in comboboxes (translation slowing this?)          
+Find some way to eliminate flickering on translation update/initial load              - DONE
+Cutting mask display based on dimensions                                              - DONE
+Make .dat and input images relative to save location path                             - DONE
 
-# Finish output file boxes, switching them to use the new set of functions              - DONE
-# Do the project save/load/new etc. and management functionality (using pickle & hash)  - DONE
-#   Multi-project system for later versions                                             - POSTPONE 0.7
-#   Multi-project version implemented as object, contains projects in a dict
-#   referenced by keyword lookup, this has lookup methods for the active project
-#   so that all of that stuff can be taken out of the main program entirely
-#   This stuff will likely go into tcproject
+Finish output file boxes, switching them to use the new set of functions              - DONE
+Do the project save/load/new etc. and management functionality (using pickle & hash)  - DONE
+  Multi-project system for later versions                                             - POSTPONE 0.7
+  Multi-project version implemented as object, contains projects in a dict
+  referenced by keyword lookup, this has lookup methods for the active project
+  so that all of that stuff can be taken out of the main program entirely
+  This stuff will likely go into tcproject
 
 
-# Program settings, load from a config file (using json)                                - DONE
-# Dialog to set program options                                                         - 0.7
-# Move all static variables and program option variables into config class              - DONE
-# Produce frames picker control                                                         - POSTPONE 0.6
-# Offset/Mask control - internal functions, click modifies model & triggers redrawing   - DONE
-# Dims control - click modifies model & triggers redrawing                              - DONE
-# Direction/Season/Dims - trigger redrawing                                             - DONE
+Produce frames picker control                                                         - POSTPONE 0.6
+Dialog to set program options                                                         - 0.7
+Program settings, load from a config file (using json)                                - DONE
+Move all static variables and program option variables into config class              - DONE
+Offset/Mask control - internal functions, click modifies model & triggers redrawing   - DONE
+Dims control - click modifies model & triggers redrawing                              - DONE
+Direction/Season/Dims - trigger redrawing                                             - DONE
 
-# Translation system - On the fly translation system now possible                       - DONE
-# Menu translations                                                                     - DONE
-# Translation system needs work to function correctly with unicode strings              - DONE (files MUST be UTF-8)
-# Find some way of translating the entries in combo boxes!                              - DONE
+Translation system - On the fly translation system now possible                       - DONE
+Menu translations                                                                     - DONE
+Translation system needs work to function correctly with unicode strings              - DONE (files MUST be UTF-8)
+Find some way of translating the entries in combo boxes!                              - DONE
 
-# Current view context built into activeproject, details of the currently selected view - DONE
-# Implement current view context to all view controls                                   - DONE
-# Source image control (needs current view context)                                     - DONE
-# -> File must exist                                                                    - DONE
-# -> Implement modal dialog for browse                                                  - DONE
-# -> Allow text entry, highlight in red if file does not exist??                        - DONE
-# -> Implement modal confirmation dialog for "open same file for all" button            - DONE
-# -> Function to reload the current view's image                                        - DONE
+Current view context built into activeproject, details of the currently selected view - DONE
+Implement current view context to all view controls                                   - DONE
+Source image control (needs current view context)                                     - DONE
+-> File must exist                                                                    - DONE
+-> Implement modal dialog for browse                                                  - DONE
+-> Allow text entry, highlight in red if file does not exist??                        - DONE
+-> Implement modal confirmation dialog for "open same file for all" button            - DONE
+-> Function to reload the current view's image                                        - DONE
 
 # UI
-# Move UI classes into a module to enhance loading speed                                - DONE
-# Add display/direct edit boxes to the offset control                                   - 0.7
+Move UI classes into a module to enhance loading speed                                - DONE
+Add display/direct edit boxes to the offset control                                   - 0.7
 
-# Needs much better error handling, add try/except clauses in critical places
+Needs much better error handling, add try/except clauses in critical places
 
-# Add the TileCutter icon                                                               - DONE Icon made, works well in windows
-# Use img2py to compile icon image into the application                                 - DONE
-# Can use the same technique for all the other images, e.g. bitmap buttons etc.         - DONE
-# Need higher detail icons for the mac version                                          - DONE (Test icon display in OSX)
+Add the TileCutter icon                                                               - DONE Icon made, works well in windows
+Use img2py to compile icon image into the application                                 - DONE
+Can use the same technique for all the other images, e.g. bitmap buttons etc.         - DONE
+Need higher detail icons for the mac version                                          - DONE (Test icon display in OSX)
 
-# About dialog                                                                          - DONE
+About dialog                                                                          - DONE
 
 # Distribution
-# Make py2exe, look into producing smaller packages                                     - DONE
-# Import only bits of wx needed, to reduce py2exe package?                              
-# Look into producing more mac-native package                                           - 0.6
-# Mac drag + drop support                                                               - 0.6
-# Test with Linux, Mac OSX, Windows (xp), try and have the same code across all platforms!
-# Produce help documentation                                                            - Web documentation available
-# -> Quick start guide (interface should be fairly self-explanatory though)             
+Make py2exe, look into producing smaller packages                                     - DONE
+Import only bits of wx needed, to reduce py2exe package?                              
+Test with Linux, Mac OSX, Windows (xp), try and have the same code across all platforms!
+Produce help documentation                                                            - Web documentation available
+-> Quick start guide (interface should be fairly self-explanatory though)             
 
 # Cutting engine                                                                        
-# Dynamic mask generation + caching                                                     - DONE
-# New cutting engine able to cope with all settings except frames                       - DONE
-#   -> Test this cutting engine in all circumstances                                    
-# Full .dat editing capability                                                          - 0.6
-# "Pretty" output mode                                                                  - 0.6
+Dynamic mask generation + caching                                                     - DONE
+New cutting engine able to cope with all settings except frames                       - DONE
+  -> Test this cutting engine in all circumstances                                    
+Full .dat editing capability                                                          - 0.6
+"Pretty" output mode                                                                  - 0.6
 
 
 # Aims v.0.5
-# Rewrite core cutting engine and output engine
-# Produce minimal testing UI
-#   - Set X/Y/Z dims, X/Y offsets, facing/season
-#   - Determine output .png, .dat etc.
-# Debugging system with nice output
-# Translation function implemented
-# Project save/load functions
-#   - Implement using pickle
+Rewrite core cutting engine and output engine
+Produce minimal testing UI
+  - Set X/Y/Z dims, X/Y offsets, facing/season
+  - Determine output .png, .dat etc.
+Debugging system with nice output
+Translation function implemented
+Project save/load functions
+  - Implement using pickle
 
 # Aims v.0.6
-# Extend UI, include dat editor
-# Project save/load functions
+Extend UI, include dat editor
+Project save/load functions
 
 # Aims v.0.7
-# Multi-project support
+Multi-project support
