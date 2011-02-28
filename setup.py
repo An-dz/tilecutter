@@ -57,13 +57,13 @@ def walk_dir(dirname):
 
 # Generic options
 options = {
-    "name":             u"TileCutter",
+    "name":             "TileCutter",
     "version":          version,
-    "description":      u"Simutrans Building Editor",
+    "description":      "Simutrans Building Editor",
     "long_description": "",
-    "author":           u"Timothy Baldock",
-    "author_email":     u"tb@entropy.me.uk",
-    "url":              u"http://entropy.me.uk/tilecutter",
+    "author":           "Timothy Baldock",
+    "author_email":     "tb@entropy.me.uk",
+    "url":              "http://entropy.me.uk/tilecutter",
     "zipfile":          "python\\library.zip",
     "data_files":       [
                          ("", ["licence.txt", "tc.config", "test.png"]),
@@ -126,6 +126,7 @@ if len(sys.argv) >= 2 and sys.argv[1] == "py2exe":
         "script":"tilecutter.py",
         "windows":"tilecutter.py",
         "icon_resources": [(1, "TileCutter icon/tilecutter.ico"),(42, "TileCutter icon/tcp.ico")],
+        "copyright": "2008-2011 Timothy Baldock. All Rights Reserved.",
         },
     ]
 #    options["data_files"] += [("", ["../dist/msvcp71.dll"]]
