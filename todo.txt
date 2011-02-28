@@ -42,9 +42,19 @@ Make .dmg distribution of the py2app application (automated if possible)        
 
 Windows
 msi installer, simple + command line capable
-register file types via installer or script
-drag+drop support for files onto main window or via argvals (e.g. drag+drop onto .exe)
-context-menu option in explorer (via file handler in registry)
+- copy files into %PROGRAMFILES%
+- Install desktop icon
+- Install start menu group
+  - Shortcut to .exe
+  - Uninstall link
+  - Shortcut to online documentation
+- register file type extension (for double click to open handling)
+- right-click "process with tilecutter" option for .tcp files (automatic output)
+- Options: "TileCutter -> Output .dat/.png" (cut image + output .dat)
+           "TileCutter -> Create .pak" (also output .pak files using makeobj)
+- Register add/remove products icon
+Standalone script that does the same file registrations as the installer
+Drag+drop support for files onto main window
 Logging - correct place                                                                             - Done
 Config - correct place                                                                              - Done
 

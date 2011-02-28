@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Product Id="*"
+             Name="TileCutter"
+             Language="1033"
+             Version="0.0.1.0"
+             Manufacturer="TileCutter Project"
+             UpgradeCode="633C4102-4C0A-4F00-A7C0-133819127019">
+
+        <Package Description="TileCutter Installer"
+                 Comments="Comments about the installer"
+                 Manufacturer="TileCutter Project" 
+                 InstallerVersion="200" 
+                 Compressed="yes" />
+
+        <Media Id='1' Cabinet='product.cab' EmbedCab='yes' />
+
+        <Directory Id="TARGETDIR" Name="SourceDir">
+            <Directory Id="ProgramFilesFolder" Name="PFiles">
+                <Directory Id="APPLICATIONFOLDER" Name="TileCutter">
+                    <Component Id="tilecutter_main" Guid="266E4B28-8BE3-4760-8D74-30B031267A96">
+                        <File Id="tc_py" Name="tilecutter.py" DiskId="1" Source="tilecutter.py" />
+                    </Component>
+                </Directory>
+             </Directory>
+        </Directory>
+
+        <Feature Id="tilecutter_main_program" Title="Main TileCutter Program" Level="1">
+            <ComponentRef Id="tilecutter_main" />
+        </Feature>
+
+        <Property Id="ApplicationFolderName" Value="TileCutter Installation Directory" />
+        <Property Id="WixAppFolder" Value="WixPerMachineFolder" />
+
+        <UIRef Id="WixUI_Advanced" />
+
+        <WixVariable Id="WixUILicenseRtf" Value="licence.txt" />
+
+<!--        <WixVariable Id="WixUIBannerBmp" Value="graphics/wixuibanner.bmp" />
+        <WixVariable Id="WixUIDialogBmp" Value="graphics/wixuidialog.bmp" />
+        <WixVariable Id="WixUIExclamationIco" Value="graphics/wixuiexclamation.ico" />
+        <WixVariable Id="WixUIInfoIco" Value="graphics/wixuiinfo.ico" />
+        <WixVariable Id="WixUINewIco" Value="graphics/wixuinew.ico" />
+        <WixVariable Id="WixUIUpIco" Value="graphics/wixuiup.ico" /> -->
+
+        <Property Id="WIXUI_EXITDIALOGOPTIONALTEXT" Value="Final install completion text" />
+
+    </Product>
+</Wix>
