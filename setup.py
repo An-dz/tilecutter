@@ -91,7 +91,7 @@ if len(sys.argv) >= 2 and sys.argv[1] == "source":
         print "Copying contents of: %s/" % recdir
         shutil.copytree(recdir, os.path.join(dist_dir, recdir), ignore=shutil.ignore_patterns(".svn", "tmp*", "*.pyc", "*.py~", "*.tab~"))
 
-    for distfile in ["config.py", "imres.py", "licence.txt", "logger.py", "tc.py", "tcproject.py", "test.png", "tilecutter.py", "tilecutter.pyw", "main.py"]:
+    for distfile in ["config.py", "imres.py", "licence.txt", "logger.py", "tcp.py", "tc.py", "tcproject.py", "test.png", "tilecutter.py", "tilecutter.pyw", "main.py"]:
         print "Copying file: %s" % distfile
         shutil.copy(distfile, dist_dir)
 

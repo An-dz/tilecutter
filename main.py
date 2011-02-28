@@ -4,7 +4,7 @@
 # TileCutter, version 0.5
 #
 
-# Copyright © 2008-2010 Timothy Baldock. All Rights Reserved.
+# Copyright © 2008-2011 Timothy Baldock. All Rights Reserved.
 #
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 #
@@ -21,8 +21,6 @@
 # First thing imported is logger, so that other imports can use logging too
 import logger
 debug = logger.Log()
-
-debug(u"--------------------------------------------------------------------------")
 
 import sys, os
 
@@ -52,7 +50,8 @@ import config
 config = config.Config()
 config.save()
 
-debug(u"configuration loaded from default file:")
+debug(u"configuration source is %s" % config.source)
+debug(u"configuration loaded from file: %s" % config.conf_path)
 debug(unicode(config))
 
 class App(wx.App):
@@ -441,7 +440,7 @@ def run():
 
     # Command line arguments could indicate files to open (if they are the only things)
     # Use of the "-c" option will invoke the CLI operation mode
-    debug(str(sys.argv))
+    debug(u"sys.argv says: %s" % sys.argv)
     # Parse command line arguments (if any)
     usage = "usage: %prog [options] filename1 [filename2 ... ]"
     parser = OptionParser(usage=usage)

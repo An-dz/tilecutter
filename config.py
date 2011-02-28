@@ -50,14 +50,24 @@ class Config(object):
         "version": u"0.5.6.4",
         }
 
-    if sys.platform == "darwin":
-        conf_path = os.path.expanduser(u"~/.tilecutter/tilecutter.config")
-    elif sys.platform == "win32":
-        conf_path = os.path.normpath(os.path.expanduser(u"~/Application Data/tilecutter/tilecutter.config"))
+    # If a tc.config or tilecutter.config file exists in the program directory use that to load config from 
+    # (to permit setting of global config, or for backwards compatibility with existing installs)
+    if os.path.isfile(u"tc.config"):
+        conf_path = os.path.abspath(u"tc.config")
+        source = u"legacy: tc.config in program directory"
+    elif os.path.isfile(u"tilecutter.config"):
+        conf_path = os.path.abspath(u"tilecutter.config")
+        source = u"override: tilecutter.config in program directory"
     else:
-        conf_path = os.path.expanduser(u"~/.tilecutter/tilecutter.config")
-#    conf_path = u"tc.config"
-
+        if sys.platform == "darwin":
+            conf_path = os.path.expanduser(u"~/.tilecutter/tilecutter.config")
+            source = u"darwin auto location"
+        elif sys.platform == "win32":
+            conf_path = os.path.normpath(os.path.expanduser(u"~/Application Data/tilecutter/tilecutter.config"))
+            source = u"win32 auto location"
+        else:
+            conf_path = os.path.expanduser(u"~/.tilecutter/tilecutter.config")
+            source = u"unix auto location"
 
     def __init__(self):
         """"""
