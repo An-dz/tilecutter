@@ -53,10 +53,11 @@ class Config(object):
     if sys.platform == "darwin":
         conf_path = os.path.expanduser(u"~/.tilecutter/tilecutter.config")
     elif sys.platform == "win32":
-        conf_path = os.path.expanduser(u"~/Application Data/tilecutter/tilecutter.config")
+        conf_path = os.path.normpath(os.path.expanduser(u"~/Application Data/tilecutter/tilecutter.config"))
     else:
         conf_path = os.path.expanduser(u"~/.tilecutter/tilecutter.config")
 #    conf_path = u"tc.config"
+
 
     def __init__(self):
         """"""

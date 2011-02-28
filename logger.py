@@ -31,16 +31,22 @@ class Log(object):
                 # Default for config is to specify log file as platform_default
                 if config.logfile == "platform_default":
                     if sys.platform == "darwin":
-                        Log.file = codecs.open(os.path.expanduser(u"~/Library/Logs/tilecutter.log"), "a", "UTF-8")
+                        file = os.path.expanduser(u"~/Library/Logs/tilecutter.log")
                     elif sys.platform == "win32":
-                        Log.file = codecs.open(os.path.expanduser(u"~/Application Data/tilecutter/tilecutter.log"), "a", "UTF-8")
+                        file = os.path.normpath(os.path.expanduser(u"~/Application Data/tilecutter/tilecutter.log"))
+
                     else:
-                        Log.file = codecs.open(os.path.expanduser(u"~/.tilecutter/tilecutter.log"), "a", "UTF-8")
+                        file = os.path.expanduser(u"~/.tilecutter/tilecutter.log")
                 else:
                     # Appends this session's log info to the logging file
-                    Log.file = codecs.open(config.logfile, "a", "UTF-8")
-            else:
-                Log.file = codecs.open(file, "a", "UTF-8")
+                    file = config.logfile
+
+            # Confirm if path exists, create directories if needed
+            if not os.path.isdir(os.path.split(file)[0]):
+                os.makedirs(os.path.split(file)[0])
+
+            Log.file = codecs.open(file, "a", "UTF-8")
+
     def __call__(self, s):
         """Calls self.write()"""
         self.out(s)
