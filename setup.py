@@ -125,7 +125,7 @@ if len(sys.argv) >= 2 and sys.argv[1] == "py2exe":
         {
         "script":"tilecutter.py",
         "windows":"tilecutter.py",
-        "icon_resources": [(1, "TileCutter icon/tilecutter.ico"),(42, "TileCutter icon/tcp.ico")],
+        "icon_resources": [(1, "graphics/tilecutter.ico"),(42, "graphics/tcp.ico")],
         "copyright": "2008-2011 Timothy Baldock. All Rights Reserved.",
         },
     ]
@@ -211,12 +211,12 @@ if len(sys.argv) >= 2 and sys.argv[1] == "py2app":
         "py2app": {
             "dist_dir": dist_dir,
             "argv_emulation": True,
-            "iconfile": "TileCutter icon/tilecutter.icns",
+            "iconfile": "graphics/tilecutter.icns",
             "packages": [],
             "excludes": ["difflib", "doctest", "calendar", "pdb", "inspect",
                         "Tkconstants", "Tkinter", "tcl"],
             "site_packages": True,
-            "resources": ["TileCutter icon/tcp.icns",],
+            "resources": ["graphics/tcp.icns",],
             "plist": plist,
             }
     }
