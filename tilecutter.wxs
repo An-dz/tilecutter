@@ -43,8 +43,8 @@
                     <Component Id="c_test.png" Guid="8A297551-7802-41CE-BC41-66D83EE5378F">
                         <File Id="f_test.png" Name="test.png" DiskId="1" Source="test.png" KeyPath="yes" />
                     </Component>
-                    <Component Id="c_python26.dll" Guid="A3BC0562-F604-4D83-9AC1-3C26BAD5906F">
-                        <File Id="f_python26.dll" Name="python26.dll" DiskId="1" Source="python26.dll" KeyPath="yes" />
+                    <Component Id="c_python27.dll" Guid="A3BC0562-F604-4D83-9AC1-3C26BAD5906F">
+                        <File Id="f_python27.dll" Name="python26.dll" DiskId="1" Source="python27.dll" KeyPath="yes" />
                     </Component>
                     <Component Id="c_licence.txt" Guid="2546AF5B-AE81-437D-85BA-E18706BFF4F7">
                         <File Id="f_licence.txt" Name="licence.txt" DiskId="1" Source="licence.txt" KeyPath="yes" />
@@ -74,7 +74,7 @@
             <ComponentRef Id="c_tilecutter.exe" />
             <ComponentRef Id="c_w9xpopen.exe" />
             <ComponentRef Id="c_test.png" />
-            <ComponentRef Id="c_python26.dll" />
+            <ComponentRef Id="c_python27.dll" />
             <ComponentRef Id="c_licence.txt" />
             <!-- <Feature Id="fea_desktop_shortcut" Title="Desktop Shortcut" Description="Place a shortcut to TileCutter on the Desktop" Level="1" AllowAdvertise="no" InstallDefault="local">
                 <ComponentRef Id="c_tilecutter.exe_desktop" />
@@ -92,9 +92,9 @@
 
         <WixVariable Id="WixUILicenseRtf" Value="licence.rtf" />
 
-<!--        <WixVariable Id="WixUIBannerBmp" Value="graphics/wixuibanner.bmp" />
+        <WixVariable Id="WixUIBannerBmp" Value="graphics/wixuibanner.bmp" />
         <WixVariable Id="WixUIDialogBmp" Value="graphics/wixuidialog.bmp" />
-        <WixVariable Id="WixUIExclamationIco" Value="graphics/wixuiexclamation.ico" />
+<!--        <WixVariable Id="WixUIExclamationIco" Value="graphics/wixuiexclamation.ico" />
         <WixVariable Id="WixUIInfoIco" Value="graphics/wixuiinfo.ico" />
         <WixVariable Id="WixUINewIco" Value="graphics/wixuinew.ico" />
         <WixVariable Id="WixUIUpIco" Value="graphics/wixuiup.ico" /> -->
