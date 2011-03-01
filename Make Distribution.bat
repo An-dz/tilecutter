@@ -1,5 +1,5 @@
 @ECHO OFF
-REM This file creates a windows executable and puts it in a .zip archive, ready for distribution
+REM This script creates a windows executable and puts it in a .zip archive, ready for distribution
 REM Will also make an installer in future
 
 REM Delete folders from earlier builds
