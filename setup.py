@@ -66,7 +66,7 @@ options = {
     "url":              "http://entropy.me.uk/tilecutter",
     "zipfile":          "python\\library.zip",
     "data_files":       [
-                         ("", ["licence.txt", "tc.config", "test.png"]),
+                         ("", ["licence.txt", "test.png"]),
                          walk_dir("languages"),
                          ]
 }

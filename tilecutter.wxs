@@ -18,15 +18,59 @@
         <Directory Id="TARGETDIR" Name="SourceDir">
             <Directory Id="ProgramFilesFolder" Name="PFiles">
                 <Directory Id="APPLICATIONFOLDER" Name="TileCutter">
-                    <Component Id="tilecutter_main" Guid="266E4B28-8BE3-4760-8D74-30B031267A96">
-                        <File Id="tc_py" Name="tilecutter.py" DiskId="1" Source="tilecutter.py" />
+                    <Component Id="c_tcp_register" Guid="">
+                        <ProgId Id="TileCutter.tcp" Description "TileCutter Project File" Icon="icon_tcp.ico">
+                            <Extension Id="tcp" ContentType="application/x-tilecutter-project">
+                                <Verb Id="open" Command="Open" TargetFile="f_tilecutter.exe" Argument='"%1"' />
+                            </Extension>
+                        </ProgId>
                     </Component>
+                    <Component Id="c_tilecutter.exe_startmenu" Guid="">
+                        <Shortcut Id="sc_tilecutter.exe_startmenu" Directory="ProgramMenuDir" Name="TileCutter" 
+                                  WorkingDirectory="APPLICATIONFOLDER" Icon="icon_tilecutter.ico" Advertise="yes" />
+                    </Component>
+                    <Component Id="c_tilecutter.exe_desktop" Guid="">
+                        <Shortcut Id="sc_tilecutter.exe_desktop" Directory="DesktopFolder" Name="TileCutter" 
+                                  WorkingDirectory="APPLICATIONFOLDER" Icon="icon_tilecutter.ico" Advertise="yes" />
+                    </Component>
+                    <Component Id="c_tilecutter.exe" Guid="">
+                        <File Id="f_tilecutter.exe" Name="tilecutter.exe" DiskId="1" Source="tilecutter.exe" KeyPath="yes" />
+                    </Component>
+                    <Component Id="c_w9xpopen.exe" Guid="">
+                        <File Id="f_w9xpopen.exe" Name="w9xpopen.exe" DiskId="1" Source="w9xpopen.exe" KeyPath="yes" />
+                    </Component>
+                    <Component Id="c_test.png" Guid="">
+                        <File Id="f_test.png" Name="test.png" DiskId="1" Source="test.png" KeyPath="yes" />
+                    </Component>
+                    <Component Id="c_python26.dll" Guid="">
+                        <File Id="f_python26.dll" Name="python26.dll" DiskId="1" Source="python26.dll" KeyPath="yes" />
+                    </Component>
+                    <Component Id="c_licence.txt" Guid="">
+                        <File Id="f_licence.txt" Name="licence.txt" DiskId="1" Source="licence.txt" KeyPath="yes" />
+                    </Component>
+                    <Directory Id="dir_languages" Name="languages">
+                    </Directory>
+                    <Directory Id="dir_python" Name="python">
+                    </Directory>
                 </Directory>
              </Directory>
         </Directory>
 
-        <Feature Id="tilecutter_main_program" Title="Main TileCutter Program" Level="1">
-            <ComponentRef Id="tilecutter_main" />
+        <Feature id="Complete" Title="TileCutter" Description="The Complete Package" Level="1" AllowAdvertise="no" Absent="disallow" InstallDefault="local">
+            <Feature Id="fea_main_program" Title="Main TileCutter Program" Description="Program executable and supporting files" Level="1" AllowAdvertise="no" InstallDefault="local">
+                <ComponentRef Id="c_tcp_register" />
+                <ComponentRef Id="c_tilecutter.exe" />
+                <ComponentRef Id="c_w9xopen.exe" />
+                <ComponentRef Id="c_test.png" />
+                <ComponentRef Id="c_python26.dll" />
+                <ComponentRef Id="c_licence.txt" />
+            </Feature>
+            <Feature Id="fea_desktop_shortcut" Title="Desktop Shortcut" Description="Place a shortcut to TileCutter on the Desktop" Level="1" AllowAdvertise="no" InstallDefault="local">
+                <ComponentRef Id="c_tilecutter.exe_desktop" />
+            </Feature>
+            <Feature Id="fea_startmenu_group" Title="Create Start Menu Group" Description="Create shortcuts in the Start Menu" Level="1" AllowAdvertise="no" InstallDefault="local">
+                <ComponentRef Id="c_tilecutter.exe_startmenu" />
+            </Feature>
         </Feature>
 
         <Property Id="ApplicationFolderName" Value="TileCutter Installation Directory" />
@@ -44,6 +88,9 @@
         <WixVariable Id="WixUIUpIco" Value="graphics/wixuiup.ico" /> -->
 
         <Property Id="WIXUI_EXITDIALOGOPTIONALTEXT" Value="Final install completion text" />
+
+        <Icon Id="icon_tilecutter.ico" SourceFile="graphics/tilecutter.ico" />
+        <Icon Id="icon_tcp.ico" SourceFile="graphics/tcp.ico" />
 
     </Product>
 </Wix>
