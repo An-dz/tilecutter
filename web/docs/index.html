@@ -13,7 +13,10 @@
 	
 <body>
 
+<div class="header">
 <h1>TileCutter Online Documentation</h1>
+<p class="version">Version 0.5.7</p>
+</div>
 
 <h2 class="menu"><a name="Menu"></a>Contents</h2>
 <ol>
@@ -26,6 +29,7 @@
 </li>
 <li><a href="#BasicUsage">Basic Usage</a></li>
 <li><a href="#CommandLineUsage">Command Line Usage</a></li>
+<li><a href="#DefaultFileLocations">Default File Locations</a></li>
 <li><a href="#AnyOtherQuestions">Any Other Questions</a></li>
 <li><a href="#TileCutterLicence">TileCutter Licence</a></li>
 </ol>
@@ -36,7 +40,7 @@
 
 <h2><a name="Interface"></a>Interface<a href="#Menu">Menu</a></h2>
 
-<p>TileCutter has two interfaces, a cross-platform graphical user interface (GUI) provided by wxWidgets and a command line interface (CLI). The GUI is used to configure all of the attributes of a cutting operation, and the CLI can then be used to "compile" the .tcp file and source images into either Simutrans object source files, or a compiled .pak file.</p>
+<p>TileCutter has two interfaces, a cross-platform graphical user interface (GUI) provided by wxWidgets and a command line interface (CLI). The GUI is used to configure all of the attributes of a cutting operation. The configuration can then be saved to a TileCutter Project (.tcp) file. The CLI can then be used to "compile" the .tcp file and source images into either Simutrans object source files, or a compiled .pak file.</p>
 
 <h3><a name="Interface_GUI"></a>GUI<a href="#Interface">Interface</a></h3>
 
@@ -50,17 +54,20 @@
 
 <p>TileCutter's CLI is designed only to allow the scripted processing of .tcp files into .dat/.png and/or .pak files. It permits you to set up many projects, and then rebuild them all at once (e.g. for pakset maintainers). It also allows for platform-specific build scripts to be produced, e.g. as part of an automated process for outputting rendered building images. See the <a href="#CommandLineUsage">Command Line Usage</a> section for more</p>
 
-<p>If TileCutter is run with any command line arguments it suppresses the GUI. The available options can be found by running the command:</p>
+<p>If TileCutter is run with the "-c" command line argument the GUI is suppressed and the files specified on the command line will be processed automatically. If the "-c" option is not specified then the files specified on the command line will be opened in GUI mode. The available options can be found by running the command:</p>
 
-<pre>tilecutter5 -h</pre>
+<pre>tilecutter -h</pre>
 
 <p>For example:</p>
 
 <pre>
-Usage: tilecutter5 [options] filename1 [filename2 ... ]
+Usage: tilecutter.py [options] filename1 [filename2 ... ]
 
 Options:
   -h, --help    show this help message and exit
+  -c            run program in CLI mode (must be specified or program will run
+                in GUI mode and load the first file specified on the command
+                line)
   -i DIRECTORY  override .png file output location to DIRECTORY
   -I FILENAME   override .png file output name to FILENAME
   -n            disable .dat file output (if -m specified, dat info will be
@@ -108,26 +115,47 @@ Options:
 
 <p>The CLI interface to TileCutter is designed to allow scripted processing of pre-produced .tcp project files. It does not support direct project creation (use the GUI for that). After creating your project file you can feed it into TileCutter at the command line by running a command such as:</p>
 
-<pre>tilecutter5 my_project.tcp</pre>
+<pre>tilecutter -c my_project.tcp</pre>
 
 <p>This will then process the project file, producing .dat and .png output as defined by the paths specified in the project.</p>
 
 <p>If you wish to run the output through Makeobj, suppress .dat creation, override the creation directories etc. you can do so by running the command with flags. For example, the following command switches on .pak file creation and redirects pak file creation to "/home/timothy/tilecutter/" for processing the two projects "my_project.tcp" and "my_second_project.tcp":</p>
 
-<pre>tilecutter5 -m -p /home/timothy/tilecutter/ my_project.tcp my_second_project.tcp</pre>
+<pre>tilecutter -c -m -p /home/timothy/tilecutter/ my_project.tcp my_second_project.tcp</pre>
 
 <p>This interface can be used as part of scripted pakset generation, as part of a workflow for automatically creating rendered objects (e.g. render, post-processing, cutting, Makeobj export) or just to allow one-click object creation as part of an OS-specific script (e.g. Windows Batch file, or Unix Shell Script). If you have a suggestion for an extension to the script interface please let me know.</p>
 
+<h2><a name="DefaultFileLocations"></a>Default File Locations<a href="#Menu">Menu</a></h2>
+
+<p>Since version 0.5.7 TileCutter attempts to store its configuration and log files in the standard location for the platform it is running on. The configuration file is called "tilecutter.config" and can be found under one of these locations:</p>
+
+<ul>
+<li>On Mac OSX: ~/.tilecutter/tilecutter.config</li>
+<li>On Windows: %USERPROFILE%\Application Data\tilecutter\tilecutter.config</li>
+<li>On other platforms: ~/.tilecutter/tilecutter.config</li>
+</ul>
+
+<p>TileCutter will also read configuration from a tilecutter.config file placed in the installation directory. For backwards compatibility only it will similarly read from a tc.config file from an earlier version located in the installation directory.</p>
+
+<p>The log file is called tilecutter.log and can be found under the following locations.</p>
+
+<ul>
+<li>On Mac OSX: ~/Library/Logs/tilecutter.log</li>
+<li>On Windows: %USERPROFILE%\Application Data\tilecutter\tilecutter.log</li>
+<li>On other platforms: ~/.tilecutter/tilecutter.log</li>
+</ul>
+
+<p>The Windows version can also create a log file called TileCutter.exe.log which will always be found in the directory where the main TileCutter.exe executable is located. This log file will only appear in the case of program errors). The location of the log file can be controlled by specifying the "logfile" parameter in the configuration file. This is set to "system_default" by default which indicates that the above logic will be used to determine the log file location.</p>
 
 <h2><a name="AnyOtherQuestions"></a>Any Other Questions<a href="#Menu">Menu</a></h2>
 
-<p>If you have any questions about using TileCutter please feel free to ask on the <a href="http://forum.simutrans.com/index.php?board=40.0">Simutrans Forum</a>, or PM me (username: Timothy). I can also be contacted by email: "tb {at} entropy [dot] me (dot) uk".</p>
+<p>If you have any questions about using TileCutter please feel free to ask on the <a href="http://forum.simutrans.com/index.php?board=40.0">Simutrans Forum</a>, or PM me (username: Timothy). I can also be contacted by email: <a href="mailto:tb@entropy.me.uk">tb@entropy.me.uk</a>.</p>
 
 <h2><a name="TileCutterLicence"></a>TileCutter Licence<a href="#Menu">Menu</a></h2>
 
 <p>A reproduction of the TileCutter Licence, for your convenience. This document is covered by the same licence.</p>
 
-<p class="monospace">Copyright &copy; 2008-2010 Timothy Baldock. All Rights Reserved.</p>
+<p class="monospace">Copyright &copy; 2008-2011 Timothy Baldock. All Rights Reserved.</p>
 
 <p class="monospace">Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:</p>
 

@@ -3,14 +3,20 @@ font: 12px/1.2 Verdana, Arial, Helvetica, sans-serif;
 margin: 0;
 }
 
-h1 {
+div.header {
 background-color: #c4d4d4;
-padding: 0.5em;
-margin: 0;
 background-image: url("tc_icon2_128_plain.png");
 background-repeat: no-repeat;
 background-position: center right;
-min-height: 128px;
+padding: 0.5em;
+margin: 0;
+min-height: 136px;
+}
+
+h1 {
+padding: 0.5em;
+padding-bottom: 0.2em;
+margin: 0;
 }
 
 h2 {
@@ -38,6 +44,11 @@ padding: 0.5em;
 
 p {
 margin: 1em;
+}
+
+p.version {
+margin: 0 1em;
+padding-left: 0.5em;
 }
 
 p.monospace {
