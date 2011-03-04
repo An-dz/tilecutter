@@ -9,6 +9,8 @@
 import json
 import codecs
 
+from environment import getenvvar
+
 import sys, os
 
 # Better to use json module in python 2.6 here
@@ -47,7 +49,7 @@ class Config(object):
         "default_language": u"English",
         }
     internals = {
-        "version": u"0.5.7",
+        "version": u"0.5.7.1",
         }
 
     # If a tc.config or tilecutter.config file exists in the program directory use that to load config from 
@@ -63,8 +65,9 @@ class Config(object):
             conf_path = os.path.expanduser(u"~/.tilecutter/tilecutter.config")
             source = u"darwin auto location"
         elif sys.platform == "win32":
-            conf_path = os.path.normpath(os.path.expanduser("~/Application Data/tilecutter/tilecutter.config"))
-            conf_path = unicode(conf_path, sys.getfilesystemencoding())
+            conf_path = os.path.join(getenvvar(u"APPDATA"), "tilecutter\\tilecutter.config")
+            #conf_path = os.path.normpath(os.path.expanduser("~/Application Data/tilecutter/tilecutter.config"))
+            #conf_path = unicode(conf_path, sys.getfilesystemencoding())
             source = u"win32 auto location"
         else:
             conf_path = os.path.expanduser(u"~/.tilecutter/tilecutter.config")

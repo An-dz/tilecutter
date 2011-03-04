@@ -17,6 +17,8 @@ config = config.Config()
 from tc import Paths
 paths = Paths()
 
+from environment import getenvvar
+
 # Image should store:
 # Last path entered
 # Path of current image
@@ -475,9 +477,12 @@ class ProjectFiles(object):
 #            self.save_location = unicode(self.save_location, sys.getfilesystemencoding())
 
         # Use userprofile on all platforms as default
-        location = os.path.expanduser("~")
-        # Convert from native OS codepage to Unicode
-        location = unicode(location, sys.getfilesystemencoding())
+        if sys.platform == "darwin":
+            location = os.path.expanduser(u"~")
+        elif sys.platform == "win32":
+            location = getenvvar(u"USERPROFILE")
+        else:
+            location = os.path.expanduser(u"~")
 
         # Otherwise use location of program
         # Depending on how/when os.path.expanduser can fail this may not be needed but just in case!

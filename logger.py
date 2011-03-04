@@ -15,6 +15,8 @@
 import sys, os, codecs
 from datetime import datetime as datetime
 
+from environment import getenvvar
+
 import config
 config = config.Config()
 
@@ -32,8 +34,9 @@ class Log(object):
                         file = os.path.expanduser("~/Library/Logs/tilecutter.log")
                         source = "darwin"
                     elif sys.platform == "win32":
-                        file = os.path.normpath(os.path.expanduser("~/Application Data/tilecutter/tilecutter.log"))
-                        file = unicode(file, sys.getfilesystemencoding())
+                        file = os.path.join(getenvvar(u"APPDATA"), "tilecutter\\tilecutter.log")
+                        #file = os.path.normpath(os.path.expanduser("~/Application Data/tilecutter/tilecutter.log"))
+                        #file = unicode(file, sys.getfilesystemencoding())
                         source = "win32"
                     else:
                         file = os.path.expanduser("~/.tilecutter/tilecutter.log")
