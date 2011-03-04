@@ -134,10 +134,11 @@ if len(sys.argv) >= 2 and sys.argv[1] == "py2exe":
         # Bundling of .dlls into the zip results in massively bigger package?!
         # Option 1 creates corrupt zip, option 2 adds dlls and makes them uncompressible
         "py2exe": {"dist_dir": dist_dir,
-                   "bundle_files": 3,
-                   "excludes": ["difflib", "doctest", "calendar", "pdb", "inspect",
-                                "Tkconstants", "Tkinter", "tcl"]
-                   },
+            "bundle_files": 3,
+            "excludes": ["difflib", "doctest", "calendar", "pdb", "inspect",
+                        "Tkconstants", "Tkinter", "tcl"],
+            "dll_excludes": ["w9xpopen.exe",],
+        },
     }
 
     # run the setup

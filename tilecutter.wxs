@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
     <Product Id="*"
              Name="TileCutter"
              Language="1033"
-             Version="0.0.1.0"
+             Version="0.5.7.1"
              Manufacturer="TileCutter Project"
              UpgradeCode="633C4102-4C0A-4F00-A7C0-133819127019">
 
         <Package Description="TileCutter Installer"
-                 Comments="Comments about the installer"
                  Manufacturer="TileCutter Project" 
                  InstallerVersion="200" 
                  Compressed="yes" />
@@ -19,26 +19,21 @@
             <Directory Id="ProgramFilesFolder" Name="PFiles">
                 <Directory Id="APPLICATIONFOLDER" Name="TileCutter">
                     <!-- <Component Id="c_tcp_register" Guid="1AC07DEA-9BE8-44D3-8E9B-7066BE5FB11F">
-                    </Component>
-                    <Component Id="c_tilecutter.exe_startmenu" Guid="6543A22C-3648-4AD8-88A5-CF972A1767CC">
-                    </Component>
-                    <Component Id="c_tilecutter.exe_desktop" Guid="C53B62FB-3F43-4C47-8E5A-AD6ED933232C">
                     </Component> -->
                     <Component Id="c_tilecutter.exe" Guid="A1FAB235-206C-43A8-BC61-05DAB245CADE">
                         <File Id="f_tilecutter.exe" Name="tilecutter.exe" DiskId="1" Source="tilecutter.exe" KeyPath="yes">
-                            <Shortcut Id="sc_tilecutter.exe_startmenu" Directory="ProgramMenuDir" Name="TileCutter" 
+<!--                            <Shortcut Id="sc_tilecutter.exe_startmenu" Directory="ProgramMenuDir" Name="TileCutter" 
                                       WorkingDirectory="APPLICATIONFOLDER" Icon="tilecutter.ico" Advertise="yes" />
                             <Shortcut Id="sc_tilecutter.exe_desktop" Directory="DesktopFolder" Name="TileCutter" 
-                                      WorkingDirectory="APPLICATIONFOLDER" Icon="tilecutter.ico" Advertise="yes" />
+                                      WorkingDirectory="APPLICATIONFOLDER" Icon="tilecutter.ico" Advertise="yes" /> -->
                         </File>
                         <ProgId Id="TileCutter.tcp" Description="TileCutter Project File" Icon="f_tilecutter.exe" IconIndex="-42">
                             <Extension Id="tcp" ContentType="application/x-tilecutter-project">
                                 <Verb Id="open" Command="Open" TargetFile="f_tilecutter.exe" Argument='"%1"' />
                             </Extension>
                         </ProgId>
-                    </Component>
-                    <Component Id="c_w9xpopen.exe" Guid="1E28AB52-A0C0-4129-99BB-F7886D858867">
-                        <File Id="f_w9xpopen.exe" Name="w9xpopen.exe" DiskId="1" Source="w9xpopen.exe" KeyPath="yes" />
+                        <!-- Main log file left on uninstall (in application data folder) but need to remove this second log if it's there -->
+                        <RemoveFile Id="f_tilecutter.exe.log" On="uninstall" Name="TileCutter.exe.log" />
                     </Component>
                     <Component Id="c_test.png" Guid="8A297551-7802-41CE-BC41-66D83EE5378F">
                         <File Id="f_test.png" Name="test.png" DiskId="1" Source="test.png" KeyPath="yes" />
@@ -50,39 +45,269 @@
                         <File Id="f_licence.txt" Name="licence.txt" DiskId="1" Source="licence.txt" KeyPath="yes" />
                     </Component>
                     <Directory Id="dir_languages" Name="languages">
+                        <Component Id="c_lan_tc_en.db" Guid="F96AB2FB-2111-4A62-88C8-B5064A04A9A3">
+                            <File Id="f_lan_tc_en.db" Name="tc_en.db" DiskId="1" Source="languages/tc_en.db" KeyPath="yes" />
+                        </Component>
+                        <Component Id="c_lan_tc_simutranslator.dat" Guid="22DF955C-98A5-4A72-82FA-60D281134DB6">
+                            <File Id="f_lan_tc_simutranslator.dat" Name="tc_simutranslator.dat" DiskId="1" Source="languages/tc_simutranslator.dat" KeyPath="yes" />
+                        </Component>
+                        <Component Id="c_lan_tc_be.tab" Guid="A552A8FC-99AE-41F8-8E84-82CF01B11870">
+                            <File Id="f_lan_tc_be.tab" Name="tc_be.tab" DiskId="1" Source="languages/tc_be.tab" KeyPath="yes" />
+                        </Component>
+                        <Component Id="c_lan_tc_ca.tab" Guid="A33F57F7-AC5F-44ED-9E13-F2E09B2891EF">
+                            <File Id="f_lan_tc_ca.tab" Name="tc_ca.tab" DiskId="1" Source="languages/tc_ca.tab" KeyPath="yes" />
+                        </Component>
+                        <Component Id="c_lan_tc_ce.tab" Guid="9ED7F30F-615B-4090-B70C-A52AAB618EAE">
+                            <File Id="f_lan_tc_ce.tab" Name="tc_ce.tab" DiskId="1" Source="languages/tc_ce.tab" KeyPath="yes" />
+                        </Component>
+                        <Component Id="c_lan_tc_cn.tab" Guid="A9B85FDE-B1B0-4CE3-94F5-7352DD619BEC">
+                            <File Id="f_lan_tc_cn.tab" Name="tc_cn.tab" DiskId="1" Source="languages/tc_cn.tab" KeyPath="yes" />
+                        </Component>
+                        <Component Id="c_lan_tc_cz.tab" Guid="167A92DB-2433-4071-AA5C-2A53A520AF4D">
+                            <File Id="f_lan_tc_cz.tab" Name="tc_cz.tab" DiskId="1" Source="languages/tc_cz.tab" KeyPath="yes" />
+                        </Component>
+                        <Component Id="c_lan_tc_de.tab" Guid="2CCEAD96-F292-48C4-A578-6680399A34AD">
+                            <File Id="f_lan_tc_de.tab" Name="tc_de.tab" DiskId="1" Source="languages/tc_de.tab" KeyPath="yes" />
+                        </Component>
+                        <Component Id="c_lan_tc_dk.tab" Guid="F0324C4C-451A-4975-8D54-F72E712D03D7">
+                            <File Id="f_lan_tc_dk.tab" Name="tc_dk.tab" DiskId="1" Source="languages/tc_dk.tab" KeyPath="yes" />
+                        </Component>
+                        <Component Id="c_lan_tc_en.tab" Guid="80C4450A-0252-4460-AA21-96CF349B5CEF">
+                            <File Id="f_lan_tc_en.tab" Name="tc_en.tab" DiskId="1" Source="languages/tc_en.tab" KeyPath="yes" />
+                        </Component>
+                        <Component Id="c_lan_tc_es.tab" Guid="135DFB90-EFD3-4697-9399-04B20EE01379">
+                            <File Id="f_lan_tc_es.tab" Name="tc_es.tab" DiskId="1" Source="languages/tc_es.tab" KeyPath="yes" />
+                        </Component>
+                        <Component Id="c_lan_tc_et.tab" Guid="5A0C3C27-B76F-4BEE-A56D-E405A736816A">
+                            <File Id="f_lan_tc_et.tab" Name="tc_et.tab" DiskId="1" Source="languages/tc_et.tab" KeyPath="yes" />
+                        </Component>
+                        <Component Id="c_lan_tc_fi.tab" Guid="BA7A9FFF-8A37-4A7D-A4B2-B1950451B5A1">
+                            <File Id="f_lan_tc_fi.tab" Name="tc_fi.tab" DiskId="1" Source="languages/tc_fi.tab" KeyPath="yes" />
+                        </Component>
+                        <Component Id="c_lan_tc_fr.tab" Guid="EADCB262-2103-4CBD-AA4A-ABA71217298F">
+                            <File Id="f_lan_tc_fr.tab" Name="tc_fr.tab" DiskId="1" Source="languages/tc_fr.tab" KeyPath="yes" />
+                        </Component>
+                        <Component Id="c_lan_tc_gr.tab" Guid="7D39DF52-AEC4-47EB-95EA-F58077D70DCB">
+                            <File Id="f_lan_tc_gr.tab" Name="tc_gr.tab" DiskId="1" Source="languages/tc_gr.tab" KeyPath="yes" />
+                        </Component>
+                        <Component Id="c_lan_tc_hr.tab" Guid="CCED45CB-6DFF-4B35-BD6C-0C13CC79F60C">
+                            <File Id="f_lan_tc_hr.tab" Name="tc_hr.tab" DiskId="1" Source="languages/tc_hr.tab" KeyPath="yes" />
+                        </Component>
+                        <Component Id="c_lan_tc_hu.tab" Guid="C139004D-30E6-406D-8994-81FD05DC4D50">
+                            <File Id="f_lan_tc_hu.tab" Name="tc_hu.tab" DiskId="1" Source="languages/tc_hu.tab" KeyPath="yes" />
+                        </Component>
+                        <Component Id="c_lan_tc_id.tab" Guid="B9C984E1-DE49-40FD-B5B0-775B0A6316C9">
+                            <File Id="f_lan_tc_id.tab" Name="tc_id.tab" DiskId="1" Source="languages/tc_id.tab" KeyPath="yes" />
+                        </Component>
+                        <Component Id="c_lan_tc_it.tab" Guid="C8C3F8A5-50BD-4EC0-A945-4B7C2257AE0D">
+                            <File Id="f_lan_tc_it.tab" Name="tc_it.tab" DiskId="1" Source="languages/tc_it.tab" KeyPath="yes" />
+                        </Component>
+                        <Component Id="c_lan_tc_ja.tab" Guid="0972CEC1-1C6D-446A-8A3B-B76C468721C0">
+                            <File Id="f_lan_tc_ja.tab" Name="tc_ja.tab" DiskId="1" Source="languages/tc_ja.tab" KeyPath="yes" />
+                        </Component>
+                        <Component Id="c_lan_tc_ko.tab" Guid="1AD5F7A3-6DFA-4DA0-91AF-8AC0D781432C">
+                            <File Id="f_lan_tc_ko.tab" Name="tc_ko.tab" DiskId="1" Source="languages/tc_ko.tab" KeyPath="yes" />
+                        </Component>
+                        <Component Id="c_lan_tc_lt.tab" Guid="4D69515D-6322-44FD-A3B2-CC6D0CBAAD4F">
+                            <File Id="f_lan_tc_lt.tab" Name="tc_lt.tab" DiskId="1" Source="languages/tc_lt.tab" KeyPath="yes" />
+                        </Component>
+                        <Component Id="c_lan_tc_nl.tab" Guid="070D3805-B5C2-4DF4-A3C4-698135864464">
+                            <File Id="f_lan_tc_nl.tab" Name="tc_nl.tab" DiskId="1" Source="languages/tc_nl.tab" KeyPath="yes" />
+                        </Component>
+                        <Component Id="c_lan_tc_no.tab" Guid="E124119D-AB2B-4F61-B487-D15A05A62A3E">
+                            <File Id="f_lan_tc_no.tab" Name="tc_no.tab" DiskId="1" Source="languages/tc_no.tab" KeyPath="yes" />
+                        </Component>
+                        <Component Id="c_lan_tc_pl.tab" Guid="71C57C40-0C53-413F-9893-CCF9C7801001">
+                            <File Id="f_lan_tc_pl.tab" Name="tc_pl.tab" DiskId="1" Source="languages/tc_pl.tab" KeyPath="yes" />
+                        </Component>
+                        <Component Id="c_lan_tc_pt.tab" Guid="1DE7162B-C4B5-4926-B280-65C892BF819C">
+                            <File Id="f_lan_tc_pt.tab" Name="tc_pt.tab" DiskId="1" Source="languages/tc_pt.tab" KeyPath="yes" />
+                        </Component>
+                        <Component Id="c_lan_tc_ro.tab" Guid="CB1912F9-E973-4A5D-AB6A-5DC13763F5FF">
+                            <File Id="f_lan_tc_ro.tab" Name="tc_ro.tab" DiskId="1" Source="languages/tc_ro.tab" KeyPath="yes" />
+                        </Component>
+                        <Component Id="c_lan_tc_ru.tab" Guid="FD897F3C-3389-425C-94C5-E498AEB26CC0">
+                            <File Id="f_lan_tc_ru.tab" Name="tc_ru.tab" DiskId="1" Source="languages/tc_ru.tab" KeyPath="yes" />
+                        </Component>
+                        <Component Id="c_lan_tc_sk.tab" Guid="15823800-BEF4-4B0C-9A67-2B29921EBF49">
+                            <File Id="f_lan_tc_sk.tab" Name="tc_sk.tab" DiskId="1" Source="languages/tc_sk.tab" KeyPath="yes" />
+                        </Component>
+                        <Component Id="c_lan_tc_sv.tab" Guid="C33C9E79-4760-4E4B-A790-C72DAC4CF94A">
+                            <File Id="f_lan_tc_sv.tab" Name="tc_sv.tab" DiskId="1" Source="languages/tc_sv.tab" KeyPath="yes" />
+                        </Component>
+                        <Component Id="c_lan_tc_tr.tab" Guid="4BAB927B-C685-4671-9243-3E1A6DB2B124">
+                            <File Id="f_lan_tc_tr.tab" Name="tc_tr.tab" DiskId="1" Source="languages/tc_tr.tab" KeyPath="yes" />
+                        </Component>
+                        <Component Id="c_lan_tc_zh.tab" Guid="3538AB0C-F143-40CD-9773-DFC7DEBCD2AB">
+                            <File Id="f_lan_tc_zh.tab" Name="tc_zh.tab" DiskId="1" Source="languages/tc_zh.tab" KeyPath="yes" />
+                        </Component>
                     </Directory>
                     <Directory Id="dir_python" Name="python">
+                        <Component Id="c_python_MSVCP90.dll" Guid="4FD7D35A-1F4A-4305-BF74-2B1ECFF77B21">
+                            <File Id="f_python_MSVCP90.dll" Name="MSVCP90.dll" DiskId="1" Source="python/MSVCP90.dll" KeyPath="yes" />
+                        </Component>
+                        <Component Id="c_python__ctypes.pyd" Guid="3ACB36B4-5C6A-470D-B59A-AFBFDC6903D9">
+                            <File Id="f_python__ctypes.pyd" Name="_ctypes.pyd" DiskId="1" Source="python/_ctypes.pyd" KeyPath="yes" />
+                        </Component>
+                        <Component Id="c_python__hashlib.pyd" Guid="4E78B7F0-A4C7-485F-A02B-48FEA38C9C7C">
+                            <File Id="f_python__hashlib.pyd" Name="_hashlib.pyd" DiskId="1" Source="python/_hashlib.pyd" KeyPath="yes" />
+                        </Component>
+                        <Component Id="c_python_bz2.pyd" Guid="9C55ADD7-A29F-4AF7-8EF2-4B451F2EACC6">
+                            <File Id="f_python_bz2.pyd" Name="bz2.pyd" DiskId="1" Source="python/bz2.pyd" KeyPath="yes" />
+                        </Component>
+                        <Component Id="c_python_library.zip" Guid="2854507B-EE33-45B9-A792-0BFE746314EF">
+                            <File Id="f_python_library.zip" Name="library.zip" DiskId="1" Source="python/library.zip" KeyPath="yes" />
+                        </Component>
+                        <Component Id="c_python_select.pyd" Guid="0E2C93D5-CC62-4BB6-82E3-9C16E03FEF1A">
+                            <File Id="f_python_select.pyd" Name="select.pyd" DiskId="1" Source="python/select.pyd" KeyPath="yes" />
+                        </Component>
+                        <Component Id="c_python_unicodedata.pyd" Guid="787DC92D-D3C1-4F57-A13A-1D25C339EF90">
+                            <File Id="f_python_unicodedata.pyd" Name="unicodedata.pyd" DiskId="1" Source="python/unicodedata.pyd" KeyPath="yes" />
+                        </Component>
+                        <Component Id="c_python_wx._controls_.pyd" Guid="2AA133DA-88AB-4F04-A60E-509906F744E0">
+                            <File Id="f_python_wx._controls_.pyd" Name="wx._controls_.pyd" DiskId="1" Source="python/wx._controls_.pyd" KeyPath="yes" />
+                        </Component>
+                        <Component Id="c_python_wx._core_.pyd" Guid="7CE54C5D-044C-4760-AE81-CEA7AF56F2CB">
+                            <File Id="f_python_wx._core_.pyd" Name="wx._core_.pyd" DiskId="1" Source="python/wx._core_.pyd" KeyPath="yes" />
+                        </Component>
+                        <Component Id="c_python_wx._gdi_.pyd" Guid="A4F0ECB8-7766-443C-89D1-837ECC3EE794">
+                            <File Id="f_python_wx._gdi_.pyd" Name="wx._gdi_.pyd" DiskId="1" Source="python/wx._gdi_.pyd" KeyPath="yes" />
+                        </Component>
+                        <Component Id="c_python_wx._misc_.pyd" Guid="AAF31C38-6793-4C84-847B-81071DF79F6C">
+                            <File Id="f_python_wx._misc_.pyd" Name="wx._misc_.pyd" DiskId="1" Source="python/wx._misc_.pyd" KeyPath="yes" />
+                        </Component>
+                        <Component Id="c_python_wx._windows_.pyd" Guid="FA4DD77D-CC5F-424F-903B-F30B29C0A085">
+                            <File Id="f_python_wx._windows_.pyd" Name="wx._windows_.pyd" DiskId="1" Source="python/wx._windows_.pyd" KeyPath="yes" />
+                        </Component>
+                        <Component Id="c_python_wxbase28uh_net_vc.dll" Guid="0F325A98-238D-40FE-B5B2-5814647DD8AC">
+                            <File Id="f_python_wxbase28uh_net_vc.dll" Name="wxbase28uh_net_vc.dll" DiskId="1" Source="python/wxbase28uh_net_vc.dll" KeyPath="yes" DefaultLanguage="0" />
+                        </Component>
+                        <Component Id="c_python_wxbase28uh_vc.dll" Guid="72A6F40C-1117-44C0-B740-8874BF78DDA5">
+                            <File Id="f_python_wxbase28uh_vc.dll" Name="wxbase28uh_vc.dll" DiskId="1" Source="python/wxbase28uh_vc.dll" KeyPath="yes" DefaultLanguage="0" />
+                        </Component>
+                        <Component Id="c_python_wxmsw28uh_adv_vc.dll" Guid="E41E5DE3-380C-4A7F-BBD2-EA09B0D41592">
+                            <File Id="f_python_wxmsw28uh_adv_vc.dll" Name="wxmsw28uh_adv_vc.dll" DiskId="1" Source="python/wxmsw28uh_adv_vc.dll" KeyPath="yes" DefaultLanguage="0" />
+                        </Component>
+                        <Component Id="c_python_wxmsw28uh_core_vc.dll" Guid="20ABD82B-7DE4-4305-8108-1E936FE7CA01">
+                            <File Id="f_python_wxmsw28uh_core_vc.dll" Name="wxmsw28uh_core_vc.dll" DiskId="1" Source="python/wxmsw28uh_core_vc.dll" KeyPath="yes" DefaultLanguage="0" />
+                        </Component>
+                        <Component Id="c_python_wxmsw28uh_html_vc.dll" Guid="9B4E9512-67D2-4EC6-B2B4-4EFF2B814301">
+                            <File Id="f_python_wxmsw28uh_html_vc.dll" Name="wxmsw28uh_html_vc.dll" DiskId="1" Source="python/wxmsw28uh_html_vc.dll" KeyPath="yes" DefaultLanguage="0" />
+                        </Component>
+
                     </Directory>
                 </Directory>
             </Directory>
 
             <Directory Id="ProgramMenuFolder" Name="Programs">
                 <Directory Id="ProgramMenuDir" Name="TileCutter">
-                    <Component Id="ProgramMenuDir" Guid="0F1A4FC5-A073-4FA6-97EA-D1B3699D3E98">
+                    <Component Id="c_tilecutter.exe_startmenu" Guid="6543A22C-3648-4AD8-88A5-CF972A1767CC">
+                        <Shortcut Id="sc_tilecutter.exe_startmenu"
+                                  Icon="tilecutter.ico" 
+                                  Name="TileCutter" 
+                                  Description="Open TileCutter"
+                                  Target="[APPLICATIONFOLDER]tilecutter.exe"
+                                  WorkingDirectory="APPLICATIONFOLDER" />
+                        <util:InternetShortcut Id="sc_tilecutter_online_docs"
+                                  Name="TileCutter Online Documentation"
+                                  Target="http://entropy.me.uk/tilecutter/docs/"/>
                         <RemoveFolder Id="ProgramMenuDir" On="uninstall" />
-                        <RegistryValue Root="HKCU" Key="Software\[Manufacturer]\[ProductName]" Type="string" Value="" KeyPath="yes" />
+                        <RegistryValue Root="HKCU" Key="Software\TileCutter Project\TileCutter" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
                     </Component>
+
                 </Directory>
             </Directory>
 
-            <Directory Id="DesktopFolder" Name="Desktop" />
+            <Directory Id="DesktopFolder" Name="Desktop">
+                <Component Id="c_tilecutter.exe_desktop" Guid="C53B62FB-3F43-4C47-8E5A-AD6ED933232C">
+                    <Shortcut Id="sc_tilecutter.exe_desktop"
+                              Icon="tilecutter.ico" 
+                              Name="TileCutter" 
+                              Description="Open TileCutter"
+                              Target="[APPLICATIONFOLDER]tilecutter.exe"
+                              WorkingDirectory="APPLICATIONFOLDER" />
+                    <RegistryValue Root="HKCU" Key="Software\TileCutter Project\TileCutter" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+                </Component>
+            </Directory>
+
+<!--            <Component Id="c_explorer_extension" Guid="EE1297B5-7458-4E96-8A3F-47573144DE32">
+                <RegistryKey Id="" Root="" Key="" Action="createAndRemoveOnUninstall">
+                    <RegistryValue Type="string" Name="" Value="" />
+                    <RegistryValue Type="integer" Name="" Value="" />
+                </RegistryKey>
+            </Component> -->
         </Directory>
 
 
 
-        <Feature Id="Complete" Title="TileCutter" Description="The Complete Package" Level="1" AllowAdvertise="no" Absent="disallow" InstallDefault="local">
+        <Feature Id="Complete" Title="TileCutter" Description="Install Main TileCutter executable and support files." Level="1" AllowAdvertise="no" Absent="disallow" InstallDefault="local">
             <ComponentRef Id="c_tilecutter.exe" />
-            <ComponentRef Id="c_w9xpopen.exe" />
             <ComponentRef Id="c_test.png" />
             <ComponentRef Id="c_python27.dll" />
             <ComponentRef Id="c_licence.txt" />
+            <ComponentRef Id="c_lan_tc_en.db" />
+            <ComponentRef Id="c_lan_tc_simutranslator.dat" />
+
+            <ComponentRef Id="c_lan_tc_be.tab" />
+            <ComponentRef Id="c_lan_tc_ca.tab" />
+            <ComponentRef Id="c_lan_tc_ce.tab" />
+            <ComponentRef Id="c_lan_tc_cn.tab" />
+            <ComponentRef Id="c_lan_tc_cz.tab" />
+            <ComponentRef Id="c_lan_tc_de.tab" />
+            <ComponentRef Id="c_lan_tc_dk.tab" />
+            <ComponentRef Id="c_lan_tc_en.tab" />
+            <ComponentRef Id="c_lan_tc_es.tab" />
+            <ComponentRef Id="c_lan_tc_et.tab" />
+            <ComponentRef Id="c_lan_tc_fi.tab" />
+            <ComponentRef Id="c_lan_tc_fr.tab" />
+            <ComponentRef Id="c_lan_tc_gr.tab" />
+            <ComponentRef Id="c_lan_tc_hr.tab" />
+            <ComponentRef Id="c_lan_tc_hu.tab" />
+            <ComponentRef Id="c_lan_tc_id.tab" />
+            <ComponentRef Id="c_lan_tc_it.tab" />
+            <ComponentRef Id="c_lan_tc_ja.tab" />
+            <ComponentRef Id="c_lan_tc_ko.tab" />
+            <ComponentRef Id="c_lan_tc_lt.tab" />
+            <ComponentRef Id="c_lan_tc_nl.tab" />
+            <ComponentRef Id="c_lan_tc_no.tab" />
+            <ComponentRef Id="c_lan_tc_pl.tab" />
+            <ComponentRef Id="c_lan_tc_pt.tab" />
+            <ComponentRef Id="c_lan_tc_ro.tab" />
+            <ComponentRef Id="c_lan_tc_ru.tab" />
+            <ComponentRef Id="c_lan_tc_sk.tab" />
+            <ComponentRef Id="c_lan_tc_sv.tab" />
+            <ComponentRef Id="c_lan_tc_tr.tab" />
+            <ComponentRef Id="c_lan_tc_zh.tab" />
+
+            <ComponentRef Id="c_python_MSVCP90.dll" />
+            <ComponentRef Id="c_python__ctypes.pyd" />
+            <ComponentRef Id="c_python__hashlib.pyd" />
+            <ComponentRef Id="c_python_bz2.pyd" />
+            <ComponentRef Id="c_python_library.zip" />
+            <ComponentRef Id="c_python_select.pyd" />
+            <ComponentRef Id="c_python_unicodedata.pyd" />
+            <ComponentRef Id="c_python_wx._controls_.pyd" />
+            <ComponentRef Id="c_python_wx._core_.pyd" />
+            <ComponentRef Id="c_python_wx._gdi_.pyd" />
+            <ComponentRef Id="c_python_wx._misc_.pyd" />
+            <ComponentRef Id="c_python_wx._windows_.pyd" />
+            <ComponentRef Id="c_python_wxbase28uh_net_vc.dll" />
+            <ComponentRef Id="c_python_wxbase28uh_vc.dll" />
+            <ComponentRef Id="c_python_wxmsw28uh_adv_vc.dll" />
+            <ComponentRef Id="c_python_wxmsw28uh_core_vc.dll" />
+            <ComponentRef Id="c_python_wxmsw28uh_html_vc.dll" />
+
             <!-- <Feature Id="fea_desktop_shortcut" Title="Desktop Shortcut" Description="Place a shortcut to TileCutter on the Desktop" Level="1" AllowAdvertise="no" InstallDefault="local">
                 <ComponentRef Id="c_tilecutter.exe_desktop" />
             </Feature> -->
-            <Feature Id="fea_startmenu_group" Title="Create Start Menu Group" Description="Create shortcuts in the Start Menu" Level="1" AllowAdvertise="no" InstallDefault="local">
-                <!-- <ComponentRef Id="c_tilecutter.exe_startmenu" /> -->
-                <ComponentRef Id="ProgramMenuDir" />
+            <Feature Id="fea_startmenu_group" Title="Create Start Menu Group" Description="Create shortcuts in the Start Menu." Level="1" AllowAdvertise="no" InstallDefault="local">
+                <ComponentRef Id="c_tilecutter.exe_startmenu" />
             </Feature>
+            <Feature Id="fea_desktop_shortcut" Title="Create Desktop Shortcut" Description="Create shortcut to TileCutter on the Desktop." Level="1" AllowAdvertise="no" InstallDefault="local">
+                <ComponentRef Id="c_tilecutter.exe_desktop" />
+            </Feature>
+<!--            <Feature Id="fea_explorer_extension" Title="Add Windows Explorer Extension" Description="Adds context-sensitive shortcuts to the right-click menu in Windows Explorer for TileCutter Project (.tcp) files." Level="1" AllowAdvertise="no" InstallDefault="local">
+            </Feature> -->
         </Feature>
 
         <Property Id="ApplicationFolderName" Value="TileCutter" />
@@ -99,7 +324,16 @@
         <WixVariable Id="WixUINewIco" Value="graphics/wixuinew.ico" />
         <WixVariable Id="WixUIUpIco" Value="graphics/wixuiup.ico" /> -->
 
-        <Property Id="WIXUI_EXITDIALOGOPTIONALTEXT" Value="Final install completion text" />
+<!--        <Property Id="WIXUI_EXITDIALOGOPTIONALTEXT" Value="Final install completion text" /> -->
+
+<!--        <Property Id="ARPCOMMENTS">any comments</Property>
+        <Property Id="ARPCONTACT">contact info</Property> -->
+        <Property Id="ARPHELPLINK">http://entropy.me.uk/tilecutter/docs/</Property>
+        <Property Id="ARPURLINFOABOUT">http://entropy.me.uk/tilecutter/</Property>
+        <Property Id="ARPURLUPDATEINFO">http://entropy.me.uk/tilecutter/download/</Property>
+        <Property Id="ARPREADME">path</Property>
+<!--        <Property Id="ARPSIZE">17658</Property> -->
+        <Property Id="ARPPRODUCTICON">tilecutter.ico</Property>
 
         <Icon Id="tilecutter.ico" SourceFile="graphics/tilecutter.ico" />
 
