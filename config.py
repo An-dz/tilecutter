@@ -63,7 +63,8 @@ class Config(object):
             conf_path = os.path.expanduser(u"~/.tilecutter/tilecutter.config")
             source = u"darwin auto location"
         elif sys.platform == "win32":
-            conf_path = os.path.normpath(os.path.expanduser(u"~/Application Data/tilecutter/tilecutter.config"))
+            conf_path = os.path.normpath(os.path.expanduser("~/Application Data/tilecutter/tilecutter.config"))
+            conf_path = unicode(conf_path, sys.getfilesystemencoding())
             source = u"win32 auto location"
         else:
             conf_path = os.path.expanduser(u"~/.tilecutter/tilecutter.config")

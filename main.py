@@ -1,4 +1,4 @@
-#!/usr/local/bin/python
+#!/usr/bin/python
 # coding: UTF-8
 #
 # TileCutter, version 0.5

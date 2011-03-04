@@ -29,13 +29,14 @@ class Log(object):
                 # Default for config is to specify log file as platform_default
                 if config.logfile == "platform_default":
                     if sys.platform == "darwin":
-                        file = os.path.expanduser(u"~/Library/Logs/tilecutter.log")
+                        file = os.path.expanduser("~/Library/Logs/tilecutter.log")
                         source = "darwin"
                     elif sys.platform == "win32":
-                        file = os.path.normpath(os.path.expanduser(u"~/Application Data/tilecutter/tilecutter.log"))
+                        file = os.path.normpath(os.path.expanduser("~/Application Data/tilecutter/tilecutter.log"))
+                        file = unicode(file, sys.getfilesystemencoding())
                         source = "win32"
                     else:
-                        file = os.path.expanduser(u"~/.tilecutter/tilecutter.log")
+                        file = os.path.expanduser("~/.tilecutter/tilecutter.log")
                         source = "unix"
                 else:
                     # Appends this session's log info to the logging file
