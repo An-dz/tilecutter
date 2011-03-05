@@ -12,11 +12,13 @@ debug = logger.Log()
 import sys, os
 
 import pickle
-import tcproject
+import json
 
-#import config
-#config = config.Config()
-#config.save()
+import tcproject
+import project
+
+import config
+config = config.Config()
 
 class tcp_writer(object):
     """"""
@@ -36,6 +38,9 @@ class tcp_writer(object):
         debug(u"Writing object: %s to file" % str(obj))
         if self.mode == "pickle":
             output_string = self.pickle_object(obj, 2)
+        elif self.mode == "json":
+            header_string = "#TCP_JSON,%s\n#This is a TileCutter Project file (JSON formatted). You may edit it by hand if you are careful.\n" % config.version
+            output_string = header_string + self.json_object(obj)
 
         self.file.write(output_string)
         self.file.close()
@@ -52,8 +57,10 @@ class tcp_writer(object):
         return pickle_string
 
     def json_object(self, obj):
-        """"""
+        """Write project object's props dict to a JSON formatted file"""
         debug(u"json_object")
+        return json.dumps(obj.props, ensure_ascii=False, sort_keys=True, indent=4)
+        
 
 class tcp_reader(object):
     """The main application, pre-window launch stuff should go here"""
@@ -87,10 +94,11 @@ class tcp_reader(object):
         obj.post_serialise(params)
         return obj
 
-    def unjson_object(self, str):
+    def unjson_object(self, str, params):
         """"""
         debug(u"unjson_object")
-        pass
+        props_dict = json.loads(str)
+        return project.Project(params[0], load=props_dict)
 
     def detect_filetype(self, str):
         """Detect whether data is from a JSON or pickle file"""

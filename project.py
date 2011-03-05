@@ -162,7 +162,7 @@ from environment import getenvvar
 
 class Project(object):
     """New Model containing all information about a project."""
-    def __init__(self, parent):
+    def __init__(self, parent, load=None):
         """Initialise this project, and set default values"""
         self.parent = parent
 #        # Create a 4/2 array of ProjectImages arrays, which can then contain a variable number of
@@ -200,37 +200,102 @@ class Project(object):
 
         # Internals used for stuff which shouldn't be saved, e.g. image data
         self.internals = {
-            "images" = self.init_image_array();
+            "images": self.init_image_array(),
+            "files": {
+                "saved": "False",
+                "save_location": init_save_location(),
+            }
         }
         self.defaults = {
             # project[view][season][frame][layer][xdim][ydim][zdim]
-            "images" = self.init_image_array();
-            "activeimage" = {
-                "direction": 0;
-                "season": 0;
-                "frame": 0;
-                "layer": 0;
-            };
-            "dims" = {
-                "x": 1;
-                "y": 1;
-                "x": 1;
-                "paksize": int(config.default_paksize);
-                "views": 1;
-                "winter": 0;
-                "frontimage": 0;
-                "frames": 1;
-            };
-            "files" = {
-                "saved": False;
-                "save_location": init_save_location();
-                "datfile_location": u"output.dat";
-                "datfile_write": True;
-                "pngfile_location": ospath.join(u"images", u"output.png");
-                "pakfile_location": u"";
-            };
-            "dat_properties" = u"Obj=building\nName=test_1\nType=cur\nPassengers=100\nintro_year=1900\nchance=100";
+            "images": self.init_image_array(),
+            "activeimage": {
+                "direction": 0,
+                "season": 0,
+                "frame": 0,
+                "layer": 0,
+            },
+            "dims": {
+                "x": 1,
+                "y": 1,
+                "z": 1,
+                "paksize": int(config.default_paksize),
+                "directions": 1,
+                "frames": 1,
+                "winter": False,
+                "frontimage": False,
+            },
+            "files": {
+                "datfile_location": u"output.dat",
+                "datfile_write": True,
+                "pngfile_location": ospath.join(u"images", u"output.png"),
+                "pakfile_location": u"",
+            },
+            "dat": {
+                "dat_lump": u"Obj=building\nName=test_1\nType=cur\nPassengers=100\nintro_year=1900\nchance=100",
+            },
         }
+        # ALL items in validators must be either dicts (implying subkeys) or functions (implying keys to be validated)
+        self.validators = {
+            "images": self.validate_image_array,
+            "activeimage": {
+                "direction": self.direction,
+                "season": self.season,
+                "frame": self.frame,
+                "layer": self.layer,
+            },
+            "dims": {
+                "x": self.x,
+                "y": self.y,
+                "z": self.z,
+                "paksize": self.paksize,
+                "directions": self.directions,
+                "frames": self.frames,
+                "winter": self.winter,
+                "frontimage": self.frontimage,
+            },
+            "files": {
+                "datfile_location": self.datfile_location,
+                "datfile_write": self.datfile_write,
+                "pngfile_location": self.pngfile_location,
+                "pakfile_location": self.pakfile_location,
+            },
+            "dat": {
+                "dat_lump": self.dat_lump,
+            },
+        }
+        if load is None:
+            self.props = self.defaults
+        else:
+            self.props = self.load_dict(load, self.validators, self.defaults)
+
+
+    def load_dict(self, loaded, validators, defaults):
+        """Load a dict of stuff from config, may be called recursively"""
+        props = {}
+        for k, v in validators.iteritems():
+            if loaded.has_key(k):
+                # If this is a key, validate value + set if valid
+                if type(v) == type(lambda x: x):
+                    if v(loaded[k]):
+                        props[k] = loaded[k]
+                    else:
+                        props[k] = defaults[k]
+                # If this is a node call function to determine what to set
+                elif type(v) == type({}) 
+                    if type(loaded[k]) == type({}):
+                        props[k] = self.load_dict(loaded[k], v, defaults[k])
+                    else:
+                        # Validators defines this to be a dict, but the loaded data for this key isn't a dict - data must be invalid so use defaults
+                        props[k] = defaults[k]
+                else:
+                    # This should not happen, panic
+                    debug(u"ERROR: invalid state for load_dict decode")
+                    raise ValueError
+            else:
+                props[k] = defaults[k]
+        return props
+
 
     def init_image_array(self):
         """Init a default/empty image array"""
@@ -302,34 +367,41 @@ class Project(object):
     def __getitem__(self, key):
         return self.props["images"][key]
 
-    def temp_dat_properties(self, set=None):
-        """References a string containing arbitrary dat properties for the project"""
-        if set != None:
-            self.val_temp_dat = set
-            debug(u"TEMP dat properties set to %s" % self.val_temp_dat)
-            self.on_change()
-            return 0
-        else:
-            return self.val_temp_dat
 
+    # These functions deal with dat file properties
+    def temp_dat_properties(self, set=None):
+        debug(u"Deprecation warning: temp_dat_properties() method called!")
+        return self.dat_lump(set)
+    def dat_lump(self, set=None):
+        """Sets or returns a string containing arbitrary .dat file properties"""
+        if set is not None:
+            self.props["dat"]["dat_lump"] = set
+            self.val_temp_dat = set
+            debug(u"dat_lump properties set to %s" % self.props["dat"]["dat_lump"])
+            self.on_change()
+            return True
+        else:
+            return self.props["dat"]["dat_lump"]
+
+
+    # Replaces image() method of the Image object
+    #    def image(self):
+    #        """Return a wxImage representation of the cached image"""
+    #        if self.value_image == None:
+    #            self.reloadImage()
+    #        return self.value_image
     def get_image(self, d, s, f, l):
         """Return a wxImage representation of the cached image"""
-        # Replaces image() method of the Image object
-        #    def image(self):
-        #        """Return a wxImage representation of the cached image"""
-        #        if self.value_image == None:
-        #            self.reloadImage()
-        #        return self.value_image
         self.reload_image(d, s, f, l)
         return self.internals["images"][d][s][f][l]["imagedata"]
 
+    # Replaces bitmap() method of the Image object
+    #    def bitmap(self):
+    #        """Return a wxBitmap representation of the cached image"""
+    #        if self.value_bitmap == None:
+    #            self.reloadImage()
+    #        return self.value_bitmap
     def get_bitmap(self, d, s, f, l):
-        # Replaces bitmap() method of the Image object
-        #    def bitmap(self):
-        #        """Return a wxBitmap representation of the cached image"""
-        #        if self.value_bitmap == None:
-        #            self.reloadImage()
-        #        return self.value_bitmap
         self.reload_image(d, s, f, l)
         return self.internals["images"][d][s][f][l]["bitmapdata"]
 
@@ -456,27 +528,52 @@ class Project(object):
         """Set or return the image data of the active image"""
         return self.active_image()["imagedata"]
 
+    def direction(self, set=None):
+        """Set or query active image's direction"""
+        # Must be 0,1,2 or 3
+        self.props["active"]["direction"] = direction
+    def season(self, set=None):
+        """Set or query active image's season"""
+        # Must be 0 or 1
+        self.props["active"].["season"] = season
+    def frame(self, set=None):
+        """Set or query active image's frame"""
+        # Must be in range of length of number of frames
+        self.props["active"]["frame"] = frame
+    def layer(self, set=None):
+        """Set or query active image's layer"""
+        # Must be 0 or 1
+        self.props["active"]["layer"] = layer
+
 #    def activeImage(self, direction=None, season=None, frame=None, layer=None):
     def active_image(self, direction=None, season=None, frame=None, layer=None):
         """Set or return the currently active image"""
         # If parameters have been changed at all, update
         changed = False
         if direction != self.props["active"]["direction"] and direction != None:
-            self.props["active"]["direction"] = direction
-            changed = True
-            debug(u"Active Image direction changed to: %s" % unicode(self.props["active"]["direction"]))
+            if self.direction(direction):
+                changed = True
+                debug(u"Active Image direction changed to: %s" % unicode(self.props["active"]["direction"]))
+            else:
+                return False
         if season != self.props["active"]["season"] and season != None:
-            self.props["active"].["season"] = season
-            changed = True
-            debug(u"Active Image season changed to: %s" % unicode(self.props["active"]["season"]))
+            if self.season(season):
+                changed = True
+                debug(u"Active Image season changed to: %s" % unicode(self.props["active"]["season"]))
+            else:
+                return False
         if frame != self.props["active"]["frame"] and frame != None:
-            self.props["active"]["frame"] = frame
-            changed = True
-            debug(u"Active Image frame changed to: %s" % unicode(self.props["active"]["frame"]))
+            if self.frame(frame):
+                changed = True
+                debug(u"Active Image frame changed to: %s" % unicode(self.props["active"]["frame"]))
+            else:
+                return False
         if layer != self.props["active"]["layer"] and layer != None:
-            self.props["active"]["layer"] = layer
-            changed = True
-            debug(u"Active Image layer changed to: %s" % unicode(self.props["active"]["layer"]))
+            if self.layer(layer):
+                changed = True
+                debug(u"Active Image layer changed to: %s" % unicode(self.props["active"]["layer"]))
+            else:
+                return False
 #        if changed == True:
 #            self.active.UpdateImage()
 #        else:
@@ -493,169 +590,212 @@ class Project(object):
                 self.props["dims"]["x"] = int(set)
                 debug(u"X dimension set to %i" % self.props["dims"]["x"])
                 self.on_change()
-                return 0
+                return True
             else:
                 debug(u"Attempt to set X dimension failed - Value (%s) outside of acceptable range" % unicode(set))
-                return 1
+                return False
         else:
             return self.props["dims"]["x"]
+
     def y(self, set=None):
         """Set or return Y dimension"""
-        if set != None:
+        if set is not None:
             if set in config.choicelist_dims:
                 self.props["dims"]["y"] = int(set)
                 debug(u"Y dimension set to %i" % self.props["dims"]["y"])
                 self.on_change()
-                return 0
+                return True
             else:
                 debug(u"Attempt to set Y dimension failed - Value (%s) outside of acceptable range" % unicode(set))
-                return 1
+                return False
         else:
             return self.props["dims"]["y"]
+
     def z(self, set=None):
         """Set or return Z dimension"""
-        if set != None:
+        if set is not None:
             if set in config.choicelist_dims_z:
                 self.props["dims"]["z"] = int(set)
                 debug(u"Z dimension set to %i" % self.props["dims"]["z"])
                 self.on_change()
-                return 0
+                return True
             else:
                 debug(u"Attempt to set Z dimension failed - Value (%s) outside of acceptable range" % unicode(set))
-                return 1
+                return False
         else:
             return self.props["dims"]["z"]
+
     def paksize(self, set=None):
         """Set or return paksize"""
-        if set != None:
+        if set is not None:
             if set in config.choicelist_paksize:
                 self.props["dims"]["paksize"] = int(set)
                 debug(u"Paksize set to %i" % self.props["dims"]["paksize"])
                 self.on_change()
-                return 0
+                return True
             else:
                 debug(u"Attempt to set Paksize failed - Value (%s) outside of acceptable range" % unicode(set))
-                return 1
+                return False
         else:
             return self.props["dims"]["paksize"]
+
     def winter(self, set=None):
         """Set or return if Winter image is enabled"""
-        if set != None:
-            if set == 1 or set == True:
-                self.props["dims"]["winter"] = 1
-                debug(u"WinterViewEnable set to %i" % self.props["dims"]["winter"])
+        if set is not None:
+            if set in [True, 1]:
+                self.props["dims"]["winter"] = True
+                debug(u"winter set to %i" % self.props["dims"]["winter"])
                 self.on_change()
-                return 0
-            elif set == 0 or set == False:
-                self.props["dims"]["winter"] = 0
-                debug(u"WinterViewEnable set to %i" % self.props["dims"]["winter"])
+                return True
+            elif set in [False, 0]:
+                self.props["dims"]["winter"] = False
+                debug(u"winter set to %i" % self.props["dims"]["winter"])
                 self.on_change()
-                return 0
+                return True
             else:
-                debug(u"Attempt to set WinterViewEnable failed - Value (%s) outside of acceptable range" % unicode(set))
-                return 1
+                debug(u"Attempt to set winter failed - Value (%s) outside of acceptable range" % unicode(set))
+                return False
         else:
             return self.props["dims"]["winter"]
+
     def frontimage(self, set=None):
         """Set or return if Front image is enabled"""
-        if set != None:
-            if set == 1 or set == True:
-                self.props["dims"]["frontimage"] = 1
-                debug(u"FrontImageEnable set to %i" % self.props["dims"]["frontimage"])
+        if set is not None:
+            if set in [True, 1]:
+                self.props["dims"]["frontimage"] = True
+                debug(u"frontimage set to %i" % self.props["dims"]["frontimage"])
                 self.on_change()
-                return 0
-            elif set == 0 or set == False:
-                self.props["dims"]["frontimage"] = 0
-                debug(u"FrontImageEnable set to %i" % self.props["dims"]["frontimage"])
+                return True
+            elif set in [False, 0]:
+                self.props["dims"]["frontimage"] = False
+                debug(u"frontimage set to %i" % self.props["dims"]["frontimage"])
                 self.on_change()
-                return 0
+                return True
             else:
-                debug(u"Attempt to set FrontImageEnable failed - Value (%s) outside of acceptable range" % unicode(set))
-                return 1
+                debug(u"Attempt to set frontimage failed - Value (%s) outside of acceptable range" % unicode(set))
+                return False
         else:
             return self.props["dims"]["frontimage"]
-    def views(self, set=None):
-        """Set or return number of views (1, 2 or 4)"""
-        if set != None:
-            if set in config.choicelist_views:
-                self.props["dims"]["views"] = int(set)
-                debug(u"Views set to %i" % self.props["dims"]["views"])
-                self.on_change()
-                return 0
+
+    def frames(self, set=None):
+        """Query or validate new value for number of frames"""
+        if set is not None:
+            if set == 1:
+                self.props["dims"]["frames"] = int(set)
+                return True
             else:
-                debug(u"Attempt to set Views failed - Value (%s) outside of acceptable range" % unicode(set))
-                return 1
-        return self.props["dims"]["views"]
+                debug(u"attempt to set frames failed - value (%s) outside of acceptable range" % unicode(set))
+                return False
+        else:
+            return self.props["dims"]["frames"]
 
+    def views(self, set=None):
+        debug(u"Deprecation warning: views() method called!")
+        return self.directions(set)
+    def directions(self, set=None):
+        """Set or return number of direction views (1, 2 or 4)"""
+        if set is not None:
+            if set in config.choicelist_views:
+                self.props["dims"]["directions"] = int(set)
+                debug(u"Views set to %i" % self.props["dims"]["directions"])
+                self.on_change()
+                return True
+            else:
+                debug(u"attempt to set directions failed - value (%s) outside of acceptable range" % unicode(set))
+                return False
+        else:
+            return self.props["dims"]["directions"]
 
-            "files" = {
-                "saved": False;
-                "save_location": init_save_location();
-                "datfile_location": u"output.dat";
-                "datfile_write": True;
-                "pngfile_location": ospath.join(u"images", u"output.png");
-                "pakfile_location": u"";
 
     # Functions with deal with file properties of the project
     def datfile(self, set=None):
+        debug(u"Deprecation warning: datfile() method called!")
+        self.datfile_location(set)
+    def datfile_location(self, set=None):
         """Set or return (relative) path to dat file"""
-        if set != None:
+        if set is not None:
             self.props["files"]["datfile_location"] = unicode(set)
             self.on_change()
+            return True
         else:
             return self.props["files"]["datfile_location"]
+
     def writedat(self, set=None):
+        debug(u"Deprecation warning: writedat() method called!")
+        self.datfile_write(set)
+    def datfile_write(self, set=None):
         """Set or return if dat file should be written"""
         if set is not None:
             if set in [True, 1]:
                 self.props["files"]["datfile_write"] = True
                 self.on_change()
+                return True
             elif set in [False, 0]:
                 self.props["files"]["datfile_write"] = False
                 self.on_change()
+                return True
             else:
                 debug(u"Attempt to set datfile_write failed - Value (%s) outside of acceptable range" % unicode(set))
-                return 1
+                return False
         else:
             return self.props["files"]["datfile_write"]
+
     def pngfile(self, set=None):
+        debug(u"Deprecation warning: pngfile() method called!")
+        self.pngfile_location(set)
+    def pngfile_location(self, set=None):
         """Set or return (relative) path to png file"""
         if set is not None:
             self.props["files"]["pngfile_location"] = unicode(set)
             self.on_change()
+            return True
         else:
             return self.props["files"]["pngfile_location"]
+
     def pakfile(self, set=None):
+        debug(u"Deprecation warning: pakfile() method called!")
+        self.pakfile_location(set)
+    def pakfile_location(self, set=None):
         """Set or return (relative) path to pak file"""
-        if set != None:
+        if set is not None:
             self.props["files"]["pakfile_location"] = unicode(set)
             self.on_change()
+            return True
         else:
             return self.props["files"]["pakfile_location"]
-#    # Deprecate this function as it does the same thing as saved()
-#    def has_save_location(self):
-#        """Return True if project has a save location, False otherwise"""
-#        return self.props["files"]["saved"]
+
+
+    # The following functions deal with the save file for the project and are saved to the internals set (since we don't need to preserve these values when saving)
+    def has_save_location(self):
+        debug(u"Deprecation warning: has_save_location() method called!")
+        self.saved(set)
     def saved(self, set=None):
         """Set or return whether a save path has been set for this project"""
-        if set != None:
+        if set is not None:
             if set in [True, 1]:
-                self.props["files"]["saved"] = True
+                self.internals["files"]["saved"] = True
                 self.on_change()
+                return True
             elif set in [False, 0]:
-                self.props["files"]["saved"] = False
+                self.internals["files"]["saved"] = False
                 self.on_change()
+                return True
             else:
                 debug(u"Attempt to set project saved status failed - Value (%s) outside of acceptable range" % unicode(set))
         else:
-            return self.props["files"]["saved"]
+            return self.internals["files"]["saved"]
+
     def savefile(self, set=None):
+        debug(u"Deprecation warning: savefile() method called!")
+        self.save_location(set)
+    def save_location(self, set=None):
         """Set or return (absolute) path to project save file location"""
-        if set != None:
-            self.props["files"]["save_location"] = unicode(set)
+        if set is not None:
+            self.internals["files"]["save_location"] = unicode(set)
             self.on_change()
+            return True
         else:
-            return self.props["files"]["save_location"]
+            return self.internals["files"]["save_location"]
 
     # Inputting/extracting information from the project is done via methods of the project class, so we can change the underlying
     # structure without having to change the way every other function interacts with it
