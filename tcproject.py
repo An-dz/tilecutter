@@ -1,6 +1,6 @@
 # coding: UTF-8
 #
-# TileCutter Project Module
+# TileCutter Project Module (Old version)
 #
 
 # Copyright © 2008-2011 Timothy Baldock. All Rights Reserved.
@@ -26,6 +26,29 @@ from environment import getenvvar
 # As user enters a path in the box, it updates the active image, only when the path points to a valid
 # file should the current image path be set, and the image loaded from file into the cache
 # File validity is measured relative to the current project save location
+
+# project[view][season][frame][image][xdim][ydim][zdim]
+# view=NSEW, 0,1,2,3 - array - controlled by global enable
+# season=summer/winter, 0,1 - array - controlled by global bool enable
+# frame=0,++ - array - controlled by global number of frames variable
+# image=back/front, 0,1 - array - controlled by global bool enable
+
+
+# Main object should have a json() function which removes its images and then returns a json formatted version of itself
+# Should also have a pickle() function which does the same for the python representation
+
+# For replacement
+# Needs overall method to reload a particular image
+# Concept of active image needs to be tied to an image index which can be passed to main parent object
+#  This can then be used in a call to that object to reload the image, rather than going to a child object
+# Properties for each image:
+#   is_backimage - not kept, property used to look up this image so should be a structural thing at higher level
+#  imagedata - wx.Bitmap
+#  path - string
+#  
+#  offset - coords/array
+#   cutimageset - not kept, generated on the fly by cutting routine and not stored in this object
+
 
 class ProjectImage(object):
     """An individual image object, consisting of a cached image, path to that image and offset dimensions"""
@@ -462,19 +485,6 @@ class ProjectFiles(object):
         # Location of save file, by default this is the user's home directory
         # If user has previously selected a place to save project files to, use this as the default save path
         # Whenever the user does a Save-As this config directive should be updated
-
-#        if config.last_save_path != "" and os.path.exists(config.last_save_path):
-#            self.save_location = self.test_path(config.last_save_path)
-#
-#        # HOME is on Unix-style systems
-#        elif u"HOME" in os.environ and os.path.exists(os.environ[u"HOME"]):
-#            self.save_location = self.test_path(os.environ[u"HOME"])
-#
-#        # USERPROFILE is on Windows
-#        elif u"USERPROFILE" in os.environ and os.path.exists(os.environ[u"USERPROFILE"]):
-#            self.save_location = self.test_path(os.environ[u"USERPROFILE"])
-#            # Convert from native windows codepage if non-ASCII chars involved
-#            self.save_location = unicode(self.save_location, sys.getfilesystemencoding())
 
         # Use userprofile on all platforms as default
         if sys.platform == "darwin":

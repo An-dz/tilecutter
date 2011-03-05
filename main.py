@@ -389,8 +389,8 @@ class App(wx.App):
         if loadpath is None:                                        # Check if a load path was passed into this function
             loadpath = self.dialog_load()                           # If not prompt for file to load
         if loadpath != wx.ID_CANCEL and loadpath != False:          # If user picked a file and didn't cancel the dialog
-            debug(u"Load dialog returned a path: %s" % ret)
-            return self.load_project(ret)                           # Load the project
+            debug(u"Load dialog returned a path: %s" % loadpath)
+            return self.load_project(loadpath)                      # Load the project
         else:                                                       # Otherwise
             return False                                            # Quit out
     def OnSaveProject(self, project):
