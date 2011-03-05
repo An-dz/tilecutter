@@ -32,7 +32,9 @@ except ImportError:
     raise
 
 import pickle
-import tcui, tc, tcproject, imres, codecs
+import tcui, tc, imres, codecs
+import tcproject
+import project
 from optparse import OptionParser
 
 # Classes to read/write TileCutter files
@@ -79,12 +81,12 @@ class App(wx.App):
         # Create a default active project
         debug(u"App OnInit: Create default project")
         self.projects = {}
-        self.projects["default"] = tcproject.Project(self)
+        self.projects["default"] = project.Project(self)
         self.activeproject = self.projects["default"]
         # Serialise active project, this string is then checked to see if it needs to be saved
         self.activepickle = self.pickle_project(self.activeproject)
         # Active project needs a file save location, by default this is set to a default in the new project
-        self.active_save_location = self.activeproject.files.save_location
+        self.active_save_location = self.activeproject.save_location()
         self.update_title_text()
 
         if self.gui:
@@ -158,16 +160,16 @@ class App(wx.App):
     def update_title_text(self):
         """Updates the title text with the details of the currently active project"""
         debug(u"update_title_text")
-        if self.activeproject.has_save_location():
+        if self.activeproject.saved():
             # Project has been previously saved
             if self.project_changed(self.activeproject):
                 # Project has changed but was previously saved
                 # Title string will be *FileName.tcp - TileCutter
-                self.title_text = "*%s - %s" % (self.activeproject.savefile(), "%s")
+                self.title_text = "*%s - %s" % (self.activeproject.save_location(), "%s")
             else:
                 # Project hasn't changed and is saved
                 # Title string will be FileName.tcp - TileCutter
-                self.title_text = "%s - %s" % (self.activeproject.savefile(), "%s")
+                self.title_text = "%s - %s" % (self.activeproject.save_location(), "%s")
         else:
             # Project hasn't been saved before
             if self.project_changed(self.activeproject):
@@ -188,7 +190,7 @@ class App(wx.App):
         if write_dat is None:
             write_dat = config.write_dat
         # First trigger project to generate cut images
-        project.cutImages(tc.export_cutter)
+        project.cut_images(tc.export_cutter)
         # Then feed project into outputting routine
         # Will need a way to report back progress to a progress bar/indicator
         ret = tc.export_writer(project, pak_output, return_dat, write_dat)
@@ -252,8 +254,8 @@ class App(wx.App):
         filesAllowed = "TileCutter Project files (*.tcp)|*.tcp"
         dialogFlags = wx.FD_OPEN|wx.FD_FILE_MUST_EXIST
         # This probably needs to be more robust
-        path = os.path.split(self.activeproject.savefile())[0]
-        file = os.path.split(self.activeproject.savefile())[1]
+        path = os.path.split(self.activeproject.save_location())[0]
+        file = os.path.split(self.activeproject.save_location())[1]
         dlg = wx.FileDialog(self.frame, gt("Choose a project file to open..."),
                             path, file, filesAllowed, dialogFlags)
         result = dlg.ShowModal()
@@ -276,12 +278,12 @@ class App(wx.App):
     def pickle_project(self, project, picklemode = 2):
         """Use pickle to return a string which can be compared against a previous one to tell if the project has changed"""
         # Remove all image information, as this can't be pickled (and doesn't need to be anyway)
-        params = project.prep_serialise()
+#        params = project.prep_serialise()
 
-        pickle_string = pickle.dumps(project, picklemode)
+        pickle_string = pickle.dumps(project.props, picklemode)
 
         # Restore parent information
-        project.post_serialise(params)
+#        project.post_serialise(params)
 
         debug(u"pickle_project, object type: %s pickle type: %s" % (unicode(project), picklemode))
         return pickle_string
@@ -294,7 +296,7 @@ class App(wx.App):
         debug(u"save_project - Save project out to disk")
 
         # Create new writer
-        t_writer = tcp_writer(self.activeproject.savefile(), "pickle")
+        t_writer = tcp_writer(self.activeproject.save_location(), "json")
 
         # Check parent before + after
         debug(u"  before - parent of project: %s is: %s" % (str(project), str(project.parent)))
@@ -349,10 +351,10 @@ class App(wx.App):
     def new_project(self):
         """Create a new project"""
         debug(u"new_project - Create new project")
-        self.activeproject = tcproject.Project(self)
+        self.activeproject = project.Project(self)
         self.activepickle = self.pickle_project(self.activeproject)
         # Reset project save location/name
-        self.active_save_location = self.activeproject.files.save_location
+        self.active_save_location = self.activeproject.save_location()
         # Finally update the frame to display changes
         self.frame.update()
         self.project_has_changed()
@@ -512,31 +514,31 @@ def run():
                 if options.png_directory is not None:
                     png_dir = options.png_directory
                 else:
-                    png_dir = os.path.split(app.activeproject.pngfile())[0]
+                    png_dir = os.path.split(app.activeproject.pngfile_location())[0]
                 if options.png_filename is not None:
                     png_file = options.png_filename
                 else:
-                    png_file = os.path.split(app.activeproject.pngfile())[1]
+                    png_file = os.path.split(app.activeproject.pngfile_location())[1]
                 app.activeproject.pngfile(os.path.join(png_dir, png_file))
                 # For DAT file
                 if options.dat_directory is not None:
                     dat_dir = options.dat_directory
                 else:
-                    dat_dir = os.path.split(app.activeproject.datfile())[0]
+                    dat_dir = os.path.split(app.activeproject.datfile_location())[0]
                 if options.dat_filename is not None:
                     dat_file = options.dat_filename
                 else:
-                    dat_file = os.path.split(app.activeproject.datfile())[1]
+                    dat_file = os.path.split(app.activeproject.datfile_location())[1]
                 app.activeproject.datfile(os.path.join(dat_dir, dat_file))
                 # For PAK file
                 if options.pak_directory is not None:
                     pak_dir = options.pak_directory
                 else:
-                    pak_dir = os.path.split(app.activeproject.pakfile())[0]
+                    pak_dir = os.path.split(app.activeproject.pakfile_location())[0]
                 if options.pak_filename is not None:
                     pak_file = options.pak_filename
                 else:
-                    pak_file = os.path.split(app.activeproject.pakfile())[1]
+                    pak_file = os.path.split(app.activeproject.pakfile_location())[1]
                 app.activeproject.pakfile(os.path.join(pak_dir, pak_file))
 
                 app.export_project(app.activeproject, pak_output=options.pak_output, return_dat=False, write_dat=options.dat_output)
