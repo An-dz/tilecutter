@@ -39,7 +39,7 @@ class tcp_writer(object):
         if self.mode == "pickle":
             output_string = self.pickle_object(obj, 2)
         elif self.mode == "json":
-            header_string = "#TCP_JSON,%s\n#This is a TileCutter Project file (JSON formatted). You may edit it by hand if you are careful.\n" % config.version
+            header_string = "#TCP_JSON,%s\n#This is a TileCutter Project file (JSON formatted). You may edit it by hand if you are careful and don't change anything above this line.\n" % config.version
             output_string = header_string + self.json_object(obj)
 
         self.file.write(output_string)
@@ -57,7 +57,7 @@ class tcp_writer(object):
         return pickle_string
 
     def json_object(self, obj):
-        """Write project object's props dict to a JSON formatted file"""
+        """Write project object's props dict to a json formatted file"""
         debug(u"json_object")
         return json.dumps(obj.props, ensure_ascii=False, sort_keys=True, indent=4)
         
@@ -79,13 +79,20 @@ class tcp_reader(object):
         # Optional params argument which contains values which should be passed to post_serialise method of object to initalise it
         str = self.file.read()
         self.file.close()
-        # Check what kind of file it is, JSON or pickle
+        # Check what kind of file it is, json or pickle
         if self.detect_filetype(str) == "pickle":
             obj = self.unpickle_object(str, params)
-        elif self.detect_filetype(str) == "JSON":
-            pass
+        elif self.detect_filetype(str) == "json":
+            obj = self.unjson_object(str, params)
 
         return obj
+
+    def convert_tcproject(self, tcproj):
+        """Convert an old-style tcproject object into a new style project one"""
+        # tcproj represents a tcproject object
+        # Frames were not implemented under this format, so assume there's only one
+        # Build an input dict for a new project using the tcproject's properties
+        # The validators in the project class will then take care of the rest
 
     def unpickle_object(self, str, params):
         """Unpickle an object from the pickled string str, call post_serialise with params"""
@@ -101,6 +108,12 @@ class tcp_reader(object):
         return project.Project(params[0], load=props_dict)
 
     def detect_filetype(self, str):
-        """Detect whether data is from a JSON or pickle file"""
-        return "pickle"
+        """Detect whether data is from a json or pickle file"""
+        # If first line of file reads "#TCP_JSON" then this is a json format file 
+        # (should then be a comma followed by the program version that wrote it)
+        if str[:9] == u"#TCP_JSON":
+            return "json"
+        # Otherwise it's probably either pickle format (or some trash, but the pickle decoder will find that out)
+        else:
+            return "pickle"
 

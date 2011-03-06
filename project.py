@@ -39,32 +39,13 @@ from environment import getenvvar
 # image=back/front, 0,1 - array - controlled by global bool enable
 
 
-# Main object should have a json() function which removes its images and then returns a json formatted version of itself
-# Should also have a pickle() function which does the same for the python representation
-
 class Project(object):
     """New Model containing all information about a project."""
     def __init__(self, parent, load=None):
         """Initialise this project, and set default values"""
         self.parent = parent
 
-        # All properties stored in a single dict which is then read from/written to by access functions
-        # All values which can exist in a save file must be defined with defaults here to be read in
-        # Dicts are checked recursively for validity based on the properties defined within them
-
-        # For replacement
-        # Needs overall method to reload a particular image
-        # Concept of active image needs to be tied to an image index which can be passed to main parent object
-        #  This can then be used in a call to that object to reload the image, rather than going to a child object
-        # Properties for each image:
-        #   is_backimage - not kept, property used to look up this image so should be a structural thing at higher level
-        #  imagedata - wx.Bitmap
-        #  path - string
-        #  
-        #  offset - coords/array
-        #   cutimageset - not kept, generated on the fly by cutting routine and not stored in this object
-
-        # Internals used for stuff which shouldn't be saved, e.g. image data
+        # internals is used to store things which shouldn't be saved, e.g. image data, save path etc.
         self.internals = {
             "images": self.init_image_array(),
             "files": {
@@ -72,6 +53,8 @@ class Project(object):
                 "save_location": self.init_save_location(),
             }
         }
+
+        # defaults defines default values for all project properties
         self.defaults = {
             # project[view][season][frame][layer][xdim][ydim][zdim]
             "images": self.init_image_array(),
@@ -101,6 +84,8 @@ class Project(object):
                 "dat_lump": u"Obj=building\nName=test_1\nType=cur\nPassengers=100\nintro_year=1900\nchance=100",
             },
         }
+
+        # validators defines validation functions for project properties which can be used when loading files to ensure valid data
         # ALL items in validators must be either dicts (implying subkeys) or functions (implying keys to be validated)
         self.validators = {
             "images": self.validate_image_array,
@@ -130,10 +115,14 @@ class Project(object):
                 "dat_lump": self.dat_lump,
             },
         }
+
         if load is None:
             self.props = self.defaults
         else:
             self.props = self.load_dict(load, self.validators, self.defaults)
+
+    def __getitem__(self, key):
+        return self.props["images"][key]
 
 
     def load_dict(self, loaded, validators, defaults):
@@ -186,7 +175,6 @@ class Project(object):
             viewarray.append(seasonarray)
         return viewarray
                         
-
     def validate_image_array(self, imarray):
         """Validate that an image array loaded from file is valid"""
 
@@ -230,10 +218,6 @@ class Project(object):
         debug(u"Root on_change triggered, sending message to App")
         self.parent.project_has_changed()
 
-    def __getitem__(self, key):
-        return self.props["images"][key]
-
-
     # These functions deal with dat file properties
     def temp_dat_properties(self, set=None):
         debug(u"Deprecation warning: temp_dat_properties() method called!")
@@ -249,6 +233,24 @@ class Project(object):
         else:
             return self.props["dat"]["dat_lump"]
 
+
+    # These functions deal with image data
+    def active_image_path(self, path=None):
+        """Set or return the path of the active image"""
+        return self.image_path(self.props["activeimage"]["direction"], 
+                               self.props["activeimage"]["season"], 
+                               self.props["activeimage"]["frame"], 
+                               self.props["activeimage"]["layer"],
+                               path)
+    def image_path(self, d, s, f, l, path=None):
+        """Set or return the path of the specified image"""
+        if path is not None:
+            self.props["images"][d][s][f][l]["path"] = path
+            # This will either load the image (if the path exists) or set a default image if it doesn't
+            self.reload_image(d, s, f, l)
+            return True
+        else:
+            return self.props["images"][d][s][f][l]["path"]
 
     def get_image(self, d, s, f, l):
         """Return a wxImage representation of the specified image"""
@@ -288,7 +290,6 @@ class Project(object):
         """Return cut image fragments based on full coordinate lookup in wxBitmap format, used by output writer"""
         return self.internals["images"][d][s][f][l]["cutimageset"][x][y][z]
 
-#    def cutImages(self, cutting_function):
     def cut_images(self, cutting_function):
         """Produce cut imagesets for all images in this project"""
         # Can make this work conditionally based on which images are enabled later
@@ -300,7 +301,6 @@ class Project(object):
                         self.reload_image(d,s,f,l)
                         # Call cutting function on image and store data on the internals array
                         # Cutting function by convention takes args: wxbitmap, dims(x,y,z,direction), offset, paksize
-#                        self.props["images"][d][s][f][l].cutImage(cutting_function, (self.x(), self.y(), self.z(), d), self.paksize())
                         self.internals["images"][d][s][f][l]["cutimageset"] = cutting_function(self.internals["images"][d][s][f][l]["bitmapdata"],
                                                                                                (self.props["dims"]["x"], 
                                                                                                 self.props["dims"]["y"], 
@@ -327,7 +327,6 @@ class Project(object):
             pass
         self.internals["images"][d][s][f][l]["bitmapdata"] = wx.BitmapFromImage(self.internals["images"][d][s][f][l]["imagedata"])
 
-#    def delImages(self):
     def delete_imagedata(self):
         """Delete all image data representations, ready for pickling"""
         # This won't be needed since the image data will be stored in the internals["images"] array rather than props (and only props will be saved)
@@ -393,32 +392,6 @@ class Project(object):
                 return 0
         else:
             return self.active_image()["offset"]
-
-    def active_image_path(self, path=None):
-        """Set or return the path of the active image"""
-        return self.image_path(self.props["activeimage"]["direction"], 
-                               self.props["activeimage"]["season"], 
-                               self.props["activeimage"]["frame"], 
-                               self.props["activeimage"]["layer"],
-                               path)
-    def image_path(self, d, s, f, l, path=None):
-        """Set or return the path of the specified image"""
-        if path is not None:
-            self.props["images"][d][s][f][l]["path"] = path
-            # This will either load the image (if the path exists) or set a default image if it doesn't
-            self.reload_image(d, s, f, l)
-            return True
-        else:
-            return self.props["images"][d][s][f][l]["path"]
-
-#    def active_image_data(self, path=None):
-#        """Set or return the image data of the active image"""
-#        # This needs to index into internals not props for the image data!
-#        return self.active_image()["imagedata"]
-#    def active_bitmap_data(self):
-#        """Return wxBitmap data for the active image"""
-#        # This needs to index into internals not props for the image data!
-#        return self.active_image()["bitmapdata"]
 
     def direction(self, set=None):
         """Set or query active image's direction"""
@@ -505,10 +478,6 @@ class Project(object):
                 debug(u"Active Image layer changed to: %s" % unicode(self.props["activeimage"]["layer"]))
             else:
                 return False
-#        if changed == True:
-#            self.active.UpdateImage()
-#        else:
-        # project[direction][season][frame][layer][xdim][ydim][zdim]
         # Returns dict containing active image's properties
         return self.props["images"][self.props["activeimage"]["direction"]][self.props["activeimage"]["season"]][self.props["activeimage"]["frame"]][self.props["activeimage"]["layer"]]
 

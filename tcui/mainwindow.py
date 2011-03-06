@@ -24,7 +24,7 @@ gt = translator.Translator()
 _gt = gt.loop
 
 
-import tcui, tc, tcproject, imres
+import tcui, tc, imres
 
 import config
 config = config.Config()

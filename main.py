@@ -33,7 +33,6 @@ except ImportError:
 
 import pickle
 import tcui, tc, imres, codecs
-import tcproject
 import project
 from optparse import OptionParser
 
