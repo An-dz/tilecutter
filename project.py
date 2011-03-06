@@ -69,7 +69,7 @@ class Project(object):
             "images": self.init_image_array(),
             "files": {
                 "saved": "False",
-                "save_location": init_save_location(),
+                "save_location": self.init_save_location(),
             }
         }
         self.defaults = {
@@ -94,7 +94,7 @@ class Project(object):
             "files": {
                 "datfile_location": u"output.dat",
                 "datfile_write": True,
-                "pngfile_location": ospath.join(u"images", u"output.png"),
+                "pngfile_location": os.path.join(u"images", u"output.png"),
                 "pakfile_location": u"",
             },
             "dat": {
@@ -250,27 +250,29 @@ class Project(object):
             return self.props["dat"]["dat_lump"]
 
 
-    # Replaces image() method of the Image object
-    #    def image(self):
-    #        """Return a wxImage representation of the cached image"""
-    #        if self.value_image == None:
-    #            self.reloadImage()
-    #        return self.value_image
     def get_image(self, d, s, f, l):
-        """Return a wxImage representation of the cached image"""
+        """Return a wxImage representation of the specified image"""
         self.reload_image(d, s, f, l)
         return self.internals["images"][d][s][f][l]["imagedata"]
 
-    # Replaces bitmap() method of the Image object
-    #    def bitmap(self):
-    #        """Return a wxBitmap representation of the cached image"""
-    #        if self.value_bitmap == None:
-    #            self.reloadImage()
-    #        return self.value_bitmap
+    def get_active_image(self):
+        """Return a wxImage representation of the active image"""
+        return self.get_image(self.props["activeimage"]["direction"], 
+                              self.props["activeimage"]["season"], 
+                              self.props["activeimage"]["frame"], 
+                              self.props["activeimage"]["layer"])
+
     def get_bitmap(self, d, s, f, l):
+        """Return a wxBitmap representation of the specified image"""
         self.reload_image(d, s, f, l)
         return self.internals["images"][d][s][f][l]["bitmapdata"]
 
+    def get_active_bitmap(self):
+        """Return a wxBitmap representation of the active image"""
+        return self.get_bitmap(self.props["activeimage"]["direction"], 
+                               self.props["activeimage"]["season"], 
+                               self.props["activeimage"]["frame"], 
+                               self.props["activeimage"]["layer"])
 
     def set_all_images(self, path):
         """Set the path for all images to the same path"""
@@ -309,7 +311,7 @@ class Project(object):
     def reload_image(self, d, s, f, l):
         """Refresh the cached image, inputs are: direction, season, frame, layer"""
         # If path is valid, use it, otherwise use a blank image/image with error message
-        abspath = paths.join_paths(self.props["files"]["save_location"], self.props["images"][d][s][f][l]["path"])
+        abspath = paths.join_paths(self.internals["files"]["save_location"], self.props["images"][d][s][f][l]["path"])
         # If path is valid, load file
         self.internals["images"][d][s][f][l]["imagedata"] = wx.EmptyImage(1,1)
         if (paths.is_input_file(abspath) and os.path.exists(abspath)):
@@ -396,52 +398,96 @@ class Project(object):
 
     def active_image_data(self, path=None):
         """Set or return the image data of the active image"""
+        # This needs to index into internals not props for the image data!
         return self.active_image()["imagedata"]
+    def active_bitmap_data(self):
+        """Return wxBitmap data for the active image"""
+        # This needs to index into internals not props for the image data!
+        return self.active_image()["bitmapdata"]
 
     def direction(self, set=None):
         """Set or query active image's direction"""
-        # Must be 0,1,2 or 3
-        self.props["active"]["direction"] = direction
+        if set is not None:
+            if set in [0,1,2,3]:
+                self.props["activeimage"]["direction"] = set
+                debug(u"Active image direction set to %i" % self.props["activeimage"]["direction"])
+                self.on_change()
+                return True
+            else:
+                debug(u"Attempt to set active image direction failed - Value (%s) outside of acceptable range" % unicode(set))
+                return False
+        else:
+            return self.props["activeimage"]["direction"]
+
     def season(self, set=None):
         """Set or query active image's season"""
-        # Must be 0 or 1
-        self.props["active"]["season"] = season
+        if set is not None:
+            if set in [0, 1]:
+                self.props["activeimage"]["season"] = set
+                debug(u"Active image season set to %i" % self.props["activeimage"]["season"])
+                self.on_change()
+                return True
+            else:
+                debug(u"Attempt to set active image season failed - Value (%s) outside of acceptable range" % unicode(set))
+                return False
+        else:
+            return self.props["activeimage"]["season"]
+
     def frame(self, set=None):
         """Set or query active image's frame"""
-        # Must be in range of length of number of frames
-        self.props["active"]["frame"] = frame
+        if set is not None:
+            if set in range(self.props["dims"]["frames"]):
+                self.props["activeimage"]["frame"] = set
+                debug(u"Active image frame set to %i" % self.props["activeimage"]["frame"])
+                self.on_change()
+                return True
+            else:
+                debug(u"Attempt to set active image frame failed - Value (%s) outside of acceptable range" % unicode(set))
+                return False
+        else:
+            return self.props["activeimage"]["frame"]
+
     def layer(self, set=None):
         """Set or query active image's layer"""
-        # Must be 0 or 1
-        self.props["active"]["layer"] = layer
+        if set is not None:
+            if set in [0, 1]:
+                self.props["activeimage"]["layer"] = set
+                debug(u"Active image layer set to %i" % self.props["activeimage"]["layer"])
+                self.on_change()
+                return True
+            else:
+                debug(u"Attempt to set active image layer failed - Value (%s) outside of acceptable range" % unicode(set))
+                return False
+        else:
+            return self.props["activeimage"]["layer"]
 
 #    def activeImage(self, direction=None, season=None, frame=None, layer=None):
     def active_image(self, direction=None, season=None, frame=None, layer=None):
         """Set or return the currently active image"""
         # If parameters have been changed at all, update
         changed = False
-        if direction != self.props["active"]["direction"] and direction != None:
+        if direction != self.props["activeimage"]["direction"] and direction != None:
             if self.direction(direction):
                 changed = True
-                debug(u"Active Image direction changed to: %s" % unicode(self.props["active"]["direction"]))
+                debug(u"Active Image direction changed to: %s" % unicode(self.props["activeimage"]["direction"]))
             else:
                 return False
-        if season != self.props["active"]["season"] and season != None:
+        if season != self.props["activeimage"]["season"] and season != None:
             if self.season(season):
                 changed = True
-                debug(u"Active Image season changed to: %s" % unicode(self.props["active"]["season"]))
+                debug(u"Active Image season changed to: %s" % unicode(self.props["activeimage"]["season"]))
             else:
                 return False
-        if frame != self.props["active"]["frame"] and frame != None:
+        if frame != self.props["activeimage"]["frame"] and frame != None:
             if self.frame(frame):
                 changed = True
-                debug(u"Active Image frame changed to: %s" % unicode(self.props["active"]["frame"]))
+                debug(u"Active Image frame changed to: %s" % unicode(self.props["activeimage"]["frame"]))
             else:
                 return False
-        if layer != self.props["active"]["layer"] and layer != None:
+        if layer != self.props["activeimage"]["layer"] and layer != None:
             if self.layer(layer):
                 changed = True
-                debug(u"Active Image layer changed to: %s" % unicode(self.props["active"]["layer"]))
+                debug(u"Active Image layer changed to: %s" % unicode(self.props["activeimage"]["layer"]))
             else:
                 return False
 #        if changed == True:
@@ -449,7 +495,7 @@ class Project(object):
 #        else:
         # project[direction][season][frame][layer][xdim][ydim][zdim]
         # Returns dict containing active image's properties
-        return self.props["images"][self.props["active"]["direction"]][self.props["active"]["season"]][self.props["active"]["frame"]][self.props["active"]["layer"]]
+        return self.props["images"][self.props["activeimage"]["direction"]][self.props["activeimage"]["season"]][self.props["activeimage"]["frame"]][self.props["activeimage"]["layer"]]
 
 
     # Functions which deal with dimensions properties of the project
@@ -580,7 +626,7 @@ class Project(object):
     # Functions with deal with file properties of the project
     def datfile(self, set=None):
         debug(u"Deprecation warning: datfile() method called!")
-        self.datfile_location(set)
+        return self.datfile_location(set)
     def datfile_location(self, set=None):
         """Set or return (relative) path to dat file"""
         if set is not None:
@@ -592,7 +638,7 @@ class Project(object):
 
     def writedat(self, set=None):
         debug(u"Deprecation warning: writedat() method called!")
-        self.datfile_write(set)
+        return self.datfile_write(set)
     def datfile_write(self, set=None):
         """Set or return if dat file should be written"""
         if set is not None:
@@ -612,7 +658,7 @@ class Project(object):
 
     def pngfile(self, set=None):
         debug(u"Deprecation warning: pngfile() method called!")
-        self.pngfile_location(set)
+        return self.pngfile_location(set)
     def pngfile_location(self, set=None):
         """Set or return (relative) path to png file"""
         if set is not None:
@@ -624,7 +670,7 @@ class Project(object):
 
     def pakfile(self, set=None):
         debug(u"Deprecation warning: pakfile() method called!")
-        self.pakfile_location(set)
+        return self.pakfile_location(set)
     def pakfile_location(self, set=None):
         """Set or return (relative) path to pak file"""
         if set is not None:
@@ -638,7 +684,7 @@ class Project(object):
     # The following functions deal with the save file for the project and are saved to the internals set (since we don't need to preserve these values when saving)
     def has_save_location(self):
         debug(u"Deprecation warning: has_save_location() method called!")
-        self.saved(set)
+        return self.saved(set)
     def saved(self, set=None):
         """Set or return whether a save path has been set for this project"""
         if set is not None:
@@ -657,7 +703,7 @@ class Project(object):
 
     def savefile(self, set=None):
         debug(u"Deprecation warning: savefile() method called!")
-        self.save_location(set)
+        return self.save_location(set)
     def save_location(self, set=None):
         """Set or return (absolute) path to project save file location"""
         if set is not None:

@@ -156,16 +156,16 @@ class MainWindow(wx.Frame):
         return self.app.activeproject.active_image_path(val)
     def get_active_savefile_path(self, val=None):
         """Return activeproject's save path"""
-        return self.app.activeproject.savefile(val)
+        return self.app.activeproject.save_location(val)
     def get_active_datfile_path(self, val=None):
         """Return activeproject's datfile path"""
-        return self.app.activeproject.datfile(val)
+        return self.app.activeproject.datfile_location(val)
     def get_active_pngfile_path(self, val=None):
         """Return activeproject's pngfile path"""
-        return self.app.activeproject.pngfile(val)
+        return self.app.activeproject.pngfile_location(val)
     def get_active_pakfile_path(self, val=None):
         """Return activeproject's pakfile path"""
-        return self.app.activeproject.pakfile(val)
+        return self.app.activeproject.pakfile_location(val)
 
     def translate(self):
         """Master translate function for the mainwindow object"""
