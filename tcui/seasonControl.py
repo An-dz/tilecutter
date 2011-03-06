@@ -67,7 +67,7 @@ class seasonControl(object):
             # If currently have winter image selected, switch to summer image
             if self.seasons_select_winter.GetValue() == True:
                 # Update model
-                self.app.activeproject.activeImage(season = 0)
+                self.app.activeproject.active_image(season = 0)
                 self.seasons_select_summer.SetValue(True)
                 # As active season changed, need to redraw display
                 self.app.frame.display.update()
@@ -85,12 +85,12 @@ class seasonControl(object):
     def OnSummer(self,e):
         """Change to Summer image"""
         # Set active image to Summer
-        self.app.activeproject.activeImage(season = 0)
+        self.app.activeproject.active_image(season = 0)
         # Redraw active image
         self.app.frame.display.update()
     def OnWinter(self,e):
         """Change to Winter image"""
         # Set active image to Winter
-        self.app.activeproject.activeImage(season = 1)
+        self.app.activeproject.active_image(season = 1)
         # Redraw active image
         self.app.frame.display.update()

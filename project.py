@@ -308,8 +308,14 @@ class Project(object):
                                                                                                self.props["images"][d][s][f][l]["offset"],
                                                                                                self.props["dims"]["paksize"])
 
+    def reload_active_image(self):
+        """Refresh the active image"""
+        return self.reload_image(self.props["activeimage"]["direction"], 
+                                 self.props["activeimage"]["season"], 
+                                 self.props["activeimage"]["frame"], 
+                                 self.props["activeimage"]["layer"])
     def reload_image(self, d, s, f, l):
-        """Refresh the cached image, inputs are: direction, season, frame, layer"""
+        """Refresh the specified image, inputs are: direction, season, frame, layer"""
         # If path is valid, use it, otherwise use a blank image/image with error message
         abspath = paths.join_paths(self.internals["files"]["save_location"], self.props["images"][d][s][f][l]["path"])
         # If path is valid, load file
@@ -390,20 +396,29 @@ class Project(object):
 
     def active_image_path(self, path=None):
         """Set or return the path of the active image"""
+        return self.image_path(self.props["activeimage"]["direction"], 
+                               self.props["activeimage"]["season"], 
+                               self.props["activeimage"]["frame"], 
+                               self.props["activeimage"]["layer"],
+                               path)
+    def image_path(self, d, s, f, l, path=None):
+        """Set or return the path of the specified image"""
         if path is not None:
-            self.active_image()["path"] = path
-            # If path has been modified call reload_image function for this image
+            self.props["images"][d][s][f][l]["path"] = path
             # This will either load the image (if the path exists) or set a default image if it doesn't
-        return self.active_image()["path"]
+            self.reload_image(d, s, f, l)
+            return True
+        else:
+            return self.props["images"][d][s][f][l]["path"]
 
-    def active_image_data(self, path=None):
-        """Set or return the image data of the active image"""
-        # This needs to index into internals not props for the image data!
-        return self.active_image()["imagedata"]
-    def active_bitmap_data(self):
-        """Return wxBitmap data for the active image"""
-        # This needs to index into internals not props for the image data!
-        return self.active_image()["bitmapdata"]
+#    def active_image_data(self, path=None):
+#        """Set or return the image data of the active image"""
+#        # This needs to index into internals not props for the image data!
+#        return self.active_image()["imagedata"]
+#    def active_bitmap_data(self):
+#        """Return wxBitmap data for the active image"""
+#        # This needs to index into internals not props for the image data!
+#        return self.active_image()["bitmapdata"]
 
     def direction(self, set=None):
         """Set or query active image's direction"""

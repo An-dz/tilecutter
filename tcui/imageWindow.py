@@ -106,10 +106,14 @@ class imageWindow(wx.ScrolledWindow):
     def refresh_if_valid(self):
         """Called when child impath entry box text changes
         Only updates the displayed image if a new valid file has been entered"""
-        debug(u"valid: %s, path: %s" % (self.app.activeproject.activeImage().valid_path(),self.app.activeproject.activeImage().path()))
-        if self.app.activeproject.activeImage().valid_path() == self.app.activeproject.activeImage().path():
-            # If valid_path and path are same, then refresh screen
-            self.Refresh()
+#        debug(u"valid: %s, path: %s" % (self.app.activeproject.active_image().valid_path(),self.app.activeproject.activeImage().path()))
+#        if self.app.activeproject.activeImage().valid_path() == self.app.activeproject.activeImage().path():
+#            # If valid_path and path are same, then refresh screen
+#            self.Refresh()
+        # Always refresh the screen to show either blank/noimage graphic or the valid graphic
+        debug(u"new image path: %s, calling Refresh()" % self.app.activeproject.active_image_path())
+        self.app.activeproject.reload_active_image()
+        self.Refresh()
 
     def refresh_screen(self, dc):
         """Refresh the screen display"""
@@ -230,6 +234,6 @@ class imageWindow(wx.ScrolledWindow):
     def OnReloadImage(self,e):
         """When reload image button clicked"""
         debug(u"Reload active image...")
-        self.app.activeproject.activeImage().reloadImage()
+        self.app.activeproject.reload_active_image()
         self.update()
 
