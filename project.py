@@ -51,7 +51,8 @@ class Project(object):
             "files": {
                 "saved": "False",
                 "save_location": self.init_save_location(),
-            }
+            },
+            "hash": 0,
         }
 
         # defaults defines default values for all project properties
@@ -120,6 +121,9 @@ class Project(object):
             self.props = self.defaults
         else:
             self.props = self.load_dict(load, self.validators, self.defaults)
+
+        # Set initial hash value to indicate that the project is unchanged (either having just been loaded in, or being brand new)
+        self.update_hash()
 
     def __getitem__(self, key):
         return self.props["images"][key]
@@ -217,6 +221,26 @@ class Project(object):
         # allow for updating of UI
         debug(u"Root on_change triggered, sending message to App")
         self.parent.project_has_changed()
+
+
+    # Functions related to checking whether the project has changed
+    def has_changed(self):
+        """An indication of whether this project has been changed since the last time it was saved"""
+        current = self.hash_props()
+        if current == self.internals["hash"]:
+            debug(u"  Check Project for changes - Project Unchanged")
+            return False
+        else:
+            debug(u"  Check Project for changes - Project Changed")
+            return True
+    def hash_props(self):
+        """Return a hash of the representation of the properties dict for use in comparisons"""
+        return hash(repr(self.props))
+    def update_hash(self):
+        """Set intenals hash to the current hash value"""
+        self.internals["hash"] = self.hash_props()
+        return True
+
 
     # These functions deal with dat file properties
     def temp_dat_properties(self, set=None):

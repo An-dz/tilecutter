@@ -82,8 +82,8 @@ class App(wx.App):
         self.projects = {}
         self.projects["default"] = project.Project(self)
         self.activeproject = self.projects["default"]
-        # Serialise active project, this string is then checked to see if it needs to be saved
-        self.activepickle = self.pickle_project(self.activeproject)
+#        # Serialise active project, this string is then checked to see if it needs to be saved
+#        self.activepickle = self.pickle_project(self.activeproject)
         # Active project needs a file save location, by default this is set to a default in the new project
         self.active_save_location = self.activeproject.save_location()
         self.update_title_text()
@@ -161,7 +161,8 @@ class App(wx.App):
         debug(u"update_title_text")
         if self.activeproject.saved():
             # Project has been previously saved
-            if self.project_changed(self.activeproject):
+#            if self.project_changed(self.activeproject):
+            if self.activeproject.has_changed():
                 # Project has changed but was previously saved
                 # Title string will be *FileName.tcp - TileCutter
                 self.title_text = "*%s - %s" % (self.activeproject.save_location(), "%s")
@@ -171,7 +172,8 @@ class App(wx.App):
                 self.title_text = "%s - %s" % (self.activeproject.save_location(), "%s")
         else:
             # Project hasn't been saved before
-            if self.project_changed(self.activeproject):
+#            if self.project_changed(self.activeproject):
+            if self.activeproject.has_changed():
                 # Unsaved, but changed
                 # Title string will be *(New Project) - TileCutter
                 self.title_text = "*(%s) - %s" % (_gt("New Project"), "%s")
@@ -197,16 +199,16 @@ class App(wx.App):
             # Pop up a modal dialog box to display the .dat file info
             pass
 
-    # Checks on project relative to the active project
-    def project_changed(self, project):
-        """Returns true if project has changed since last save"""
-        debug(u"project_changed")
-        if self.pickle_project(project) == self.activepickle:
-            debug(u"  Check Project for changes - Project Unchanged")
-            return False
-        else:
-            debug(u"  Check Project for changes - Project Changed")
-            return True
+#    # Checks on project relative to the active project
+#    def project_changed(self, project):
+#        """Returns true if project has changed since last save"""
+#        debug(u"project_changed")
+#        if self.pickle_project(project) == self.activepickle:
+#            debug(u"  Check Project for changes - Project Unchanged")
+#            return False
+#        else:
+#            debug(u"  Check Project for changes - Project Changed")
+#            return True
 
     # Dialogs involved in loading/saving
     def dialog_save_changes(self, project):
@@ -309,9 +311,10 @@ class App(wx.App):
         # If saving worked, update current status
         if ret:
             project.saved(ret)
-            self.activepickle = self.pickle_project(project)
+            project.update_hash()
+#            self.activepickle = self.pickle_project(project)
 
-            debug(u"  typeof activepickle: %s" % type(self.activepickle))
+#            debug(u"  typeof activepickle: %s" % type(self.activepickle))
 
             # Update frame to reflect change to active project
             if self.gui:
@@ -340,7 +343,7 @@ class App(wx.App):
         debug(u"after - parent of project: %s is: %s" % (str(project), str(project.parent)))
 
         self.activeproject = project
-        self.activepickle = self.pickle_project(self.activeproject)
+#        self.activepickle = self.pickle_project(self.activeproject)
         if self.gui:
             self.frame.update()
             self.project_has_changed()
@@ -351,7 +354,7 @@ class App(wx.App):
         """Create a new project"""
         debug(u"new_project - Create new project")
         self.activeproject = project.Project(self)
-        self.activepickle = self.pickle_project(self.activeproject)
+#        self.activepickle = self.pickle_project(self.activeproject)
         # Reset project save location/name
         self.active_save_location = self.activeproject.save_location()
         # Finally update the frame to display changes
@@ -363,7 +366,8 @@ class App(wx.App):
         """Init process of starting a new project"""
         debug(u"OnNewProject")
         project = self.activeproject
-        if self.project_changed(project):
+#        if self.project_changed(project):
+        if self.activeproject.has_changed():
             ret = self.dialog_save_changes(project)
             if ret == wx.ID_YES:
                 if not project.saved():
@@ -377,7 +381,8 @@ class App(wx.App):
         """Init process of loading a project from file, if optional savepath is specified then skip the load file dialog"""
         debug(u"OnLoadProject")
         project = self.activeproject
-        if self.project_changed(project):                           # If project has changed
+#        if self.project_changed(project):                           # If project has changed
+        if self.activeproject.has_changed():
             ret = self.dialog_save_changes(project)                 # Prompt to save project
             if ret == wx.ID_YES:                                    # If answer is yes
                 if not project.saved():                             #  Check if file has a save location
