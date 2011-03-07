@@ -9,7 +9,7 @@
 import logger
 debug = logger.Log()
 
-import sys, os
+import sys, os, traceback
 
 import pickle
 import json
@@ -49,12 +49,24 @@ class tcp_writer(object):
             try:
                 output_string = json.dumps(saveobj, ensure_ascii=False, sort_keys=True, indent=4)
             except:
+                debug(u"tcp_writer: write - Error dumping json for saveobj, trace follows")
+                debug(traceback.format_exc())
                 # Any problems this has probably failed, so don't write out file
                 return False
 
         # Needs addition of exception handling for IO
-        self.file = open(filename, "wb")
-        self.file.write(output_string)
+        try:
+            self.file = open(filename, "wb")
+        except IOError:
+            debug(u"tcp_writer: write - IOError attempting to open file: %s for writing" % filename)
+            debug(traceback.format_exc())
+            return False
+        try:
+            self.file.write(output_string)
+        except IOError:
+            debug(u"tcp_writer: write - IOError attempting to write to file: %s" % filename)
+            debug(traceback.format_exc())
+            return False
         self.file.close()
 
         return True
@@ -77,18 +89,21 @@ class tcp_reader(object):
             self.file = open(filename, "rb")
         except IOError:
             debug(u"Opening file for reading failed, file probably does not exist!")
+            debug(traceback.format_exc())
             self.file = None
 
     def load(self, params):
         """Load object from file, return deserialised object"""
-        debug(u"Loading object from file")
+        debug(u"tcp_reader: load - Loading object from file")
         # Optional params argument which contains values which should be passed to post_serialise method of object to initalise it
         str = self.file.read()
         self.file.close()
         # Try to load file as JSON format first, if this fails try to load it as pickle
         try:
-            loadobj = self.unjson_object(str, params)
-            if loadobj["type"] == "TCP_JSON":
+            debug(u"tcp_reader: load - attempting to load as JSON")
+            loadobj = json.loads(str)
+            if type(loadobj) == type({}) and loadobj.has_key("type") and loadobj["type"] == "TCP_JSON":
+                debug(u"tcp_reader: load - JSON load successful, attempting to load in object")
                 # Init new project using loaded data from dict
                 obj = project.Project(params[0], load=loadobj["data"])
             else:
@@ -98,41 +113,34 @@ class tcp_reader(object):
         except ValueError:
             debug(u"tcp_reader: load - loading as JSON failed, attempting to load as pickle (legacy format)")
             try:
-                legacyobj = self.unpickle_object(str, params)
+                legacyobj = self.unpickle_object(str)
+                # Build a new-style project from the old-style one
+                newdict = self.convert_tcproject(legacyobj)
+                obj = project.Project(params[0], load=newdict)
             except:
                 # Any error indicates failure to load, abort
                 debug(u"tcp_reader: load - loading as pickle also fails, this isn't a valid .tcp file!")
+                debug(traceback.format_exc())
                 return False
 
         return obj
 
     def convert_tcproject(self, tcproj):
         """Convert an old-style tcproject object into a new style project one"""
+        debug(u"tcp_reader: convert_tcproject")
         # tcproj represents a tcproject object
         # Frames were not implemented under this format, so assume there's only one
         # Build an input dict for a new project using the tcproject's properties
         # The validators in the project class will then take care of the rest
+        return {}
 
-    def unpickle_object(self, str, params):
-        """Unpickle an object from the pickled string str, call post_serialise with params"""
-        debug(u"unpickle_object")
+    def unpickle_object(self, str, params=None):
+        """Unpickle an object from the pickled string str, optionally call post_serialise with params"""
+        debug(u"tcp_reader: unpickle_object")
         obj = pickle.loads(str)
-        obj.post_serialise(params)
+        if params is not None:
+            debug(u"tcp_reader: unpickle_object - running post_serialise")
+            obj.post_serialise(params)
+        debug(u"tcp_reader: unpickle_object - unpickled object: %s" % repr(obj))
         return obj
-
-    def unjson_object(self, str, params):
-        """"""
-        debug(u"unjson_object")
-        props_dict = json.loads(str)
-        return project.Project(params[0], load=props_dict)
-
-    def detect_filetype(self, str):
-        """Detect whether data is from a json or pickle file"""
-        # If first line of file reads "#TCP_JSON" then this is a json format file 
-        # (should then be a comma followed by the program version that wrote it)
-        if str[:9] == u"#TCP_JSON":
-            return "json"
-        # Otherwise it's probably either pickle format (or some trash, but the pickle decoder will find that out)
-        else:
-            return "pickle"
 
