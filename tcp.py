@@ -132,7 +132,47 @@ class tcp_reader(object):
         # Frames were not implemented under this format, so assume there's only one
         # Build an input dict for a new project using the tcproject's properties
         # The validators in the project class will then take care of the rest
-        return {}
+        projdict = {
+            # project[view][season][frame][layer][xdim][ydim][zdim]
+            "dims": {
+                "x": tcproj.x(),
+                "y": tcproj.y(),
+                "z": tcproj.z(),
+                "paksize": tcproj.paksize(),
+                "directions": tcproj.views(),
+                "frames": 1,
+                "winter": tcproj.winter(),
+                "frontimage": tcproj.frontimage(),
+            },
+            "files": {
+                "datfile_location": tcproj.datfile(),
+                "datfile_write": tcproj.writedat(),
+                "pngfile_location": tcproj.pngfile(),
+                "pakfile_location": tcproj.pakfile(),
+            },
+            "dat": {
+                "dat_lump": tcproj.temp_dat_properties(),
+            },
+        }
+        viewarray = []
+        for view in range(4):
+            seasonarray = []
+            for season in range(2):
+                framearray = []
+                for frame in range(1):
+                    imagearray = []
+                    for image in range(2):
+                        imdefault = {
+                            "path": tcproj[view][season][frame][image].path(),
+                            "offset": tcproj[view][season][frame][image].offset,
+                        }
+                        imagearray.append(imdefault)
+                    framearray.append(imagearray)
+                seasonarray.append(framearray)
+            viewarray.append(seasonarray)
+        projdict["images"] = viewarray
+        debug(u"tcp_reader: convert_tcproject - projdict to feed into new project is: %s" % repr(projdict))
+        return projdict
 
     def unpickle_object(self, str, params=None):
         """Unpickle an object from the pickled string str, optionally call post_serialise with params"""

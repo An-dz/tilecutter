@@ -103,73 +103,77 @@ class offsetControl(wx.StaticBox):
     def OnUpLeft(self,e):
         """Move mask up and left"""
         if self.offset_selector.GetValue():
-            r = self.app.activeproject.offset(x=-2,y=1)
+            self.app.activeproject.active_offset([max(self.app.activeproject.active_x_offset() - 2, 0), 
+                                                  self.app.activeproject.active_y_offset() + 1])
         else:
-            r = self.app.activeproject.offset(x=-self.app.activeproject.paksize()/2,
-                                              y=self.app.activeproject.paksize()/4)
-        if r == 1:
-            self.app.frame.display.update()
+            self.app.activeproject.active_offset([max(self.app.activeproject.active_x_offset() - self.app.activeproject.paksize()/2, 0), 
+                                                  self.app.activeproject.active_y_offset() + self.app.activeproject.paksize()/4])
+#        if r == 1:
+#            self.app.frame.display.update()
     def OnUpRight(self,e):
         """Move mask up and right"""
         if self.offset_selector.GetValue():
-            r = self.app.activeproject.offset(x=2,y=1)
+            self.app.activeproject.active_offset([self.app.activeproject.active_x_offset() + 2, 
+                                                  self.app.activeproject.active_y_offset() + 1])
         else:
-            r = self.app.activeproject.offset(x=self.app.activeproject.paksize()/2,
-                                              y=self.app.activeproject.paksize()/4)
-        if r == 1:
-            self.app.frame.display.update()
+            self.app.activeproject.active_offset([self.app.activeproject.active_x_offset() + self.app.activeproject.paksize()/2, 
+                                                  self.app.activeproject.active_y_offset() + self.app.activeproject.paksize()/4])
+#        if r == 1:
+#            self.app.frame.display.update()
     def OnDownLeft(self,e):
         """Move mask down and left"""
         if self.offset_selector.GetValue():
-            r = self.app.activeproject.offset(x=-2,y=-1)
+            self.app.activeproject.active_offset([max(self.app.activeproject.active_x_offset() - 2, 0), 
+                                                  max(self.app.activeproject.active_y_offset() - 1, 0)])
         else:
-            r = self.app.activeproject.offset(x=-self.app.activeproject.paksize()/2,
-                                              y=-self.app.activeproject.paksize()/4)
-        if r == 1:
-            self.app.frame.display.update()
+            self.app.activeproject.active_offset([max(self.app.activeproject.active_x_offset() - self.app.activeproject.paksize()/2, 0), 
+                                                  max(self.app.activeproject.active_y_offset() - self.app.activeproject.paksize()/4, 0)])
+#        if r == 1:
+#            self.app.frame.display.update()
     def OnDownRight(self,e):
         """Move mask down and right"""
         if self.offset_selector.GetValue():
-            r = self.app.activeproject.offset(x=2,y=-1)
+            self.app.activeproject.active_offset([self.app.activeproject.active_x_offset() + 2, 
+                                                  max(self.app.activeproject.active_y_offset() - 1, 0)])
         else:
-            r = self.app.activeproject.offset(x=self.app.activeproject.paksize()/2,
-                                              y=-self.app.activeproject.paksize()/4)
-        if r == 1:
-            self.app.frame.display.update()
+            self.app.activeproject.active_offset([self.app.activeproject.active_x_offset() + self.app.activeproject.paksize()/2, 
+                                                  max(self.app.activeproject.active_y_offset() - self.app.activeproject.paksize()/4, 0)])
+#        if r == 1:
+#            self.app.frame.display.update()
     def OnUp(self,e):
         """Move mask up"""
         if self.offset_selector.GetValue():
-            r = self.app.activeproject.offset(y=1)
+            self.app.activeproject.active_y_offset(self.app.activeproject.active_y_offset() + 1)
         else:
-            r = self.app.activeproject.offset(y=self.app.activeproject.paksize())
-        if r == 1:
-            self.app.frame.display.update()
+            self.app.activeproject.active_y_offset(self.app.activeproject.active_y_offset() + self.app.activeproject.paksize())
+#        if r == 1:
+#            self.app.frame.display.update()
     def OnLeft(self,e):
         """Move mask left"""
         if self.offset_selector.GetValue():
-            r = self.app.activeproject.offset(x=-1)
+            self.app.activeproject.active_x_offset(max(self.app.activeproject.active_x_offset() - 1, 0))
         else:
-            r = self.app.activeproject.offset(x=-self.app.activeproject.paksize())
-        if r == 1:
-            self.app.frame.display.update()
+            self.app.activeproject.active_x_offset(max(self.app.activeproject.active_x_offset() - self.app.activeproject.paksize(), 0))
+#        if r == 1:
+#            self.app.frame.display.update()
     def OnCenter(self,e):
         """Reset mask position"""
-        r = self.app.activeproject.offset(x=0, y=0)
-        if r == 1:
-            self.app.frame.display.update()
+        self.app.activeproject.active_offset([0,0])
+#        if r == 1:
+#            self.app.frame.display.update()
     def OnRight(self,e):
         """Move mask right"""
         if self.offset_selector.GetValue():
-            r = self.app.activeproject.offset(x=1)
+            self.app.activeproject.active_x_offset(self.app.activeproject.active_x_offset() + 1)
         else:
-            r = self.app.activeproject.offset(x=self.app.activeproject.paksize())
-        if r == 1:
-            self.app.frame.display.update()
+            self.app.activeproject.active_x_offset(self.app.activeproject.active_x_offset() + self.app.activeproject.paksize())
+#        if r == 1:
+#            self.app.frame.display.update()
     def OnDown(self,e):
         """Move mask down"""
         if self.offset_selector.GetValue():
-            r = self.app.activeproject.offset(y=-1)
+            self.app.activeproject.active_y_offset(max(self.app.activeproject.active_y_offset() - 1, 0))
         else:
-            r = self.app.activeproject.offset(y=-self.app.activeproject.paksize())
-        if r == 1:
-            self.app.frame.display.update()
+            self.app.activeproject.active_y_offset(max(self.app.activeproject.active_y_offset() - self.app.activeproject.paksize(), 0))
+#        if r == 1:
+#            self.app.frame.display.update()

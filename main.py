@@ -339,6 +339,12 @@ class App(wx.App):
         # Load project, passing reference to self which will be set as project's parent in its post_serialisation method
         project = t_reader.load([self,])
 
+        if project == False:
+            dlg = wx.MessageDialog(None, "Error loading file, please see log file for details", "Error", wx.OK|wx.ICON_ERROR)
+            dlg.ShowModal()
+            # Project loading has failed, abort
+            return False
+
         # Check parent after
         debug(u"after - parent of project: %s is: %s" % (str(project), str(project.parent)))
 

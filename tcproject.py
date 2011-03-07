@@ -19,35 +19,11 @@ paths = Paths()
 
 from environment import getenvvar
 
-# Image should store:
-# Last path entered
-# Path of current image
-# Image itself (cached)
-# As user enters a path in the box, it updates the active image, only when the path points to a valid
-# file should the current image path be set, and the image loaded from file into the cache
-# File validity is measured relative to the current project save location
-
 # project[view][season][frame][image][xdim][ydim][zdim]
 # view=NSEW, 0,1,2,3 - array - controlled by global enable
 # season=summer/winter, 0,1 - array - controlled by global bool enable
 # frame=0,++ - array - controlled by global number of frames variable
 # image=back/front, 0,1 - array - controlled by global bool enable
-
-
-# Main object should have a json() function which removes its images and then returns a json formatted version of itself
-# Should also have a pickle() function which does the same for the python representation
-
-# For replacement
-# Needs overall method to reload a particular image
-# Concept of active image needs to be tied to an image index which can be passed to main parent object
-#  This can then be used in a call to that object to reload the image, rather than going to a child object
-# Properties for each image:
-#   is_backimage - not kept, property used to look up this image so should be a structural thing at higher level
-#  imagedata - wx.Bitmap
-#  path - string
-#  
-#  offset - coords/array
-#   cutimageset - not kept, generated on the fly by cutting routine and not stored in this object
 
 
 class ProjectImage(object):
@@ -101,15 +77,6 @@ class ProjectImage(object):
             self.value_image = wx.EmptyImage(1,1)
             self.value_image.LoadFile(abspath, wx.BITMAP_TYPE_ANY)
             self.value_bitmap = wx.BitmapFromImage(self.value_image)
-##    def lastpath(self, path=None):
-##        """Set or return the non-valid path set for this image"""
-##        # Non-valid path keeps track of user entries in the text entry box which aren't valid files
-##        # This may also be a valid file, but shouldn't be relied upon
-##        if path != None:
-##            self.value_lastpath = path
-##            debug(u"Image lastpath set to \"%s\"" % unicode(path))
-##        else:
-##            return self.value_lastpath
     def valid_path(self):
         """Return the valid/real path of this image"""
         return self.value_valid_path

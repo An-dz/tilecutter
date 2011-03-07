@@ -133,7 +133,7 @@ class imageWindow(wx.ScrolledWindow):
         p = self.app.activeproject.paksize()
         p2 = p/2
         p4 = p/4
-        mask_offset_x, mask_offset_y = self.app.activeproject.offset()
+        mask_offset_x, mask_offset_y = self.app.activeproject.active_offset()
         mask_width = (x + y) * p2
         mask_height = (x + y) * p4 + p2 + (z - 1) * p
         mask_width_off = mask_width + abs(mask_offset_x)

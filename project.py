@@ -117,10 +117,9 @@ class Project(object):
             },
         }
 
-        if load is None:
-            self.props = self.defaults
-        else:
-            self.props = self.load_dict(load, self.validators, self.defaults)
+        self.props = self.defaults
+        if load is not None:
+            self.load_dict(load, self.validators, self.defaults)
 
         # Set initial hash value to indicate that the project is unchanged (either having just been loaded in, or being brand new)
         self.update_hash()
@@ -131,28 +130,38 @@ class Project(object):
 
     def load_dict(self, loaded, validators, defaults):
         """Load a dict of stuff from config, may be called recursively"""
+        # This function will alter the current project's representation through the standard access methods
+        # It also keeps track of all changes and will eventually return a dict which will match the internal state of the project
         props = {}
         for k, v in validators.iteritems():
+            debug(u"project: load_dict - processing node with key value: %s" % k)
             if loaded.has_key(k):
                 # If this is a key, validate value + set if valid
-                if type(v) == type(lambda x: x):
+                if callable(v):
+                    debug(u"project: load_dict - callable object in dict, this is a node, running validation on data: %s" % loaded[k])
                     if v(loaded[k]):
+                        debug(u"project: load_dict - validation succeeds, using value: %s from input" % loaded[k])
                         props[k] = loaded[k]
                     else:
+                        debug(u"project: load_dict - validation failed, using value: %s from defaults" % defaults[k])
                         props[k] = defaults[k]
                 # If this is a node call function to determine what to set
                 elif type(v) == type({}):
                     if type(loaded[k]) == type({}):
+                        debug(u"project: load_dict - dict-type object, recursing to process subset of keys: %s" % repr(loaded[k]))
                         props[k] = self.load_dict(loaded[k], v, defaults[k])
                     else:
                         # Validators defines this to be a dict, but the loaded data for this key isn't a dict - data must be invalid so use defaults
+                        debug(u"project: load_dict - Validators defines this value to be a dict, but input data isn't, using defaults values from node: %s" % k)
                         props[k] = defaults[k]
                 else:
                     # This should not happen, panic
-                    debug(u"ERROR: invalid state for load_dict decode")
+                    debug(u"project: load_dict - ERROR: invalid state for load_dict decode, offending data is: %s (type: %s)" % (repr(v), type(v)))
                     raise ValueError
             else:
+                debug(u"project: load_dict - Input data does not contain key: %s, using defaults for this node" % k)
                 props[k] = defaults[k]
+        debug(u"project: load_dict - done processing this level, returning properties dict: %s" % repr(props))
         return props
 
 
@@ -384,231 +393,296 @@ class Project(object):
 
 
     # Methods which deal with properties of the currently active image
-    def offset(self, x=None, y=None):
-        """Increases/decreases the offset for the active image, if set to 0 that offset dimension is reset"""
-        old_x = self.active_image()["offset"][0]
-        old_y = self.active_image()["offset"][1]
-        changed = False
-        if x == 0:
-            self.active_image()["offset"][0] = 0
-            changed = True
-        elif x != None:
-            self.active_image()["offset"][0] += x
-            if not config.negative_offset_allowed:
-                if self.active_image()["offset"][0] < 0:
-                    self.active_image()["offset"][0] = 0     # Limit to 0
-            changed = True
-        if y == 0:
-            self.active_image()["offset"][1] = 0
-            changed = True
-        elif y != None:
-            self.active_image()["offset"][1] += y
-            if not config.negative_offset_allowed:
-                if self.active_image()["offset"][1] < 0:
-                    self.active_image()["offset"][1] = 0     # Limit to 0
-            changed = True
-        if changed == True:
-            debug(u"Active Image offset changed to: %s" % unicode(self.active_image()["offset"]))
-            self.on_change()
-            if old_x != self.active_image()["offset"][0] or old_y != self.active_image()["offset"][1]:
-                return 1
+    def active_x_offset(self, set=None, validate=False):
+        """Get or set the active image's x offset"""
+        return self.x_offset(self.props["activeimage"]["direction"], 
+                             self.props["activeimage"]["season"], 
+                             self.props["activeimage"]["frame"], 
+                             self.props["activeimage"]["layer"],
+                             set,
+                             validate)
+    def x_offset(self, d, s, f, l, set=None, validate=False):
+        """Directly set or get the X offset of the specified image"""
+        if set is not None:
+            if set >= 0:
+                if not validate:
+                    self.props["images"][d][s][f][l]["offset"][0] = set
+                    debug(u"project: x_offset - X Offset for image d:%s,s:%s,f:%s,l:%s set to %i" % (d, s, f, l, self.props["images"][d][s][f][l]["offset"][0]))
+                    self.on_change()
+                return True
             else:
-                return 0
+                debug(u"project: x_offset - Value (%s) outside of acceptable range" % unicode(set))
+                return False
         else:
-            return self.active_image()["offset"]
+            return self.props["images"][d][s][f][l]["offset"][0]
 
-    def direction(self, set=None):
+    def active_y_offset(self, set=None, validate=False):
+        """Get or set the active image's y offset"""
+        return self.y_offset(self.props["activeimage"]["direction"], 
+                             self.props["activeimage"]["season"], 
+                             self.props["activeimage"]["frame"], 
+                             self.props["activeimage"]["layer"],
+                             set,
+                             validate)
+    def y_offset(self, d, s, f, l, set=None, validate=False):
+        """Directly set or get the Y offset of the specified image"""
+        if set is not None:
+            if set >= 0:
+                if not validate:
+                    self.props["images"][d][s][f][l]["offset"][1] = set
+                    debug(u"project: y_offset - Y Offset for image d:%s,s:%s,f:%s,l:%s set to %i" % (d, s, f, l, self.props["images"][d][s][f][l]["offset"][1]))
+                    self.on_change()
+                return True
+            else:
+                debug(u"project: y_offset - Value (%s) outside of acceptable range" % unicode(set))
+                return False
+        else:
+            return self.props["images"][d][s][f][l]["offset"][1]
+
+    def active_offset(self, set=None, validate=False):
+        """Set or get the full offset coordinates for the active image"""
+        return self.offset(self.props["activeimage"]["direction"], 
+                           self.props["activeimage"]["season"], 
+                           self.props["activeimage"]["frame"], 
+                           self.props["activeimage"]["layer"],
+                           set,
+                           validate)
+    def offset(self, d, s, f, l, set=None, validate=False):
+        """Set or get the full offset coordinates for the specified image"""
+        if set is not None:
+            # Call with validate enabled to prevent multiple updates/on_change triggers
+            if self.x_offset(d, s, f, l, set[0], True) and self.y_offset(d, s, f, l, set[1], True):
+                if not validate:
+                    self.props["images"][d][s][f][l]["offset"] = [set[0], set[1]]
+                    debug(u"project: offset - Offset for image d:%s,s:%s,f:%s,l:%s set to %i" % (d, s, f, l, self.props["images"][d][s][f][l]["offset"][1]))
+                    self.on_change()
+                return True
+            else:
+                debug(u"project: offset - Value (%s) outside of acceptable range" % unicode(set))
+                return False
+        else:
+            return self.props["images"][d][s][f][l]["offset"]
+
+#    def offset(self, x=None, y=None, validate=False):
+#        """Increases/decreases the offset for the active image, if set to 0 that offset dimension is reset"""
+#        old_x = self.active_image()["offset"][0]
+#        old_y = self.active_image()["offset"][1]
+#        changed = False
+#        if x == 0:
+#            self.active_image()["offset"][0] = 0
+#            changed = True
+#        elif x != None:
+#            self.active_image()["offset"][0] += x
+#            if not config.negative_offset_allowed:
+#                if self.active_image()["offset"][0] < 0:
+#                    self.active_image()["offset"][0] = 0     # Limit to 0
+#            changed = True
+#        if y == 0:
+#            self.active_image()["offset"][1] = 0
+#            changed = True
+#        elif y != None:
+#            self.active_image()["offset"][1] += y
+#            if not config.negative_offset_allowed:
+#                if self.active_image()["offset"][1] < 0:
+#                    self.active_image()["offset"][1] = 0     # Limit to 0
+#            changed = True
+#        if changed == True:
+#            debug(u"project: offset - Active Image offset changed to: %s" % unicode(self.active_image()["offset"]))
+#            self.on_change()
+#            if old_x != self.active_image()["offset"][0] or old_y != self.active_image()["offset"][1]:
+#                return 1
+#            else:
+#                return 0
+#        else:
+#            return self.active_image()["offset"]
+
+    def direction(self, set=None, validate=False):
         """Set or query active image's direction"""
         if set is not None:
             if set in [0,1,2,3]:
-                self.props["activeimage"]["direction"] = set
-                debug(u"Active image direction set to %i" % self.props["activeimage"]["direction"])
-                self.on_change()
+                if not validate:
+                    self.props["activeimage"]["direction"] = set
+                    debug(u"project: direction - Active image direction set to %i" % self.props["activeimage"]["direction"])
+                    self.on_change()
                 return True
             else:
-                debug(u"Attempt to set active image direction failed - Value (%s) outside of acceptable range" % unicode(set))
+                debug(u"project: direction - Attempt to set active image direction failed - Value (%s) outside of acceptable range" % unicode(set))
                 return False
         else:
             return self.props["activeimage"]["direction"]
 
-    def season(self, set=None):
+    def season(self, set=None, validate=False):
         """Set or query active image's season"""
         if set is not None:
             if set in [0, 1]:
-                self.props["activeimage"]["season"] = set
-                debug(u"Active image season set to %i" % self.props["activeimage"]["season"])
-                self.on_change()
+                if not validate:
+                    self.props["activeimage"]["season"] = set
+                    debug(u"project: season - Active image season set to %i" % self.props["activeimage"]["season"])
+                    self.on_change()
                 return True
             else:
-                debug(u"Attempt to set active image season failed - Value (%s) outside of acceptable range" % unicode(set))
+                debug(u"project: season - Attempt to set active image season failed - Value (%s) outside of acceptable range" % unicode(set))
                 return False
         else:
             return self.props["activeimage"]["season"]
 
-    def frame(self, set=None):
+    def frame(self, set=None, validate=False):
         """Set or query active image's frame"""
         if set is not None:
             if set in range(self.props["dims"]["frames"]):
-                self.props["activeimage"]["frame"] = set
-                debug(u"Active image frame set to %i" % self.props["activeimage"]["frame"])
-                self.on_change()
+                if not validate:
+                    self.props["activeimage"]["frame"] = set
+                    debug(u"project: frame - Active image frame set to %i" % self.props["activeimage"]["frame"])
+                    self.on_change()
                 return True
             else:
-                debug(u"Attempt to set active image frame failed - Value (%s) outside of acceptable range" % unicode(set))
+                debug(u"project: frame - Attempt to set active image frame failed - Value (%s) outside of acceptable range" % unicode(set))
                 return False
         else:
             return self.props["activeimage"]["frame"]
 
-    def layer(self, set=None):
+    def layer(self, set=None, validate=False):
         """Set or query active image's layer"""
         if set is not None:
             if set in [0, 1]:
-                self.props["activeimage"]["layer"] = set
-                debug(u"Active image layer set to %i" % self.props["activeimage"]["layer"])
-                self.on_change()
+                if not validate:
+                    self.props["activeimage"]["layer"] = set
+                    debug(u"project: layer - Active image layer set to %i" % self.props["activeimage"]["layer"])
+                    self.on_change()
                 return True
             else:
-                debug(u"Attempt to set active image layer failed - Value (%s) outside of acceptable range" % unicode(set))
+                debug(u"project: layer - Attempt to set active image layer failed - Value (%s) outside of acceptable range" % unicode(set))
                 return False
         else:
             return self.props["activeimage"]["layer"]
 
-#    def activeImage(self, direction=None, season=None, frame=None, layer=None):
-    def active_image(self, direction=None, season=None, frame=None, layer=None):
+    def active_image(self, direction=None, season=None, frame=None, layer=None, validate=False):
         """Set or return the currently active image"""
-        # If parameters have been changed at all, update
-        changed = False
         if direction != self.props["activeimage"]["direction"] and direction != None:
-            if self.direction(direction):
-                changed = True
-                debug(u"Active Image direction changed to: %s" % unicode(self.props["activeimage"]["direction"]))
-            else:
-                return False
+            return self.direction(direction, validate)
         if season != self.props["activeimage"]["season"] and season != None:
-            if self.season(season):
-                changed = True
-                debug(u"Active Image season changed to: %s" % unicode(self.props["activeimage"]["season"]))
-            else:
-                return False
+            return self.season(season, validate)
         if frame != self.props["activeimage"]["frame"] and frame != None:
-            if self.frame(frame):
-                changed = True
-                debug(u"Active Image frame changed to: %s" % unicode(self.props["activeimage"]["frame"]))
-            else:
-                return False
+            return self.frame(frame, validate)
         if layer != self.props["activeimage"]["layer"] and layer != None:
-            if self.layer(layer):
-                changed = True
-                debug(u"Active Image layer changed to: %s" % unicode(self.props["activeimage"]["layer"]))
-            else:
-                return False
+            return self.layer(layer, validate)
         # Returns dict containing active image's properties
         return self.props["images"][self.props["activeimage"]["direction"]][self.props["activeimage"]["season"]][self.props["activeimage"]["frame"]][self.props["activeimage"]["layer"]]
 
 
     # Functions which deal with dimensions properties of the project
-    def x(self, set=None):
+    def x(self, set=None, validate=False):
         """Set or return X dimension"""
         if set is not None:
             if set in config.choicelist_dims:
-                self.props["dims"]["x"] = int(set)
-                debug(u"X dimension set to %i" % self.props["dims"]["x"])
-                self.on_change()
+                if not validate:
+                    self.props["dims"]["x"] = int(set)
+                    debug(u"project: x - set to %i" % self.props["dims"]["x"])
+                    self.on_change()
                 return True
             else:
-                debug(u"Attempt to set X dimension failed - Value (%s) outside of acceptable range" % unicode(set))
+                debug(u"project: x - Attempt to set X dimension failed - Value (%s) outside of acceptable range" % unicode(set))
                 return False
         else:
             return self.props["dims"]["x"]
 
-    def y(self, set=None):
+    def y(self, set=None, validate=False):
         """Set or return Y dimension"""
         if set is not None:
             if set in config.choicelist_dims:
-                self.props["dims"]["y"] = int(set)
-                debug(u"Y dimension set to %i" % self.props["dims"]["y"])
-                self.on_change()
+                if not validate:
+                    self.props["dims"]["y"] = int(set)
+                    debug(u"project: y - set to %i" % self.props["dims"]["y"])
+                    self.on_change()
                 return True
             else:
-                debug(u"Attempt to set Y dimension failed - Value (%s) outside of acceptable range" % unicode(set))
+                debug(u"project: y - Attempt to set Y dimension failed - Value (%s) outside of acceptable range" % unicode(set))
                 return False
         else:
             return self.props["dims"]["y"]
 
-    def z(self, set=None):
+    def z(self, set=None, validate=False):
         """Set or return Z dimension"""
         if set is not None:
             if set in config.choicelist_dims_z:
-                self.props["dims"]["z"] = int(set)
-                debug(u"Z dimension set to %i" % self.props["dims"]["z"])
-                self.on_change()
+                if not validate:
+                    self.props["dims"]["z"] = int(set)
+                    debug(u"project: z - set to %i" % self.props["dims"]["z"])
+                    self.on_change()
                 return True
             else:
-                debug(u"Attempt to set Z dimension failed - Value (%s) outside of acceptable range" % unicode(set))
+                debug(u"project: z - Attempt to set Z dimension failed - Value (%s) outside of acceptable range" % unicode(set))
                 return False
         else:
             return self.props["dims"]["z"]
 
-    def paksize(self, set=None):
+    def paksize(self, set=None, validate=False):
         """Set or return paksize"""
         if set is not None:
             if set in config.choicelist_paksize:
-                self.props["dims"]["paksize"] = int(set)
-                debug(u"Paksize set to %i" % self.props["dims"]["paksize"])
-                self.on_change()
+                if not validate:
+                    self.props["dims"]["paksize"] = int(set)
+                    debug(u"project: paksize - set to %i" % self.props["dims"]["paksize"])
+                    self.on_change()
                 return True
             else:
-                debug(u"Attempt to set Paksize failed - Value (%s) outside of acceptable range" % unicode(set))
+                debug(u"project: paksize - Attempt to set Paksize failed - Value (%s) outside of acceptable range" % unicode(set))
                 return False
         else:
             return self.props["dims"]["paksize"]
 
-    def winter(self, set=None):
+    def winter(self, set=None, validate=False):
         """Set or return if Winter image is enabled"""
         if set is not None:
             if set in [True, 1]:
-                self.props["dims"]["winter"] = 1
-                debug(u"winter set to %i" % self.props["dims"]["winter"])
-                self.on_change()
+                if not validate:
+                    self.props["dims"]["winter"] = 1
+                    debug(u"project: winter - set to %i" % self.props["dims"]["winter"])
+                    self.on_change()
                 return True
             elif set in [False, 0]:
-                self.props["dims"]["winter"] = 0
-                debug(u"winter set to %i" % self.props["dims"]["winter"])
-                self.on_change()
+                if not validate:
+                    self.props["dims"]["winter"] = 0
+                    debug(u"project: winter - set to %i" % self.props["dims"]["winter"])
+                    self.on_change()
                 return True
             else:
-                debug(u"Attempt to set winter failed - Value (%s) outside of acceptable range" % unicode(set))
+                debug(u"project: winter - Attempt to set winter failed - Value (%s) outside of acceptable range" % unicode(set))
                 return False
         else:
             return self.props["dims"]["winter"]
 
-    def frontimage(self, set=None):
+    def frontimage(self, set=None, validate=False):
         """Set or return if Front image is enabled"""
         if set is not None:
             if set in [True, 1]:
-                self.props["dims"]["frontimage"] = 1
-                debug(u"frontimage set to %i" % self.props["dims"]["frontimage"])
-                self.on_change()
+                if not validate:
+                    self.props["dims"]["frontimage"] = 1
+                    debug(u"project: frontimage - set to %i" % self.props["dims"]["frontimage"])
+                    self.on_change()
                 return True
             elif set in [False, 0]:
-                self.props["dims"]["frontimage"] = 0
-                debug(u"frontimage set to %i" % self.props["dims"]["frontimage"])
-                self.on_change()
+                if not validate:
+                    self.props["dims"]["frontimage"] = 0
+                    debug(u"project: frontimage - set to %i" % self.props["dims"]["frontimage"])
+                    self.on_change()
                 return True
             else:
-                debug(u"Attempt to set frontimage failed - Value (%s) outside of acceptable range" % unicode(set))
+                debug(u"project: frontimage - Attempt to set frontimage failed - Value (%s) outside of acceptable range" % unicode(set))
                 return False
         else:
             return self.props["dims"]["frontimage"]
 
-    def frames(self, set=None):
+    def frames(self, set=None, validate=False):
         """Query or validate new value for number of frames"""
         if set is not None:
             if set == 1:
-                self.props["dims"]["frames"] = int(set)
+                if not validate:
+                    self.props["dims"]["frames"] = int(set)
+                    self.on_change()
                 return True
             else:
-                debug(u"attempt to set frames failed - value (%s) outside of acceptable range" % unicode(set))
+                debug(u"project: frames - attempt to set frames failed - value (%s) outside of acceptable range" % unicode(set))
                 return False
         else:
             return self.props["dims"]["frames"]
@@ -616,16 +690,16 @@ class Project(object):
     def views(self, set=None):
         debug(u"Deprecation warning: views() method called!")
         return self.directions(set)
-    def directions(self, set=None):
+    def directions(self, set=None, validate=False):
         """Set or return number of direction views (1, 2 or 4)"""
         if set is not None:
             if set in config.choicelist_views:
-                self.props["dims"]["directions"] = int(set)
-                debug(u"Views set to %i" % self.props["dims"]["directions"])
-                self.on_change()
+                if not validate:
+                    self.props["dims"]["directions"] = int(set)
+                    self.on_change()
                 return True
             else:
-                debug(u"attempt to set directions failed - value (%s) outside of acceptable range" % unicode(set))
+                debug(u"project: directions - attempt to set directions failed - value (%s) outside of acceptable range" % unicode(set))
                 return False
         else:
             return self.props["dims"]["directions"]
@@ -635,11 +709,12 @@ class Project(object):
     def datfile(self, set=None):
         debug(u"Deprecation warning: datfile() method called!")
         return self.datfile_location(set)
-    def datfile_location(self, set=None):
+    def datfile_location(self, set=None, validate=False):
         """Set or return (relative) path to dat file"""
         if set is not None:
-            self.props["files"]["datfile_location"] = unicode(set)
-            self.on_change()
+            if not validate:
+                self.props["files"]["datfile_location"] = unicode(set)
+                self.on_change()
             return True
         else:
             return self.props["files"]["datfile_location"]
@@ -647,16 +722,18 @@ class Project(object):
     def writedat(self, set=None):
         debug(u"Deprecation warning: writedat() method called!")
         return self.datfile_write(set)
-    def datfile_write(self, set=None):
+    def datfile_write(self, set=None, validate=False):
         """Set or return if dat file should be written"""
         if set is not None:
             if set in [True, 1]:
-                self.props["files"]["datfile_write"] = True
-                self.on_change()
+                if not validate:
+                    self.props["files"]["datfile_write"] = True
+                    self.on_change()
                 return True
             elif set in [False, 0]:
-                self.props["files"]["datfile_write"] = False
-                self.on_change()
+                if not validate:
+                    self.props["files"]["datfile_write"] = False
+                    self.on_change()
                 return True
             else:
                 debug(u"Attempt to set datfile_write failed - Value (%s) outside of acceptable range" % unicode(set))
@@ -667,11 +744,12 @@ class Project(object):
     def pngfile(self, set=None):
         debug(u"Deprecation warning: pngfile() method called!")
         return self.pngfile_location(set)
-    def pngfile_location(self, set=None):
+    def pngfile_location(self, set=None, validate=False):
         """Set or return (relative) path to png file"""
         if set is not None:
-            self.props["files"]["pngfile_location"] = unicode(set)
-            self.on_change()
+            if not validate:
+                self.props["files"]["pngfile_location"] = unicode(set)
+                self.on_change()
             return True
         else:
             return self.props["files"]["pngfile_location"]
@@ -679,11 +757,12 @@ class Project(object):
     def pakfile(self, set=None):
         debug(u"Deprecation warning: pakfile() method called!")
         return self.pakfile_location(set)
-    def pakfile_location(self, set=None):
+    def pakfile_location(self, set=None, validate=False):
         """Set or return (relative) path to pak file"""
         if set is not None:
-            self.props["files"]["pakfile_location"] = unicode(set)
-            self.on_change()
+            if not validate:
+                self.props["files"]["pakfile_location"] = unicode(set)
+                self.on_change()
             return True
         else:
             return self.props["files"]["pakfile_location"]
@@ -693,7 +772,7 @@ class Project(object):
     def has_save_location(self):
         debug(u"Deprecation warning: has_save_location() method called!")
         return self.saved(set)
-    def saved(self, set=None):
+    def saved(self, set=None, validate=False):
         """Set or return whether a save path has been set for this project"""
         if set is not None:
             if set in [True, 1]:
@@ -712,7 +791,7 @@ class Project(object):
     def savefile(self, set=None):
         debug(u"Deprecation warning: savefile() method called!")
         return self.save_location(set)
-    def save_location(self, set=None):
+    def save_location(self, set=None, validate=False):
         """Set or return (absolute) path to project save file location"""
         if set is not None:
             self.internals["files"]["save_location"] = unicode(set)
