@@ -47,6 +47,12 @@ class Project(object):
         # internals is used to store things which shouldn't be saved, e.g. image data, save path etc.
         self.internals = {
             "images": self.init_image_array(),
+            "activeimage": {
+                "direction": 0,
+                "season": 0,
+                "frame": 0,
+                "layer": 0,
+            },
             "files": {
                 "saved": saved,
                 "save_location": "",
@@ -64,12 +70,6 @@ class Project(object):
         self.defaults = {
             # project[view][season][frame][layer][xdim][ydim][zdim]
             "images": self.init_image_array(),
-            "activeimage": {
-                "direction": 0,
-                "season": 0,
-                "frame": 0,
-                "layer": 0,
-            },
             "dims": {
                 "x": 1,
                 "y": 1,
@@ -95,12 +95,12 @@ class Project(object):
         # ALL items in validators must be either dicts (implying subkeys) or functions (implying keys to be validated)
         self.validators = {
             "images": self.image_array,
-            "activeimage": {
-                "direction": self.direction,
-                "season": self.season,
-                "frame": self.frame,
-                "layer": self.layer,
-            },
+#            "activeimage": {
+#                "direction": self.direction,
+#                "season": self.season,
+#                "frame": self.frame,
+#                "layer": self.layer,
+#            },
             "dims": {
                 "x": self.x,
                 "y": self.y,
@@ -201,27 +201,27 @@ class Project(object):
         fresh_image_array = self.init_image_array()
         if set is not None:
             if type(set) == type([]) and len(set) == 4:
-                for v, view in enumerate(set):
-                    # Each view should be a list containing 2 items
-                    if type(view) == type([]) and len(view) == 2:
-                        for s, season in enumerate(view):
+                for d, direction in enumerate(set):
+                    # Each direction should be a list containing 2 items
+                    if type(direction) == type([]) and len(direction) == 2:
+                        for s, season in enumerate(direction):
                             # Each season should contain a variable number of frames (greater than 1) of type list
-                            if type(season) == type([]) and len(season) > 1:
+                            if type(season) == type([]) and len(season) >= 1:
                                 for f, frame in enumerate(season):
                                     # Each frame should be a list containing 2 items
                                     if type(frame) == type([]) and len(frame) == 2:
                                         for l, layer in enumerate(frame):
-                                            # Each image should be a dict containing optional keys
+                                            # Each layer should be a dict containing optional keys
                                             if type(layer) == type({}):
-                                                if image.has_key("path"):
-                                                    if self.image_path(layer["path"], validate=True):
-                                                        fresh_image_array[v][s][f][l]["path"] = layer["path"]
+                                                if layer.has_key("path"):
+                                                    if self.image_path(d, s, f, l, layer["path"], validate=True):
+                                                        fresh_image_array[d][s][f][l]["path"] = layer["path"]
                                                     else:
                                                         # non-fatal validation error, just use the default instead
                                                         debug(u"project: image_array - Validation failed for property \"path\" with value: %s, using default instead" % layer["path"])
-                                                if image.has_key("offset"):
-                                                    if self.offset(layer["offset"], validate=True):
-                                                        fresh_image_array[v][s][f][l]["offset"] = layer["path"]
+                                                if layer.has_key("offset"):
+                                                    if self.offset(d, s, f, l, layer["offset"], validate=True):
+                                                        fresh_image_array[d][s][f][l]["offset"] = layer["path"]
                                                     else:
                                                         # non-fatal validation error, just use the default instead
                                                         debug(u"project: image_array - Validation failed for property \"offset\" with value: %s, using default instead" % layer["offset"])
@@ -229,13 +229,13 @@ class Project(object):
                                                 debug(u"project: image_array - Validation failed, type of potential layer was incorrect, should've been dict but was: %s" % type(layer))
                                                 return False
                                     else:
-                                        debug(u"project: image_array - Validation failed, type or length of potential frame was incorrect, should've been array,2 but was: %s" % (type(frame),len(frame)))
+                                        debug(u"project: image_array - Validation failed, type or length of potential frame was incorrect, should've been array,2 but was: %s,%s" % (type(frame),len(frame)))
                                         return False
                             else:
-                                debug(u"project: image_array - Validation failed, type or length of potential season was incorrect, should've been array,>1 but was: %s" % (type(season),len(season)))
+                                debug(u"project: image_array - Validation failed, type or length of potential season was incorrect, should've been array,>1 but was: %s,%s" % (type(season),len(season)))
                                 return False
                     else:
-                        debug(u"project: image_array - Validation failed, type or length of potential view was incorrect, should've been array,2 but was: %s,%s" % (type(view),len(view)))
+                        debug(u"project: image_array - Validation failed, type or length of potential direction was incorrect, should've been array,2 but was: %s,%s" % (type(direction),len(direction)))
                         return False
             else:
                 debug(u"project: image_array - Validation failed, type of potential image array was incorrect, should've been array but was: %s,%s" % type(set))
@@ -267,7 +267,7 @@ class Project(object):
         else:
             save_location = self.test_path(save_location)
 
-        debug(u"save_location: %s, datfile_location: %s, pngfile_location: %s, pakfile_location: %s" % (self.save_location,
+        debug(u"project: init_save_location - as: %s, datfile_location: %s, pngfile_location: %s, pakfile_location: %s" % (self.save_location,
                                                                                                        self.datfile_location,
                                                                                                        self.pngfile_location,
                                                                                                        self.pakfile_location))
@@ -287,7 +287,7 @@ class Project(object):
     def on_change(self):
         # When something in the project has changed, notify containing app to
         # allow for updating of UI
-        debug(u"Root on_change triggered, sending message to App")
+        debug(u"project: on_change - Root on_change triggered, sending message to App")
         self.parent.project_has_changed()
 
 
@@ -296,10 +296,10 @@ class Project(object):
         """An indication of whether this project has been changed since the last time it was saved"""
         current = self.hash_props()
         if current == self.internals["hash"]:
-            debug(u"  Check Project for changes - Project Unchanged")
+            debug(u"project: has_changed - Check Project for changes - Project Unchanged")
             return False
         else:
-            debug(u"  Check Project for changes - Project Changed")
+            debug(u"project: has_changed - Check Project for changes - Project Changed")
             return True
     def hash_props(self):
         """Return a hash of the representation of the properties dict for use in comparisons"""
@@ -311,17 +311,19 @@ class Project(object):
 
 
     # These functions deal with dat file properties
-    def temp_dat_properties(self, set=None):
-        debug(u"Deprecation warning: temp_dat_properties() method called!")
-        return self.dat_lump(set)
-    def dat_lump(self, set=None):
+    def dat_lump(self, set=None, validate=False):
         """Sets or returns a string containing arbitrary .dat file properties"""
         if set is not None:
-            self.props["dat"]["dat_lump"] = set
-            self.val_temp_dat = set
-            debug(u"dat_lump properties set to %s" % self.props["dat"]["dat_lump"])
-            self.on_change()
-            return True
+            if type(set) in [type(""), type(u"")]:
+                if not validate:
+                    self.props["dat"]["dat_lump"] = set
+                    self.val_temp_dat = set
+                    debug(u"project: dat_lump - properties set to %s" % self.props["dat"]["dat_lump"])
+                    self.on_change()
+                return True
+            else:
+                debug(u"project: dat_lump - type of value (%s) outside of acceptable range" % unicode(set))
+                return False
         else:
             return self.props["dat"]["dat_lump"]
 
@@ -329,10 +331,10 @@ class Project(object):
     # These functions deal with image data
     def active_image_path(self, set=None, validate=False):
         """Set or return the path of the active image"""
-        return self.image_path(self.props["activeimage"]["direction"], 
-                               self.props["activeimage"]["season"], 
-                               self.props["activeimage"]["frame"], 
-                               self.props["activeimage"]["layer"],
+        return self.image_path(self.internals["activeimage"]["direction"], 
+                               self.internals["activeimage"]["season"], 
+                               self.internals["activeimage"]["frame"], 
+                               self.internals["activeimage"]["layer"],
                                set,
                                validate)
     def image_path(self, d, s, f, l, set=None, validate=False):
@@ -341,7 +343,7 @@ class Project(object):
             if type(set) in [type(""), type(u"")]:
                 if not validate:
                     self.props["images"][d][s][f][l]["path"] = set
-                    debug(u"project: image_path - for image d:%s,s:%s,f:%s,l:%s set to %i" % (d, s, f, l, self.props["images"][d][s][f][l]["offset"][0]))
+                    debug(u"project: image_path - for image d:%s,s:%s,f:%s,l:%s set to %s" % (d, s, f, l, self.props["images"][d][s][f][l]["path"]))
                     # This will either load the image (if the path exists) or set a default image if it doesn't
                     self.reload_image(d, s, f, l)
                     self.on_change()
@@ -359,10 +361,10 @@ class Project(object):
 
     def get_active_image(self):
         """Return a wxImage representation of the active image"""
-        return self.get_image(self.props["activeimage"]["direction"], 
-                              self.props["activeimage"]["season"], 
-                              self.props["activeimage"]["frame"], 
-                              self.props["activeimage"]["layer"])
+        return self.get_image(self.internals["activeimage"]["direction"], 
+                              self.internals["activeimage"]["season"], 
+                              self.internals["activeimage"]["frame"], 
+                              self.internals["activeimage"]["layer"])
 
     def get_bitmap(self, d, s, f, l):
         """Return a wxBitmap representation of the specified image"""
@@ -371,10 +373,10 @@ class Project(object):
 
     def get_active_bitmap(self):
         """Return a wxBitmap representation of the active image"""
-        return self.get_bitmap(self.props["activeimage"]["direction"], 
-                               self.props["activeimage"]["season"], 
-                               self.props["activeimage"]["frame"], 
-                               self.props["activeimage"]["layer"])
+        return self.get_bitmap(self.internals["activeimage"]["direction"], 
+                               self.internals["activeimage"]["season"], 
+                               self.internals["activeimage"]["frame"], 
+                               self.internals["activeimage"]["layer"])
 
     def set_all_images(self, path):
         """Set the path for all images to the same path"""
@@ -417,10 +419,10 @@ class Project(object):
                         self.reload_image(d,s,f,l)
     def reload_active_image(self):
         """Refresh the active image"""
-        return self.reload_image(self.props["activeimage"]["direction"], 
-                                 self.props["activeimage"]["season"], 
-                                 self.props["activeimage"]["frame"], 
-                                 self.props["activeimage"]["layer"])
+        return self.reload_image(self.internals["activeimage"]["direction"], 
+                                 self.internals["activeimage"]["season"], 
+                                 self.internals["activeimage"]["frame"], 
+                                 self.internals["activeimage"]["layer"])
     def reload_image(self, d, s, f, l):
         """Refresh the specified image, inputs are: direction, season, frame, layer"""
         # If path is valid, use it, otherwise use a blank image/image with error message
@@ -437,10 +439,10 @@ class Project(object):
 
     def active_x_offset(self, set=None, validate=False):
         """Get or set the active image's x offset"""
-        return self.x_offset(self.props["activeimage"]["direction"], 
-                             self.props["activeimage"]["season"], 
-                             self.props["activeimage"]["frame"], 
-                             self.props["activeimage"]["layer"],
+        return self.x_offset(self.internals["activeimage"]["direction"], 
+                             self.internals["activeimage"]["season"], 
+                             self.internals["activeimage"]["frame"], 
+                             self.internals["activeimage"]["layer"],
                              set,
                              validate)
     def x_offset(self, d, s, f, l, set=None, validate=False):
@@ -460,10 +462,10 @@ class Project(object):
 
     def active_y_offset(self, set=None, validate=False):
         """Get or set the active image's y offset"""
-        return self.y_offset(self.props["activeimage"]["direction"], 
-                             self.props["activeimage"]["season"], 
-                             self.props["activeimage"]["frame"], 
-                             self.props["activeimage"]["layer"],
+        return self.y_offset(self.internals["activeimage"]["direction"], 
+                             self.internals["activeimage"]["season"], 
+                             self.internals["activeimage"]["frame"], 
+                             self.internals["activeimage"]["layer"],
                              set,
                              validate)
     def y_offset(self, d, s, f, l, set=None, validate=False):
@@ -483,10 +485,10 @@ class Project(object):
 
     def active_offset(self, set=None, validate=False):
         """Set or get the full offset coordinates for the active image"""
-        return self.offset(self.props["activeimage"]["direction"], 
-                           self.props["activeimage"]["season"], 
-                           self.props["activeimage"]["frame"], 
-                           self.props["activeimage"]["layer"],
+        return self.offset(self.internals["activeimage"]["direction"], 
+                           self.internals["activeimage"]["season"], 
+                           self.internals["activeimage"]["frame"], 
+                           self.internals["activeimage"]["layer"],
                            set,
                            validate)
     def offset(self, d, s, f, l, set=None, validate=False):
@@ -512,73 +514,73 @@ class Project(object):
         if set is not None:
             if set in [0,1,2,3]:
                 if not validate:
-                    self.props["activeimage"]["direction"] = set
-                    debug(u"project: direction - Active image direction set to %i" % self.props["activeimage"]["direction"])
+                    self.internals["activeimage"]["direction"] = set
+                    debug(u"project: direction - Active image direction set to %i" % self.internals["activeimage"]["direction"])
                     self.on_change()
                 return True
             else:
                 debug(u"project: direction - Attempt to set active image direction failed - Value (%s) outside of acceptable range" % unicode(set))
                 return False
         else:
-            return self.props["activeimage"]["direction"]
+            return self.internals["activeimage"]["direction"]
 
     def season(self, set=None, validate=False):
         """Set or query active image's season"""
         if set is not None:
             if set in [0, 1]:
                 if not validate:
-                    self.props["activeimage"]["season"] = set
-                    debug(u"project: season - Active image season set to %i" % self.props["activeimage"]["season"])
+                    self.internals["activeimage"]["season"] = set
+                    debug(u"project: season - Active image season set to %i" % self.internals["activeimage"]["season"])
                     self.on_change()
                 return True
             else:
                 debug(u"project: season - Attempt to set active image season failed - Value (%s) outside of acceptable range" % unicode(set))
                 return False
         else:
-            return self.props["activeimage"]["season"]
+            return self.internals["activeimage"]["season"]
 
     def frame(self, set=None, validate=False):
         """Set or query active image's frame"""
         if set is not None:
             if set in range(self.props["dims"]["frames"]):
                 if not validate:
-                    self.props["activeimage"]["frame"] = set
-                    debug(u"project: frame - Active image frame set to %i" % self.props["activeimage"]["frame"])
+                    self.internals["activeimage"]["frame"] = set
+                    debug(u"project: frame - Active image frame set to %i" % self.internals["activeimage"]["frame"])
                     self.on_change()
                 return True
             else:
                 debug(u"project: frame - Attempt to set active image frame failed - Value (%s) outside of acceptable range" % unicode(set))
                 return False
         else:
-            return self.props["activeimage"]["frame"]
+            return self.internals["activeimage"]["frame"]
 
     def layer(self, set=None, validate=False):
         """Set or query active image's layer"""
         if set is not None:
             if set in [0, 1]:
                 if not validate:
-                    self.props["activeimage"]["layer"] = set
-                    debug(u"project: layer - Active image layer set to %i" % self.props["activeimage"]["layer"])
+                    self.internals["activeimage"]["layer"] = set
+                    debug(u"project: layer - Active image layer set to %i" % self.internals["activeimage"]["layer"])
                     self.on_change()
                 return True
             else:
                 debug(u"project: layer - Attempt to set active image layer failed - Value (%s) outside of acceptable range" % unicode(set))
                 return False
         else:
-            return self.props["activeimage"]["layer"]
+            return self.internals["activeimage"]["layer"]
 
     def active_image(self, direction=None, season=None, frame=None, layer=None, validate=False):
         """Set or return the currently active image"""
-        if direction != self.props["activeimage"]["direction"] and direction != None:
+        if direction != self.internals["activeimage"]["direction"] and direction != None:
             return self.direction(direction, validate)
-        if season != self.props["activeimage"]["season"] and season != None:
+        if season != self.internals["activeimage"]["season"] and season != None:
             return self.season(season, validate)
-        if frame != self.props["activeimage"]["frame"] and frame != None:
+        if frame != self.internals["activeimage"]["frame"] and frame != None:
             return self.frame(frame, validate)
-        if layer != self.props["activeimage"]["layer"] and layer != None:
+        if layer != self.internals["activeimage"]["layer"] and layer != None:
             return self.layer(layer, validate)
         # Returns dict containing active image's properties
-        return self.props["images"][self.props["activeimage"]["direction"]][self.props["activeimage"]["season"]][self.props["activeimage"]["frame"]][self.props["activeimage"]["layer"]]
+        return self.props["images"][self.internals["activeimage"]["direction"]][self.internals["activeimage"]["season"]][self.internals["activeimage"]["frame"]][self.internals["activeimage"]["layer"]]
 
 
     # Functions which deal with dimensions properties of the project
@@ -699,9 +701,6 @@ class Project(object):
         else:
             return self.props["dims"]["frames"]
 
-    def views(self, set=None):
-        debug(u"Deprecation warning: views() method called!")
-        return self.directions(set)
     def directions(self, set=None, validate=False):
         """Set or return number of direction views (1, 2 or 4)"""
         if set is not None:
@@ -719,16 +718,13 @@ class Project(object):
 
 
     # Functions with deal with file properties of the project
-    def datfile(self, set=None):
-        debug(u"Deprecation warning: datfile() method called!")
-        return self.datfile_location(set)
     def datfile_location(self, set=None, validate=False):
         """Set or return (relative) path to dat file"""
         if set is not None:
             if type(set) in [type(""), type(u"")]:
                 if not validate:
                     self.props["files"]["datfile_location"] = unicode(set)
-                    debug(u"project: datfile_location - set to %i" % self.props["dims"]["datfile_location"])
+                    debug(u"project: datfile_location - set to %s" % self.props["dims"]["datfile_location"])
                     self.on_change()
                 return True
             else:
@@ -737,22 +733,19 @@ class Project(object):
         else:
             return self.props["files"]["datfile_location"]
 
-    def writedat(self, set=None):
-        debug(u"Deprecation warning: writedat() method called!")
-        return self.datfile_write(set)
     def datfile_write(self, set=None, validate=False):
         """Set or return if dat file should be written"""
         if set is not None:
             if set in [True, 1]:
                 if not validate:
                     self.props["files"]["datfile_write"] = True
-                    debug(u"project: datfile_write - set to %i" % self.props["dims"]["datfile_write"])
+                    debug(u"project: datfile_write - set to %s" % self.props["dims"]["datfile_write"])
                     self.on_change()
                 return True
             elif set in [False, 0]:
                 if not validate:
                     self.props["files"]["datfile_write"] = False
-                    debug(u"project: datfile_write - set to %i" % self.props["dims"]["datfile_write"])
+                    debug(u"project: datfile_write - set to %s" % self.props["dims"]["datfile_write"])
                     self.on_change()
                 return True
             else:
@@ -761,16 +754,13 @@ class Project(object):
         else:
             return self.props["files"]["datfile_write"]
 
-    def pngfile(self, set=None):
-        debug(u"Deprecation warning: pngfile() method called!")
-        return self.pngfile_location(set)
     def pngfile_location(self, set=None, validate=False):
         """Set or return (relative) path to png file"""
         if set is not None:
             if type(set) in [type(""), type(u"")]:
                 if not validate:
                     self.props["files"]["pngfile_location"] = unicode(set)
-                    debug(u"project: pngfile_location - set to %i" % self.props["dims"]["pngfile_location"])
+                    debug(u"project: pngfile_location - set to %s" % self.props["dims"]["pngfile_location"])
                     self.on_change()
                 return True
             else:
@@ -779,16 +769,13 @@ class Project(object):
         else:
             return self.props["files"]["pngfile_location"]
 
-    def pakfile(self, set=None):
-        debug(u"Deprecation warning: pakfile() method called!")
-        return self.pakfile_location(set)
     def pakfile_location(self, set=None, validate=False):
         """Set or return (relative) path to pak file"""
         if set is not None:
             if type(set) in [type(""), type(u"")]:
                 if not validate:
                     self.props["files"]["pakfile_location"] = unicode(set)
-                    debug(u"project: pakfile_location - set to %i" % self.props["dims"]["pakfile_location"])
+                    debug(u"project: pakfile_location - set to %s" % self.props["dims"]["pakfile_location"])
                     self.on_change()
                 return True
             else:
@@ -799,20 +786,17 @@ class Project(object):
 
 
     # The following functions deal with the save file for the project and are saved to the internals set (since we don't need to preserve these values when saving)
-    def has_save_location(self):
-        debug(u"Deprecation warning: has_save_location() method called!")
-        return self.saved(set)
     def saved(self, set=None, validate=False):
         """Set or return whether a save path has been set for this project"""
         if set is not None:
             if set in [True, 1]:
                 self.internals["files"]["saved"] = True
-                debug(u"project: saved - set to %i" % self.props["dims"]["saved"])
+                debug(u"project: saved - set to %s" % self.internals["files"]["saved"])
                 self.on_change()
                 return True
             elif set in [False, 0]:
                 self.internals["files"]["saved"] = False
-                debug(u"project: saved - set to %i" % self.props["dims"]["saved"])
+                debug(u"project: saved - set to %s" % self.internals["files"]["saved"])
                 self.on_change()
                 return True
             else:
@@ -821,15 +805,12 @@ class Project(object):
         else:
             return self.internals["files"]["saved"]
 
-    def savefile(self, set=None):
-        debug(u"Deprecation warning: savefile() method called!")
-        return self.save_location(set)
     def save_location(self, set=None, validate=False):
         """Set or return (absolute) path to project save file location"""
         if set is not None:
             if type(set) in [type(""), type(u"")]:
                 self.internals["files"]["save_location"] = unicode(set)
-                debug(u"project: save_location - set to %i" % self.props["dims"]["save_location"])
+                debug(u"project: save_location - set to %s" % self.internals["files"]["save_location"])
                 self.on_change()
                 return True
             else:
