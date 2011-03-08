@@ -228,8 +228,7 @@ class MainWindow(wx.Frame):
         self.Thaw()
 
     def OnToggleDatExport(self, e):
-        """Toggle whether .dat file info should be exported, or just the cut image
-        if .dat file exporting is disabled the .dat file will be displayed in a dialog"""
+        """Toggle whether .dat file info should be exported, or just the cut image"""
         if config.write_dat != self.export_dat_toggle.GetValue():
             config.write_dat = self.export_dat_toggle.GetValue()
-            debug(u"OnToggleDatExport: Set config.write_dat to %s" % config.write_dat)
+            debug(u"mainwindow: OnToggleDatExport: Set config.write_dat to %s" % config.write_dat)

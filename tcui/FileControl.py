@@ -77,7 +77,7 @@ class FileControl(tcui.fileTextBox):
         """Set the values of the controls in this group to the values in the model"""
         # Setting these values should also cause text highlighting to occur
         self.path_box.ChangeValue(self.linked())
-        debug(u"update file control")
+        debug(u"file_control: update - update file control")
         self.highlight()
 
     def SetDependants(self, list):
@@ -87,15 +87,15 @@ class FileControl(tcui.fileTextBox):
 
     def highlight(self):
         """Highlight entry box text"""
-        debug(u"highlighting %s entry box" % self.label)
+        debug(u"file_control: highlight - highlighting %s entry box" % self.label)
         if self.relative != None:
-            debug(u"highlight with relative, %s | %s" % (self.linked(), self.relative()))
+            debug(u"file_control: highlight - highlight with relative, %s | %s" % (self.linked(), self.relative()))
             self.highlightText(self.path_box, self.linked(), self.relative())
         else:
-            debug(u"highlight without relative, %s" % self.linked())
+            debug(u"file_control: highlight - highlight without relative, %s" % self.linked())
             self.highlightText(self.path_box, self.linked())
         if self.dependants:
-            debug(u"highlighting dependants: %s" % (unicode(self.dependants)))
+            debug(u"file_control: highlight - highlighting dependants: %s" % (unicode(self.dependants)))
             for i in self.dependants:
                 i.highlight()
 
@@ -104,7 +104,7 @@ class FileControl(tcui.fileTextBox):
         """Triggered when the text in the path box is changed"""
         if self.linked() != self.path_box.GetValue():
             self.linked(self.path_box.GetValue())
-            debug(u"Text changed in %s entry box, new text: %s" % (self.label, unicode(self.path_box.GetValue())))
+            debug(u"file_control: OnTextChange - Text changed in %s entry box, new text: %s" % (self.label, unicode(self.path_box.GetValue())))
             self.highlight()
             # Optionally trigger some action in the parent when the text is updated
             if self.parent_change_function != None:

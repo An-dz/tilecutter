@@ -87,7 +87,7 @@ class imageWindow(wx.ScrolledWindow):
     # Device Context events and methods
     def OnPaint(self, e):
         """Event handler for scrolled window repaint requests"""
-        debug(u"onPaint event for imageWindow triggered")
+        debug(u"image_window: OnPaint - event for imageWindow triggered")
         dc = wx.AutoBufferedPaintDC(self)
         self.refresh_screen(dc)
 
@@ -111,13 +111,13 @@ class imageWindow(wx.ScrolledWindow):
 #            # If valid_path and path are same, then refresh screen
 #            self.Refresh()
         # Always refresh the screen to show either blank/noimage graphic or the valid graphic
-        debug(u"new image path: %s, calling Refresh()" % self.app.activeproject.active_image_path())
+        debug(u"image_window: refresh_if_valid - new image path: %s, calling Refresh()" % self.app.activeproject.active_image_path())
         self.app.activeproject.reload_active_image()
         self.Refresh()
 
     def refresh_screen(self, dc):
         """Refresh the screen display"""
-        debug(u"imageWindow - refresh_screen")
+        debug(u"image_window: refresh_screen")
         # Redraw the active image in the window, with mask etc.
         bitmap = self.app.activeproject.get_active_bitmap()
 
@@ -212,7 +212,7 @@ class imageWindow(wx.ScrolledWindow):
             # Then the bottom ones
             pos = self.tileToScreen((x, yy, 1), (x,y,z), (mask_offset_x,mask_offset_y), p, bitmap.GetHeight() + bmp_offset_y)
             dc.DrawLine(pos[0],pos[1] - p4, pos[0]+p2,pos[1])
-        debug(u"imageWindow - refresh_screen - Done")
+        debug(u"image_window: refresh_screen - Done")
 
     # Take tile coords and convert into screen coords
     # This function is replicated in tc, and references to it should be made there!
@@ -233,7 +233,7 @@ class imageWindow(wx.ScrolledWindow):
 
     def OnReloadImage(self,e):
         """When reload image button clicked"""
-        debug(u"Reload active image...")
+        debug(u"image_window: OnReloadImage - Reload active image...")
         self.app.activeproject.reload_active_image()
         self.update()
 

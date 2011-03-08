@@ -125,71 +125,71 @@ class menuObject:
 
     # Menu event functions
     def OnNewProject(self, e):
-        debug(u"Menu-File-> New Project")
+        debug(u"menu_object: OnNewProject - Menu-File-> New Project")
         # Call app's NewProject method
         self.app.OnNewProject()
     def OnOpenProject(self, e):
-        debug(u"Menu-File-> Open Project")
+        debug(u"menu_object: OnOpenProject - Menu-File-> Open Project")
         # Call app's OpenProject method
         self.app.OnLoadProject()
     def OnSaveProject(self, e):
-        debug(u"Menu-File-> Save Project")
+        debug(u"menu_object: OnSaveProject - Menu-File-> Save Project")
         # Call app's SaveProject method
         self.app.OnSaveProject(self.app.activeproject)
     def OnSaveProjectAs(self, e):
-        debug(u"Menu-File-> Save Project As...")
+        debug(u"menu_object: OnSaveProjectAs - Menu-File-> Save Project As...")
         # Call app's SaveProject method with saveas set to True
         self.app.OnSaveAsProject(self.app.activeproject)
     def OnCutProject(self, e):
-        debug(u"Menu-File-> Cut Project")
+        debug(u"menu_object: OnCutProject - Menu-File-> Cut Project")
         self.app.export_project(self.app.activeproject, pak_output=False)
     def OnExportProject(self, e):
-        debug(u"Menu-File-> Export Project")
+        debug(u"menu_object: OnExportProject - Menu-File-> Export Project")
         self.app.export_project(self.app.activeproject, pak_output=True)
     def OnExit(self, e):
-        debug(u"Menu-File-> Exit Program")
+        debug(u"menu_object: OnExit - Menu-File-> Exit Program")
         # Call app's Exit method
         self.app.Exit()
 
     def OnDatEdit(self, e):
-        debug(u"Menu-Tools-> Open .dat edit dialog")
+        debug(u"menu_object: OnDatEdit - Menu-Tools-> Open .dat edit dialog")
         dlg = tcui.DatFileEditDialog(self.parent, self.app)
         if dlg.ShowModal() == wx.ID_OK:
             dlg.Destroy()
     def OnSmokeEdit(self, e):
-        debug(u"Menu-Tools-> Open smoke edit dialog")
+        debug(u"menu_object: OnSmokeEdit - Menu-Tools-> Open smoke edit dialog")
         return 1
 
     def OnSameForAll(self, e):
         """When "load same image for all" button is clicked"""
-        debug(u"Load active image for all images")
+        debug(u"menu_object: OnSameForAll - Load active image for all images")
         dlg = wx.MessageDialog(self.parent, gt("This action will set all images in the project to be the same as this one. Do you wish to proceed?"),
                                gt("Load same image for all"),
                                style=wx.YES_NO|wx.YES_DEFAULT|wx.ICON_QUESTION)
         result = dlg.ShowModal()
         dlg.Destroy()
         if result == wx.ID_YES:
-            debug(u"  LoadImageForAll - Result YES")
+            debug(u"menu_object: OnSameForAll - LoadImageForAll - Result YES")
             self.app.activeproject.set_all_images(self.app.activeproject.active_image_path())
         else:
-            debug(u"  LoadImageForAll - Result NO")
+            debug(u"menu_object: OnSameForAll - LoadImageForAll - Result NO")
 
     def OnSelectLanguage(self, e):
-        debug(u"Menu-Tools-> Open select language dialog")
+        debug(u"menu_object: OnSelectLanguage - Menu-Tools-> Open select language dialog")
         dlg = tcui.translationDialog(self.parent, self.app)
         if dlg.ShowModal() == wx.ID_OK:
             dlg.Destroy()
     def OnPreferences(self, e):
-        debug(u"Menu-Tools-> Open preferences dialog")
+        debug(u"menu_object: OnPreferences - Menu-Tools-> Open preferences dialog")
         dlg = tcui.preferencesDialog(self.parent, self.app)
         if dlg.ShowModal() == wx.ID_OK:
             dlg.Destroy()
 
     def OnHelp(self, e):
-        debug(u"Menu-Help-> Open online help")
+        debug(u"menu_object: OnHelp - Menu-Help-> Open online help")
         wx.LaunchDefaultBrowser("http://entropy.me.uk/tilecutter/docs")
     def OnAbout(self, e):
-        debug(u"Menu-Help-> Open about dialog")
+        debug(u"menu_object: OnAbout - Menu-Help-> Open about dialog")
         dlg = tcui.aboutDialog(self.parent, self.app, config.version)
         if dlg.ShowModal() == wx.ID_OK:
             dlg.Destroy()

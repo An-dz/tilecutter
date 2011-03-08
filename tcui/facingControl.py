@@ -123,7 +123,7 @@ class facingControl(object):
         """Set the values of the controls in this group to the values in the model"""
         # Set value of the toggle control (to set number of directions)
         if self.app.activeproject.directions() == 1:
-            debug(u"self.app.activeproject.directions = 1")
+            debug(u"facing_control: update - self.app.activeproject.directions = 1")
             self.facing_enable_select.SetValue(self.choicelist_views[0])
             # Update controls
             self.facing_select_south.Enable()
@@ -141,7 +141,7 @@ class facingControl(object):
                 # Redraw active image
                 self.app.frame.display.update()
         elif self.app.activeproject.directions() == 2:
-            debug(u"self.app.activeproject.directions = 2")
+            debug(u"facing_control: update - self.app.activeproject.directions = 2")
             self.facing_enable_select.SetValue(self.choicelist_views[1])
             self.facing_select_south.Enable()
             self.facing_select_south_label.Enable()
@@ -158,7 +158,7 @@ class facingControl(object):
                 # Redraw active image
                 self.app.frame.display.update()
         else:
-            debug(u"self.app.activeproject.directions = 4")
+            debug(u"facing_control: update - self.app.activeproject.directions = 4")
             self.facing_enable_select.SetValue(self.choicelist_views[2])
             self.facing_select_south.Enable()
             self.facing_select_south_label.Enable()
@@ -173,40 +173,35 @@ class facingControl(object):
 
     def OnToggle(self, e):
         """Changing the value in the selection box"""
-        debug(u"facing_control: OnToggle - Updating model")
+        debug(u"facing_control: OnToggle")
         self.app.activeproject.directions(config.choicelist_views[self.choicelist_views.index(self.facing_enable_select.GetValue())])
-        debug(u"facing_control: OnToggle - Updating self")
         self.update()
 
     def OnSouth(self, e):
         """Toggle South direction"""
+        debug(u"facing_control: OnSouth")
         # If called from the label, ensure radio button is selected
         self.facing_select_south.SetValue(True)
         # Set active image to South
         self.app.activeproject.active_image(direction = 0)
-        # Redraw active image
-        self.app.frame.display.update()
     def OnEast(self, e):
         """Toggle East direction"""
+        debug(u"facing_control: OnEast")
         # If called from the label, ensure radio button is selected
         self.facing_select_east.SetValue(True)
         # Set active image to East
         self.app.activeproject.active_image(direction = 1)
-        # Redraw active image
-        self.app.frame.display.update()
     def OnNorth(self, e):
         """Toggle North direction"""
+        debug(u"facing_control: OnNorth")
         # If called from the label, ensure radio button is selected
         self.facing_select_north.SetValue(True)
         # Set active image to North
         self.app.activeproject.active_image(direction = 2)
-        # Redraw active image
-        self.app.frame.display.update()
     def OnWest(self, e):
         """Toggle West direction"""
+        debug(u"facing_control: OnWest")
         # If called from the label, ensure radio button is selected
         self.facing_select_west.SetValue(True)
         # Set active image to West
         self.app.activeproject.active_image(direction = 3)
-        # Redraw active image
-        self.app.frame.display.update()

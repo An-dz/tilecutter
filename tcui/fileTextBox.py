@@ -40,7 +40,7 @@ class fileTextBox(object):
                                      a, b, dialogFilesAllowed, dialogFlags)
         if pickerDialog.ShowModal() == wx.ID_OK:
             # This needs to calculate a relative path between the location of the output png and the location of the output dat
-            debug(u"File picker dialog, ID_OK, Directory is: %s, Filename is: %s" % (pickerDialog.GetDirectory(), pickerDialog.GetFilename()))
+            debug(u"file_textbox: filePickerDialog - File picker dialog, ID_OK, Directory is: %s, Filename is: %s" % (pickerDialog.GetDirectory(), pickerDialog.GetFilename()))
             drivesplit = os.path.splitdrive(pickerDialog.GetDirectory())
             if drivesplit[0] != "" and drivesplit[1] == "":
                 # There is a drive specified in the string, and nothing else in the path
