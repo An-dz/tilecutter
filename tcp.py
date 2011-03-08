@@ -85,6 +85,7 @@ class tcp_reader(object):
     def __init__(self, filename):
         """"""
         debug(u"Initialising new tcp_reader, file: %s" % filename)
+        self.filename = filename
         try:
             self.file = open(filename, "rb")
         except IOError:
@@ -105,7 +106,7 @@ class tcp_reader(object):
             if type(loadobj) == type({}) and loadobj.has_key("type") and loadobj["type"] == "TCP_JSON":
                 debug(u"tcp_reader: load - JSON load successful, attempting to load in object")
                 # Init new project using loaded data from dict
-                obj = project.Project(params[0], load=loadobj["data"])
+                obj = project.Project(params[0], load=loadobj["data"], save_location=self.filename, saved=True)
             else:
                 # This isn't a well-formed json tcp file, abort
                 debug(u"tcp_reader: load - JSON file is not well-formed, type incorrect, aborting load")
@@ -116,7 +117,7 @@ class tcp_reader(object):
                 legacyobj = self.unpickle_object(str)
                 # Build a new-style project from the old-style one
                 newdict = self.convert_tcproject(legacyobj)
-                obj = project.Project(params[0], load=newdict)
+                obj = project.Project(params[0], load=newdict, save_location=self.filename, saved=False)
             except:
                 # Any error indicates failure to load, abort
                 debug(u"tcp_reader: load - loading as pickle also fails, this isn't a valid .tcp file!")
@@ -176,7 +177,7 @@ class tcp_reader(object):
 
     def unpickle_object(self, str, params=None):
         """Unpickle an object from the pickled string str, optionally call post_serialise with params"""
-        debug(u"tcp_reader: unpickle_object")
+        debug(u"tcp_reader: unpickle_object - WARNING: pickle-style .tcp projects are considered a legacy format!")
         obj = pickle.loads(str)
         if params is not None:
             debug(u"tcp_reader: unpickle_object - running post_serialise")
