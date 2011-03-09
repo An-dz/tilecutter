@@ -56,18 +56,18 @@ class tcp_writer(object):
 
         # Needs addition of exception handling for IO
         try:
-            self.file = open(self.filename, "wb")
+            f = open(self.filename, "wb")
         except IOError:
             debug(u"tcp_writer: write - IOError attempting to open file: %s for writing" % filename)
             debug(traceback.format_exc())
             return False
         try:
-            self.file.write(output_string)
+            f.write(output_string)
         except IOError:
             debug(u"tcp_writer: write - IOError attempting to write to file: %s" % filename)
             debug(traceback.format_exc())
             return False
-        self.file.close()
+        f.close()
 
         return True
 
@@ -86,19 +86,18 @@ class tcp_reader(object):
         """"""
         debug(u"Initialising new tcp_reader, file: %s" % filename)
         self.filename = filename
-        try:
-            self.file = open(filename, "rb")
-        except IOError:
-            debug(u"Opening file for reading failed, file probably does not exist!")
-            debug(traceback.format_exc())
-            self.file = None
 
     def load(self, params):
         """Load object from file, return deserialised object"""
         debug(u"tcp_reader: load - Loading object from file")
         # Optional params argument which contains values which should be passed to post_serialise method of object to initalise it
-        str = self.file.read()
-        self.file.close()
+        try:
+            f = open(self.filename, "rb")
+        except IOError:
+            debug(u"Opening file for reading failed, file probably does not exist!")
+            debug(traceback.format_exc())
+        str = f.read()
+        f.close()
         # Try to load file as JSON format first, if this fails try to load it as pickle
         try:
             debug(u"tcp_reader: load - attempting to load as JSON")

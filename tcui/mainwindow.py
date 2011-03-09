@@ -53,6 +53,11 @@ class MainWindow(wx.Frame):
         self.menubar = tcui.menuObject(self, app)
         self.SetMenuBar(self.menubar.menu)
 
+        # Create the status bar
+        self.statusbar = wx.StatusBar(self, wx.ID_ANY)
+        self.SetStatusBar(self.statusbar)
+        self.statusbar.SetStatusText(u"", 0)
+
         # self.panel contains all other elements within this frame and must be their parent
         self.panel = wx.Panel(self, wx.ID_ANY)
 
@@ -210,6 +215,11 @@ class MainWindow(wx.Frame):
     def set_title(self):
         # Set title text of window
         self.SetTitle(self.app.get_title_text() % _gt("TileCutter"))
+
+    def set_status_text(self, message, field=0):
+        """Set the status bar text field specified to the message specified"""
+        debug(u"mainwindow: set_status_text - setting field: %s to string: %s" % (field, message))
+        self.statusbar.SetStatusText(message, field)
 
     def update(self):
         """Update frame and all its children to reflect values in the active project"""

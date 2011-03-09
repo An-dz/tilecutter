@@ -19,7 +19,7 @@ config = config.Config()
 import logger
 debug = logger.Log()
 
-class menuObject:
+class menuObject(object):
     """Class containing the main program menu"""
     def __init__(self, parent, app):
         """Create the menu"""

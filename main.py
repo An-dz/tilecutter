@@ -82,8 +82,6 @@ class App(wx.App):
         self.projects = {}
         self.projects["default"] = project.Project(self)
         self.activeproject = self.projects["default"]
-        # Active project needs a file save location, by default this is set to a default in the new project
-        self.active_save_location = self.activeproject.save_location()
         self.update_title_text()
 
         if self.gui:
@@ -159,7 +157,6 @@ class App(wx.App):
         debug(u"App: update_title_text")
         if self.activeproject.saved():
             # Project has been previously saved
-#            if self.project_changed(self.activeproject):
             if self.activeproject.has_changed():
                 # Project has changed but was previously saved
                 # Title string will be *FileName.tcp - TileCutter
@@ -170,7 +167,6 @@ class App(wx.App):
                 self.title_text = "%s - %s" % (self.activeproject.save_location(), "%s")
         else:
             # Project hasn't been saved before
-#            if self.project_changed(self.activeproject):
             if self.activeproject.has_changed():
                 # Unsaved, but changed
                 # Title string will be *(New Project) - TileCutter
@@ -180,6 +176,10 @@ class App(wx.App):
                 # Title string will be (New Project) - TileCutter
                 self.title_text = "(%s) - %s" % (_gt("New Project"), "%s")
         debug(u"App: update_title_text - Setting title_text to: %s" % (self.title_text % _gt("TileCutter")))
+
+    def set_status_text(self, message, field=0):
+        """Updates the status bar text field specified with the message specified"""
+        self.frame.set_status_text(message, field)
 
     # Method to invoke cutting engine on a particular project
     def export_project(self, project, pak_output=False, return_dat=None, write_dat=None):
@@ -219,16 +219,16 @@ class App(wx.App):
         debug(u"App: dialog_save_location - Grabbing save path from dialog")
         filesAllowed = "TileCutter Project files (*.tcp)|*.tcp"
         dialogFlags = wx.FD_SAVE|wx.OVERWRITE_PROMPT
-        path = os.path.split(project.savefile())[0]
-        filename = os.path.split(project.savefile())[1]
+        path = os.path.split(project.save_location())[0]
+        filename = os.path.split(project.save_location())[1]
         dlg = wx.FileDialog(self.frame, gt("Choose a location to save to..."),
                             path, filename, filesAllowed, dialogFlags)
         result = dlg.ShowModal()
         if result == wx.ID_OK:
-            #project.savefile(os.path.join(dlg.GetDirectory(), dlg.GetFilename()))
-            project.savefile(dlg.GetPath())
+            #project.save_location(os.path.join(dlg.GetDirectory(), dlg.GetFilename()))
+            project.save_location(dlg.GetPath())
             config.last_save_path = dlg.GetDirectory()
-            debug(u"App: dialog_save_location - New savefile for project is: %s" % project.savefile())
+            debug(u"App: dialog_save_location - New save_location for project is: %s" % project.save_location())
             dlg.Destroy()
             return True
         else:
@@ -270,14 +270,8 @@ class App(wx.App):
         # Create new writer
         t_writer = tcp_writer(self.activeproject.save_location(), "json")
 
-        # Check parent before + after
-        debug(u"App: save_project - before - parent of project: %s is: %s" % (str(project), str(project.parent)))
-
         # Write out project
         ret = t_writer.write(project)
-
-        # Check parent before + after
-        debug(u"App: save_project - after - parent of project: %s is: %s" % (str(project), str(project.parent)))
 
         # If saving worked, update current status
         if ret:
@@ -288,11 +282,16 @@ class App(wx.App):
             if self.gui:
                 self.frame.update()
                 self.project_has_changed()
+                self.set_status_text(gt("Project was saved successfully"))
             debug(u"App: save_project - save_project - Save project success")
             return True
         else:
             # Saving failed for some reason
             debug(u"App: save_project - ERROR: save_project - Saving failed!")
+            if self.gui:
+                self.set_status_text(gt("ERROR: Failed to save project!"), 0)
+                dlg = wx.MessageDialog(None, "Error saving file, please see log file for details", "Error", wx.OK|wx.ICON_ERROR)
+                dlg.ShowModal()
             return False
 
     def load_project(self, location):
@@ -300,16 +299,16 @@ class App(wx.App):
         debug(u"App: load_project - Load project from file: %s" % location)
 
         t_reader = tcp_reader(location)
-        if t_reader.file is None:
-            # Loading file failed for some reason, abort this process
-            return False
 
         # Load project, passing reference to self which will be set as project's parent in its post_serialisation method
         project = t_reader.load([self,])
 
         if project == False:
-            dlg = wx.MessageDialog(None, "Error loading file, please see log file for details", "Error", wx.OK|wx.ICON_ERROR)
-            dlg.ShowModal()
+            debug(u"App: load_project - ERROR: load_project - Loading failed!")
+            if self.gui:
+                self.set_status_text(gt("ERROR: Failed to load project!"), 0)
+                dlg = wx.MessageDialog(None, "Error loading file, please see log file for details", "Error", wx.OK|wx.ICON_ERROR)
+                dlg.ShowModal()
             # Project loading has failed, abort
             return False
 
@@ -320,6 +319,7 @@ class App(wx.App):
         if self.gui:
             self.frame.update()
             self.project_has_changed()
+            self.set_status_text(gt("Project was loaded successfully"), 0)
         debug(u"App: load_project - Load Project succeeded")
         return True
 
@@ -327,40 +327,41 @@ class App(wx.App):
         """Create a new project"""
         debug(u"App: new_project - Create new project")
         self.activeproject = project.Project(self)
-        # Reset project save location/name
-        self.active_save_location = self.activeproject.save_location()
         # Finally update the frame to display changes
-        self.frame.update()
-        self.project_has_changed()
+        if self.gui:
+            self.frame.update()
+            self.project_has_changed()
+            self.set_status_text(gt("New project created"), 0)
         debug(u"App: new_project - Complete!")
 
     def OnNewProject(self):
         """Init process of starting a new project"""
         debug(u"App: OnNewProject")
         project = self.activeproject
-#        if self.project_changed(project):
         if self.activeproject.has_changed():
             ret = self.dialog_save_changes(project)
             if ret == wx.ID_YES:
                 if not project.saved():
                     if not self.dialog_save_location(project):
                         return False
-                self.save_project(project)
+                if not self.save_project(project):
+                    return False
             elif ret == wx.ID_CANCEL:
                 return False
         self.new_project()
+
     def OnLoadProject(self, loadpath=None):
         """Init process of loading a project from file, if optional savepath is specified then skip the load file dialog"""
         debug(u"App: OnLoadProject")
         project = self.activeproject
-#        if self.project_changed(project):                           # If project has changed
         if self.activeproject.has_changed():
             ret = self.dialog_save_changes(project)                 # Prompt to save project
             if ret == wx.ID_YES:                                    # If answer is yes
                 if not project.saved():                             #  Check if file has a save location
                     if not self.dialog_save_location(project):      #  If it doesn't, prompt user for one
                         return False                                #  If user cancels, quit out
-                self.save_project(project)                          #  Otherwise save the project
+                if not self.save_project(project):                  #  Otherwise save the project
+                    return False                                    # If project saving fails abort loading or we'd lose changes
             elif ret == wx.ID_CANCEL:                               # If answer is no
                 return False                                        # Quit out
             # else ret is wx.ID_NO, so we don't want to save but can continue
@@ -368,20 +369,22 @@ class App(wx.App):
             loadpath = self.dialog_load()                           # If not prompt for file to load
         if loadpath != wx.ID_CANCEL and loadpath != False:          # If user picked a file and didn't cancel the dialog
             debug(u"App: OnLoadProject - Load dialog returned a path: %s" % loadpath)
-            return self.load_project(loadpath)                      # Load the project
+            return self.load_project(loadpath)                      # Load the project (returns project object or False depending on success)
         else:                                                       # Otherwise
             return False                                            # Quit out
+
     def OnSaveProject(self, project):
         """Init process of saving a project to file"""
         debug(u"App: OnSaveProject")
         if project.saved():
-            return self.save_project(project)
+            return self.save_project(project)                       # Returns True on save success, False on failure
         else:
             if self.dialog_save_location(project):
-                return self.save_project(project)
+                return self.save_project(project)                   # Returns True on save success, False on failure
             return False
         # Project already saved
         return True
+
     def OnSaveAsProject(self, project):
         """Init process of saving a project to a new location"""
         debug(u"App: OnSaveAsProject")
