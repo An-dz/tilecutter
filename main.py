@@ -402,9 +402,10 @@ class App(wx.App):
     def OnQuit(self, e):
         """Close all windows and quit the application on a quit event in the main window"""
         debug(u"App: OnQuit - Application quitting...")
-        debug(u"App: OnQuit - Saving current application window size and position for next time")
-        config.window_position = self.frame.GetPositionTuple()
+        debug(u"App: OnQuit - Saving current application window size (%s) to config file" % unicode(self.frame.GetSizeTuple()))
         config.window_size = self.frame.GetSizeTuple()
+        debug(u"App: OnQuit - Saving current application window position (%s) to config file" % unicode(self.frame.GetPositionTuple()))
+        config.window_position = self.frame.GetPositionTuple()
         debug(u"App: OnQuit - Destroying frame...")
         self.frame.Destroy()
         debug(u"App: OnQuit - End")
