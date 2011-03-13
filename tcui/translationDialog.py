@@ -96,6 +96,7 @@ class translationDialog(wx.Dialog):
     def OnSelection(self, e):
         """When user changes the language selection"""
         # Set active translation to the one specified
+        debug(u"translation_dialog: OnSelection - User selected language: %s" % gt.longnameToName(self.language_picker.GetValue()))
         gt.setActiveTranslation(gt.longnameToName(self.language_picker.GetValue()))
         # Call own translate function
         self.translate()

@@ -95,12 +95,6 @@ class Project(object):
         # ALL items in validators must be either dicts (implying subkeys) or functions (implying keys to be validated)
         self.validators = {
             "images": self.image_array,
-#            "activeimage": {
-#                "direction": self.direction,
-#                "season": self.season,
-#                "frame": self.frame,
-#                "layer": self.layer,
-#            },
             "dims": {
                 "x": self.x,
                 "y": self.y,
@@ -146,7 +140,7 @@ class Project(object):
             if loaded.has_key(k):
                 # If this is a key, validate value + set if valid
                 if callable(v):
-                    debug(u"project: load_dict - callable object in dict, this is a node, running validation on data: %s" % loaded[k])
+                    debug(u"project: load_dict - callable object in validators dict, this is a node, running validation on data: %s" % loaded[k])
                     if v(loaded[k], validate=True):
                         debug(u"project: load_dict - validation succeeds, using value: %s from input" % loaded[k])
                         props[k] = loaded[k]
@@ -156,7 +150,7 @@ class Project(object):
                 # If this is a node call function to determine what to set
                 elif type(v) == type({}):
                     if type(loaded[k]) == type({}):
-                        debug(u"project: load_dict - dict-type object, recursing to process subset of keys: %s" % repr(loaded[k]))
+                        debug(u"project: load_dict - dict-type object in both validators and input, recursing to process subset of keys: %s" % repr(loaded[k]))
                         props[k] = self.load_dict(loaded[k], v, defaults[k])
                     else:
                         # Validators defines this to be a dict, but the loaded data for this key isn't a dict - data must be invalid so use defaults
@@ -287,9 +281,11 @@ class Project(object):
     def on_change(self):
         # When something in the project has changed, notify containing app to
         # allow for updating of UI
-        debug(u"project: on_change - Root on_change triggered, sending message to App")
         if self.parent is not None:
+            debug(u"project: on_change - Root on_change triggered, sending message to App")
             self.parent.project_has_changed()
+        else:
+            debug(u"project: on_change - Root on_change triggered but no parent specified, doing nothing")
 
 
     # Functions related to checking whether the project has changed

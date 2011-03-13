@@ -174,7 +174,7 @@ class MainWindow(wx.Frame):
 
     def translate(self):
         """Master translate function for the mainwindow object"""
-        self.Freeze()
+#        self.Freeze()
         self.cut_button.SetLabel(gt("Cut image"))
         self.export_button.SetLabel(gt("Compile pak"))
         self.export_dat_toggle.SetLabel(gt("Write out .dat file"))
@@ -198,19 +198,30 @@ class MainWindow(wx.Frame):
         self.set_title()
 
         # Store previous size of window
-        prev_size = self.GetSizeTuple()
-        # Finally re-do the window's layout
-        self.panel.Layout()
-        self.Layout()
-        self.panel.Fit()
-        self.Fit()
+        prev_size = self.panel.GetSizeTuple()
 
-        self.SetMinSize(wx.Size(int(self.GetBestSize().GetHeight() * 1.4),
-                                self.GetBestSize().GetHeight()))
-        self.SetSize(prev_size)
-        self.panel.Layout()
-        self.Layout()
-        self.Thaw()
+        # After updating translations re-layout the main window/panel
+        # Find minimum size of panel
+        self.panel.Fit()
+        debug(u"minimum panel size is: %s, previous panel size is: %s" % (self.GetSizeTuple(), prev_size))
+        # If horizontal or vertical size is smaller than it was before set the size to that value
+        new_size = (max(prev_size[0], self.panel.GetSizeTuple()[0]), max(prev_size[1], self.panel.GetSizeTuple()[1]))
+        debug(u"new size is: %s" % str(new_size))
+
+        # Set minimum size to the minimum allowable height and 1.4* ratio width of that height (or the minimum width if this is larger)
+        self.panel.SetMinSize(wx.Size(max(self.panel.GetSizeTuple()[1] * 1.4, self.panel.GetSizeTuple()[0]), self.panel.GetSizeTuple()[1]))
+        # Set window size to contain the resized panel
+        self.SetClientSize(self.panel.GetMinSize())
+        # Set window's minimum size as well
+        self.SetMinSize(self.GetSizeTuple())
+        debug(u"new minimum panel size is: %s" % self.panel.GetMinSize())
+        debug(u"new minimum window size is: %s" % self.GetMinSize())
+        # Finally set size to the calculated new size, which is the larger of the new minimum or pre-existing
+        self.panel.SetSize(new_size)
+#        self.panel.Layout()
+        self.SetClientSize(self.panel.GetSize())
+#        self.Layout()
+#        self.Thaw()
 
     def set_title(self):
         # Set title text of window

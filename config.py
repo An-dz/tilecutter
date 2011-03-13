@@ -49,7 +49,7 @@ class Config(object):
         "default_language": u"English",
         }
     internals = {
-        "version": u"0.5.7.1",
+        "version": u"0.5.8",
         }
 
     # If a tc.config or tilecutter.config file exists in the program directory use that to load config from 
