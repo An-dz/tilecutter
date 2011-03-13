@@ -174,7 +174,6 @@ class MainWindow(wx.Frame):
 
     def translate(self):
         """Master translate function for the mainwindow object"""
-#        self.Freeze()
         self.cut_button.SetLabel(gt("Cut image"))
         self.export_button.SetLabel(gt("Compile pak"))
         self.export_dat_toggle.SetLabel(gt("Write out .dat file"))
@@ -218,10 +217,8 @@ class MainWindow(wx.Frame):
         debug(u"new minimum window size is: %s" % self.GetMinSize())
         # Finally set size to the calculated new size, which is the larger of the new minimum or pre-existing
         self.panel.SetSize(new_size)
-#        self.panel.Layout()
+        self.panel.Layout()
         self.SetClientSize(self.panel.GetSize())
-#        self.Layout()
-#        self.Thaw()
 
     def set_title(self):
         # Set title text of window
