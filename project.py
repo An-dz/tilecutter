@@ -40,7 +40,7 @@ from environment import getenvvar
 
 class Project(object):
     """New Model containing all information about a project."""
-    def __init__(self, parent, load=None, save_location=None, saved=False):
+    def __init__(self, parent=None, load=None, save_location=None, saved=False):
         """Initialise this project, and set default values"""
         self.parent = parent
 
@@ -267,10 +267,10 @@ class Project(object):
         else:
             save_location = self.test_path(save_location)
 
-        debug(u"project: init_save_location - as: %s, datfile_location: %s, pngfile_location: %s, pakfile_location: %s" % (self.save_location,
-                                                                                                       self.datfile_location,
-                                                                                                       self.pngfile_location,
-                                                                                                       self.pakfile_location))
+#        debug(u"project: init_save_location - as: %s, datfile_location: %s, pngfile_location: %s, pakfile_location: %s" % (self.save_location,
+#                                                                                                       self.datfile_location,
+#                                                                                                       self.pngfile_location,
+#                                                                                                       self.pakfile_location))
         return save_location
 
     def test_path(self, path):
@@ -288,7 +288,8 @@ class Project(object):
         # When something in the project has changed, notify containing app to
         # allow for updating of UI
         debug(u"project: on_change - Root on_change triggered, sending message to App")
-        self.parent.project_has_changed()
+        if self.parent is not None:
+            self.parent.project_has_changed()
 
 
     # Functions related to checking whether the project has changed
@@ -317,7 +318,6 @@ class Project(object):
             if type(set) in [type(""), type(u"")]:
                 if not validate:
                     self.props["dat"]["dat_lump"] = set
-                    self.val_temp_dat = set
                     debug(u"project: dat_lump - properties set to %s" % self.props["dat"]["dat_lump"])
                     self.on_change()
                 return True
