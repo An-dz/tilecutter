@@ -196,29 +196,41 @@ class MainWindow(wx.Frame):
         # Finally translate the application name in title bar
         self.set_title()
 
-        # Store previous size of window
-        prev_size = self.panel.GetSizeTuple()
+        # Find size of panel and size of window
+        # Difference between the two is the difference between client and surrounding area
+        prev_panel_size = self.panel.GetSizeTuple()
+        prev_window_size = self.GetSizeTuple()
 
-        # After updating translations re-layout the main window/panel
+        if prev_panel_size == (0,0):
+            # Must be first time this has been run, panel hasn't been laid out yet
+            self.panel.Fit()
+            self.SetClientSize(self.panel.GetSize())
+            prev_panel_size = self.panel.GetSizeTuple()
+            prev_window_size = self.GetSizeTuple()
+
+        debug(u"previous panel size: %s, previous window size: %s" % (prev_panel_size, prev_window_size))
+
         # Find minimum size of panel
         self.panel.Fit()
-        debug(u"minimum panel size is: %s, previous panel size is: %s" % (self.GetSizeTuple(), prev_size))
-        # If horizontal or vertical size is smaller than it was before set the size to that value
-        new_size = (max(prev_size[0], self.panel.GetSizeTuple()[0]), max(prev_size[1], self.panel.GetSizeTuple()[1]))
-        debug(u"new size is: %s" % str(new_size))
+        debug(u"minimum panel size is: %s" % (str(self.panel.GetBestSizeTuple())))
 
-        # Set minimum size to the minimum allowable height and 1.4* ratio width of that height (or the minimum width if this is larger)
-        self.panel.SetMinSize(wx.Size(max(self.panel.GetSizeTuple()[1] * 1.4, self.panel.GetSizeTuple()[0]), self.panel.GetSizeTuple()[1]))
-        # Set window size to contain the resized panel
-        self.SetClientSize(self.panel.GetMinSize())
-        # Set window's minimum size as well
-        self.SetMinSize(self.GetSizeTuple())
-        debug(u"new minimum panel size is: %s" % self.panel.GetMinSize())
-        debug(u"new minimum window size is: %s" % self.GetMinSize())
+        # If horizontal or vertical size is smaller than it was before set the size to that value
+        new_panel_size = (max(prev_panel_size[0], self.panel.GetBestSizeTuple()[0]), max(prev_panel_size[1], self.panel.GetBestSizeTuple()[1]))
+        # New window size will be the new panel size plus the difference between the previous window size and panel size
+        new_window_size = (prev_window_size[0] - prev_panel_size[0] + new_panel_size[0], 
+                           prev_window_size[1] - prev_panel_size[1] + new_panel_size[1])
+        debug(u"new panel size is: %s, new window size is: %s" % (new_panel_size, new_window_size))
+
+        # Set minimum panel size to the minimum allowable height and 1.4* ratio width of that height (or the minimum width if this is larger)
+        self.panel.SetMinSize(wx.Size(max(self.panel.GetBestSizeTuple()[1] * 1.4, self.panel.GetBestSizeTuple()[0]), self.panel.GetBestSizeTuple()[1]))
+        # Set minimum window size to minimum panel size plus the difference in the previous sizes
+        self.SetMinSize(wx.Size(prev_window_size[0] - prev_panel_size[0] + max(self.panel.GetBestSizeTuple()[1] * 1.4, self.panel.GetBestSizeTuple()[0]), 
+                                prev_window_size[1] - prev_panel_size[1] + self.panel.GetBestSizeTuple()[1]))
+
         # Finally set size to the calculated new size, which is the larger of the new minimum or pre-existing
-        self.panel.SetSize(new_size)
+        self.panel.SetSize(new_panel_size)
         self.panel.Layout()
-        self.SetClientSize(self.panel.GetSize())
+        self.SetClientSize(new_panel_size)
 
     def set_title(self):
         # Set title text of window
