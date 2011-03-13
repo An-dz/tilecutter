@@ -48,28 +48,17 @@ class aboutDialog(wx.Dialog):
         self.version_text = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_CENTER_HORIZONTAL)
         self.copyright_text = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_CENTER_HORIZONTAL)
 
-        # Add close button at the bottom
-        self.close_button = wx.Button(self, wx.ID_OK, "", (-1,-1), (-1,-1), wx.ALIGN_RIGHT)
-
         # Add all items to horizontal sizers, to get horizontal centering and expansion
-        self.hbox1.Add(self.icon,           0, wx.TOP|wx.BOTTOM, 15)
-        self.hbox2.Add(self.title_text,     0, wx.BOTTOM, 2)
-        self.hbox3.Add(self.subtitle_text,  0, wx.BOTTOM, 4)
-        self.hbox4.Add(self.version_text,   0, wx.BOTTOM, 10)
-        self.hbox5.Add(self.copyright_text, 0, wx.BOTTOM|wx.RIGHT|wx.LEFT, 10)
-        self.hbox6.Add(self.close_button,   1, wx.ALIGN_RIGHT, 0)
-
-        # Add horizontal sizers to the vertical one (along with a static line)
-        self.vbox.Add(self.hbox1, 0, wx.ALIGN_CENTER)
-        self.vbox.Add(self.hbox2, 0, wx.ALIGN_CENTER)
-        self.vbox.Add(self.hbox3, 0, wx.ALIGN_CENTER)
-        self.vbox.Add(self.hbox4, 0, wx.ALIGN_CENTER)
-        self.vbox.Add(self.hbox5, 1, wx.BOTTOM, 10)
-        self.vbox.Add(wx.StaticLine(self, wx.ID_ANY, (-1,-1), (-1,1)), 0, wx.EXPAND|wx.ALL, 3)
-        self.vbox.Add(self.hbox6, 0, wx.ALIGN_RIGHT|wx.ALL, 3)
+        self.vbox.Add(self.icon,           0, wx.ALIGN_CENTER_HORIZONTAL|wx.TOP|wx.BOTTOM, 15)
+        self.vbox.Add(self.title_text,     0, wx.ALIGN_CENTER_HORIZONTAL|wx.BOTTOM, 2)
+        self.vbox.Add(self.subtitle_text,  0, wx.ALIGN_CENTER_HORIZONTAL|wx.BOTTOM, 4)
+        self.vbox.Add(self.version_text,   0, wx.ALIGN_CENTER_HORIZONTAL|wx.BOTTOM, 10)
+        self.vbox.Add(self.copyright_text, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.BOTTOM, 15)
 
         # Bind events
-        self.close_button.Bind(wx.EVT_BUTTON, self.OnClose, self.close_button)
+        self.title_text.Bind(wx.EVT_KEY_DOWN, self.OnClose, self.title_text)
+
+        self.title_text.SetFocus()
 
         # Layout sizers
         self.SetSizer(self.vbox)
@@ -79,19 +68,17 @@ class aboutDialog(wx.Dialog):
     def translate(self):
         """Update the text of all controls to reflect a new translation"""
         self.SetLabel(gt("About TileCutter"))
-        self.close_button.SetLabel(gt("Close"))
         self.title_text.SetLabel(gt("TileCutter"))
         self.subtitle_text.SetLabel(gt("Simutrans Building Editor"))
         self.version_text.SetLabel(gt("Version %s") % self.version_number)
-        self.copyright_text.SetLabel(u"\nCopyright \u00A9 2008-2009 Timothy Baldock. All rights reserved.\n\nThis program makes use of the wxWidgets library, which is Copyright \u00A9 1992-2006 Julian Smart, Robert Roebling, Vadim Zeitlin and other members of the wxWidgets team\n\nTileCutter is written in Python")
-        self.title_text.Wrap(self.size[0])
-        self.subtitle_text.Wrap(self.size[0])
-        self.version_text.Wrap(self.size[0])
-        self.copyright_text.Wrap(self.size[0])
+        self.copyright_text.SetLabel(u"\nCopyright \u00A9 2008-2009 Timothy Baldock. All rights reserved.\n\nThis program makes use of the wxWidgets library, which is Copyright \u00A9 1992-2006 Julian Smart, Robert Roebling, Vadim Zeitlin and other members of the wxWidgets team.\n\nTileCutter is written in Python.")
+        self.title_text.Wrap(self.size[0]-20)
+        self.subtitle_text.Wrap(self.size[0]-20)
+        self.version_text.Wrap(self.size[0]-20)
+        self.copyright_text.Wrap(self.size[0]-20)
 
-        self.Layout()
         self.Fit()
-        self.Refresh()
+        self.SetSize(wx.Size(400, self.GetBestSizeTuple()[1]))
         self.CentreOnParent(wx.BOTH)
 
     def update(self):

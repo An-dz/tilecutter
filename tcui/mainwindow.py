@@ -154,6 +154,8 @@ class MainWindow(wx.Frame):
         # Layout sizers
         self.panel.SetSizer(self.sizer)
 
+        self.panel.SetSize((0,0))
+
         self.translate()
 
     def get_active_image_path(self, val=None):
@@ -174,6 +176,7 @@ class MainWindow(wx.Frame):
 
     def translate(self):
         """Master translate function for the mainwindow object"""
+        self.Freeze()
         self.cut_button.SetLabel(gt("Cut image"))
         self.export_button.SetLabel(gt("Compile pak"))
         self.export_dat_toggle.SetLabel(gt("Write out .dat file"))
@@ -231,6 +234,7 @@ class MainWindow(wx.Frame):
         self.panel.SetSize(new_panel_size)
         self.panel.Layout()
         self.SetClientSize(new_panel_size)
+        self.Thaw()
 
     def set_title(self):
         # Set title text of window
