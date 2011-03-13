@@ -131,7 +131,7 @@ class App(wx.App):
     def MacOpenFile(self, filename):
         """Called for files droped on dock icon, or opened via finders context menu"""
         debug(u"App: MacOpenFile - %s dropped on app" % (filename))
-        self.OnLoadProject(self, filename)
+        self.OnLoadProject(filename)
     def MacReopenApp(self):
         """Called when the doc icon is clicked, and for other reasons that need to focus the application"""
         self.BringWindowToFront()

@@ -58,7 +58,6 @@ class aboutDialog(wx.Dialog):
         self.hbox4.Add(self.version_text,   0, wx.BOTTOM, 10)
         self.hbox5.Add(self.copyright_text, 0, wx.BOTTOM|wx.RIGHT|wx.LEFT, 10)
         self.hbox6.Add(self.close_button,   1, wx.ALIGN_RIGHT, 0)
-        #self.hbox6 = self.CreateButtonSizer(wx.OK)
 
         # Add horizontal sizers to the vertical one (along with a static line)
         self.vbox.Add(self.hbox1, 0, wx.ALIGN_CENTER)

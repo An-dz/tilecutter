@@ -146,7 +146,7 @@ class MainWindow(wx.Frame):
         # SIZERS
         # Add the remaining sizers to each other
         # Line under menu bar
-        self.sizer.Add(wx.StaticLine(self.panel, wx.ID_ANY, (-1,-1),(-1,-1), wx.LI_HORIZONTAL), 0, wx.EXPAND, 0)
+#        self.sizer.Add(wx.StaticLine(self.panel, wx.ID_ANY, (-1,-1),(-1,-1), wx.LI_HORIZONTAL), 0, wx.EXPAND, 0)
         # Left and right panels added
         self.s_panel.Add(self.s_panel_left, 0, wx.EXPAND|wx.RIGHT, 1)
         self.s_panel.Add(self.s_panel_right, 1, wx.EXPAND, 0)
