@@ -3,7 +3,7 @@
 # TileCutter User Interface Module - imageControl
 #
 
-# Copyright © 2008-2009 Timothy Baldock. All Rights Reserved.
+# Copyright © 2008-2011 Timothy Baldock. All Rights Reserved.
 
 import wx, imres
 
@@ -14,41 +14,49 @@ gt = translator.Translator()
 import logger
 debug = logger.Log()
 
-class imageControl(object):
+class imageControl(wx.Panel):
     """Box containing Front/Back image controls"""
-    def __init__(self, parent, app, parent_sizer):
+    def __init__(self, parent, app):
+        wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
         self.app = app
         # Setup sizers
         self.sizer = wx.BoxSizer(wx.VERTICAL)
-        self.s_images_flex = wx.FlexGridSizer(0,2,0,0)
-        self.s_images_flex.AddGrowableCol(1)
+        self.s_images_flex = wx.FlexGridSizer(0,3,0,0)
+        self.s_images_flex.AddGrowableCol(2)
         # Header text
-        self.label = wx.StaticText(parent, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
+        self.label = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
         # Add items
-        self.images_select_back_im = wx.StaticBitmap(parent, wx.ID_ANY, imres.catalog["ImageBack"].getBitmap())
-        self.images_select_back = wx.RadioButton(parent, wx.ID_ANY, "", (-1,-1), (-1,-1), wx.RB_GROUP)
+        self.images_select_back_im = wx.StaticBitmap(self, wx.ID_ANY, imres.catalog["ImageBack"].getBitmap())
+        self.images_select_back = wx.RadioButton(self, wx.ID_ANY, "", (-1,-1), (-1,-1), wx.RB_GROUP)
         self.images_select_back.SetValue(True)
-        self.images_select_front_im = wx.StaticBitmap(parent, wx.ID_ANY, imres.catalog["ImageFront"].getBitmap())
-        self.images_select_front = wx.RadioButton(parent, wx.ID_ANY, "", (-1,-1), (-1,-1))
-        self.images_enable_front = wx.CheckBox(parent, wx.ID_ANY, "", (-1,-1), (-1,-1))
+        self.images_select_front_im = wx.StaticBitmap(self, wx.ID_ANY, imres.catalog["ImageFront"].getBitmap())
+        self.images_select_front = wx.RadioButton(self, wx.ID_ANY, "", (-1,-1), (-1,-1))
+        self.images_enable_front = wx.CheckBox(self, wx.ID_ANY, "", (-1,-1), (-1,-1))
         # Add to sizers
-        self.s_images_flex.Add(self.images_select_back_im, 0, wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.LEFT|wx.BOTTOM, 2)
-        self.s_images_flex.Add(self.images_select_back, 0, wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 2)
-        self.s_images_flex.Add(self.images_select_front_im, 0, wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.LEFT|wx.BOTTOM, 2)
-        self.s_images_flex.Add(self.images_select_front, 0, wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 2)
-#        self.s_images_flex.Add(wx.Size(1,1))
-#        self.s_images_flex.Add(self.images_enable_front, 0, wx.ALIGN_LEFT|wx.RIGHT, 2)
+        self.s_images_flex.Add(self.images_select_back_im, 0, wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL)
+        self.s_images_flex.Add((4,0))
+        self.s_images_flex.Add(self.images_select_back, 0, wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL)
+        self.s_images_flex.Add((0,2))
+        self.s_images_flex.Add((0,2))
+        self.s_images_flex.Add((0,2))
+        self.s_images_flex.Add(self.images_select_front_im, 0, wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL)
+        self.s_images_flex.Add((4,0))
+        self.s_images_flex.Add(self.images_select_front, 0, wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL)
         # Add to default sizer with header and line
-        self.sizer.Add(self.label, 0, wx.LEFT|wx.TOP|wx.BOTTOM, 2)
-        self.sizer.Add(self.s_images_flex, 0, wx.TOP|wx.ALIGN_CENTER_HORIZONTAL|wx.BOTTOM, 2)
-        self.sizer.Add(self.images_enable_front, 0, wx.LEFT|wx.ALIGN_CENTER_HORIZONTAL|wx.TOP|wx.BOTTOM, 2)
-        self.sizer.Add(wx.StaticLine(parent, wx.ID_ANY, (-1,-1),(-1,-1), wx.LI_HORIZONTAL), 0, wx.EXPAND|wx.TOP|wx.BOTTOM, 2)
+        self.sizer.Add((0,2))
+        self.sizer.Add(self.label, 0, wx.LEFT, 2)
+        self.sizer.Add((0,4))
+        self.sizer.Add(self.s_images_flex, 0, wx.ALIGN_CENTER_HORIZONTAL)
+        self.sizer.Add((0,6))
+        self.sizer.Add(self.images_enable_front, 0, wx.ALIGN_CENTER_HORIZONTAL)
+        self.sizer.Add((0,2))
         # Bind events
         self.images_enable_front.Bind(wx.EVT_CHECKBOX, self.OnToggle, self.images_enable_front)
         self.images_select_back.Bind(wx.EVT_RADIOBUTTON, self.OnBackImage, self.images_select_back)
         self.images_select_front.Bind(wx.EVT_RADIOBUTTON, self.OnFrontImage, self.images_select_front)
-        # Add element to its parent sizer
-        parent_sizer.Add(self.sizer, 0, wx.EXPAND|wx.LEFT|wx.RIGHT, 3)
+
+        # Set panel's sizer
+        self.SetSizer(self.sizer)
 
     def translate(self):
         """Update the text of all controls to reflect a new translation"""
@@ -59,6 +67,8 @@ class imageControl(object):
         self.images_select_front.SetToolTipString(gt("tt_images_select_front"))
         self.images_enable_front.SetLabel(gt("Enable FrontImage"))
         self.images_enable_front.SetToolTipString(gt("tt_images_enable_front"))
+
+        self.Fit()
 
     def update(self):
         """Set the values of the controls in this group to the values in the model"""

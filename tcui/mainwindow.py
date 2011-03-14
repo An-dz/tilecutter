@@ -71,13 +71,26 @@ class MainWindow(wx.Frame):
 
         # LEFT SIDE CONTROLS
         # Season controls
-#        self.control_seasons    = tcui.seasonControl(self.panel, app, self.s_panel_left)
-        self.control_seasons = tcui.seasonControl(self.panel, app)
+        self.control_seasons    = tcui.seasonControl(self.panel, app)
         self.s_panel_left.Add(self.control_seasons, 0, wx.EXPAND|wx.LEFT|wx.RIGHT, 3)
+        self.s_panel_left.Add((0,2))
+        self.s_panel_left.Add(wx.StaticLine(self.panel, style=wx.LI_HORIZONTAL), 0, wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND)
+        self.s_panel_left.Add((0,2))
+
         # Image controls
-        self.control_images     = tcui.imageControl(self.panel, app, self.s_panel_left)
+        self.control_images     = tcui.imageControl(self.panel, app)
+        self.s_panel_left.Add(self.control_images, 0, wx.EXPAND|wx.LEFT|wx.RIGHT, 3)
+        self.s_panel_left.Add((0,2))
+        self.s_panel_left.Add(wx.StaticLine(self.panel, style=wx.LI_HORIZONTAL), 0, wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND)
+        self.s_panel_left.Add((0,2))
+
         # Facing controls
-        self.control_facing     = tcui.facingControl(self.panel, app, self.s_panel_left)
+        self.control_facing     = tcui.facingControl(self.panel, app)
+        self.s_panel_left.Add(self.control_facing, 0, wx.EXPAND|wx.LEFT|wx.RIGHT, 3)
+        self.s_panel_left.Add((0,2))
+        self.s_panel_left.Add(wx.StaticLine(self.panel, style=wx.LI_HORIZONTAL), 0, wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND)
+        self.s_panel_left.Add((0,2))
+
         # Dimension controls
         self.control_dims       = tcui.dimsControl(self.panel, app, self.s_panel_left)
         # Offset/mask controls

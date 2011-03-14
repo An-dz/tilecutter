@@ -21,7 +21,7 @@ class seasonControl(wx.Panel):
         self.app = app
         # Setup sizers
         self.sizer = wx.BoxSizer(wx.VERTICAL)
-        self.s_seasons_flex = wx.FlexGridSizer(0,3,1,0)
+        self.s_seasons_flex = wx.FlexGridSizer(0,3,0,0)
         self.s_seasons_flex.AddGrowableCol(2)
         # Header text
         self.label = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
@@ -49,8 +49,6 @@ class seasonControl(wx.Panel):
         self.sizer.Add(self.s_seasons_flex, 0, wx.ALIGN_CENTER_HORIZONTAL)
         self.sizer.Add((0,6))
         self.sizer.Add(self.seasons_enable_winter, 0, wx.ALIGN_CENTER_HORIZONTAL)
-        self.sizer.Add((0,4))
-        self.sizer.Add(wx.StaticLine(self, wx.ID_ANY, (-1,-1),(-1,-1), wx.LI_HORIZONTAL), 0, wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND)
         self.sizer.Add((0,2))
         # Bind functions
         self.seasons_enable_winter.Bind(wx.EVT_CHECKBOX, self.OnToggle, self.seasons_enable_winter)

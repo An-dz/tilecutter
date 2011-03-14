@@ -3,7 +3,7 @@
 # TileCutter User Interface Module - facingControl
 #
 
-# Copyright © 2008-2010 Timothy Baldock. All Rights Reserved.
+# Copyright © 2008-2011 Timothy Baldock. All Rights Reserved.
 
 import wx, imres
 
@@ -16,9 +16,10 @@ config = config.Config()
 import logger
 debug = logger.Log()
 
-class facingControl(object):
+class facingControl(wx.Panel):
     """Box containing direction facing controls"""
-    def __init__(self, parent, app, parent_sizer):
+    def __init__(self, parent, app):
+        wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
         self.app = app
         # Setup sizers
         self.sizer = wx.BoxSizer(wx.VERTICAL)
@@ -28,42 +29,46 @@ class facingControl(object):
         self.s_facing_flex.AddGrowableCol(2)
 
         # Header text
-        self.label = wx.StaticText(parent, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
+        self.label = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
         # Components which make up the tile graphic
-        self.facing_tile_left = wx.StaticBitmap(parent, wx.ID_ANY, imres.catalog["tilegraphic_left"].getBitmap())
-        self.facing_tile_right = wx.StaticBitmap(parent, wx.ID_ANY, imres.catalog["tilegraphic_right"].getBitmap())
-        self.facing_tile_middle = wx.StaticBitmap(parent, wx.ID_ANY, imres.catalog["tilegraphic_middle"].getBitmap())
-        self.facing_tile_bottom = wx.StaticBitmap(parent, wx.ID_ANY, imres.catalog["tilegraphic_bottom"].getBitmap())
-        self.facing_tile_top = wx.StaticBitmap(parent, wx.ID_ANY, imres.catalog["tilegraphic_top"].getBitmap())
+        self.facing_tile_left = wx.StaticBitmap(self, wx.ID_ANY, imres.catalog["tilegraphic_left"].getBitmap())
+        self.facing_tile_right = wx.StaticBitmap(self, wx.ID_ANY, imres.catalog["tilegraphic_right"].getBitmap())
+        self.facing_tile_middle = wx.StaticBitmap(self, wx.ID_ANY, imres.catalog["tilegraphic_middle"].getBitmap())
+        self.facing_tile_bottom = wx.StaticBitmap(self, wx.ID_ANY, imres.catalog["tilegraphic_bottom"].getBitmap())
+        self.facing_tile_top = wx.StaticBitmap(self, wx.ID_ANY, imres.catalog["tilegraphic_top"].getBitmap())
 
         # Add items
         self.s_facing_select_south = wx.BoxSizer(wx.HORIZONTAL)
-        self.facing_select_south_label = wx.StaticText(parent, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_RIGHT)
-        self.facing_select_south = wx.RadioButton(parent, wx.ID_ANY, "", (-1,-1), (-1,-1), wx.RB_GROUP)
+        self.facing_select_south_label = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_RIGHT)
+        self.facing_select_south = wx.RadioButton(self, wx.ID_ANY, "", (-1,-1), (-1,-1), wx.RB_GROUP)
         self.facing_select_south.SetValue(True)
         self.s_facing_select_south.Add(self.facing_select_south_label, 0)
+        self.s_facing_select_south.Add((3,0))
         self.s_facing_select_south.Add(self.facing_select_south, 0)
 
         self.s_facing_select_east = wx.BoxSizer(wx.HORIZONTAL)
-        self.facing_select_east_label = wx.StaticText(parent, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
-        self.facing_select_east = wx.RadioButton(parent, wx.ID_ANY, "", (-1,-1), (-1,-1))
+        self.facing_select_east_label = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
+        self.facing_select_east = wx.RadioButton(self, wx.ID_ANY, "", (-1,-1), (-1,-1))
         self.s_facing_select_east.Add(self.facing_select_east, 0)
+        self.s_facing_select_east.Add((3,0))
         self.s_facing_select_east.Add(self.facing_select_east_label, 0)
 
         self.s_facing_select_north = wx.BoxSizer(wx.HORIZONTAL)
-        self.facing_select_north_label = wx.StaticText(parent, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
-        self.facing_select_north = wx.RadioButton(parent, wx.ID_ANY, "", (-1,-1), (-1,-1))
+        self.facing_select_north_label = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
+        self.facing_select_north = wx.RadioButton(self, wx.ID_ANY, "", (-1,-1), (-1,-1))
         self.s_facing_select_north.Add(self.facing_select_north, 0)
+        self.s_facing_select_north.Add((3,0))
         self.s_facing_select_north.Add(self.facing_select_north_label, 0)
 
         self.s_facing_select_west = wx.BoxSizer(wx.HORIZONTAL)
-        self.facing_select_west_label = wx.StaticText(parent, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_RIGHT)
-        self.facing_select_west = wx.RadioButton(parent, wx.ID_ANY, "", (-1,-1), (-1,-1))
+        self.facing_select_west_label = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_RIGHT)
+        self.facing_select_west = wx.RadioButton(self, wx.ID_ANY, "", (-1,-1), (-1,-1))
         self.s_facing_select_west.Add(self.facing_select_west_label, 0)
+        self.s_facing_select_west.Add((3,0))
         self.s_facing_select_west.Add(self.facing_select_west, 0)
 
-        self.facing_enable_label = wx.StaticText(parent, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_CENTER_HORIZONTAL)
-        self.facing_enable_select = wx.ComboBox(parent, wx.ID_ANY, "", (-1, -1), (70, -1), "", wx.CB_READONLY)
+        self.facing_enable_label = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_CENTER_HORIZONTAL)
+        self.facing_enable_select = wx.ComboBox(self, wx.ID_ANY, "", (-1, -1), (70, -1), "", wx.CB_READONLY)
 
         # Add to sizers
         self.s_facing_flex.Add(self.s_facing_select_west, 0, wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM)
@@ -77,12 +82,16 @@ class facingControl(object):
         self.s_facing_flex.Add(self.s_facing_select_east, 0, wx.ALIGN_LEFT|wx.ALIGN_TOP)
 
         # Add to default sizer with header and line
-        # Adding to vertical sizer, so expand to use all horizontal space
-        self.sizer.Add(self.label, 0, wx.LEFT|wx.TOP|wx.BOTTOM, 2)
-        self.sizer.Add(self.s_facing_flex, 0, wx.TOP|wx.BOTTOM|wx.EXPAND, 2)
+        self.sizer.Add((0,2))
+        self.sizer.Add(self.label, 0, wx.LEFT, 2)
+        self.sizer.Add((0,6))
+        self.sizer.Add(self.s_facing_flex, 0, wx.EXPAND)
+        self.sizer.Add((0,4))
         self.sizer.Add(self.facing_enable_label, 0, wx.ALIGN_CENTER_HORIZONTAL)
+        self.sizer.Add((0,4))
         self.sizer.Add(self.facing_enable_select, 0, wx.ALIGN_CENTER_HORIZONTAL)
-        self.sizer.Add(wx.StaticLine(parent, wx.ID_ANY, (-1,-1),(-1,-1), wx.LI_HORIZONTAL), 0, wx.EXPAND|wx.TOP|wx.BOTTOM, 2)
+        self.sizer.Add((0,2))
+
         # Bind events
         self.facing_enable_select.Bind(wx.EVT_COMBOBOX, self.OnToggle, self.facing_enable_select)
         self.facing_select_south.Bind(wx.EVT_RADIOBUTTON, self.OnSouth, self.facing_select_south)
@@ -94,9 +103,8 @@ class facingControl(object):
         self.facing_select_west.Bind(wx.EVT_RADIOBUTTON, self.OnWest, self.facing_select_west)
         self.facing_select_west_label.Bind(wx.EVT_LEFT_DOWN, self.OnWest, self.facing_select_west_label)
 
-        # Add element to its parent sizer
-        # Adding elements to vertical sizer, so Expand to take up all horizontal space
-        parent_sizer.Add(self.sizer, 0, wx.EXPAND|wx.LEFT|wx.RIGHT, 3)
+        # Set panel's sizer
+        self.SetSizer(self.sizer)
 
     def translate(self):
         """Update the text of all controls to reflect a new translation"""
