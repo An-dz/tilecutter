@@ -71,7 +71,9 @@ class MainWindow(wx.Frame):
 
         # LEFT SIDE CONTROLS
         # Season controls
-        self.control_seasons    = tcui.seasonControl(self.panel, app, self.s_panel_left)
+#        self.control_seasons    = tcui.seasonControl(self.panel, app, self.s_panel_left)
+        self.control_seasons = tcui.seasonControl(self.panel, app)
+        self.s_panel_left.Add(self.control_seasons, 0, wx.EXPAND|wx.LEFT|wx.RIGHT, 3)
         # Image controls
         self.control_images     = tcui.imageControl(self.panel, app, self.s_panel_left)
         # Facing controls
