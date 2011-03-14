@@ -71,21 +71,21 @@ class MainWindow(wx.Frame):
 
         # LEFT SIDE CONTROLS
         # Season controls
-        self.control_seasons    = tcui.seasonControl(self.panel, app)
+        self.control_seasons = tcui.seasonControl(self.panel, app)
         self.s_panel_left.Add(self.control_seasons, 0, wx.EXPAND|wx.LEFT|wx.RIGHT, 3)
         self.s_panel_left.Add((0,2))
         self.s_panel_left.Add(wx.StaticLine(self.panel, style=wx.LI_HORIZONTAL), 0, wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND)
         self.s_panel_left.Add((0,2))
 
         # Image controls
-        self.control_images     = tcui.imageControl(self.panel, app)
+        self.control_images = tcui.imageControl(self.panel, app)
         self.s_panel_left.Add(self.control_images, 0, wx.EXPAND|wx.LEFT|wx.RIGHT, 3)
         self.s_panel_left.Add((0,2))
         self.s_panel_left.Add(wx.StaticLine(self.panel, style=wx.LI_HORIZONTAL), 0, wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND)
         self.s_panel_left.Add((0,2))
 
         # Facing controls
-        self.control_facing     = tcui.facingControl(self.panel, app)
+        self.control_facing = tcui.facingControl(self.panel, app)
         self.s_panel_left.Add(self.control_facing, 0, wx.EXPAND|wx.LEFT|wx.RIGHT, 3)
         self.s_panel_left.Add((0,2))
         self.s_panel_left.Add(wx.StaticLine(self.panel, style=wx.LI_HORIZONTAL), 0, wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND)
@@ -97,7 +97,8 @@ class MainWindow(wx.Frame):
         self.control_offset     = tcui.offsetControl(self.panel, app, self.s_panel_left)
 
         # Create Image display window and image path entry control, which adds itself to the sizer
-        self.display = tcui.imageWindow(self, self.panel, app, self.s_panel_right, config.transparent)
+        self.display = tcui.imageWindow(self, app, config.transparent)
+        self.s_panel_right.Add(self.display, 1, wx.EXPAND)
 
         # Save, Dat, Image and Pak output paths
         self.s_panel_export_paths = wx.FlexGridSizer(0,3,3,0)

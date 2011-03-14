@@ -20,54 +20,55 @@ debug = logger.Log()
 
 from tc import Paths
 
-class imageWindow(wx.ScrolledWindow):
+class imageWindow(wx.Panel):
     """Window onto which bitmaps may be drawn, background colour is set by bgcolor
     Also contains the image path entry box and associated controls"""
     bmp = []
-    def __init__(self, parent, panel, app, parent_sizer, bgcolor, id=wx.ID_ANY, size=wx.DefaultSize, extended=0):
+    def __init__(self, parent, app, bgcolor, extended=0):
+        wx.Panel.__init__(self, parent=parent.panel, id=wx.ID_ANY)
         self.bgcolor = bgcolor
         self.app = app
-        self.panel = panel
         self.parent = parent
-        wx.ScrolledWindow.__init__(self, panel, id, (0, 0), size=size, style=wx.SUNKEN_BORDER)
+        self.scrolledwindow = wx.ScrolledWindow(self, id=wx.ID_ANY, style=wx.SUNKEN_BORDER)
 
         # Required for wx.AutoBufferedPaintDC to work
-        self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
+        self.scrolledwindow.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
 
         # Make controls for the image path entry box
         self.s_panel_flex = wx.FlexGridSizer(0,5,0,0)
-            # Make controls
+
+        # Make controls
         # tcproject image class does some additional checking on the path to source images
         # which break this control
-        self.control_imagepath = tcui.FileControl(self.panel, app, self.s_panel_flex, parent.get_active_image_path,
+        self.control_imagepath = tcui.FileControl(self, app, self.s_panel_flex, parent.get_active_image_path,
                                                   _gt("Source image location:"), _gt("tt_image_file_location"),
                                                   _gt("Choose an image file to open..."), "PNG files (*.png)|*.png",
                                                   _gt("Browse..."), _gt("tt_browse_input_file"), parent.get_active_savefile_path,
                                                   wx.FD_OPEN|wx.FD_FILE_MUST_EXIST, self.refresh_if_valid)
 
-        self.impath_entry_reloadfile = wx.Button(self.panel, wx.ID_ANY)
+        self.impath_entry_reloadfile = wx.Button(self, wx.ID_ANY)
         self.impath_entry_reloadfile.Bind(wx.EVT_BUTTON, self.OnReloadImage, self.impath_entry_reloadfile)
 
         # Add them to sizer...
         self.s_panel_flex.Add(self.impath_entry_reloadfile, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 3)
         self.s_panel_flex.AddGrowableCol(1)
-        # Bind them to events
-        # Add element to its parent sizer
-        parent_sizer.Add(self.s_panel_flex, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND|wx.ALL, 4)
 
-        self.s_panel_imagewindow = wx.BoxSizer(wx.HORIZONTAL)           # Right side (bottom part for the image window
-        self.s_panel_imagewindow.Add(self, 1, wx.EXPAND|wx.TOP|wx.BOTTOM, 0)
+        # Add all items to panel's sizer
+        self.sizer = wx.BoxSizer(wx.VERTICAL)
+        self.sizer.Add(self.s_panel_flex, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND|wx.ALL, 4)
+        self.sizer.Add(self.scrolledwindow, 1, wx.EXPAND, 0)
 
-        parent_sizer.Add(self.s_panel_imagewindow,1,wx.EXPAND, 0)
+        self.SetSizer(self.sizer)
+
 
         self.lines = []
         self.x = self.y = 0
         self.drawing = False
 
-        self.SetVirtualSize((1, 1))
-        self.SetScrollRate(20,20)
+        self.scrolledwindow.SetVirtualSize((1, 1))
+        self.scrolledwindow.SetScrollRate(20,20)
 
-        self.Bind(wx.EVT_PAINT, self.OnPaint)
+        self.scrolledwindow.Bind(wx.EVT_PAINT, self.OnPaint, self.scrolledwindow)
 
 ##        if extended == 1:
 ##            #self.Bind(wx.EVT_LEFT_DOWN, self.Draww)
@@ -88,7 +89,7 @@ class imageWindow(wx.ScrolledWindow):
     def OnPaint(self, e):
         """Event handler for scrolled window repaint requests"""
         debug(u"image_window: OnPaint - event for imageWindow triggered")
-        dc = wx.AutoBufferedPaintDC(self)
+        dc = wx.AutoBufferedPaintDC(self.scrolledwindow)
         self.refresh_screen(dc)
 
     def translate(self):
@@ -101,7 +102,7 @@ class imageWindow(wx.ScrolledWindow):
     def update(self):
         """Set the values of the controls in this group to the values in the model"""
         self.control_imagepath.update()
-        self.Refresh()
+        self.scrolledwindow.Refresh()
 
     def refresh_if_valid(self):
         """Called when child impath entry box text changes
@@ -113,7 +114,7 @@ class imageWindow(wx.ScrolledWindow):
         # Always refresh the screen to show either blank/noimage graphic or the valid graphic
         debug(u"image_window: refresh_if_valid - new image path: %s, calling Refresh()" % self.app.activeproject.active_image_path())
         self.app.activeproject.reload_active_image()
-        self.Refresh()
+        self.scrolledwindow.Refresh()
 
     def refresh_screen(self, dc):
         """Refresh the screen display"""
@@ -159,7 +160,7 @@ class imageWindow(wx.ScrolledWindow):
         # Height - will be either height of bitmap, or calculated height of mask (whichever is greater)
         # Width, same thing
         # -ve offset values for mask should count as positive for this calculation!
-        self.SetVirtualSize((max(bitmap.GetWidth(),mask_width_off), max(bitmap.GetHeight(),mask_height_off)))
+        self.scrolledwindow.SetVirtualSize((max(bitmap.GetWidth(),mask_width_off), max(bitmap.GetHeight(),mask_height_off)))
 
 #        if self.IsDoubleBuffered():
 #            dc = pdc
@@ -167,7 +168,7 @@ class imageWindow(wx.ScrolledWindow):
 #            #cdc = wx.ClientDC(self)
 #            dc = wx.BufferedDC(pdc, self.buffer)
 
-        self.DoPrepareDC(dc)            
+        self.scrolledwindow.DoPrepareDC(dc)            
 
         # Setup default brushes
         dc.SetBackground(wx.Brush(self.bgcolor))
