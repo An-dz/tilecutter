@@ -92,7 +92,12 @@ class MainWindow(wx.Frame):
         self.s_panel_left.Add((0,2))
 
         # Dimension controls
-        self.control_dims       = tcui.dimsControl(self.panel, app, self.s_panel_left)
+        self.control_dims = tcui.dimsControl(self.panel, app)
+        self.s_panel_left.Add(self.control_dims, 0, wx.EXPAND|wx.LEFT|wx.RIGHT, 3)
+        self.s_panel_left.Add((0,2))
+        self.s_panel_left.Add(wx.StaticLine(self.panel, style=wx.LI_HORIZONTAL), 0, wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND)
+        self.s_panel_left.Add((0,2))
+
         # Offset/mask controls
         self.control_offset     = tcui.offsetControl(self.panel, app, self.s_panel_left)
 

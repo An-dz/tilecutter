@@ -3,7 +3,7 @@
 # TileCutter User Interface Module - dimsControl
 #
 
-# Copyright © 2008-2009 Timothy Baldock. All Rights Reserved.
+# Copyright © 2008-2011 Timothy Baldock. All Rights Reserved.
 
 import wx, imres
 
@@ -15,40 +15,57 @@ config = config.Config()
 import logger
 debug = logger.Log()
 
-class dimsControl(object):
+class dimsControl(wx.Panel):
     """Box containing dimensions controls"""
-    def __init__(self, parent, app, parent_sizer):
+    def __init__(self, parent, app):
+        wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
         self.app = app
         # Setup sizers
         self.sizer = wx.BoxSizer(wx.VERTICAL)
-        self.s_dims_flex = wx.FlexGridSizer(0,2,1,0)
-        self.s_dims_flex.AddGrowableCol(1)
         # Header text
-        self.label = wx.StaticText(parent, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
+        self.label = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
         # Add items
-        self.dims_p_label = wx.StaticText(parent, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
-        self.dims_p_select = wx.ComboBox(parent, wx.ID_ANY, "", (-1, -1), (70, -1), "", wx.CB_READONLY)
-        self.dims_z_label = wx.StaticText(parent, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
-        self.dims_z_select = wx.ComboBox(parent, wx.ID_ANY, "", (-1, -1), (70, -1), "", wx.CB_READONLY)
-        self.dims_x_label = wx.StaticText(parent, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
-        self.dims_x_select = wx.ComboBox(parent, wx.ID_ANY, "", (-1, -1), (70, -1), "", wx.CB_READONLY)
-        self.dims_y_label = wx.StaticText(parent, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
-        self.dims_y_select = wx.ComboBox(parent, wx.ID_ANY, "", (-1, -1), (70, -1), "", wx.CB_READONLY)
+        self.dims_p_label = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1))
+        self.dims_p_select = wx.ComboBox(self, wx.ID_ANY, "", (-1, -1), (-1, -1), "", wx.CB_READONLY)
+        self.dims_z_label = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1))
+        self.dims_z_select = wx.ComboBox(self, wx.ID_ANY, "", (-1, -1), (-1, -1), "", wx.CB_READONLY)
+        self.dims_pz_sizer = wx.BoxSizer(wx.VERTICAL)
+        self.dims_x_label = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1))
+        self.dims_x_select = wx.ComboBox(self, wx.ID_ANY, "", (-1, -1), (-1, -1), "", wx.CB_READONLY)
+        self.dims_y_label = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1))
+        self.dims_y_select = wx.ComboBox(self, wx.ID_ANY, "", (-1, -1), (-1, -1), "", wx.CB_READONLY)
+        self.dims_xy_sizer = wx.BoxSizer(wx.VERTICAL)
         # Add to sizers
-        self.s_dims_flex.Add(self.dims_p_label, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.RIGHT, 3)
-        self.s_dims_flex.Add(self.dims_x_label, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.LEFT, 3)
-        self.s_dims_flex.Add(self.dims_p_select, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.RIGHT|wx.BOTTOM, 3)
-        self.s_dims_flex.Add(self.dims_x_select, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.LEFT|wx.BOTTOM, 3)
-        self.s_dims_flex.Add(self.dims_z_label, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.RIGHT, 3)
-        self.s_dims_flex.Add(self.dims_y_label, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.LEFT, 3)
-        self.s_dims_flex.Add(self.dims_z_select, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.RIGHT, 3)
-        self.s_dims_flex.Add(self.dims_y_select, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.LEFT, 3)
+        self.dims_pz_sizer.Add(self.dims_p_label, 0, wx.ALIGN_CENTER)
+        self.dims_pz_sizer.Add((0,2))
+        self.dims_pz_sizer.Add(self.dims_p_select, 0, wx.ALIGN_CENTER)
+        self.dims_pz_sizer.Add((0,4))
+        self.dims_pz_sizer.Add(self.dims_z_label, 0, wx.ALIGN_CENTER)
+        self.dims_pz_sizer.Add((0,2))
+        self.dims_pz_sizer.Add(self.dims_z_select, 0, wx.ALIGN_CENTER)
+        self.dims_xy_sizer.Add(self.dims_x_label, 0, wx.ALIGN_CENTER)
+        self.dims_xy_sizer.Add((0,2))
+        self.dims_xy_sizer.Add(self.dims_x_select, 0, wx.ALIGN_CENTER)
+        self.dims_xy_sizer.Add((0,4))
+        self.dims_xy_sizer.Add(self.dims_y_label, 0, wx.ALIGN_CENTER)
+        self.dims_xy_sizer.Add((0,2))
+        self.dims_xy_sizer.Add(self.dims_y_select, 0, wx.ALIGN_CENTER)
+
+        self.dims_horizontal = wx.BoxSizer(wx.HORIZONTAL)
+        self.dims_horizontal.Add(self.dims_pz_sizer, 0)
+        self.dims_horizontal.Add((6,0))
+        self.dims_horizontal.Add(self.dims_xy_sizer, 0)
         # Add to default sizer with header and line
-        self.sizer.Add(self.label, 0, wx.LEFT|wx.TOP|wx.BOTTOM, 2)
-        self.sizer.Add(self.s_dims_flex, 1, wx.ALIGN_CENTER_HORIZONTAL|wx.TOP|wx.BOTTOM, 2)
-        self.sizer.Add(wx.StaticLine(parent, wx.ID_ANY, (-1,-1),(-1,-1), wx.LI_HORIZONTAL), 0, wx.EXPAND|wx.TOP|wx.BOTTOM, 2)
-        # Add element to its parent sizer
-        parent_sizer.Add(self.sizer, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND|wx.LEFT|wx.RIGHT, 3)
+        self.sizer.Add((0,2))
+        self.sizer.Add(self.label, 0, wx.LEFT, 2)
+        self.sizer.Add((0,4))
+        self.sizer.Add(self.dims_horizontal, 1, wx.ALIGN_CENTER)
+        self.sizer.Add((0,2))
+
+        # Set panel's sizer
+        self.SetSizer(self.sizer)
+
+
         # Bind functions
         self.dims_p_select.Bind(wx.EVT_COMBOBOX, self.OnPaksizeSelect, self.dims_p_select)
         self.dims_z_select.Bind(wx.EVT_COMBOBOX, self.OnZdimsSelect, self.dims_z_select)
@@ -92,6 +109,19 @@ class dimsControl(object):
         # And set value to value in the project
         self.dims_x_select.SetStringSelection(self.choicelist_dims[config.choicelist_dims.index(self.app.activeproject.x())])
         self.dims_y_select.SetStringSelection(self.choicelist_dims[config.choicelist_dims.index(self.app.activeproject.y())])
+
+        # Ensure all combo boxes are the same width
+        biggest_width = max(self.dims_p_select.GetBestSize()[0],
+                            self.dims_z_select.GetBestSize()[0],
+                            self.dims_x_select.GetBestSize()[0],
+                            self.dims_y_select.GetBestSize()[0],
+                            60)
+        self.dims_p_select.SetMinSize((biggest_width,-1))
+        self.dims_z_select.SetMinSize((biggest_width,-1))
+        self.dims_x_select.SetMinSize((biggest_width,-1))
+        self.dims_y_select.SetMinSize((biggest_width,-1))
+
+        self.Fit()
 
     def update(self):
         """Set the values of the controls in this group to the values in the model"""
