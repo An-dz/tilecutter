@@ -14,26 +14,28 @@ gt = translator.Translator()
 import logger
 debug = logger.Log()
 
-class offsetControl(wx.StaticBox):
+class offsetControl(wx.Panel):
     """Box containing offset controls"""
     def __init__(self, parent, app, parent_sizer):
+        wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
         self.app = app
         # Setup sizers
         self.sizer = wx.BoxSizer(wx.VERTICAL)
         self.s_offset_flex = wx.FlexGridSizer(0,3,2,2)
         # Header text
-        self.label = wx.StaticText(parent, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
+        self.label = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
         # Add items
-        self.offset_button_up = wx.BitmapButton(parent, wx.ID_ANY, imres.catalog["MoveUpDouble"].getBitmap(), (-1,-1), (-1,-1))
-        self.offset_button_left = wx.BitmapButton(parent, wx.ID_ANY, imres.catalog["MoveLeftDouble"].getBitmap(), (-1,-1), (-1,-1))
-        self.offset_button_reset = wx.BitmapButton(parent, wx.ID_ANY, imres.catalog["MoveCenter"].getBitmap(), (-1,-1), (-1,-1))
-        self.offset_button_right = wx.BitmapButton(parent, wx.ID_ANY, imres.catalog["MoveRightDouble"].getBitmap(), (-1,-1), (-1,-1))
-        self.offset_button_down = wx.BitmapButton(parent, wx.ID_ANY, imres.catalog["MoveDownDouble"].getBitmap(), (-1,-1), (-1,-1))
-        self.offset_button_up_left = wx.BitmapButton(parent, wx.ID_ANY, imres.catalog["MoveUpAndLeftDouble"].getBitmap(), (-1,-1), (-1,-1))
-        self.offset_button_up_right = wx.BitmapButton(parent, wx.ID_ANY, imres.catalog["MoveUpAndRightDouble"].getBitmap(), (-1,-1), (-1,-1))
-        self.offset_button_down_left = wx.BitmapButton(parent, wx.ID_ANY, imres.catalog["MoveDownAndLeftDouble"].getBitmap(), (-1,-1), (-1,-1))
-        self.offset_button_down_right = wx.BitmapButton(parent, wx.ID_ANY, imres.catalog["MoveDownAndRightDouble"].getBitmap(), (-1,-1), (-1,-1))
-        self.offset_selector = wx.CheckBox(parent, wx.ID_ANY, "", (-1,-1), (-1,-1))
+        self.offset_button_up = wx.BitmapButton(self, wx.ID_ANY, imres.catalog["MoveUpDouble"].getBitmap(), (-1,-1), (-1,-1))
+        self.offset_button_left = wx.BitmapButton(self, wx.ID_ANY, imres.catalog["MoveLeftDouble"].getBitmap(), (-1,-1), (-1,-1))
+        self.offset_button_reset = wx.BitmapButton(self, wx.ID_ANY, imres.catalog["MoveCenter"].getBitmap(), (-1,-1), (-1,-1))
+        self.offset_button_right = wx.BitmapButton(self, wx.ID_ANY, imres.catalog["MoveRightDouble"].getBitmap(), (-1,-1), (-1,-1))
+        self.offset_button_down = wx.BitmapButton(self, wx.ID_ANY, imres.catalog["MoveDownDouble"].getBitmap(), (-1,-1), (-1,-1))
+        self.offset_button_up_left = wx.BitmapButton(self, wx.ID_ANY, imres.catalog["MoveUpAndLeftDouble"].getBitmap(), (-1,-1), (-1,-1))
+        self.offset_button_up_right = wx.BitmapButton(self, wx.ID_ANY, imres.catalog["MoveUpAndRightDouble"].getBitmap(), (-1,-1), (-1,-1))
+        self.offset_button_down_left = wx.BitmapButton(self, wx.ID_ANY, imres.catalog["MoveDownAndLeftDouble"].getBitmap(), (-1,-1), (-1,-1))
+        self.offset_button_down_right = wx.BitmapButton(self, wx.ID_ANY, imres.catalog["MoveDownAndRightDouble"].getBitmap(), (-1,-1), (-1,-1))
+        self.offset_selector = wx.CheckBox(self, wx.ID_ANY, "", (-1,-1), (-1,-1))
+
         # Add to sizers
         self.s_offset_flex.Add(self.offset_button_up_left, 0, wx.LEFT, 0)
         self.s_offset_flex.Add(self.offset_button_up, 0, wx.LEFT, 0)
@@ -44,14 +46,20 @@ class offsetControl(wx.StaticBox):
         self.s_offset_flex.Add(self.offset_button_down_left, 0, wx.LEFT, 0)
         self.s_offset_flex.Add(self.offset_button_down, 0, wx.LEFT, 0)
         self.s_offset_flex.Add(self.offset_button_down_right, 0, wx.LEFT, 0)
+
         # Add to default sizer with header and line
-        self.sizer.Add(self.label, 0, wx.LEFT|wx.BOTTOM|wx.TOP, 2)
-        self.sizer.Add(self.s_offset_flex, 1, wx.ALIGN_CENTER_HORIZONTAL|wx.TOP|wx.BOTTOM, 2)
+        self.sizer.Add((0,2))
+        self.sizer.Add(self.label, 0, wx.LEFT, 2)
+        self.sizer.Add((0,4))
+        self.sizer.Add(self.s_offset_flex, 1, wx.ALIGN_CENTER_HORIZONTAL)
         # Add fine button to vertical sizer
-        self.sizer.Add(self.offset_selector, 0, wx.TOP|wx.ALIGN_CENTER_HORIZONTAL|wx.BOTTOM, 5)
-        #self.sizer.Add(wx.StaticLine(parent, wx.ID_ANY, (-1,-1),(-1,-1), wx.LI_HORIZONTAL), 0, wx.EXPAND|wx.TOP|wx.BOTTOM, 2)
-        # Add element to its parent sizer
-        parent_sizer.Add(self.sizer, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND|wx.LEFT|wx.RIGHT, 3)
+        self.sizer.Add((0,7))
+        self.sizer.Add(self.offset_selector, 0, wx.ALIGN_CENTER_HORIZONTAL)
+        self.sizer.Add((0,4))
+
+        # Set panel's sizer
+        self.SetSizer(self.sizer)
+
         # Bind functions
         self.offset_button_up.Bind(wx.EVT_BUTTON, self.OnUp, self.offset_button_up)
         self.offset_button_left.Bind(wx.EVT_BUTTON, self.OnLeft, self.offset_button_left)
@@ -74,6 +82,8 @@ class offsetControl(wx.StaticBox):
         self.offset_button_down.SetToolTipString(gt("tt_offset_button_down"))
         self.offset_selector.SetLabel(gt("Fine"))
         self.offset_selector.SetToolTipString(gt("tt_offset_selector"))
+
+        self.Fit()
 
     def update(self):
         """Set the values of the controls in this group to the values in the model"""
@@ -108,8 +118,6 @@ class offsetControl(wx.StaticBox):
         else:
             self.app.activeproject.active_offset([max(self.app.activeproject.active_x_offset() - self.app.activeproject.paksize()/2, 0), 
                                                   self.app.activeproject.active_y_offset() + self.app.activeproject.paksize()/4])
-#        if r == 1:
-#            self.app.frame.display.update()
     def OnUpRight(self,e):
         """Move mask up and right"""
         if self.offset_selector.GetValue():
@@ -118,8 +126,6 @@ class offsetControl(wx.StaticBox):
         else:
             self.app.activeproject.active_offset([self.app.activeproject.active_x_offset() + self.app.activeproject.paksize()/2, 
                                                   self.app.activeproject.active_y_offset() + self.app.activeproject.paksize()/4])
-#        if r == 1:
-#            self.app.frame.display.update()
     def OnDownLeft(self,e):
         """Move mask down and left"""
         if self.offset_selector.GetValue():
@@ -128,8 +134,6 @@ class offsetControl(wx.StaticBox):
         else:
             self.app.activeproject.active_offset([max(self.app.activeproject.active_x_offset() - self.app.activeproject.paksize()/2, 0), 
                                                   max(self.app.activeproject.active_y_offset() - self.app.activeproject.paksize()/4, 0)])
-#        if r == 1:
-#            self.app.frame.display.update()
     def OnDownRight(self,e):
         """Move mask down and right"""
         if self.offset_selector.GetValue():
@@ -138,42 +142,30 @@ class offsetControl(wx.StaticBox):
         else:
             self.app.activeproject.active_offset([self.app.activeproject.active_x_offset() + self.app.activeproject.paksize()/2, 
                                                   max(self.app.activeproject.active_y_offset() - self.app.activeproject.paksize()/4, 0)])
-#        if r == 1:
-#            self.app.frame.display.update()
     def OnUp(self,e):
         """Move mask up"""
         if self.offset_selector.GetValue():
             self.app.activeproject.active_y_offset(self.app.activeproject.active_y_offset() + 1)
         else:
             self.app.activeproject.active_y_offset(self.app.activeproject.active_y_offset() + self.app.activeproject.paksize())
-#        if r == 1:
-#            self.app.frame.display.update()
     def OnLeft(self,e):
         """Move mask left"""
         if self.offset_selector.GetValue():
             self.app.activeproject.active_x_offset(max(self.app.activeproject.active_x_offset() - 1, 0))
         else:
             self.app.activeproject.active_x_offset(max(self.app.activeproject.active_x_offset() - self.app.activeproject.paksize(), 0))
-#        if r == 1:
-#            self.app.frame.display.update()
     def OnCenter(self,e):
         """Reset mask position"""
         self.app.activeproject.active_offset([0,0])
-#        if r == 1:
-#            self.app.frame.display.update()
     def OnRight(self,e):
         """Move mask right"""
         if self.offset_selector.GetValue():
             self.app.activeproject.active_x_offset(self.app.activeproject.active_x_offset() + 1)
         else:
             self.app.activeproject.active_x_offset(self.app.activeproject.active_x_offset() + self.app.activeproject.paksize())
-#        if r == 1:
-#            self.app.frame.display.update()
     def OnDown(self,e):
         """Move mask down"""
         if self.offset_selector.GetValue():
             self.app.activeproject.active_y_offset(max(self.app.activeproject.active_y_offset() - 1, 0))
         else:
             self.app.activeproject.active_y_offset(max(self.app.activeproject.active_y_offset() - self.app.activeproject.paksize(), 0))
-#        if r == 1:
-#            self.app.frame.display.update()

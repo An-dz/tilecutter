@@ -99,7 +99,11 @@ class MainWindow(wx.Frame):
         self.s_panel_left.Add((0,2))
 
         # Offset/mask controls
-        self.control_offset     = tcui.offsetControl(self.panel, app, self.s_panel_left)
+        self.control_offset = tcui.offsetControl(self.panel, app, self.s_panel_left)
+        self.s_panel_left.Add(self.control_offset, 0, wx.EXPAND|wx.LEFT|wx.RIGHT, 3)
+        self.s_panel_left.Add((0,2))
+        self.s_panel_left.Add(wx.StaticLine(self.panel, style=wx.LI_HORIZONTAL), 0, wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND)
+        self.s_panel_left.Add((0,2))
 
         # Create Image display window and image path entry control, which adds itself to the sizer
         self.display = tcui.imageWindow(self, app, config.transparent)
