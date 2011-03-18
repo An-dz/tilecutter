@@ -16,7 +16,7 @@ debug = logger.Log()
 
 class offsetControl(wx.Panel):
     """Box containing offset controls"""
-    def __init__(self, parent, app, parent_sizer):
+    def __init__(self, parent, app):
         wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
         self.app = app
         # Setup sizers
