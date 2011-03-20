@@ -720,7 +720,7 @@ class Project(object):
             if type(set) in [type(""), type(u"")]:
                 if not validate:
                     self.props["files"]["datfile_location"] = unicode(set)
-                    debug(u"project: datfile_location - set to %s" % self.props["dims"]["datfile_location"])
+                    debug(u"project: datfile_location - set to %s" % self.props["files"]["datfile_location"])
                     self.on_change()
                 return True
             else:
@@ -735,13 +735,13 @@ class Project(object):
             if set in [True, 1]:
                 if not validate:
                     self.props["files"]["datfile_write"] = True
-                    debug(u"project: datfile_write - set to %s" % self.props["dims"]["datfile_write"])
+                    debug(u"project: datfile_write - set to %s" % self.props["files"]["datfile_write"])
                     self.on_change()
                 return True
             elif set in [False, 0]:
                 if not validate:
                     self.props["files"]["datfile_write"] = False
-                    debug(u"project: datfile_write - set to %s" % self.props["dims"]["datfile_write"])
+                    debug(u"project: datfile_write - set to %s" % self.props["files"]["datfile_write"])
                     self.on_change()
                 return True
             else:
@@ -756,7 +756,7 @@ class Project(object):
             if type(set) in [type(""), type(u"")]:
                 if not validate:
                     self.props["files"]["pngfile_location"] = unicode(set)
-                    debug(u"project: pngfile_location - set to %s" % self.props["dims"]["pngfile_location"])
+                    debug(u"project: pngfile_location - set to %s" % self.props["files"]["pngfile_location"])
                     self.on_change()
                 return True
             else:
@@ -771,7 +771,7 @@ class Project(object):
             if type(set) in [type(""), type(u"")]:
                 if not validate:
                     self.props["files"]["pakfile_location"] = unicode(set)
-                    debug(u"project: pakfile_location - set to %s" % self.props["dims"]["pakfile_location"])
+                    debug(u"project: pakfile_location - set to %s" % self.props["files"]["pakfile_location"])
                     self.on_change()
                 return True
             else:

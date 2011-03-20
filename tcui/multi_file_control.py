@@ -32,7 +32,7 @@ class MultiFileControl(wx.Panel):
         title for file picker, allowed types for file picker, variable this is relative to (if any)"""
         wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
 
-        self.ftbox = tcui.fileTextBox()
+        self.ftbox = tcui.fileTextBox(parent)
 
         self.app = app
         self.parent = parent

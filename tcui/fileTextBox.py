@@ -17,6 +17,9 @@ debug = logger.Log()
 class fileTextBox(object):
     """Methods for text boxes displaying paths"""
     #                   Path 1 joined onto the end of path 2, to allow for relative paths, also used to calculate relative output
+    def __init__(self, parent):
+        """"""
+        self.parent = parent
     def filePickerDialog(self, path1, path2=None, dialogText="", dialogFilesAllowed="", dialogFlags=None):
         """File picker dialog with additional methods"""
         if path2 == None:
