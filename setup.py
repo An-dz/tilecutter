@@ -15,7 +15,7 @@ import zipfile
 import config
 config = config.Config()
 
-version = config.version
+version = str(config.version)
 
 ### this manifest enables the standard Windows XP-looking theme
 ##manifest = """

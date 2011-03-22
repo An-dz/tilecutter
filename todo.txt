@@ -67,6 +67,21 @@ Add a status bar, displaying status information about the program
 Make icons in main menu much bigger (double size)
 New graphics for the offset control buttons that look nicer/are bigger
 
+# Release 0.5.8
+ADD: Completely new save format (JSON-based)
+     Older files can still be opened, but all new files will be saved in the new format
+     New format can be edited by hand if you are careful
+CHANGE: Much better code layout and optimisation (ongoing)
+FIX: Further Unicode issues which should now be fully resolved
+FIX: Opening files again works
+CHANGE: About dialog now has no button and closes on any key press
+CHANGE: UI layout minor tweaks to look better cross-platform
+CHANGE: New larger icons for controls
+FIX: Flickering when language changes
+FIX: Changing language now resizes the main window properly
+ADD: Better hashing system for projects (to check changes) built into new project
+
+
 # Release 0.5.7
 FIX: Many unicode issues relating to information passed into program
 FIX: Logger now handles multiline output properly
