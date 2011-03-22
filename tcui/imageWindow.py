@@ -34,32 +34,29 @@ class imageWindow(wx.Panel):
         # Required for wx.AutoBufferedPaintDC to work
         self.scrolledwindow.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
 
-        # Make controls for the image path entry box
-        self.s_panel_flex = wx.FlexGridSizer(0,5,0,0)
+#        # Make controls for the image path entry box
+#        self.s_panel_flex = wx.FlexGridSizer(0,5,0,0)
 
         # Make controls
-        # tcproject image class does some additional checking on the path to source images
-        # which break this control
-        self.control_imagepath = tcui.FileControl(self, app, self.s_panel_flex, parent.get_active_image_path,
-                                                  _gt("Source image location:"), _gt("tt_image_file_location"),
-                                                  _gt("Choose an image file to open..."), "PNG files (*.png)|*.png",
-                                                  _gt("Browse..."), _gt("tt_browse_input_file"), parent.get_active_savefile_path,
-                                                  wx.FD_OPEN|wx.FD_FILE_MUST_EXIST, self.refresh_if_valid)
+#        # tcproject image class does some additional checking on the path to source images
+#        # which break this control
+#        self.control_imagepath = tcui.FileControl(self, app, self.s_panel_flex, parent.get_active_image_path,
+#                                                  _gt("Source image location:"), _gt("tt_image_file_location"),
+#                                                  _gt("Choose an image file to open..."), "PNG files (*.png)|*.png",
+#                                                  _gt("Browse..."), _gt("tt_browse_input_file"), parent.get_active_savefile_path,
+#                                                  wx.FD_OPEN|wx.FD_FILE_MUST_EXIST, self.refresh_if_valid)
+        self.control_imagepath = tcui.ImageFileControl(self, app)
 
-        self.impath_entry_reloadfile = wx.Button(self, wx.ID_ANY)
-        self.impath_entry_reloadfile.Bind(wx.EVT_BUTTON, self.OnReloadImage, self.impath_entry_reloadfile)
-
-        # Add them to sizer...
-        self.s_panel_flex.Add(self.impath_entry_reloadfile, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 3)
-        self.s_panel_flex.AddGrowableCol(1)
+#        # Add them to sizer...
+#        self.s_panel_flex.Add(self.impath_entry_reloadfile, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 3)
+#        self.s_panel_flex.AddGrowableCol(1)
 
         # Add all items to panel's sizer
         self.sizer = wx.BoxSizer(wx.VERTICAL)
-        self.sizer.Add(self.s_panel_flex, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND|wx.ALL, 4)
+        self.sizer.Add(self.control_imagepath, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND|wx.ALL, 4)
         self.sizer.Add(self.scrolledwindow, 1, wx.EXPAND, 0)
 
         self.SetSizer(self.sizer)
-
 
         self.lines = []
         self.x = self.y = 0
@@ -95,8 +92,6 @@ class imageWindow(wx.Panel):
     def translate(self):
         """Update the text of all controls to reflect a new translation"""
         self.control_imagepath.translate()
-        self.impath_entry_reloadfile.SetLabel(gt("Reload Image"))
-        self.impath_entry_reloadfile.SetToolTipString(gt("tt_reload_input_file"))
 
     # Update refreshes both textbox (if it's changed) and the device context
     def update(self):
@@ -231,10 +226,4 @@ class imageWindow(wx.Panel):
         if screen_height != None:
             yy = screen_height - yy
         return (xx,yy)
-
-    def OnReloadImage(self,e):
-        """When reload image button clicked"""
-        debug(u"image_window: OnReloadImage - Reload active image...")
-        self.app.activeproject.reload_active_image()
-        self.update()
 

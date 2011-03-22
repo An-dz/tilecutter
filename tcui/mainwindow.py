@@ -39,7 +39,6 @@ class MainWindow(wx.Frame):
         wx.Frame.__init__(self, parent, wx.ID_ANY, title, (-1,-1), (-1,-1),
                                         style=wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL)
         self.app = app
-        # Init stuff
 
         # Set the program's icon
         self.icons = wx.IconBundle()
@@ -66,8 +65,10 @@ class MainWindow(wx.Frame):
         self.s_panel = wx.BoxSizer(wx.HORIZONTAL)
 
         # Within the top panel, two horizontal divisions, one for the controls, one for the image window
-        self.s_panel_left = wx.BoxSizer(wx.VERTICAL)        # Left side - Main controls
-        self.s_panel_right = wx.BoxSizer(wx.VERTICAL)       # Right side - Image window and controls
+        # Left side - Main controls
+        self.s_panel_left = wx.BoxSizer(wx.VERTICAL)
+        # Right side - Image window and controls
+        self.s_panel_right = wx.BoxSizer(wx.VERTICAL)
 
         # LEFT SIDE CONTROLS
         # Season controls
@@ -111,35 +112,6 @@ class MainWindow(wx.Frame):
 
         # Save, Dat, Image and Pak output paths
         self.control_paths = tcui.MultiFileControl(self.panel, app)
-
-#        self.s_panel_export_paths = wx.FlexGridSizer(0,3,3,0)
-#        # Passing through reference to app.activeproject.XXXfile doesn't work here when we make a new
-#        # project/load a project, since it still points to the old one! needs to access these values
-#        # some other way...
-#        self.control_savepath = tcui.FileControl(self.panel, app, self.s_panel_export_paths, self.get_active_savefile_path,
-#                                                 _gt("Project Save Location"), _gt("tt_save_file_location"),
-#                                                 _gt("Choose a location to save project..."), "TCP files (*.tcp)|*.tcp",
-#                                                 _gt("Browse..."), _gt("tt_browse_save_file"), None)
-#
-#        self.control_datpath = tcui.FileControl(self.panel, app, self.s_panel_export_paths, self.get_active_datfile_path,
-#                                                _gt(".dat Output Location"), _gt("tt_dat_file_location"),
-#                                                _gt("Choose a location to save .dat file..."), "DAT files (*.dat)|*.dat",
-#                                                _gt("Browse..."), _gt("tt_browse_dat_file"), self.get_active_savefile_path)
-#
-#        self.control_pngpath = tcui.FileControl(self.panel, app, self.s_panel_export_paths, self.get_active_pngfile_path,
-#                                                _gt(".png Output Location"), _gt("tt_png_file_location"),
-#                                                _gt("Choose a location to save .png file..."), "PNG files (*.png)|*.png",
-#                                                _gt("Browse..."), _gt("tt_browse_png_file"), self.get_active_savefile_path)
-#
-#        self.control_pakpath = tcui.FileControl(self.panel, app, self.s_panel_export_paths, self.get_active_pakfile_path,
-#                                                _gt(".pak Output Location"), _gt("tt_pak_file_location"),
-#                                                _gt("Choose a location to export .pak file..."), "PAK files (*.pak)|*.pak",
-#                                                _gt("Browse..."), _gt("tt_browse_pak_file"), self.get_active_savefile_path)
-#
-#        # Set controls that savepath also alters (ones which are relative to it)
-#        self.control_savepath.SetDependants([self.control_datpath, self.control_pngpath, self.control_pakpath])
-#
-#        self.s_panel_export_paths.AddGrowableCol(1)
 
         # CUT/EXPORT BUTTONS
         # Export .dat checkbox
@@ -221,10 +193,6 @@ class MainWindow(wx.Frame):
         self.control_offset.translate()
         # Path entry controls
         self.control_paths.translate()
-#        self.control_savepath.translate()
-#        self.control_datpath.translate()
-#        self.control_pngpath.translate()
-#        self.control_pakpath.translate()
         # And the menus
         self.menubar.translate()
         # Finally translate the application name in title bar
@@ -286,10 +254,6 @@ class MainWindow(wx.Frame):
         self.control_dims.update()
         self.control_offset.update()
         self.control_paths.update()
-#        self.control_datpath.update()
-#        self.control_pngpath.update()
-#        self.control_pakpath.update()
-#        self.control_savepath.update()
         self.display.update()
         self.Thaw()
 

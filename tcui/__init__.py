@@ -14,6 +14,7 @@ from menuObject import menuObject
 from FileControl import FileControl
 
 from multi_file_control import MultiFileControl
+from image_file_control import ImageFileControl
 
 from mainwindow import MainWindow
 
