@@ -17,6 +17,8 @@ debug = logger.Log()
 class offsetControl(wx.Panel):
     """Box containing offset controls"""
     def __init__(self, parent, app):
+        """"""
+        debug(u"tcui.OffsetControl: __init__")
         wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
         self.app = app
         # Setup sizers
@@ -74,6 +76,7 @@ class offsetControl(wx.Panel):
 
     def translate(self):
         """Update the text of all controls to reflect a new translation"""
+        debug(u"tcui.OffsetControl: translate")
         self.label.SetLabel(gt("Mask Offset:"))
         self.offset_button_up.SetToolTipString(gt("tt_offset_button_up"))
         self.offset_button_left.SetToolTipString(gt("tt_offset_button_left"))
@@ -87,10 +90,12 @@ class offsetControl(wx.Panel):
 
     def update(self):
         """Set the values of the controls in this group to the values in the model"""
+        debug(u"tcui.OffsetControl: update")
         # Offset control doesn't have any controls which are determined by the model, "fine" checkbox always off by default
 
     def OnFine(self,e):
         """On toggle of the "fine" checkbox, change images on the buttons"""
+        debug(u"tcui.OffsetControl: OnFine")
         if self.offset_selector.GetValue():
             self.offset_button_up.SetBitmapLabel(imres.catalog["MoveUp"].getBitmap())
             self.offset_button_left.SetBitmapLabel(imres.catalog["MoveLeft"].getBitmap())
@@ -112,6 +117,7 @@ class offsetControl(wx.Panel):
 
     def OnUpLeft(self,e):
         """Move mask up and left"""
+        debug(u"tcui.OffsetControl: OnUpLeft")
         if self.offset_selector.GetValue():
             self.app.activeproject.active_offset([max(self.app.activeproject.active_x_offset() - 2, 0), 
                                                   self.app.activeproject.active_y_offset() + 1])
@@ -120,6 +126,7 @@ class offsetControl(wx.Panel):
                                                   self.app.activeproject.active_y_offset() + self.app.activeproject.paksize()/4])
     def OnUpRight(self,e):
         """Move mask up and right"""
+        debug(u"tcui.OffsetControl: OnUpRight")
         if self.offset_selector.GetValue():
             self.app.activeproject.active_offset([self.app.activeproject.active_x_offset() + 2, 
                                                   self.app.activeproject.active_y_offset() + 1])
@@ -128,6 +135,7 @@ class offsetControl(wx.Panel):
                                                   self.app.activeproject.active_y_offset() + self.app.activeproject.paksize()/4])
     def OnDownLeft(self,e):
         """Move mask down and left"""
+        debug(u"tcui.OffsetControl: OnDownLeft")
         if self.offset_selector.GetValue():
             self.app.activeproject.active_offset([max(self.app.activeproject.active_x_offset() - 2, 0), 
                                                   max(self.app.activeproject.active_y_offset() - 1, 0)])
@@ -136,6 +144,7 @@ class offsetControl(wx.Panel):
                                                   max(self.app.activeproject.active_y_offset() - self.app.activeproject.paksize()/4, 0)])
     def OnDownRight(self,e):
         """Move mask down and right"""
+        debug(u"tcui.OffsetControl: OnDownRight")
         if self.offset_selector.GetValue():
             self.app.activeproject.active_offset([self.app.activeproject.active_x_offset() + 2, 
                                                   max(self.app.activeproject.active_y_offset() - 1, 0)])
@@ -144,27 +153,32 @@ class offsetControl(wx.Panel):
                                                   max(self.app.activeproject.active_y_offset() - self.app.activeproject.paksize()/4, 0)])
     def OnUp(self,e):
         """Move mask up"""
+        debug(u"tcui.OffsetControl: OnUp")
         if self.offset_selector.GetValue():
             self.app.activeproject.active_y_offset(self.app.activeproject.active_y_offset() + 1)
         else:
             self.app.activeproject.active_y_offset(self.app.activeproject.active_y_offset() + self.app.activeproject.paksize())
     def OnLeft(self,e):
         """Move mask left"""
+        debug(u"tcui.OffsetControl: OnLeft")
         if self.offset_selector.GetValue():
             self.app.activeproject.active_x_offset(max(self.app.activeproject.active_x_offset() - 1, 0))
         else:
             self.app.activeproject.active_x_offset(max(self.app.activeproject.active_x_offset() - self.app.activeproject.paksize(), 0))
     def OnCenter(self,e):
         """Reset mask position"""
+        debug(u"tcui.OffsetControl: OnCenter")
         self.app.activeproject.active_offset([0,0])
     def OnRight(self,e):
         """Move mask right"""
+        debug(u"tcui.OffsetControl: OnRight")
         if self.offset_selector.GetValue():
             self.app.activeproject.active_x_offset(self.app.activeproject.active_x_offset() + 1)
         else:
             self.app.activeproject.active_x_offset(self.app.activeproject.active_x_offset() + self.app.activeproject.paksize())
     def OnDown(self,e):
         """Move mask down"""
+        debug(u"tcui.OffsetControl: OnDown")
         if self.offset_selector.GetValue():
             self.app.activeproject.active_y_offset(max(self.app.activeproject.active_y_offset() - 1, 0))
         else:

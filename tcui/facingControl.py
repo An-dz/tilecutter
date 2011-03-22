@@ -19,6 +19,8 @@ debug = logger.Log()
 class facingControl(wx.Panel):
     """Box containing direction facing controls"""
     def __init__(self, parent, app):
+        """"""
+        debug(u"tcui.FacingControl: __init__")
         wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
         self.app = app
         # Setup sizers
@@ -108,6 +110,7 @@ class facingControl(wx.Panel):
 
     def translate(self):
         """Update the text of all controls to reflect a new translation"""
+        debug(u"tcui.FacingControl: translate")
         self.label.SetLabel(gt("Direction Facing:"))
         self.facing_select_south_label.SetLabel(gt("South"))
         self.facing_select_south.SetToolTipString(gt("tt_facing_select_south"))
@@ -129,9 +132,10 @@ class facingControl(wx.Panel):
 
     def update(self):
         """Set the values of the controls in this group to the values in the model"""
+        debug(u"tcui.FacingControl: update")
         # Set value of the toggle control (to set number of directions)
         if self.app.activeproject.directions() == 1:
-            debug(u"facing_control: update - self.app.activeproject.directions = 1")
+            debug(u"tcui.FacingControl: update - self.app.activeproject.directions = 1")
             self.facing_enable_select.SetValue(self.choicelist_views[0])
             # Update controls
             self.facing_select_south.Enable()
@@ -149,7 +153,7 @@ class facingControl(wx.Panel):
                 # Redraw active image
                 self.app.frame.display.update()
         elif self.app.activeproject.directions() == 2:
-            debug(u"facing_control: update - self.app.activeproject.directions = 2")
+            debug(u"tcui.FacingControl: update - self.app.activeproject.directions = 2")
             self.facing_enable_select.SetValue(self.choicelist_views[1])
             self.facing_select_south.Enable()
             self.facing_select_south_label.Enable()
@@ -166,7 +170,7 @@ class facingControl(wx.Panel):
                 # Redraw active image
                 self.app.frame.display.update()
         else:
-            debug(u"facing_control: update - self.app.activeproject.directions = 4")
+            debug(u"tcui.FacingControl: update - self.app.activeproject.directions = 4")
             self.facing_enable_select.SetValue(self.choicelist_views[2])
             self.facing_select_south.Enable()
             self.facing_select_south_label.Enable()
@@ -181,34 +185,34 @@ class facingControl(wx.Panel):
 
     def OnToggle(self, e):
         """Changing the value in the selection box"""
-        debug(u"facing_control: OnToggle")
+        debug(u"tcui.FacingControl: OnToggle")
         self.app.activeproject.directions(config.choicelist_views[self.choicelist_views.index(self.facing_enable_select.GetValue())])
         self.update()
 
     def OnSouth(self, e):
         """Toggle South direction"""
-        debug(u"facing_control: OnSouth")
+        debug(u"tcui.FacingControl: OnSouth")
         # If called from the label, ensure radio button is selected
         self.facing_select_south.SetValue(True)
         # Set active image to South
         self.app.activeproject.active_image(direction = 0)
     def OnEast(self, e):
         """Toggle East direction"""
-        debug(u"facing_control: OnEast")
+        debug(u"tcui.FacingControl: OnEast")
         # If called from the label, ensure radio button is selected
         self.facing_select_east.SetValue(True)
         # Set active image to East
         self.app.activeproject.active_image(direction = 1)
     def OnNorth(self, e):
         """Toggle North direction"""
-        debug(u"facing_control: OnNorth")
+        debug(u"tcui.FacingControl: OnNorth")
         # If called from the label, ensure radio button is selected
         self.facing_select_north.SetValue(True)
         # Set active image to North
         self.app.activeproject.active_image(direction = 2)
     def OnWest(self, e):
         """Toggle West direction"""
-        debug(u"facing_control: OnWest")
+        debug(u"tcui.FacingControl: OnWest")
         # If called from the label, ensure radio button is selected
         self.facing_select_west.SetValue(True)
         # Set active image to West

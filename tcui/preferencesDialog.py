@@ -21,6 +21,7 @@ class preferencesDialog(wx.Dialog):
     """Dialog for setting program preferences"""
     def __init__(self, parent, app):
         """Initialise the dialog and populate lists"""
+        debug(u"tcui.PreferencesDialog: __init__")
         self.app = app
         size = (300,200)
         wx.Dialog.__init__(self, parent, wx.ID_ANY, "", (-1,-1), size)
@@ -52,6 +53,7 @@ class preferencesDialog(wx.Dialog):
 
     def translate(self):
         """Update the text of all controls to reflect a new translation"""
+        debug(u"tcui.PreferencesDialog: translate")
         self.SetLabel(gt("Preferences"))
         self.makeobj_label.SetLabel(gt("Path to makeobj binary:"))
         self.makeobj_box.SetToolTipString(gt("Relative paths are interpreted relative to TileCutter's start location"))
@@ -63,13 +65,17 @@ class preferencesDialog(wx.Dialog):
 
     def update(self):
         """Set the values of the controls in this group to the values in the model"""
+        debug(u"tcui.PreferencesDialog: update")
 
     def OnClose(self, e):
         """On click of the close button"""
+        debug(u"tcui.PreferencesDialog: OnClose")
         self.EndModal(wx.ID_OK)
+
     def OnMakeobjTextChange(self, e):
         """When user changes the makeobj path text"""
+        debug(u"tcui.PreferencesDialog: OnMakeobjTextChange")
         if config.path_to_makeobj != self.makeobj_box.GetValue():
             config.path_to_makeobj = self.makeobj_box.GetValue()
-            debug(u"preferences_dialog: OnMakeobjTextChange - Preferences: Text changed in makeobj path entry box, new text: %s" % unicode(self.makeobj_box.GetValue()))
+            debug(u"tcui.PreferencesDialog: OnMakeobjTextChange - Preferences: Text changed in makeobj path entry box, new text: %s" % unicode(self.makeobj_box.GetValue()))
 
