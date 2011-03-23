@@ -1,10 +1,32 @@
-#{"name": "English", "name_translated": "English", "language_code": "en", "created_by": "SimuTranslator", "created_date": "23-03-2011"}
+#{"name": "english_translation", "name_translated": "English", "language_code": "EN", "created_by": "Timothy Baldock", "created_date": "23-03-2011"}
+#
+#	** English translation file for TileCutter **
+#
+#	File Encoding: UTF-8
+#
+#	Produced using TileCutterTranslator version 0.4.2 for TileCutter version 0.5.9
+#	On (23-March-2011)
+#
+#	* Translation keys are provided, translation string should be on the line below
+#   * The information at the head of the file must exist for the translation file to be valid
+#	* Entries with tt before them are tooltips
+#	* Where "&" appears in a string, the next character will be a control character,
+#	  "%i" indicates a number goes here, "%s" indicates a program-generated string goes here
+#	  these are required!! The key should give an indication of how they work...
+#
+#	"#" indicates line is a comment, you can escape it with "\" in case of lines starting with "#"
+#
+#
 Winter
 Winter
 Choose a location to save project...
 Choose a location to save project...
+Reload Image
+
 tt_seasons_select_summer
 View/modify the Summer image of this object
+Relative paths are interpreted relative to TileCutter's start location
+
 tt_menu_file_saveas
 Save this project to a new location
 224
@@ -49,6 +71,10 @@ tt_images_select_back
 View/modify the BackImage of this building
 Summer
 Summer
+OK
+
+Project was saved successfully
+
 &Open Project
 &Open Project
 16
@@ -63,6 +89,8 @@ Version %s
 Version %s
 &Save Project
 &Save Project
+Preferences
+
 tt_facing_select_south
 View/modify the South-facing view of this building
 West
@@ -89,6 +117,8 @@ East
 &Preferences...
 tt_dims_y_select
 Select the dimensions of the object in the East-West direction from the dropdown list
+New Project
+
 tt_menu_file_exit
 Quit the application
 Choose a location to export .pak file...
@@ -122,11 +152,15 @@ Select the dimensions of the object in the North-South direction from the dropdo
 32
 32
 Number\nof views:
-Number of views:
+Number\nof views:
+ERROR: Failed to save project!
+
 tt_seasons_enable_winter
 Enable Winter/Summer images for this project. If not enabled the project will have one image for both seasons
 tt_png_file_location
 Shows the location that the .png file will be output to
+&File
+
 tt_images_enable_front
 Enable Front/Back images for this object, useful for stations and other buildings which vehicles can drive on top of
 .pak Output Location
@@ -159,8 +193,12 @@ Simutrans Building Editor
 .png Output Location
 Datfile Properties
 Datfile Properties
+&Help
+
 Save Project &As
 Save Project &As
+ERROR: Failed to load project!
+
 Language:
 Language:
 &New Project
@@ -189,12 +227,16 @@ Choose a location to save to...
 Choose a location to save to...
 Close
 Close
+Project was loaded successfully
+
 FrontImage
 FrontImage
 tt_facing_enable_select
 Enable multiple building directions, required for non-square buildings
 Current project has changed
 Current project has changed
+New project created
+
 &About TileCutter
 &About TileCutter
 tt_menu_file_new
@@ -231,10 +273,16 @@ tt_menu_tools_smoke
 Modify the smoke file information for this object
 Choose a project file to open...
 Choose a project file to open...
+&Tools
+
+Path to makeobj binary:
+
 tt_facing_select_west
 View/modify the West-facing view of this building
 South
 South
+Same File For All &Images
+
 Source image location:
 Source image location:
 tt_same_file_for_all
@@ -255,3 +303,4 @@ tt_browse_save_file
 Browse for a location to save this project to
 Z dimension
 Z dimension
+#End of File - Total of 143 string pairs

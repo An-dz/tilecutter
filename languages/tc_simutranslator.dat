@@ -5,7 +5,13 @@ obj=program_text
 name=Choose a location to save project...
 ----------
 obj=program_text
+name=Reload Image
+----------
+obj=program_text
 name=tt_seasons_select_summer
+----------
+obj=program_text
+name=Relative paths are interpreted relative to TileCutter's start location
 ----------
 obj=program_text
 name=tt_menu_file_saveas
@@ -74,6 +80,12 @@ obj=program_text
 name=Summer
 ----------
 obj=program_text
+name=OK
+----------
+obj=program_text
+name=Project was saved successfully
+----------
+obj=program_text
 name=&Open Project
 ----------
 obj=program_text
@@ -93,6 +105,9 @@ name=Version %s
 ----------
 obj=program_text
 name=&Save Project
+----------
+obj=program_text
+name=Preferences
 ----------
 obj=program_text
 name=tt_facing_select_south
@@ -132,6 +147,9 @@ name=&Preferences...
 ----------
 obj=program_text
 name=tt_dims_y_select
+----------
+obj=program_text
+name=New Project
 ----------
 obj=program_text
 name=tt_menu_file_exit
@@ -185,10 +203,16 @@ obj=program_text
 name=Number\nof views:
 ----------
 obj=program_text
+name=ERROR: Failed to save project!
+----------
+obj=program_text
 name=tt_seasons_enable_winter
 ----------
 obj=program_text
 name=tt_png_file_location
+----------
+obj=program_text
+name=&File
 ----------
 obj=program_text
 name=tt_images_enable_front
@@ -239,7 +263,13 @@ obj=program_text
 name=Datfile Properties
 ----------
 obj=program_text
+name=&Help
+----------
+obj=program_text
 name=Save Project &As
+----------
+obj=program_text
+name=ERROR: Failed to load project!
 ----------
 obj=program_text
 name=Language:
@@ -284,6 +314,9 @@ obj=program_text
 name=Close
 ----------
 obj=program_text
+name=Project was loaded successfully
+----------
+obj=program_text
 name=FrontImage
 ----------
 obj=program_text
@@ -291,6 +324,9 @@ name=tt_facing_enable_select
 ----------
 obj=program_text
 name=Current project has changed
+----------
+obj=program_text
+name=New project created
 ----------
 obj=program_text
 name=&About TileCutter
@@ -347,10 +383,19 @@ obj=program_text
 name=Choose a project file to open...
 ----------
 obj=program_text
+name=&Tools
+----------
+obj=program_text
+name=Path to makeobj binary:
+----------
+obj=program_text
 name=tt_facing_select_west
 ----------
 obj=program_text
 name=South
+----------
+obj=program_text
+name=Same File For All &Images
 ----------
 obj=program_text
 name=Source image location:

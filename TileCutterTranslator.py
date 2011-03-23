@@ -1,7 +1,7 @@
+#!/usr/bin/python
 # coding: UTF-8
 #
 # TileCutter translation string finder
-# Version 0.4.1 for TileCutter v.0.5.7
 #
 
 # Copyright © 2008-2011 Timothy Baldock. All Rights Reserved.
@@ -11,8 +11,8 @@ import translator.w_newlines as w_newlines
 import translator.u_newlines as u_newlines
 import json
 
-VERSION_NUMBER = "0.4.1"
-COMPAT_VERSION_NUMBER = "0.5.7"
+VERSION_NUMBER = "0.4.2"
+COMPAT_VERSION_NUMBER = "0.5.9"
 # Should duplicate translator entries be outputted to the translation file?
 FILE_ENCODING = "UTF-8"
 ENCODE_WIN = False
