@@ -1,4 +1,4 @@
-#{"name": "Slovak", "name_translated": "Slovenčina", "language_code": "sk", "created_by": "SimuTranslator", "created_date": "21-02-2011"}
+#{"name": "Slovak", "name_translated": "Slovenčina", "language_code": "sk", "created_by": "SimuTranslator", "created_date": "23-03-2011"}
 Winter
 Winter
 Choose a location to save project...
@@ -122,7 +122,7 @@ Select the dimensions of the object in the North-South direction from the dropdo
 32
 32
 Number\nof views:
-Number\nof views:
+Number of views:
 tt_seasons_enable_winter
 Enable Winter/Summer images for this project. If not enabled the project will have one image for both seasons
 tt_png_file_location

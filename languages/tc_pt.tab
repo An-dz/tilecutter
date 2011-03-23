@@ -1,4 +1,4 @@
-#{"name": "Portuguese", "name_translated": "Português", "language_code": "pt", "created_by": "SimuTranslator", "created_date": "21-02-2011"}
+#{"name": "Portuguese", "name_translated": "Português", "language_code": "pt", "created_by": "SimuTranslator", "created_date": "23-03-2011"}
 Winter
 Inverno
 Choose a location to save project...
@@ -170,7 +170,7 @@ Idioma:
 96
 96
 tt_offset_selector
-Select between paksize increments and single pixel increments for moving the cutting mask
+Alternar deslocamento da máscara por largura do pakset ou por pixel
 X dimension
 Distância X
 BackImage

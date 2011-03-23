@@ -1,76 +1,76 @@
-#{"name": "Czech", "name_translated": "Česky", "language_code": "cz", "created_by": "SimuTranslator", "created_date": "21-02-2011"}
+#{"name": "Czech", "name_translated": "Česky", "language_code": "cz", "created_by": "SimuTranslator", "created_date": "23-03-2011"}
 Winter
-Winter
+Zima
 Choose a location to save project...
 Vyberte umístění pro projekt
 tt_seasons_select_summer
-View/modify the Summer image of this object
+Zobrazit/upravit letní obrázek
 tt_menu_file_saveas
-Save this project to a new location
+Uložit projekt jako
 224
 224
 Cut image
 Rozřezat obrázek
 tt_offset_button_up
-Move the cutting mask up
+Posunout stříhací matrici nahoru
 Load same image for all
 Načíst stejný obrázek pro všechny
 tt_menu_file_save
-Save this project
+Uložit projekt
 tt_menu_help_about
-Information about this application
+Informace o programu
 .&dat file options
 Volby pro *.dat soubor
 Created on:
 Vytvořeno dne:
 tt_menu_file_export
-Export a compiled .pak file for this object
+Export *.pak souboru tohoto projektu
 Fine
 Vyčistit
 tt_menu_languages
-Change the application's language settings
+Změnit jazyk
 Direction Facing:
 Směr:
 tt_offset_button_down
-Move the cutting mask down
+Posunout stříhací matrici dolů
 Created by:
 Vytvořeno: 
 tt_offset_button_left
-Move the cutting mask left
+Posunout stříhací matrici doleva
 Language Details:
 Jazyková nastavení:
 Choose a location to save .dat file...
 Vyberte umístění pro *.dat soubor
 Y dimension
-Y dimension
+Rozměr Y
 128
 128
 tt_images_select_back
-View/modify the BackImage of this building
+Zobrazit/upravit zadní obrázek
 Summer
-Summer
+Léto
 &Open Project
 Otevřít projekt
 16
 16
 tt_offset_button_right
-Move the cutting mask right
+Posunout stříhací matrici doprava
 tt_menu_tools_dat
-Modify the .dat file information for this object
+Změnit *.dat informace tohoto objektu
 Select from the options below:
-Select from the options below:
+Vyberte z možností níže:
 Version %s
-Version %s
+Verze %s
 &Save Project
 Uložit projekt
 tt_facing_select_south
-View/modify the South-facing view of this building
+Zobrazit/upravit jižní náhled budovy
 West
-West
+Západ
 tt_dims_z_select
-Select the height of the object from the dropdown list
+Vybrat výšku z seznamu
 tt_menu_tools_prefs
-Change the application's preference settings
+Změnit nastavení
 192
 192
 Project Save Location
@@ -78,7 +78,7 @@ Umístění projektu
 Compile pak
 Vytvořit *.pak soubor
 tt_seasons_select_winter
-View/modify the Winter image of this object
+Zobrazit/upravit zimní obrázek
 112
 112
 80
@@ -88,9 +88,9 @@ Východ
 &Preferences...
 Obecná nastavení
 tt_dims_y_select
-Select the dimensions of the object in the East-West direction from the dropdown list
+Vybrat velikost v východo-západním směru z seznamu
 tt_menu_file_exit
-Quit the application
+Ukončit program
 Choose a location to export .pak file...
 Vyberte umístění pro *.pak soubor
 &Smoke options
@@ -106,11 +106,11 @@ Zde je možno zadat vlastnosti potřebné k vytvoření budovy
 240
 240
 tt_dims_paksize_select
-Select the paksize of the project from the dropdown list
+Vybrat velikost paku z seznamu
 tt_facing_select_north
-View/modify the North-facing view of this building
+Zobrazit/upravit severní náhled budovy
 tt_menu_help_help
-Documentation for using this application
+Dokumentace k tomuto programu
 Dimensions:
 Rozměry
 About TileCutter
@@ -118,27 +118,27 @@ O TileCutteru
 .dat Output Location
 Umístění vytvořeného *.dat souboru
 tt_dims_x_select
-Select the dimensions of the object in the North-South direction from the dropdown list
+Vybrat velikost v severo-jižním směru z seznamu
 32
 32
 Number\nof views:
 Počet náhledů:
 tt_seasons_enable_winter
-Enable Winter/Summer images for this project. If not enabled the project will have one image for both seasons
+Povolit zimní/letní obrázky. V opačném případě bude mít jeden obrázek pro léto i pro zimu.
 tt_png_file_location
-Shows the location that the .png file will be output to
+Zobrazit umístění vytvořeného *.png obrázku
 tt_images_enable_front
-Enable Front/Back images for this object, useful for stations and other buildings which vehicles can drive on top of
+Povolit přední/zadní obrázky - užitečné pro stanice a jiné stavby využívané vlaky
 .pak Output Location
 Umístění vytvořeného *.pak souboru
 tt_images_select_front
-View/modify the FrontImage of this building
+Zobrazit/upravit přední obrázek
 64
 64
 176
 176
 tt_browse_pak_file
-Browse for the location of the output .pak file
+Najít umístění vytvořeného *.pak souboru
 Mask Offset:
 Poloha matrice:
 North
@@ -146,11 +146,11 @@ Sever
 &Language
 Jazyk
 This action will set all images in the project to be the same as this one. Do you wish to proceed?
-This action will set all images in the project to be the same as this one. Do you wish to proceed?
+Toto způsobí, že všechny obrázky v projektu budou shodné s tímto. Přejete si pokračovat?
 tt_reload_input_file
-Reloads the input file, displaying changes made since the last time it was loaded (Note: This action is always performed for all input files before the cutting process begins)
+Znovu načtení zdrojového souboru s ohlášením změn provedených od posledného načtení. Toto je automaticky provedeno pro všechny zdrojové soubory před započetím rozstříhání.
 tt_facing_select_east
-View/modify the East-facing view of this building
+Zobrazit/upravit východní náhled budovy
 Language
 Jazyk
 Simutrans Building Editor
@@ -170,9 +170,9 @@ Nový projekt
 96
 96
 tt_offset_selector
-Select between paksize increments and single pixel increments for moving the cutting mask
+Vybrat posun dílu
 X dimension
-X dimension
+Rozměr X
 BackImage
 Zadní obrázek
 &Export .pak
@@ -182,9 +182,9 @@ Uložit změny?
 Choose a location to save .png file...
 Vyberte umístění pro *.png soubor
 tt_dat_file_location
-Shows the location of the .dat file for this project relative to the root save location
+Ukázat relativní umístění *.dat souboru tohoto projektu
 TileCutter Online Help
-TileCutter Online Help
+On-line nápověda
 Choose a location to save to...
 Vyberte umístění kam bude uloženo...
 Close
@@ -192,29 +192,29 @@ Zavřít
 FrontImage
 Přední obrázek
 tt_facing_enable_select
-Enable multiple building directions, required for non-square buildings
+Povolit více směrů - nutné pro obdélníkové budovy
 Current project has changed
 Projekt změněn
 &About TileCutter
 O TileCutteru..
 tt_menu_file_new
-Create a new project
+Vytvořit nový projekt
 offset_button_reset
 Obnovit polohu stříhací matrice
 tt_pak_file_location
-Shows the location that the .pak file will be output to
+Zobrazit umístění, kam bude *.pak soubor uložen
 tt_browse_dat_file
-Browse for the location of the output .dat file
+Najít umístění vytvořeného *.dat souboru
 48
 48
 tt_browse_png_file
-Browse for the location of the output .png file
+Najít umístění vytvořeného *.png obrázku
 tt_browse_input_file
-Browse for the location of this view's input file
+Najít umístění obrázku s tímto náhledem
 &Cut Image
 Rozřezat obrázek
 tt_menu_file_open
-Open an existing project
+Otevřít projekt
 TileCutter
 TileCutter
 Enable Winter
@@ -228,30 +228,30 @@ Povolit přední obrázek
 E&xit
 Konec
 tt_menu_tools_smoke
-Modify the smoke file information for this object
+Změnit kouř
 Choose a project file to open...
 Vyberte projekt k otevření
 tt_facing_select_west
-View/modify the West-facing view of this building
+Zobrazit/upravit západní náhled budovy
 South
-South
+Jih
 Source image location:
-Source image location:
+Umístění zdrojového obrázku:
 tt_same_file_for_all
-Loads the currently selected image for all other views of this project. Useful if you have a single image with multiple object views (e.g. from a 3D render)
+Načíst právě zvolený obrázek pro zbylé náhledy. Je to užitečné ve chvíli, když máte jeden obrázek pro všechny náhledy.
 Write out .dat file
-Write out .dat file
+Vytvořit *.dat soubor
 tt_menu_file_cut
-Initiate the cutting routine, producing a .dat output file (if required) and a cut .png image
+Zahájit stříhání *.png obrázku a tvorbu *.dat souboru (je-li to nutné)
 Season:
-Season:
+Roční období:
 Paksize
 Velikost paku
 tt_image_file_location
-Shows the location of the currently displayed source image
+Zobrazit umístění právě zobrazovaného zdrojového obrázku
 tt_save_file_location
-Shows the location that the project is saved to. Note: All the other file locations are stored relative to this one and are updated if you change the save location
+Ukázat umístění, kde je projekt uložen. Pozn.: umístění všech ostatních souborů je relativní k tomuto - a upraven při změně umístění.
 tt_browse_save_file
-Browse for a location to save this project to
+Najít umístění pro uložení tohoto projektu
 Z dimension
-Z dimension
+Rozměr Z

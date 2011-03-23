@@ -1,257 +1,259 @@
-#{"name": "French", "name_translated": "Français", "language_code": "fr", "created_by": "SimuTranslator", "created_date": "21-02-2011"}
+#{"name": "French", "name_translated": "Français", "language_code": "fr", "created_by": "SimuTranslator", "created_date": "23-03-2011"}
 Winter
-Winter
+Hiver
 Choose a location to save project...
-Choose a location to save project...
+Choisir un emplacement pour enregistrer le projet...
 tt_seasons_select_summer
-View/modify the Summer image of this object
+Voir/modifier l'image Eté de cet objet
 tt_menu_file_saveas
-Save this project to a new location
+Enregistrer le projet sous
 224
 224
 Cut image
-Cut image
+Découper l'image
 tt_offset_button_up
-Move the cutting mask up
+Déplacer le masque de découpe vers le haut
 Load same image for all
-Load same image for all
+Charger la même image pour tout
 tt_menu_file_save
-Save this project
+Enregistrer le projet
 tt_menu_help_about
-Information about this application
+Information sur l'application
 .&dat file options
-.&dat File Options
+Options du fichier .&dat
 Created on:
-Created on:
+Créé le:
 tt_menu_file_export
-Export a compiled .pak file for this object
+Exporter un fichier compilé .pak pour cette objet
 Fine
-Fine
+Fin
 tt_menu_languages
-Change the application's language settings
+Modifier les paramètres de langue de l'application
 Direction Facing:
-Direction Facing:
+Orientation de la vue:
 tt_offset_button_down
-Move the cutting mask down
+Déplacer le masque de découpe vers le bas
 Created by:
-Created by:
+Créé par:
 tt_offset_button_left
-Move the cutting mask left
+Déplacer le masque de découpe vers la gauche
 Language Details:
-Language Details:
+Détails de la langue
 Choose a location to save .dat file...
-Choose a location to save .dat file...
+Choisir un emplacement pour exporter le fichier .dat...
 Y dimension
-Y dimension
+Dimension Y
 128
 128
 tt_images_select_back
-View/modify the BackImage of this building
+Voir/modifier l'arrière-plan du bâtiment
 Summer
-Summer
+Eté
 &Open Project
-&Open Project
+&Ouvrir le Projet
 16
 16
 tt_offset_button_right
-Move the cutting mask right
+Déplacer le masque de découpe vers la droite
 tt_menu_tools_dat
-Modify the .dat file information for this object
+Modifier les informations du fichier .dat de cet objet
 Select from the options below:
-Select from the options below:
+Sélectionner les options ci-dessous:
 Version %s
 Version %s
 &Save Project
-&Save Project
+&Enregistrer le Projet
 tt_facing_select_south
-View/modify the South-facing view of this building
+Voir/modifier la vue Sud du bâtiment
 West
-West
+Ouest
 tt_dims_z_select
-Select the height of the object from the dropdown list
+Sélectionner la hauteur de l'objet à partir de la liste déroulante
 tt_menu_tools_prefs
-Change the application's preference settings
+Modifier les préférences de l'application 
 192
 192
 Project Save Location
-Project Save Location
+Emplacement d'enregistrement du projet
 Compile pak
-Compile .pak
+Compiler le .pak
 tt_seasons_select_winter
-View/modify the Winter image of this object
+Voir/modifier l'image Hiver de cet objet
 112
 112
 80
 80
 East
-East
+Est
 &Preferences...
-&Preferences...
+&Préferences...
 tt_dims_y_select
-Select the dimensions of the object in the East-West direction from the dropdown list
+Sélectionner les dimensions  de l'objet de la face Est-Ouest à partir de la liste déroulante
 tt_menu_file_exit
-Quit the application
+Quitter l'application
 Choose a location to export .pak file...
-Choose a location to export .pak file...
+Choisir un emplacement pour exporter le fichier .pak...
 &Smoke options
-&Smoke Options
+Options de fumée
 Image:
 Image:
 Browse...
-Browse...
+Parcourir...
 Choose an image file to open...
-Choose an image file to open...
+Choisir une image à ouvrir...
 Here you can enter the datfile properties necessary to produce a building using makeobj
-Here you can enter the datfile properties necessary to produce a building using makeobj
+Ici vous pouvez les propriétés supplémentaires du fichier dat nécessaire pour créer le bâtiment avec makeobj
 240
 240
 tt_dims_paksize_select
-Select the paksize of the project from the dropdown list
+Sélectionner la taille du pak du projet à partir de la liste déroulante
 tt_facing_select_north
-View/modify the North-facing view of this building
+Voir/modifier la vue Nord du bâtiment
 tt_menu_help_help
-Documentation for using this application
+Manuel d'utilisation de l'application
 Dimensions:
 Dimensions:
 About TileCutter
-About TileCutter
+A propos de TileCutter
 .dat Output Location
-.dat Output Location
+Emplacement de sortie  .dat
 tt_dims_x_select
-Select the dimensions of the object in the North-South direction from the dropdown list
+Sélectionner les dimensions de l'objet de la face Nord-Sud à partir de la liste déroulante
 32
 32
 Number\nof views:
-Number\nof views:
+Nombre/vues nof
 tt_seasons_enable_winter
-Enable Winter/Summer images for this project. If not enabled the project will have one image for both seasons
+Activer les images Hiver/Eté du projet. Si non activé, une seule image sera présente pour les deux saisons
 tt_png_file_location
-Shows the location that the .png file will be output to
+Indiquer l'emplacement ou sera générer le fichier .png
 tt_images_enable_front
-Enable Front/Back images for this object, useful for stations and other buildings which vehicles can drive on top of
+Activer les images avant-plan/arrière-plan de l'objet, à utiliser pour les stations et les bâtiments dont les véhicules peuvent y circuler
 .pak Output Location
-.pak Output Location
+Emplacement de sortie .pak
 tt_images_select_front
-View/modify the FrontImage of this building
+Voir/modifier l'avant-plan du bâtiment
 64
 64
 176
 176
 tt_browse_pak_file
-Browse for the location of the output .pak file
+Parcourir un emplacement de destination pour le fichier .pak
 Mask Offset:
-Mask Offset:
+Décalage du masque
 North
-North
+Nord
 &Language
-&Language
+&Langue
 This action will set all images in the project to be the same as this one. Do you wish to proceed?
-This action will set all images in the project to be the same as this one. Do you wish to proceed?
+Cette action placera toutes les images du projet en une seule identique. Souhaitez vous continuer ?
 tt_reload_input_file
-Reloads the input file, displaying changes made since the last time it was loaded (Note: This action is always performed for all input files before the cutting process begins)
+Recharger le fichier source en reprenant les changements depuis son dernier chargement (Note:Cette action est toujours effectuée pour tous les fichiers sources avant que le processus de découpage ne commence)
+
 tt_facing_select_east
-View/modify the East-facing view of this building
+Voir/modifier la vue Est du bâtiment
 Language
-Language
+Langue
 Simutrans Building Editor
-Simutrans Building Editor
+Editeur de constructions de Simutrans
 .png Output Location
-.png Output Location
+Emplacement de sortie .png
 Datfile Properties
-Datfile Properties
+Propriétés du fichier dat
 Save Project &As
-Save Project &As
+Enregistrer le Projet &Sous
 Language:
-Language:
+Langue
 &New Project
-&New Project
+&Nouveau projet
 160
 160
 96
 96
 tt_offset_selector
-Select between paksize increments and single pixel increments for moving the cutting mask
+Sélectionner la taille intermédiaire et le pixel d'incrémentation de déplacement du masque de découpe.
 X dimension
-X dimension
+Dimension X
 BackImage
-BackImage
+Arrière-plan
 &Export .pak
-&Export .pak
+&Compiler le .pak
 Save changes before proceeding?
-Save changes before proceeding?
+Enregistrer les changements avant de continuer?
 Choose a location to save .png file...
-Choose a location to save .png file...
+Choisir un emplacement pour exporter le fichier .png...
 tt_dat_file_location
-Shows the location of the .dat file for this project relative to the root save location
+Indiquer l'emplacement du fichier .dat du projet comme racine relative
 TileCutter Online Help
-TileCutter Online Help
+Aide en ligne de TileCutter
 Choose a location to save to...
-Choose a location to save to...
+Choisir un emplacement pour enregistrer...
 Close
-Close
+Fermer
 FrontImage
-FrontImage
+Avant-plan
 tt_facing_enable_select
-Enable multiple building directions, required for non-square buildings
+Activer les orientations multiples du bâtiments, requis pour les bâtiments non carrés
 Current project has changed
-Current project has changed
+Le projet courant a été modifié
 &About TileCutter
-&About TileCutter
+&A propos de TileCutter
 tt_menu_file_new
-Create a new project
+Créer un nouveau projet 
 offset_button_reset
-Reset the offset position of the cutting mask
+Ré-initialiser le décalage du masque de découpe
 tt_pak_file_location
-Shows the location that the .pak file will be output to
+Indiquer l'emplacement ou sera généré le fichier .pak
 tt_browse_dat_file
-Browse for the location of the output .dat file
+Parcourir l'emplacement du fichier de destination pour cette vue
 48
 48
 tt_browse_png_file
-Browse for the location of the output .png file
+Parcourir un emplacement de destination pour le fichier .png
 tt_browse_input_file
-Browse for the location of this view's input file
+Parcourir l'emplacement du fichier source pour cette vue
 &Cut Image
-&Cut Image
+&Découper l'image
 tt_menu_file_open
-Open an existing project
+Ouvrir un projet existant
 TileCutter
 TileCutter
 Enable Winter
-Enable Winter
+Activer l'Hiver
 144
 144
 208
 208
 Enable FrontImage
-Enable FrontImage
+Activer l'avant-plan
 E&xit
-E&xit
+Quitter
 tt_menu_tools_smoke
-Modify the smoke file information for this object
+Modifier les information du fichier fumée de cet objet
 Choose a project file to open...
-Choose a project file to open...
+Choisir un fichier pour ouvrir un projet existant...
 tt_facing_select_west
-View/modify the West-facing view of this building
+Voir/modifier la vue Ouest du bâtiment
 South
-South
+Sud
 Source image location:
-Source image location:
+Emplacement de l'image source:
 tt_same_file_for_all
-Loads the currently selected image for all other views of this project. Useful if you have a single image with multiple object views (e.g. from a 3D render)
+Charger l'image courante pour toutes les vues du projet. A utiliser si vous avez une seule image comprenant les différentes vues de l'objet(ex. à partir d'un modeleur 3D)
+
 Write out .dat file
-Write out .dat file
+Générer le fichier .dat
 tt_menu_file_cut
-Initiate the cutting routine, producing a .dat output file (if required) and a cut .png image
+Lancer la procédure de découpage en générant le fichier .dat (si requis) et découper le fichier .png
 Season:
-Season:
+Saison:
 Paksize
-Paksize
+Taille du pak
 tt_image_file_location
-Shows the location of the currently displayed source image
+Indiquer l'emplacement de l'image source courante
 tt_save_file_location
-Shows the location that the project is saved to. Note: All the other file locations are stored relative to this one and are updated if you change the save location
+Indiquer l'emplacement ou sera enregistré le projet. Note: tous les autres chemins des fichiers y seront enregistrés relativement et seront mis à jour si vous changez cet emplacement.
 tt_browse_save_file
-Browse for a location to save this project to
+Parcourir pour enregistrer le projet
 Z dimension
-Z dimension
+Dimension Z
