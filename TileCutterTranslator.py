@@ -86,9 +86,9 @@ if ENCODE_WIN:
 else:
     stoutfile = f
 
-name = u"english_translation"
+name = u"English"
 name_translated = u"English"
-language_code = u"EN"
+language_code = u"en"
 created_by = u"Timothy Baldock"
 created_date = time.strftime(u"%d-%m-%Y")
 
@@ -155,8 +155,15 @@ f.write(json.dumps(db, sort_keys=True, indent=4))
 f.close()
 
 # Next write out all entries in the DB to the translation file
+# This file is in the same format as you get if you export a translation from SimuTranslator
+# Should provide an easy way to preview the translation strings as they appear before translation
+# The production version of the English translation should come from SimuTranslator though
 for k, v in db.items():
-    outfile.write(u"%s\n%s\n" % (unicode(k), unicode(v)))
+    # If value is blank (no translation) make the default be the same
+    if v in ["", u""]:
+        outfile.write(u"%s\n%s\n" % (unicode(k), unicode(k)))
+    else:
+        outfile.write(u"%s\n%s\n" % (unicode(k), unicode(v)))
 
 # Also write them out to the simutranslator file ready for import
 # Include the obj= and name= bits at the start of each one, with a ---- seperator between them

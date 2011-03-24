@@ -11,13 +11,7 @@ obj=program_text
 name=tt_seasons_select_summer
 ----------
 obj=program_text
-name=Relative paths are interpreted relative to TileCutter's start location
-----------
-obj=program_text
 name=tt_menu_file_saveas
-----------
-obj=program_text
-name=224
 ----------
 obj=program_text
 name=Cut image
@@ -89,7 +83,7 @@ obj=program_text
 name=&Open Project
 ----------
 obj=program_text
-name=16
+name=X dimension
 ----------
 obj=program_text
 name=tt_offset_button_right
@@ -122,7 +116,7 @@ obj=program_text
 name=tt_menu_tools_prefs
 ----------
 obj=program_text
-name=192
+name=&New Project
 ----------
 obj=program_text
 name=Project Save Location
@@ -215,7 +209,7 @@ obj=program_text
 name=&File
 ----------
 obj=program_text
-name=tt_images_enable_front
+name=Relative paths are interpreted relative to TileCutter's start location
 ----------
 obj=program_text
 name=.pak Output Location
@@ -242,6 +236,9 @@ obj=program_text
 name=&Language
 ----------
 obj=program_text
+name=tt_images_enable_front
+----------
+obj=program_text
 name=This action will set all images in the project to be the same as this one. Do you wish to proceed?
 ----------
 obj=program_text
@@ -260,13 +257,16 @@ obj=program_text
 name=.png Output Location
 ----------
 obj=program_text
+name=192
+----------
+obj=program_text
 name=Datfile Properties
 ----------
 obj=program_text
 name=&Help
 ----------
 obj=program_text
-name=Save Project &As
+name=FrontImage
 ----------
 obj=program_text
 name=ERROR: Failed to load project!
@@ -275,7 +275,7 @@ obj=program_text
 name=Language:
 ----------
 obj=program_text
-name=&New Project
+name=224
 ----------
 obj=program_text
 name=160
@@ -287,7 +287,10 @@ obj=program_text
 name=tt_offset_selector
 ----------
 obj=program_text
-name=X dimension
+name=tt_browse_dat_file
+----------
+obj=program_text
+name=16
 ----------
 obj=program_text
 name=BackImage
@@ -317,7 +320,7 @@ obj=program_text
 name=Project was loaded successfully
 ----------
 obj=program_text
-name=FrontImage
+name=Save Project &As
 ----------
 obj=program_text
 name=tt_facing_enable_select
@@ -341,7 +344,7 @@ obj=program_text
 name=tt_pak_file_location
 ----------
 obj=program_text
-name=tt_browse_dat_file
+name=Same File For All &Images
 ----------
 obj=program_text
 name=48
@@ -386,16 +389,13 @@ obj=program_text
 name=&Tools
 ----------
 obj=program_text
-name=Path to makeobj binary:
-----------
-obj=program_text
 name=tt_facing_select_west
 ----------
 obj=program_text
 name=South
 ----------
 obj=program_text
-name=Same File For All &Images
+name=Path to makeobj binary:
 ----------
 obj=program_text
 name=Source image location:
