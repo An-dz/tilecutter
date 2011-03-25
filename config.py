@@ -25,6 +25,7 @@ class Config(object):
     # Internals will always be checked before config
     defaults = {
         "debug_on": True,
+        "debug_level": 1,
         "logfile": u"platform_default",
         "transparent": [231,255,255],
         "default_paksize": 64,
@@ -50,6 +51,7 @@ class Config(object):
         }
     internals = {
         "version": u"0.5.8",
+        "loglevel_options": [0, 1, 2,],
         }
 
     # If a tc.config or tilecutter.config file exists in the program directory use that to load config from 
