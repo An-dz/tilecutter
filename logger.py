@@ -23,24 +23,28 @@ config = config.Config()
 class Log(object):
     """Debug/log output to file"""
     file = None
+    def platform_default_log_location(self):
+        """Returns default log file location for the platform we are running on"""
+        if sys.platform == "darwin":
+            file = os.path.expanduser("~/Library/Logs/tilecutter.log")
+            source = "darwin"
+        elif sys.platform == "win32":
+            file = os.path.join(getenvvar(u"APPDATA"), "tilecutter\\tilecutter.log")
+            #file = os.path.normpath(os.path.expanduser("~/Application Data/tilecutter/tilecutter.log"))
+            #file = unicode(file, sys.getfilesystemencoding())
+            source = "win32"
+        else:
+            file = os.path.expanduser("~/.tilecutter/tilecutter.log")
+            source = "unix"
+        return file, source
     def __init__(self, file=None):
         """"""
         if Log.file == None:
             source = "args"
             if file == None:
-                # Default for config is to specify log file as platform_default
-                if config.logfile == "platform_default":
-                    if sys.platform == "darwin":
-                        file = os.path.expanduser("~/Library/Logs/tilecutter.log")
-                        source = "darwin"
-                    elif sys.platform == "win32":
-                        file = os.path.join(getenvvar(u"APPDATA"), "tilecutter\\tilecutter.log")
-                        #file = os.path.normpath(os.path.expanduser("~/Application Data/tilecutter/tilecutter.log"))
-                        #file = unicode(file, sys.getfilesystemencoding())
-                        source = "win32"
-                    else:
-                        file = os.path.expanduser("~/.tilecutter/tilecutter.log")
-                        source = "unix"
+                # Default for config is to specify log file as blank and logfile_platform_default as True
+                if config.logfile_platform_default:
+                    file, source = self.platform_default_log_location()
                 else:
                     # Appends this session's log info to the logging file
                     file = os.path.abspath(config.logfile)
@@ -53,12 +57,16 @@ class Log(object):
             # First time logger is initialised write something useful to the start of the log
             self.out(u"-----------------------------------------------------------------------------------------\nLogger opened file (%s) from source: %s" % (file, source))
 
-    def __call__(self, s):
-        """Calls self.write()"""
-        self.out(s)
+    # Default debug level for statements without a level specified is 1, which will appear on all debug levels except off
+    def __call__(self, s, level=1):
+        """This allows the logger object to be called directly"""
+        self.out(s, level)
 
-    def out(self, s):
+    def out(self, s, level=1):
         """Write a string to file, stripping newlines and reformatting"""
+        # If currently configured debug level is less than debug level of this statement, do nothing
+        if config.debug_level < level:
+            return False
         # If it's a unicode string don't convert it
         if type(s) != type(u""):
             s = unicode(s, "UTF-8")

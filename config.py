@@ -25,11 +25,11 @@ class Config(object):
     # Internals will always be checked before config
     defaults = {
         "debug_on": True,
-        "debug_level": 1,
-        "logfile": u"platform_default",
+        "debug_level": 2,
+        "logfile": u"",
+        "logfile_platform_default": True,
         "transparent": [231,255,255],
         "default_paksize": 64,
-##        "PROJECT_FILE_EXTENSION": unicode(".tcp"),
         "valid_image_extensions": [u".png"],
         "OFFSET_NEGATIVE_ALLOWED": False,
         "window_size": [-1,-1],
@@ -40,18 +40,17 @@ class Config(object):
         "negative_offset_allowed": False,
         "default_image_path": u"test.png",
 
-        "path_to_makeobj": u"makeobj",
+        "path_to_makeobj": u"./makeobj",
         "write_dat": True,
 
-        "choicelist_paksize": [16,32,48,64,80,96,112,128,144,160,176,192,208,224,240],
-        "choicelist_views": [1,2,4],
-        "choicelist_dims": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],
-        "choicelist_dims_z": [1,2,3,4],
         "default_language": u"English",
         }
     internals = {
         "version": u"0.5.8",
-        "loglevel_options": [0, 1, 2,],
+        "choicelist_paksize": [16,32,48,64,80,96,112,128,144,160,176,192,208,224,240],
+        "choicelist_views": [1,2,4],
+        "choicelist_dims": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],
+        "choicelist_dims_z": [1,2,3,4],
         }
 
     # If a tc.config or tilecutter.config file exists in the program directory use that to load config from 

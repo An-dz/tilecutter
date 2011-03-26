@@ -87,7 +87,7 @@ class imageWindow(wx.Panel):
     # Device Context events and methods
     def OnPaint(self, e):
         """Event handler for scrolled window repaint requests"""
-        debug(u"tcui.ImageWindow: OnPaint")
+        debug(u"tcui.ImageWindow: OnPaint", 2)
         dc = wx.AutoBufferedPaintDC(self.scrolledwindow)
         self.refresh_screen(dc)
 

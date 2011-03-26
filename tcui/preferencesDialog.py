@@ -32,7 +32,7 @@ class preferencesDialog(wx.Dialog):
 
         # Path to makeobj
         self.makeobj_label = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
-        self.makeobj_box = wx.TextCtrl(self, wx.ID_ANY, value=config.path_to_makeobj)
+        self.makeobj_box = wx.TextCtrl(self, wx.ID_ANY, value="")
 
         # Logfile location
         self.logfile_label = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
@@ -80,7 +80,7 @@ class preferencesDialog(wx.Dialog):
         self.v_sizer.Add((0,10))
 
         self.sizer.Add((20,0))
-        self.sizer.Add(self.v_sizer, 0, wx.EXPAND)
+        self.sizer.Add(self.v_sizer, 1, wx.EXPAND)
         self.sizer.Add((20,0))
 
         # Bind events
@@ -114,22 +114,22 @@ class preferencesDialog(wx.Dialog):
         self.paksize_select.Clear()
         for i in self.choicelist_paksize:
             self.paksize_select.Append(i)
-        # And set value to value in the project
-        self.paksize_select.SetStringSelection(self.choicelist_paksize[config.choicelist_paksize.index(config.default_paksize)])
 
         # Translate the choicelist values for logging level
         self.loglevel_label.SetLabel(gt("Logging verbosity level:"))
-        self.loglevel_select
-        self.loglevel_options = gt.translateIntArray(config.loglevel_options)
+        self.choicelist_loglevel = [gt("0 - logging disabled"), gt("1 - normal logging"), gt("2 - verbose logging"),]
         self.loglevel_select.Clear()
-        for i in self.loglevel_options:
+        for i in self.choicelist_loglevel:
             self.loglevel_select.Append(i)
-        # And set value to value in the project
-        self.loglevel_select.SetStringSelection(self.loglevel_options[config.loglevel_options.index(config.debug_level)])
 
         self.close_button.SetLabel(gt("OK"))
 
+        self.update()
+
         self.Fit()
+
+        # Set width of panel to be 
+        self.SetSize(wx.Size(max(self.GetBestSizeTuple()[1] * 1.4, self.GetBestSizeTuple()[0]), self.GetBestSizeTuple()[1]))
 
         self.CentreOnParent()
         self.Refresh()
@@ -137,6 +137,21 @@ class preferencesDialog(wx.Dialog):
     def update(self):
         """Set the values of the controls in this group to the values in the model"""
         debug(u"tcui.PreferencesDialog: update")
+        self.makeobj_box.SetValue(config.path_to_makeobj)
+
+        if config.logfile_platform_default:
+            self.logfile_box.SetValue(debug.platform_default_log_location()[0])
+            self.logfile_box.Disable()
+            self.logfile_checkbox.SetValue(1)
+        else:
+            self.logfile_box.SetValue(config.logfile)
+            self.logfile_box.Enable()
+            self.logfile_checkbox.SetValue(0)
+
+        self.paksize_select.SetStringSelection(self.choicelist_paksize[config.choicelist_paksize.index(config.default_paksize)])
+
+        self.loglevel_select.SetStringSelection(self.choicelist_loglevel[config.debug_level])
+
 
     def OnClose(self, e):
         """On click of the close button"""
@@ -151,18 +166,28 @@ class preferencesDialog(wx.Dialog):
             debug(u"tcui.PreferencesDialog: OnMakeobjTextChange - Preferences: Text changed in makeobj path entry box, new text: %s" % unicode(self.makeobj_box.GetValue()))
 
     def OnLogfileTextChange(self, e):
-        """"""
+        """Triggered when user changes log file location"""
         debug(u"tcui.PreferencesDialog: OnLogfileTextChange")
+        if config.logfile != self.logfile_box.GetValue():
+            config.logfile = self.logfile_box.GetValue()
+            debug(u"tcui.PreferencesDialog: OnLogfileTextChange - Text changed in logfile path entry box, new text: %s" % unicode(config.logfile))
 
     def OnLogfileDefaultToggle(self, e):
-        """"""
-        debug(u"tcui.PreferencesDialog: OnLogfileDefaultToggle")
+        """Triggered when user selects the system default location for the log file"""
+        debug(u"tcui.PreferencesDialog: OnLogfileDefaultToggle - set to %s" % self.logfile_checkbox.GetValue())
+        if self.logfile_checkbox.GetValue():
+            config.logfile_platform_default = True
+        else:
+            config.logfile_platform_default = False
+        self.update()
 
     def OnPaksizeSelect(self, e):
         """"""
-        debug(u"tcui.PreferencesDialog: OnPaksizeSelect")
+        config.default_paksize = config.choicelist_paksize[self.choicelist_paksize.index(self.paksize_select.GetValue())]
+        debug(u"tcui.PreferencesDialog: OnPaksizeSelect - set to: %s" % config.default_paksize)
 
     def OnLoglevelSelect(self, e):
         """"""
-        debug(u"tcui.PreferencesDialog: OnLoglevelSelect")
+        config.debug_level = self.choicelist_loglevel.index(self.loglevel_select.GetValue())
+        debug(u"tcui.PreferencesDialog: OnLoglevelSelect - set to: %s" % config.debug_level)
 
