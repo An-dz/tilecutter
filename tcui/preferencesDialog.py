@@ -27,7 +27,8 @@ class preferencesDialog(wx.Dialog):
         wx.Dialog.__init__(self, parent, wx.ID_ANY, "", (-1,-1), (-1,-1))
 
         # Overall panel sizer
-        self.sizer = wx.BoxSizer(wx.VERTICAL)
+        self.v_sizer = wx.BoxSizer(wx.VERTICAL)
+        self.sizer = wx.BoxSizer(wx.HORIZONTAL)
 
         # Path to makeobj
         self.makeobj_label = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
@@ -36,12 +37,13 @@ class preferencesDialog(wx.Dialog):
         # Logfile location
         self.logfile_label = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
         self.logfile_box = wx.TextCtrl(self, wx.ID_ANY, value=config.logfile)
+        self.logfile_checkbox = wx.CheckBox(self, wx.ID_ANY, "", (-1,-1), (-1,-1))
 
         # Default paksize
         self.paksize_label = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1))
         self.paksize_select = wx.ComboBox(self, wx.ID_ANY, "", (-1, -1), (-1, -1), "", wx.CB_READONLY)
 
-        # Default paksize
+        # Logging level
         self.loglevel_label = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1))
         self.loglevel_select = wx.ComboBox(self, wx.ID_ANY, "", (-1, -1), (-1, -1), "", wx.CB_READONLY)
 
@@ -51,32 +53,42 @@ class preferencesDialog(wx.Dialog):
         self.buttons.Add(self.close_button, 0 ,wx.ALIGN_RIGHT, 0)
 
         # And finally add that, the language picker and the other static text to the panel sizer
-        self.sizer.Add((0,3))
-        self.sizer.Add(self.makeobj_label, 0, wx.EXPAND)
-        self.sizer.Add((0,3))
-        self.sizer.Add(self.makeobj_box, 0, wx.EXPAND)
+        self.v_sizer.Add((0,10))
+        self.v_sizer.Add(self.makeobj_label, 0, wx.EXPAND)
+        self.v_sizer.Add((0,3))
+        self.v_sizer.Add(self.makeobj_box, 0, wx.EXPAND)
 
-        self.sizer.Add((0,3))
-        self.sizer.Add(self.logfile_label, 0, wx.EXPAND)
-        self.sizer.Add((0,3))
-        self.sizer.Add(self.logfile_box, 0, wx.EXPAND)
+        self.v_sizer.Add((0,15))
+        self.v_sizer.Add(self.logfile_label, 0, wx.EXPAND)
+        self.v_sizer.Add((0,3))
+        self.v_sizer.Add(self.logfile_box, 0, wx.EXPAND)
+        self.v_sizer.Add((0,3))
+        self.v_sizer.Add(self.logfile_checkbox, 0, wx.EXPAND)
 
-        self.sizer.Add((0,3))
-        self.sizer.Add(self.paksize_label, 0, wx.EXPAND)
-        self.sizer.Add((0,3))
-        self.sizer.Add(self.paksize_select, 0, wx.EXPAND)
+        self.v_sizer.Add((0,15))
+        self.v_sizer.Add(self.paksize_label, 0, wx.EXPAND)
+        self.v_sizer.Add((0,3))
+        self.v_sizer.Add(self.paksize_select, 0, wx.EXPAND)
 
-        self.sizer.Add((0,3))
-        self.sizer.Add(self.loglevel_label, 0, wx.EXPAND)
-        self.sizer.Add((0,3))
-        self.sizer.Add(self.loglevel_select, 0, wx.EXPAND)
+        self.v_sizer.Add((0,15))
+        self.v_sizer.Add(self.loglevel_label, 0, wx.EXPAND)
+        self.v_sizer.Add((0,3))
+        self.v_sizer.Add(self.loglevel_select, 0, wx.EXPAND)
 
-        self.sizer.Add((0,3))
-        self.sizer.Add(self.buttons, 0, wx.ALIGN_RIGHT)
-        self.sizer.Add((0,3))
+        self.v_sizer.Add((0,15))
+        self.v_sizer.Add(self.buttons, 0, wx.ALIGN_RIGHT)
+        self.v_sizer.Add((0,10))
+
+        self.sizer.Add((20,0))
+        self.sizer.Add(self.v_sizer, 0, wx.EXPAND)
+        self.sizer.Add((20,0))
 
         # Bind events
         self.makeobj_box.Bind(wx.EVT_TEXT, self.OnMakeobjTextChange, self.makeobj_box)
+        self.logfile_box.Bind(wx.EVT_TEXT, self.OnLogfileTextChange, self.logfile_box)
+        self.logfile_checkbox.Bind(wx.EVT_CHECKBOX, self.OnLogfileDefaultToggle, self.logfile_checkbox)
+        self.paksize_select.Bind(wx.EVT_COMBOBOX, self.OnPaksizeSelect, self.paksize_select)
+        self.loglevel_select.Bind(wx.EVT_COMBOBOX, self.OnLoglevelSelect, self.loglevel_select)
         self.close_button.Bind(wx.EVT_BUTTON, self.OnClose, self.close_button)
 
         # Layout sizers
@@ -93,6 +105,8 @@ class preferencesDialog(wx.Dialog):
         self.makeobj_box.SetToolTipString(gt("Relative paths are interpreted relative to TileCutter's start location"))
         self.logfile_label.SetLabel(gt("Location of TileCutter log file:"))
         self.logfile_box.SetToolTipString(gt("tt_config_logfile"))
+        self.logfile_checkbox.SetLabel(gt("Use system default location"))
+        self.logfile_checkbox.SetToolTipString(gt("tt_config_logfile_default"))
 
         # Translate the choicelist values for paksize
         self.paksize_label.SetLabel(gt("Default paksize for new projects:"))
@@ -135,4 +149,20 @@ class preferencesDialog(wx.Dialog):
         if config.path_to_makeobj != self.makeobj_box.GetValue():
             config.path_to_makeobj = self.makeobj_box.GetValue()
             debug(u"tcui.PreferencesDialog: OnMakeobjTextChange - Preferences: Text changed in makeobj path entry box, new text: %s" % unicode(self.makeobj_box.GetValue()))
+
+    def OnLogfileTextChange(self, e):
+        """"""
+        debug(u"tcui.PreferencesDialog: OnLogfileTextChange")
+
+    def OnLogfileDefaultToggle(self, e):
+        """"""
+        debug(u"tcui.PreferencesDialog: OnLogfileDefaultToggle")
+
+    def OnPaksizeSelect(self, e):
+        """"""
+        debug(u"tcui.PreferencesDialog: OnPaksizeSelect")
+
+    def OnLoglevelSelect(self, e):
+        """"""
+        debug(u"tcui.PreferencesDialog: OnLoglevelSelect")
 
