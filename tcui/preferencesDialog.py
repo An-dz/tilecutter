@@ -128,7 +128,7 @@ class preferencesDialog(wx.Dialog):
 
         self.Fit()
 
-        # Set width of panel to be 
+        # Set width of panel to be calculated size or 1.4* height
         self.SetSize(wx.Size(max(self.GetBestSizeTuple()[1] * 1.4, self.GetBestSizeTuple()[0]), self.GetBestSizeTuple()[1]))
 
         self.CentreOnParent()

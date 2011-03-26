@@ -169,6 +169,8 @@ class menuObject(object):
         """"""
         debug(u"tcui.MenuObject: OnDatEdit - Menu-Tools-> Open .dat edit dialog")
         dlg = tcui.DatFileEditDialog(self.parent, self.app)
+        # Needed so that on mac this window comes back into foreground after switching to/from application
+        self.app.SetTopWindow(dlg)
         if dlg.ShowModal() == wx.ID_OK:
             dlg.Destroy()
     def OnSmokeEdit(self, e):
@@ -200,6 +202,8 @@ class menuObject(object):
         """"""
         debug(u"tcui.MenuObject: OnPreferences - Menu-Tools-> Open preferences dialog")
         dlg = tcui.preferencesDialog(self.parent, self.app)
+        # Needed so that on mac this window comes back into foreground after switching to/from application
+        self.app.SetTopWindow(dlg)
         if dlg.ShowModal() == wx.ID_OK:
             dlg.Destroy()
 
@@ -211,5 +215,7 @@ class menuObject(object):
         """"""
         debug(u"tcui.MenuObject: OnAbout - Menu-Help-> Open about dialog")
         dlg = tcui.aboutDialog(self.parent, self.app, config.version)
+        # Needed so that on mac this window comes back into foreground after switching to/from application
+        self.app.SetTopWindow(dlg)
         if dlg.ShowModal() == wx.ID_OK:
             dlg.Destroy()
