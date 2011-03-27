@@ -67,6 +67,15 @@ Add a status bar, displaying status information about the program
 Make icons in main menu much bigger (double size)
 New graphics for the offset control buttons that look nicer/are bigger
 
+# Release 0.5.9
+ADD: Better preferences dialog now lets you set:
+     Path to makeobj, log file location, default pak size for new projects, debug level
+FIX: On mac opening a dialog and then switching away from/back to TileCutter no longer brings wrong window to foreground
+FIX: Layout of dat editing dialog to prevent text from being cut off
+ADD: Several new translation strings added to SimuTranslator - please translate them!
+CHANGE: Final cleanup of UI to remove old way of doing things
+ADD: Update translations with latest values from SimuTranslator
+
 # Release 0.5.8
 ADD: Completely new save format (JSON-based)
      Older files can still be opened, but all new files will be saved in the new format

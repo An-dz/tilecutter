@@ -1,14 +1,14 @@
-#{"name": "Dutch", "name_translated": "Nederlands", "language_code": "nl", "created_by": "SimuTranslator", "created_date": "23-03-2011"}
+#{"name": "Dutch", "name_translated": "Nederlands", "language_code": "nl", "created_by": "SimuTranslator", "created_date": "26-03-2011"}
 Winter
 Winter
 Choose a location to save project...
 Choose a location to save project...
+Reload Image
+
 tt_seasons_select_summer
 View/modify the Summer image of this object
 tt_menu_file_saveas
 Save this project to a new location
-224
-224
 Cut image
 Cut image
 tt_offset_button_up
@@ -43,16 +43,22 @@ Choose a location to save .dat file...
 Choose a location to save .dat file...
 Y dimension
 Y dimension
+Location of TileCutter log file:
+
 128
 128
 tt_images_select_back
 View/modify the BackImage of this building
 Summer
 Summer
+OK
+
+Project was saved successfully
+
 &Open Project
 &Open Project
-16
-16
+X dimension
+X dimension
 tt_offset_button_right
 Move the cutting mask right
 tt_menu_tools_dat
@@ -63,6 +69,8 @@ Version %s
 Version %s
 &Save Project
 &Save Project
+Preferences
+
 tt_facing_select_south
 View/modify the South-facing view of this building
 West
@@ -71,8 +79,8 @@ tt_dims_z_select
 Select the height of the object from the dropdown list
 tt_menu_tools_prefs
 Change the application's preference settings
-192
-192
+&New Project
+&New Project
 Project Save Location
 Project Save Location
 Compile pak
@@ -89,8 +97,12 @@ East
 &Preferences...
 tt_dims_y_select
 Select the dimensions of the object in the East-West direction from the dropdown list
+New Project
+
 tt_menu_file_exit
 Quit the application
+2 - verbose logging
+
 Choose a location to export .pak file...
 Choose a location to export .pak file...
 &Smoke options
@@ -119,16 +131,24 @@ Over TileCutter
 .dat Output Location
 tt_dims_x_select
 Select the dimensions of the object in the North-South direction from the dropdown list
+tt_config_logfile_default
+
 32
 32
 Number\nof views:
-Number of views:
+
+ERROR: Failed to save project!
+
 tt_seasons_enable_winter
 Enable Winter/Summer images for this project. If not enabled the project will have one image for both seasons
 tt_png_file_location
 Shows the location that the .png file will be output to
-tt_images_enable_front
-Enable Front/Back images for this object, useful for stations and other buildings which vehicles can drive on top of
+1 - normal logging
+
+&File
+
+Relative paths are interpreted relative to TileCutter's start location
+
 .pak Output Location
 .pak Output Location
 tt_images_select_front
@@ -145,8 +165,12 @@ North
 North
 &Language
 &Language
+tt_images_enable_front
+Enable Front/Back images for this object, useful for stations and other buildings which vehicles can drive on top of
 This action will set all images in the project to be the same as this one. Do you wish to proceed?
 This action will set all images in the project to be the same as this one. Do you wish to proceed?
+0 - logging disabled
+
 tt_reload_input_file
 Reloads the input file, displaying changes made since the last time it was loaded (Note: This action is always performed for all input files before the cutting process begins)
 tt_facing_select_east
@@ -157,22 +181,32 @@ Simutrans Building Editor
 Simutrans Building Editor
 .png Output Location
 .png Output Location
+192
+192
 Datfile Properties
 Datfile Properties
-Save Project &As
-Save Project &As
+&Help
+
+Use system default location
+
+FrontImage
+FrontImage
+ERROR: Failed to load project!
+
 Language:
 Language:
-&New Project
-&New Project
+224
+224
 160
 160
 96
 96
 tt_offset_selector
 Select between paksize increments and single pixel increments for moving the cutting mask
-X dimension
-X dimension
+tt_browse_dat_file
+Browse for the location of the output .dat file
+16
+16
 BackImage
 BackImage
 &Export .pak
@@ -189,12 +223,18 @@ Choose a location to save to...
 Choose a location to save to...
 Close
 Close
-FrontImage
-FrontImage
+Project was loaded successfully
+
+Save Project &As
+Save Project &As
 tt_facing_enable_select
 Enable multiple building directions, required for non-square buildings
 Current project has changed
 Current project has changed
+Default paksize for new projects:
+
+New project created
+
 &About TileCutter
 &About TileCutter
 tt_menu_file_new
@@ -203,8 +243,8 @@ offset_button_reset
 Reset the offset position of the cutting mask
 tt_pak_file_location
 Shows the location that the .pak file will be output to
-tt_browse_dat_file
-Browse for the location of the output .dat file
+Same File For All &Images
+
 48
 48
 tt_browse_png_file
@@ -231,10 +271,18 @@ tt_menu_tools_smoke
 Modify the smoke file information for this object
 Choose a project file to open...
 Choose a project file to open...
+&Tools
+
 tt_facing_select_west
 View/modify the West-facing view of this building
 South
 South
+Path to makeobj binary:
+
+Logging verbosity level:
+
+tt_config_logfile
+
 Source image location:
 Source image location:
 tt_same_file_for_all

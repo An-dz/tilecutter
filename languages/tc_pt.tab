@@ -1,14 +1,14 @@
-#{"name": "Portuguese", "name_translated": "Português", "language_code": "pt", "created_by": "SimuTranslator", "created_date": "23-03-2011"}
+#{"name": "Portuguese", "name_translated": "Português", "language_code": "pt", "created_by": "SimuTranslator", "created_date": "26-03-2011"}
 Winter
 Inverno
 Choose a location to save project...
 Escolha o lugar para salvar o projeto...
+Reload Image
+
 tt_seasons_select_summer
 Ver/modificar a imagem de verão deste objeto
 tt_menu_file_saveas
 Salvar o projeto em um novo lugar
-224
-224
 Cut image
 Cortar Imagem
 tt_offset_button_up
@@ -43,16 +43,22 @@ Choose a location to save .dat file...
 Escolha o lugar para salvar o arquivo dat...
 Y dimension
 Distância Y
+Location of TileCutter log file:
+
 128
 128
 tt_images_select_back
 Ver/modificar a imagem BackImage deste objeto
 Summer
 Verão
+OK
+
+Project was saved successfully
+
 &Open Project
 &Abrir Projeto
-16
-16
+X dimension
+Distância X
 tt_offset_button_right
 Mover a máscara para direita
 tt_menu_tools_dat
@@ -63,6 +69,8 @@ Version %s
 Versão %s
 &Save Project
 &Salvar Projeto
+Preferences
+
 tt_facing_select_south
 Ver/modificar a vista Sul do edifício
 West
@@ -71,8 +79,8 @@ tt_dims_z_select
 Selecione a altura do objeto na lista
 tt_menu_tools_prefs
 Muda os parâmetros das preferências do programa
-192
-192
+&New Project
+&Novo Projeto
 Project Save Location
 Salvar Projeto em
 Compile pak
@@ -89,8 +97,12 @@ Leste
 &Preferências...
 tt_dims_y_select
 Selecione a distância na direção Leste-Oeste do objeto na lista
+New Project
+
 tt_menu_file_exit
 Sair do programa
+2 - verbose logging
+
 Choose a location to export .pak file...
 Escolha o lugar para exportar o arquivo pak...
 &Smoke options
@@ -119,16 +131,24 @@ Sobre o TileCutter
 Salvar .dat na pasta
 tt_dims_x_select
 Selecione a distância na direção Norte-Sul do objeto na lista
+tt_config_logfile_default
+
 32
 32
 Number\nof views:
-Número\nde vistas:
+
+ERROR: Failed to save project!
+
 tt_seasons_enable_winter
 Habilita imagens para o inverno neste projeto. Se ficar desabilitado a imagem de verão será utilizada nas duas estações.
 tt_png_file_location
 Mostra a pasta que a imagem .png cortada vai ser salva relativo com a pasta escolhida do projeto
-tt_images_enable_front
-Habilita a FrontImage para este objeto, útil para estações e outros edifícios que os veículos possam passar sobre a imagem
+1 - normal logging
+
+&File
+
+Relative paths are interpreted relative to TileCutter's start location
+
 .pak Output Location
 Salvar .pak na pasta
 tt_images_select_front
@@ -145,8 +165,12 @@ North
 Norte
 &Language
 &Idioma
+tt_images_enable_front
+Habilita a FrontImage para este objeto, útil para estações e outros edifícios que os veículos possam passar sobre a imagem
 This action will set all images in the project to be the same as this one. Do you wish to proceed?
 Esta ação estabelecerá a mesma imagem em todo o projeto. Deseja continuar?
+0 - logging disabled
+
 tt_reload_input_file
 Reloads the input file, displaying changes made since the last time it was loaded (Note: This action is always performed for all input files before the cutting process begins)
 tt_facing_select_east
@@ -157,22 +181,32 @@ Simutrans Building Editor
 Editor de Construções do Simutrans
 .png Output Location
 Salvar .png na pasta
+192
+192
 Datfile Properties
 Atributos .dat
-Save Project &As
-S&alvar projeto como...
+&Help
+
+Use system default location
+
+FrontImage
+FrontImage
+ERROR: Failed to load project!
+
 Language:
 Idioma:
-&New Project
-&Novo Projeto
+224
+224
 160
 160
 96
 96
 tt_offset_selector
 Alternar deslocamento da máscara por largura do pakset ou por pixel
-X dimension
-Distância X
+tt_browse_dat_file
+Procure a pasta para salvar o .dat criado
+16
+16
 BackImage
 BackImage
 &Export .pak
@@ -189,12 +223,18 @@ Choose a location to save to...
 Salvar como..
 Close
 Fechar
-FrontImage
-FrontImage
+Project was loaded successfully
+
+Save Project &As
+S&alvar projeto como...
 tt_facing_enable_select
 Habilitar direções múltiplas, necessárias para edifícios não quadrados
 Current project has changed
 O projeto atual foi alterado
+Default paksize for new projects:
+
+New project created
+
 &About TileCutter
 &Sobre o TileCutter
 tt_menu_file_new
@@ -203,8 +243,8 @@ offset_button_reset
 Redefinir a posição da máscara
 tt_pak_file_location
 Mostra a pasta que o objeto compilado (.pak) vai ser salvo relativo com a pasta escolhida do projeto
-tt_browse_dat_file
-Procure a pasta para salvar o .dat criado
+Same File For All &Images
+
 48
 48
 tt_browse_png_file
@@ -231,10 +271,18 @@ tt_menu_tools_smoke
 Modificar a informação do arquivo de fumaça para este objeto
 Choose a project file to open...
 Abrir projeto...
+&Tools
+
 tt_facing_select_west
 Ver/modificar a vista Oeste do edifício
 South
 Sul
+Path to makeobj binary:
+
+Logging verbosity level:
+
+tt_config_logfile
+
 Source image location:
 Localização da imagem base:
 tt_same_file_for_all

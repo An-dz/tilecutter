@@ -1,14 +1,14 @@
-#{"name": "German", "name_translated": "Deutsch", "language_code": "de", "created_by": "SimuTranslator", "created_date": "23-03-2011"}
+#{"name": "German", "name_translated": "Deutsch", "language_code": "de", "created_by": "SimuTranslator", "created_date": "26-03-2011"}
 Winter
 Winter
 Choose a location to save project...
 Wähle einen Ort zum Speichern des Projektes...
+Reload Image
+
 tt_seasons_select_summer
 Zeige/Bearbeite das Sommer Bild dieses Objektes
 tt_menu_file_saveas
 Speichern unter einem anderen Ort
-224
-224
 Cut image
 Schneide Bild
 tt_offset_button_up
@@ -26,11 +26,11 @@ Erstellt am:
 tt_menu_file_export
 Exportiere eine kompilierte .pak Datei von diesem Objekt
 Fine
-Fine
+Fein
 tt_menu_languages
 Ändere die Programm Sprach Einstellungen
 Direction Facing:
-Direction Facing:
+Ausrichtung:
 tt_offset_button_down
 Bewege die Schneidmaske nach unten
 Created by:
@@ -43,16 +43,22 @@ Choose a location to save .dat file...
 Wähle einen Ort zum Speichern von .dat Dateien...
 Y dimension
 Y Dimension
+Location of TileCutter log file:
+
 128
 128
 tt_images_select_back
 Zeige/Bearbeite den Hintergrund des Gebäudes
 Summer
 Sommer
+OK
+
+Project was saved successfully
+
 &Open Project
 &Projekt öffnen
-16
-16
+X dimension
+X Dimension
 tt_offset_button_right
 Bewege die Schneidmaske nach rechts
 tt_menu_tools_dat
@@ -63,6 +69,8 @@ Version %s
 Version %s
 &Save Project
 Projekt &Speichern
+Preferences
+
 tt_facing_select_south
 Zeige/Bearbeite die Südansicht der Gebäudes
 West
@@ -70,9 +78,9 @@ West
 tt_dims_z_select
 Wähle die Höhe des Projektes von der Auswahl
 tt_menu_tools_prefs
-Change the application's preference settings
-192
-192
+Ändere die Programmeinstellungen
+&New Project
+&Neues Projekt
 Project Save Location
 Projekt Speicher Ort
 Compile pak
@@ -89,8 +97,12 @@ Ost
 &Einstellungen...
 tt_dims_y_select
 Wähle die Größe des Objektes in Ost-West Richtung von der Auswahl
+New Project
+
 tt_menu_file_exit
 Beenden
+2 - verbose logging
+
 Choose a location to export .pak file...
 Wähle einn Ort zum Exportieren von .pak Dateien...
 &Smoke options
@@ -102,7 +114,7 @@ Durchsuchen...
 Choose an image file to open...
 Wähle ein Bild zum Öffnen...
 Here you can enter the datfile properties necessary to produce a building using makeobj
-Here you can enter the datfile properties necessary to produce a building using makeobj
+Hier kannst du die dat Dateieinstellungen eingeben, welche nötig sind um ein Gebäude mit makeobj zu erstellen
 240
 240
 tt_dims_paksize_select
@@ -116,21 +128,29 @@ Größe:
 About TileCutter
 Über TileCutter
 .dat Output Location
-.dat Output Location
+.dat Ausgabeort
 tt_dims_x_select
 Wähle die Größe des Objektes in Nord-Süd Richtung von der Auswahl
+tt_config_logfile_default
+
 32
 32
 Number\nof views:
-Anzahl der Ansichten:
+
+ERROR: Failed to save project!
+
 tt_seasons_enable_winter
 Aktiviere Winter/Sommer Bilder für dieses Projekt. Wenn diese Option deaktiviert ist, haben Winter und Sommer die gleichen Bilder
 tt_png_file_location
 Zeige den Ausgabeort für .png Dateien
-tt_images_enable_front
-Aktiviere Vorder-/Hintergrundbilder. Nützlich für Stationen und andere Gebäude, bei denen Fahrzeuge fahren können
+1 - normal logging
+
+&File
+
+Relative paths are interpreted relative to TileCutter's start location
+
 .pak Output Location
-.pak Output Location
+.pak Ausgabeort
 tt_images_select_front
 Zeige/Bearbeite den Vordergrund des Gebäudes
 64
@@ -145,34 +165,48 @@ North
 Nord
 &Language
 &Sprache
+tt_images_enable_front
+Aktiviere Vorder-/Hintergrundbilder. Nützlich für Stationen und andere Gebäude, bei denen Fahrzeuge fahren können
 This action will set all images in the project to be the same as this one. Do you wish to proceed?
 Diese Aktion wird alle Bilder des Projektes zu dem gleichen wie das aktuelle machen. Möchtest du fortfahren?
+0 - logging disabled
+
 tt_reload_input_file
-Reloads the input file, displaying changes made since the last time it was loaded (Note: This action is always performed for all input files before the cutting process begins)
+Lade Eingabedatei neu, zeige Änderungen seit dem letzten mal (Notiz: Dies wird immer für alle Dateien erledigt, bevor mit dem Schneiden begonnen wird)
 tt_facing_select_east
 Zeige/Bearbeite die Ostansicht der Gebäudes
 Language
 Sprache
 Simutrans Building Editor
-Simutrans Building Editor
+Simutrans Gebäudeeditor
 .png Output Location
-.png Output Location
+.png Ausgabeort
+192
+192
 Datfile Properties
-Datfile Properties
-Save Project &As
-Projekt speichern &als
+dat Dateieinstellungen
+&Help
+
+Use system default location
+
+FrontImage
+Vordergrund
+ERROR: Failed to load project!
+
 Language:
 Sprache:
-&New Project
-&Neues Projekt
+224
+224
 160
 160
 96
 96
 tt_offset_selector
-Select between paksize increments and single pixel increments for moving the cutting mask
-X dimension
-X Dimension
+Wähle zwischen Grafikset- und Pixelschritten um die Schneidemaske zu bewegen
+tt_browse_dat_file
+.dat Datei speichern unter...
+16
+16
 BackImage
 Hintergrund
 &Export .pak
@@ -186,15 +220,21 @@ Zeige den Ort der .dat Datei relativ zum Root-Speicherort
 TileCutter Online Help
 TileCutter Online Hilfe
 Choose a location to save to...
-Choose a location to save to...
+Wähle einen Ort zum speichern...
 Close
 Schließen
-FrontImage
-Vordergrund
+Project was loaded successfully
+
+Save Project &As
+Projekt speichern &als
 tt_facing_enable_select
 Aktiviere mehrere Ausrichtungen. Wird für nicht quadratische Gebäude benötigt.
 Current project has changed
 Das aktuelle Projekt wurde geändert
+Default paksize for new projects:
+
+New project created
+
 &About TileCutter
 &Über TileCutter
 tt_menu_file_new
@@ -203,8 +243,8 @@ offset_button_reset
 Setze die Verschiebung der Schneidmaske zurück
 tt_pak_file_location
 Zeige den Ausgabeort für .pak Dateien
-tt_browse_dat_file
-.dat Datei speichern unter...
+Same File For All &Images
+
 48
 48
 tt_browse_png_file
@@ -231,10 +271,18 @@ tt_menu_tools_smoke
 Ändere die Rauch Datei Informationen für dieses Objekt
 Choose a project file to open...
 Wähle ein Projekt zum Öffnen...
+&Tools
+
 tt_facing_select_west
 Zeige/Bearbeite die Westansicht der Gebäudes
 South
 Süd
+Path to makeobj binary:
+
+Logging verbosity level:
+
+tt_config_logfile
+
 Source image location:
 Quellbild Ort:
 tt_same_file_for_all
@@ -242,7 +290,7 @@ Lade das aktuelle Bild für alle Sichten diese Projektes. Nützlich wenn du ein 
 Write out .dat file
 Schreibe .dat Datei
 tt_menu_file_cut
-Initiate the cutting routine, producing a .dat output file (if required) and a cut .png image
+Starte Schneideroutine, erzeuge eine .dat Ausgabedatei (wenn angefordert) und ein .png Bild
 Season:
 Jahreszeiten:
 Paksize

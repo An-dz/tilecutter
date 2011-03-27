@@ -1,14 +1,14 @@
-#{"name": "Czech", "name_translated": "Česky", "language_code": "cz", "created_by": "SimuTranslator", "created_date": "23-03-2011"}
+#{"name": "Czech", "name_translated": "Česky", "language_code": "cz", "created_by": "SimuTranslator", "created_date": "26-03-2011"}
 Winter
 Zima
 Choose a location to save project...
 Vyberte umístění pro projekt
+Reload Image
+
 tt_seasons_select_summer
 Zobrazit/upravit letní obrázek
 tt_menu_file_saveas
 Uložit projekt jako
-224
-224
 Cut image
 Rozřezat obrázek
 tt_offset_button_up
@@ -43,16 +43,22 @@ Choose a location to save .dat file...
 Vyberte umístění pro *.dat soubor
 Y dimension
 Rozměr Y
+Location of TileCutter log file:
+
 128
 128
 tt_images_select_back
 Zobrazit/upravit zadní obrázek
 Summer
 Léto
+OK
+
+Project was saved successfully
+
 &Open Project
 Otevřít projekt
-16
-16
+X dimension
+Rozměr X
 tt_offset_button_right
 Posunout stříhací matrici doprava
 tt_menu_tools_dat
@@ -63,6 +69,8 @@ Version %s
 Verze %s
 &Save Project
 Uložit projekt
+Preferences
+
 tt_facing_select_south
 Zobrazit/upravit jižní náhled budovy
 West
@@ -71,8 +79,8 @@ tt_dims_z_select
 Vybrat výšku z seznamu
 tt_menu_tools_prefs
 Změnit nastavení
-192
-192
+&New Project
+Nový projekt
 Project Save Location
 Umístění projektu
 Compile pak
@@ -89,8 +97,12 @@ Východ
 Obecná nastavení
 tt_dims_y_select
 Vybrat velikost v východo-západním směru z seznamu
+New Project
+
 tt_menu_file_exit
 Ukončit program
+2 - verbose logging
+
 Choose a location to export .pak file...
 Vyberte umístění pro *.pak soubor
 &Smoke options
@@ -119,16 +131,24 @@ O TileCutteru
 Umístění vytvořeného *.dat souboru
 tt_dims_x_select
 Vybrat velikost v severo-jižním směru z seznamu
+tt_config_logfile_default
+
 32
 32
 Number\nof views:
-Počet náhledů:
+
+ERROR: Failed to save project!
+
 tt_seasons_enable_winter
 Povolit zimní/letní obrázky. V opačném případě bude mít jeden obrázek pro léto i pro zimu.
 tt_png_file_location
 Zobrazit umístění vytvořeného *.png obrázku
-tt_images_enable_front
-Povolit přední/zadní obrázky - užitečné pro stanice a jiné stavby využívané vlaky
+1 - normal logging
+
+&File
+
+Relative paths are interpreted relative to TileCutter's start location
+
 .pak Output Location
 Umístění vytvořeného *.pak souboru
 tt_images_select_front
@@ -145,8 +165,12 @@ North
 Sever
 &Language
 Jazyk
+tt_images_enable_front
+Povolit přední/zadní obrázky - užitečné pro stanice a jiné stavby využívané vlaky
 This action will set all images in the project to be the same as this one. Do you wish to proceed?
 Toto způsobí, že všechny obrázky v projektu budou shodné s tímto. Přejete si pokračovat?
+0 - logging disabled
+
 tt_reload_input_file
 Znovu načtení zdrojového souboru s ohlášením změn provedených od posledného načtení. Toto je automaticky provedeno pro všechny zdrojové soubory před započetím rozstříhání.
 tt_facing_select_east
@@ -157,22 +181,32 @@ Simutrans Building Editor
 Simutrans Building Editor
 .png Output Location
 Umístění vytvořeného *.png souboru
+192
+192
 Datfile Properties
 Vlastnosti *.dat souboru
-Save Project &As
-Uložit projekt jako
+&Help
+
+Use system default location
+
+FrontImage
+Přední obrázek
+ERROR: Failed to load project!
+
 Language:
 Jazyk:
-&New Project
-Nový projekt
+224
+224
 160
 160
 96
 96
 tt_offset_selector
 Vybrat posun dílu
-X dimension
-Rozměr X
+tt_browse_dat_file
+Najít umístění vytvořeného *.dat souboru
+16
+16
 BackImage
 Zadní obrázek
 &Export .pak
@@ -189,12 +223,18 @@ Choose a location to save to...
 Vyberte umístění kam bude uloženo...
 Close
 Zavřít
-FrontImage
-Přední obrázek
+Project was loaded successfully
+
+Save Project &As
+Uložit projekt jako
 tt_facing_enable_select
 Povolit více směrů - nutné pro obdélníkové budovy
 Current project has changed
 Projekt změněn
+Default paksize for new projects:
+
+New project created
+
 &About TileCutter
 O TileCutteru..
 tt_menu_file_new
@@ -203,8 +243,8 @@ offset_button_reset
 Obnovit polohu stříhací matrice
 tt_pak_file_location
 Zobrazit umístění, kam bude *.pak soubor uložen
-tt_browse_dat_file
-Najít umístění vytvořeného *.dat souboru
+Same File For All &Images
+
 48
 48
 tt_browse_png_file
@@ -231,10 +271,18 @@ tt_menu_tools_smoke
 Změnit kouř
 Choose a project file to open...
 Vyberte projekt k otevření
+&Tools
+
 tt_facing_select_west
 Zobrazit/upravit západní náhled budovy
 South
 Jih
+Path to makeobj binary:
+
+Logging verbosity level:
+
+tt_config_logfile
+
 Source image location:
 Umístění zdrojového obrázku:
 tt_same_file_for_all

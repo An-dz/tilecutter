@@ -1,14 +1,14 @@
-#{"name": "Swedish", "name_translated": "Svenska", "language_code": "sv", "created_by": "SimuTranslator", "created_date": "23-03-2011"}
+#{"name": "Swedish", "name_translated": "Svenska", "language_code": "sv", "created_by": "SimuTranslator", "created_date": "26-03-2011"}
 Winter
 Vinter
 Choose a location to save project...
 Välj en plats att spara projektet till...
+Reload Image
+
 tt_seasons_select_summer
 View/modify the Summer image of this object
 tt_menu_file_saveas
 Save this project to a new location
-224
-224
 Cut image
 Skär bild
 tt_offset_button_up
@@ -43,16 +43,22 @@ Choose a location to save .dat file...
 Välj en plats att spara .dat-filer till...
 Y dimension
 Storlek i y-axeln
+Location of TileCutter log file:
+
 128
 128
 tt_images_select_back
 View/modify the BackImage of this building
 Summer
 Sommar
+OK
+
+Project was saved successfully
+
 &Open Project
 &Öppna projekt
-16
-16
+X dimension
+Storlek i x-axeln
 tt_offset_button_right
 Move the cutting mask right
 tt_menu_tools_dat
@@ -63,6 +69,8 @@ Version %s
 Version %s
 &Save Project
 &Spara projekt
+Preferences
+
 tt_facing_select_south
 View/modify the South-facing view of this building
 West
@@ -71,8 +79,8 @@ tt_dims_z_select
 Välj objektets höjd från rullgardinsmenyn
 tt_menu_tools_prefs
 Change the application's preference settings
-192
-192
+&New Project
+&Nytt projekt
 Project Save Location
 Plats att spara projekt på
 Compile pak
@@ -89,8 +97,12 @@ East
 &Inställningar...
 tt_dims_y_select
 Välj objektets storlek i öst-västlig utsträckning från rullgardinsmenyn
+New Project
+
 tt_menu_file_exit
 Quit the application
+2 - verbose logging
+
 Choose a location to export .pak file...
 Välj en plats att exportera .pak-filer till...
 &Smoke options
@@ -119,16 +131,24 @@ Om TileCutter
 Plats att spara .dat-filer på
 tt_dims_x_select
 Välj objektets storlek i nord-sydlig utsträckning från rullgardinsmenyn
+tt_config_logfile_default
+
 32
 32
 Number\nof views:
-Antal\nvinklar:
+
+ERROR: Failed to save project!
+
 tt_seasons_enable_winter
 Enable Winter/Summer images for this project. If not enabled the project will have one image for both seasons
 tt_png_file_location
 Shows the location that the .png file will be output to
-tt_images_enable_front
-Enable Front/Back images for this object, useful for stations and other buildings which vehicles can drive on top of
+1 - normal logging
+
+&File
+
+Relative paths are interpreted relative to TileCutter's start location
+
 .pak Output Location
 Plats att spara .pak-filer på
 tt_images_select_front
@@ -145,8 +165,12 @@ North
 Norr
 &Language
 S&pråk
+tt_images_enable_front
+Enable Front/Back images for this object, useful for stations and other buildings which vehicles can drive on top of
 This action will set all images in the project to be the same as this one. Do you wish to proceed?
 Detta kommer att sätta alla projektets bilder till samma bild som den här. Vill du fortsätta?
+0 - logging disabled
+
 tt_reload_input_file
 Reloads the input file, displaying changes made since the last time it was loaded (Note: This action is always performed for all input files before the cutting process begins)
 tt_facing_select_east
@@ -157,22 +181,32 @@ Simutrans Building Editor
 Simutrans byggnadsredigerare
 .png Output Location
 Plats att spara .png-filer på
+192
+192
 Datfile Properties
 Värden för dat-fil
-Save Project &As
-Spara projektet so&m
+&Help
+
+Use system default location
+
+FrontImage
+Framkantsbild
+ERROR: Failed to load project!
+
 Language:
 Språk:
-&New Project
-&Nytt projekt
+224
+224
 160
 160
 96
 96
 tt_offset_selector
 Select between paksize increments and single pixel increments for moving the cutting mask
-X dimension
-Storlek i x-axeln
+tt_browse_dat_file
+Bläddra efter var .dat-filens sparas
+16
+16
 BackImage
 Bakgrund
 &Export .pak
@@ -189,12 +223,18 @@ Choose a location to save to...
 Välj en plats att spara till...
 Close
 Stäng
-FrontImage
-Framkantsbild
+Project was loaded successfully
+
+Save Project &As
+Spara projektet so&m
 tt_facing_enable_select
 Enable multiple building directions, required for non-square buildings
 Current project has changed
 Nuvarande projekt har ändrats
+Default paksize for new projects:
+
+New project created
+
 &About TileCutter
 &Om TileCutter
 tt_menu_file_new
@@ -203,8 +243,8 @@ offset_button_reset
 Återställ skärmaskens offsetposition
 tt_pak_file_location
 Shows the location that the .pak file will be output to
-tt_browse_dat_file
-Bläddra efter var .dat-filens sparas
+Same File For All &Images
+
 48
 48
 tt_browse_png_file
@@ -231,10 +271,18 @@ tt_menu_tools_smoke
 Modify the smoke file information for this object
 Choose a project file to open...
 Välj en projektfil att öppna...
+&Tools
+
 tt_facing_select_west
 View/modify the West-facing view of this building
 South
 Söder
+Path to makeobj binary:
+
+Logging verbosity level:
+
+tt_config_logfile
+
 Source image location:
 Källbildens plats:
 tt_same_file_for_all

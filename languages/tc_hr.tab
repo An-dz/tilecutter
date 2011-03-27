@@ -1,14 +1,14 @@
-#{"name": "Croatian", "name_translated": "Hrvatski", "language_code": "hr", "created_by": "SimuTranslator", "created_date": "23-03-2011"}
+#{"name": "Croatian", "name_translated": "Hrvatski", "language_code": "hr", "created_by": "SimuTranslator", "created_date": "26-03-2011"}
 Winter
 Zima
 Choose a location to save project...
 Odabrati lokaciju za spremanje projekta...
+Reload Image
+
 tt_seasons_select_summer
 Prikaz/promjena Ljetne slike ovoga objekta
 tt_menu_file_saveas
 Spremiti ovaj projekt na novu lokaciju
-224
-224
 Cut image
 Izrezati sliku
 tt_offset_button_up
@@ -43,16 +43,22 @@ Choose a location to save .dat file...
 Odabrati lokaciju za spremanje .dat datoteke...
 Y dimension
 X dimenzija
+Location of TileCutter log file:
+
 128
 128
 tt_images_select_back
 Prikaz/promjena BackImage za ovu zgradu
 Summer
 Ljeto
+OK
+
+Project was saved successfully
+
 &Open Project
 &Otvoriti Projekt
-16
-16
+X dimension
+X dimenzija
 tt_offset_button_right
 Pomicanje maske rezanja udesno
 tt_menu_tools_dat
@@ -63,6 +69,8 @@ Version %s
 Inacica %s
 &Save Project
 &Spremiti Project
+Preferences
+
 tt_facing_select_south
 Prikaz/promjena Juzno usmjerenog pogleda ove zgrade
 West
@@ -71,8 +79,8 @@ tt_dims_z_select
 Odabrati velicinu objekta iz liste izbora
 tt_menu_tools_prefs
 Promjena svojstava postavki aplikacije
-192
-192
+&New Project
+&Novi Projekt
 Project Save Location
 Lokacija Spremanje Projekta
 Compile pak
@@ -89,8 +97,12 @@ Istok
 &Svojstva...
 tt_dims_y_select
 Odabrati dimenzije objekta u Istok-Zapad smjeru iz liste izbora
+New Project
+
 tt_menu_file_exit
 Izlaz iz aplikacije
+2 - verbose logging
+
 Choose a location to export .pak file...
 Odabir lokacije za izvoz .pak datoteke...
 &Smoke options
@@ -119,16 +131,24 @@ O TileCutter-u
 .dat Izlazna Lokacija
 tt_dims_x_select
 Odabrati dimenzije objekta iz Sjevero-Juznog smjera iz liste izbora
+tt_config_logfile_default
+
 32
 32
 Number\nof views:
-Broj\npregleda:
+
+ERROR: Failed to save project!
+
 tt_seasons_enable_winter
 Omogucavanje Zimskih/Ljetnih slika ovoga projekta. Ako nije omoguceno projekt ce imati jednu sliku za oba godisnja doba
 tt_png_file_location
 Prikazuje lokaciju na koju ce se spremiti .png datoteka
-tt_images_enable_front
-Omoguciti Prednju/Zadnju sliku za ovaj objekt, korisno za stanice i druge zgrade na cijem vrhu mogu voziti vozila
+1 - normal logging
+
+&File
+
+Relative paths are interpreted relative to TileCutter's start location
+
 .pak Output Location
 .pak Izlazna Lokacija
 tt_images_select_front
@@ -145,8 +165,12 @@ North
 Sjever
 &Language
 &Jezik
+tt_images_enable_front
+Omoguciti Prednju/Zadnju sliku za ovaj objekt, korisno za stanice i druge zgrade na cijem vrhu mogu voziti vozila
 This action will set all images in the project to be the same as this one. Do you wish to proceed?
 Ova akcija ce postaviti sve sloke u projektu jednakima kao i ova. Zelite li nastaviti?
+0 - logging disabled
+
 tt_reload_input_file
 Ponovno ucitava ulaznu datiteku, prikazujuci promjene nacinjene od prethodnog vremena ucitavanja (Biljeska: Ova akcija se uvijek primjeni za sve ulazne datoteke prije nego pocne proces rezanja)
 tt_facing_select_east
@@ -157,22 +181,32 @@ Simutrans Building Editor
 Simutrans Editor Zgrada
 .png Output Location
 .png Izlazna Lokacija
+192
+192
 Datfile Properties
 Datfile svojstva
-Save Project &As
-Spremiti Projekt &Kao
+&Help
+
+Use system default location
+
+FrontImage
+FrontImage
+ERROR: Failed to load project!
+
 Language:
 Jezik:
-&New Project
-&Novi Projekt
+224
+224
 160
 160
 96
 96
 tt_offset_selector
 Odabrati izmedju velicine pak-ovih povecanja i povecanja jednog piksela za pomicanje maske rezanja
-X dimension
-X dimenzija
+tt_browse_dat_file
+Pretraga za lokacijom izlazne .dat datoteke
+16
+16
 BackImage
 PovratnaSlika
 &Export .pak
@@ -189,12 +223,18 @@ Choose a location to save to...
 Odabrati lokaciju za spremanju u...
 Close
 Zatvoriti
-FrontImage
-FrontImage
+Project was loaded successfully
+
+Save Project &As
+Spremiti Projekt &Kao
 tt_facing_enable_select
 Omoguciti visestruke smjerove zgrada, potrebne za ne-kvadratne zgrade
 Current project has changed
 Trenutni projekt je promijenjen
+Default paksize for new projects:
+
+New project created
+
 &About TileCutter
 &About TileCutter
 tt_menu_file_new
@@ -203,8 +243,8 @@ offset_button_reset
 Rezetiranje offset pozicije maske rezanja
 tt_pak_file_location
 Prikazuje lokaciju na koju ce se spremiti .pak datoteka
-tt_browse_dat_file
-Pretraga za lokacijom izlazne .dat datoteke
+Same File For All &Images
+
 48
 48
 tt_browse_png_file
@@ -231,10 +271,18 @@ tt_menu_tools_smoke
 Promijeniti informaciju datoteke dima za ovaj objekt
 Choose a project file to open...
 Odabrati projektnu datoteku za otvoriti...
+&Tools
+
 tt_facing_select_west
 Pregled/promjena zapadno usmjerenog pogleda ove zgrade
 South
 Jug
+Path to makeobj binary:
+
+Logging verbosity level:
+
+tt_config_logfile
+
 Source image location:
 Lokacija izvorisne slike:
 tt_same_file_for_all

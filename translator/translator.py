@@ -127,7 +127,7 @@ class translation:
         except IOError:
             debug(u"Problem loading information from file, aborting load of translation file")
             raise TranslationLoadError()
-        # Language files should be saved as UTF-8 - this conversation done now by directly reading as UTF-8
+        # Language files should be saved as UTF-8 - this conversion done now by directly reading as UTF-8
         #block = block.decode("UTF-8")
         # Convert newlines to unix style
         block = block.decode("u_newlines")
@@ -156,18 +156,34 @@ class translation:
         # Delete all items of block_lines which begin with "#"
         # Two pass system, first strip out comments
         for line in block_lines:
-            if len(line) != 0 and line[0] != "#":
-                block_lines2.append(line)
-        # Second check for and strip duplicate empty lines, single empty lines should be replaced by the translation key line
-        block_lines3 = []
-        for i in range(len(block_lines2)):
-            if len(block_lines2[i]) == 0:                       # If empty line
-                if i != 0 and len(block_lines3) != 0:           # If not first line in the file, and one non-empty line has been found
-                    if len(block_lines2[i-1]) != 0:             # If line before this not empty
-                        block_lines3.append(block_lines3[-1])   # Duplicate previous line
+            if len(line) != 0:
+                if line[0] != "#":
+                    block_lines2.append(line)
             else:
-                block_lines3.append(block_lines2[i])            # If not an empty line
-        # Check that block_lines2 is an even number of items, if not remove the last one
+                block_lines2.append(line)
+
+        # Translation is made up of key\nvalue\n pairs, the keys must be on odd-numbered lines, values on even (after comments are stripped)
+        # Blank lines can only occur on even numbered lines since a blank cannot be a key. Thus we need to normalise the file for duplicate newlines
+        # while keeping this in mind.
+
+        # Starting with first line
+        # Looking for key - Is line blank? If so discard it and start over
+        # Looking for key - If first line isn't blank assume it is key, remove from stack
+        # Looking for value - If next line is blank, assume it's a blank value, remove from stack
+        # Start over looking for a key
+
+        block_lines3 = []
+        looking_for_key = True
+        for i in block_lines2:
+            if looking_for_key:
+                if len(i) != 0:
+                    block_lines3.append(i)
+                    looking_for_key = False
+            else:
+                block_lines3.append(i)
+                looking_for_key = True
+
+        # Check that block_lines3 is an even number of items, if not remove the last one
         # (The array of items must be an even number not including comments)
         # Now need to check through for escaped characters (\n mostly) and convert them to non-escaped versions
         for i in range(len(block_lines3)):
