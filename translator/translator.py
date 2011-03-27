@@ -81,7 +81,11 @@ class Translator(object):
         """Return translated version of a string"""
         text = unicode(text)
         try:
-            return Translator.active.translation[text]
+            translation = Translator.active.translation[text]
+            if len(translation) == 0:
+                return text
+            else:
+                return translation
         except KeyError:
             # If there is no translation for this item use the default program string
             return text
