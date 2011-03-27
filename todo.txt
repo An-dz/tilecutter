@@ -75,6 +75,7 @@ FIX: Layout of dat editing dialog to prevent text from being cut off
 ADD: Several new translation strings added to SimuTranslator - please translate them!
 CHANGE: Final cleanup of UI to remove old way of doing things
 ADD: Update translations with latest values from SimuTranslator
+FIX: Translator properly handles translation files with newlines in improper places
 
 # Release 0.5.8
 ADD: Completely new save format (JSON-based)
