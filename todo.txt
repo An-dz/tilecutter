@@ -76,6 +76,8 @@ ADD: Several new translation strings added to SimuTranslator - please translate 
 CHANGE: Final cleanup of UI to remove old way of doing things
 ADD: Update translations with latest values from SimuTranslator
 FIX: Translator properly handles translation files with newlines in improper places
+ADD: New French translation from mEGa
+ADD: Mac specific distribution in app format
 
 # Release 0.5.8
 ADD: Completely new save format (JSON-based)
