@@ -1,10 +1,10 @@
-#{"name": "French", "name_translated": "Français", "language_code": "fr", "created_by": "SimuTranslator", "created_date": "26-03-2011"}
+#{"name": "French", "name_translated": "Français", "language_code": "fr", "created_by": "SimuTranslator", "created_date": "13-04-2011"}
 Winter
 Hiver
 Choose a location to save project...
 Choisir un emplacement pour enregistrer le projet...
 Reload Image
-
+Recharger l'image
 tt_seasons_select_summer
 Voir/modifier l'image Eté de cet objet
 tt_menu_file_saveas
@@ -44,7 +44,7 @@ Choisir un emplacement pour exporter le fichier .dat...
 Y dimension
 Dimension Y
 Location of TileCutter log file:
-
+Emplacement des fichiers journaux de traçage
 128
 128
 tt_images_select_back
@@ -52,9 +52,9 @@ Voir/modifier l'arrière-plan du bâtiment
 Summer
 Eté
 OK
-
+OK
 Project was saved successfully
-
+Le projet a bien été enregistré
 &Open Project
 &Ouvrir le Projet
 X dimension
@@ -70,7 +70,7 @@ Version %s
 &Save Project
 &Enregistrer le Projet
 Preferences
-
+Préférences
 tt_facing_select_south
 Voir/modifier la vue Sud du bâtiment
 West
@@ -98,11 +98,11 @@ Est
 tt_dims_y_select
 Sélectionner les dimensions  de l'objet de la face Est-Ouest à partir de la liste déroulante
 New Project
-
+Nouveau projet
 tt_menu_file_exit
 Quitter l'application
 2 - verbose logging
-
+Traçage détaillé
 Choose a location to export .pak file...
 Choisir un emplacement pour exporter le fichier .pak...
 &Smoke options
@@ -114,7 +114,7 @@ Parcourir...
 Choose an image file to open...
 Choisir une image à ouvrir...
 Here you can enter the datfile properties necessary to produce a building using makeobj
-Ici vous pouvez les propriétés supplémentaires du fichier dat nécessaire pour créer le bâtiment avec makeobj
+Ici vous pouvez ajouter les propriétés supplémentaires du fichier dat nécessaire pour créer le bâtiment avec makeobj
 240
 240
 tt_dims_paksize_select
@@ -132,23 +132,23 @@ Emplacement de sortie  .dat
 tt_dims_x_select
 Sélectionner les dimensions de l'objet de la face Nord-Sud à partir de la liste déroulante
 tt_config_logfile_default
-
+Configurer le fichier journal par défaut
 32
 32
 Number\nof views:
-
+Nombre\nof de vues
 ERROR: Failed to save project!
-
+ERREUR: échec de l'enregistrement du projet!
 tt_seasons_enable_winter
 Activer les images Hiver/Eté du projet. Si non activé, une seule image sera présente pour les deux saisons
 tt_png_file_location
 Indiquer l'emplacement ou sera générer le fichier .png
 1 - normal logging
-
+Traçage normal
 &File
-
+&Fichier
 Relative paths are interpreted relative to TileCutter's start location
-
+Chemins relatifs qui seront la base relative de l'emplacement de démarrage de Tilecutter
 .pak Output Location
 Emplacement de sortie .pak
 tt_images_select_front
@@ -168,9 +168,9 @@ Nord
 tt_images_enable_front
 Activer les images avant-plan/arrière-plan de l'objet, à utiliser pour les stations et les bâtiments dont les véhicules peuvent y circuler
 This action will set all images in the project to be the same as this one. Do you wish to proceed?
-Cette action placera toutes les images du projet en une seule identique. Souhaitez vous continuer ?
+Cette action réunira toutes les images du projet en une seule identique. Souhaitez vous continuer ?
 0 - logging disabled
-
+Traçage désactivé
 tt_reload_input_file
 Recharger le fichier source en reprenant les changements depuis son dernier chargement (Note:Cette action est toujours effectuée pour tous les fichiers sources avant que le processus de découpage ne commence)
 
@@ -187,13 +187,13 @@ Emplacement de sortie .png
 Datfile Properties
 Propriétés du fichier dat
 &Help
-
+Aid&e
 Use system default location
-
+Utiliser l'emplacement du système par défaut
 FrontImage
 Avant-plan
 ERROR: Failed to load project!
-
+ERREUR: échec du chargement du projet!
 Language:
 Langue
 224
@@ -225,7 +225,7 @@ Choisir un emplacement pour enregistrer...
 Close
 Fermer
 Project was loaded successfully
-
+Le projet a bien été chargé 
 Save Project &As
 Enregistrer le Projet &Sous
 tt_facing_enable_select
@@ -233,9 +233,9 @@ Activer les orientations multiples du bâtiments, requis pour les bâtiments non
 Current project has changed
 Le projet courant a été modifié
 Default paksize for new projects:
-
+Taille de pak par défaut pour les nouveaux objets
 New project created
-
+Le nouveau projet a été créé
 &About TileCutter
 &A propos de TileCutter
 tt_menu_file_new
@@ -245,7 +245,7 @@ Ré-initialiser le décalage du masque de découpe
 tt_pak_file_location
 Indiquer l'emplacement ou sera généré le fichier .pak
 Same File For All &Images
-
+Le Même Fichier Pour Toutes Les &Images
 48
 48
 tt_browse_png_file
@@ -273,17 +273,17 @@ Modifier les information du fichier fumée de cet objet
 Choose a project file to open...
 Choisir un fichier pour ouvrir un projet existant...
 &Tools
-
+Ou&tils
 tt_facing_select_west
 Voir/modifier la vue Ouest du bâtiment
 South
 Sud
 Path to makeobj binary:
-
+Chemin de l'exécutable makeobj
 Logging verbosity level:
-
+Niveau du détail du traçage
 tt_config_logfile
-
+Configurer les fichiers journaux
 Source image location:
 Emplacement de l'image source:
 tt_same_file_for_all

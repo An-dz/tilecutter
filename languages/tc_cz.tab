@@ -1,10 +1,10 @@
-#{"name": "Czech", "name_translated": "Česky", "language_code": "cz", "created_by": "SimuTranslator", "created_date": "26-03-2011"}
+#{"name": "Czech", "name_translated": "Česky", "language_code": "cz", "created_by": "SimuTranslator", "created_date": "13-04-2011"}
 Winter
 Zima
 Choose a location to save project...
 Vyberte umístění pro projekt
 Reload Image
-
+Znovu nahrát obrázek
 tt_seasons_select_summer
 Zobrazit/upravit letní obrázek
 tt_menu_file_saveas
@@ -44,7 +44,7 @@ Vyberte umístění pro *.dat soubor
 Y dimension
 Rozměr Y
 Location of TileCutter log file:
-
+Umístění logovacího souboru:
 128
 128
 tt_images_select_back
@@ -52,9 +52,9 @@ Zobrazit/upravit zadní obrázek
 Summer
 Léto
 OK
-
+OK
 Project was saved successfully
-
+Projekt uložen
 &Open Project
 Otevřít projekt
 X dimension
@@ -70,7 +70,7 @@ Verze %s
 &Save Project
 Uložit projekt
 Preferences
-
+Nastavení
 tt_facing_select_south
 Zobrazit/upravit jižní náhled budovy
 West
@@ -98,11 +98,11 @@ Obecná nastavení
 tt_dims_y_select
 Vybrat velikost v východo-západním směru z seznamu
 New Project
-
+Nový projekt
 tt_menu_file_exit
 Ukončit program
 2 - verbose logging
-
+Důkladnější logování
 Choose a location to export .pak file...
 Vyberte umístění pro *.pak soubor
 &Smoke options
@@ -136,19 +136,19 @@ tt_config_logfile_default
 32
 32
 Number\nof views:
-
+Počet náhledů:
 ERROR: Failed to save project!
-
+Chyba: Projekt se nepodařilo uložit!
 tt_seasons_enable_winter
 Povolit zimní/letní obrázky. V opačném případě bude mít jeden obrázek pro léto i pro zimu.
 tt_png_file_location
 Zobrazit umístění vytvořeného *.png obrázku
 1 - normal logging
-
+Obyčejné logování
 &File
-
+Soubor
 Relative paths are interpreted relative to TileCutter's start location
-
+Relativní cesty jsou vztaženy k umístění TileCutteru
 .pak Output Location
 Umístění vytvořeného *.pak souboru
 tt_images_select_front
@@ -170,7 +170,7 @@ Povolit přední/zadní obrázky - užitečné pro stanice a jiné stavby využ�
 This action will set all images in the project to be the same as this one. Do you wish to proceed?
 Toto způsobí, že všechny obrázky v projektu budou shodné s tímto. Přejete si pokračovat?
 0 - logging disabled
-
+Logování vypnuto
 tt_reload_input_file
 Znovu načtení zdrojového souboru s ohlášením změn provedených od posledného načtení. Toto je automaticky provedeno pro všechny zdrojové soubory před započetím rozstříhání.
 tt_facing_select_east
@@ -186,13 +186,13 @@ Umístění vytvořeného *.png souboru
 Datfile Properties
 Vlastnosti *.dat souboru
 &Help
-
+Nápověda
 Use system default location
 
 FrontImage
 Přední obrázek
 ERROR: Failed to load project!
-
+Chyba: Projekt se nepodařilo načíst!
 Language:
 Jazyk:
 224
@@ -224,7 +224,7 @@ Vyberte umístění kam bude uloženo...
 Close
 Zavřít
 Project was loaded successfully
-
+Projekt načten
 Save Project &As
 Uložit projekt jako
 tt_facing_enable_select
@@ -232,9 +232,9 @@ Povolit více směrů - nutné pro obdélníkové budovy
 Current project has changed
 Projekt změněn
 Default paksize for new projects:
-
+Výchozí velikost grafiky nových projektů
 New project created
-
+Projekt vytvořen
 &About TileCutter
 O TileCutteru..
 tt_menu_file_new
@@ -244,7 +244,7 @@ Obnovit polohu stříhací matrice
 tt_pak_file_location
 Zobrazit umístění, kam bude *.pak soubor uložen
 Same File For All &Images
-
+Jeden soubor pro všechny obrázky
 48
 48
 tt_browse_png_file
@@ -272,15 +272,15 @@ Změnit kouř
 Choose a project file to open...
 Vyberte projekt k otevření
 &Tools
-
+Nástroje
 tt_facing_select_west
 Zobrazit/upravit západní náhled budovy
 South
 Jih
 Path to makeobj binary:
-
+Cesta k MakeObj
 Logging verbosity level:
-
+Úroveň důkladnosti logování
 tt_config_logfile
 
 Source image location:
