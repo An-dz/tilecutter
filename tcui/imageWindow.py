@@ -123,7 +123,7 @@ class imageWindow(wx.Panel):
 
         # Setup image properties for mask generation
         # If direction is 1 or 3, then reverse x/y to take account of irregular buildings
-        if self.app.activeproject.direction in [1,3]:
+        if self.app.activeproject.direction() in [1,3]:
             x = self.app.activeproject.y()
             y = self.app.activeproject.x()
         else:
