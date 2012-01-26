@@ -3,9 +3,11 @@
 # TileCutter User Interface Module - preferencesDialog
 #
 
-# Copyright © 2010-2011 Timothy Baldock. All Rights Reserved.
+# Copyright © 2010-2012 Timothy Baldock. All Rights Reserved.
 
 import wx, imres
+
+import tcui
 
 # Utility functions
 import translator
@@ -26,13 +28,17 @@ class preferencesDialog(wx.Dialog):
 #        size = (300,200)
         wx.Dialog.__init__(self, parent, wx.ID_ANY, "", (-1,-1), (-1,-1))
 
+        self.ftbox = tcui.fileTextBox(parent)
+
         # Overall panel sizer
         self.v_sizer = wx.BoxSizer(wx.VERTICAL)
         self.sizer = wx.BoxSizer(wx.HORIZONTAL)
 
         # Path to makeobj
+        self.makeobj_sizer = wx.BoxSizer(wx.HORIZONTAL)
         self.makeobj_label = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
         self.makeobj_box = wx.TextCtrl(self, wx.ID_ANY, value="")
+        self.makeobj_filebrowse = wx.Button(self, wx.ID_ANY, label="")
 
         # Logfile location
         self.logfile_label = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
@@ -56,7 +62,10 @@ class preferencesDialog(wx.Dialog):
         self.v_sizer.Add((0,10))
         self.v_sizer.Add(self.makeobj_label, 0, wx.EXPAND)
         self.v_sizer.Add((0,3))
-        self.v_sizer.Add(self.makeobj_box, 0, wx.EXPAND)
+        self.makeobj_sizer.Add(self.makeobj_box, 1)
+        self.makeobj_sizer.Add((5,0))
+        self.makeobj_sizer.Add(self.makeobj_filebrowse, 0)
+        self.v_sizer.Add(self.makeobj_sizer, 0, wx.EXPAND)
 
         self.v_sizer.Add((0,15))
         self.v_sizer.Add(self.logfile_label, 0, wx.EXPAND)
@@ -85,6 +94,7 @@ class preferencesDialog(wx.Dialog):
 
         # Bind events
         self.makeobj_box.Bind(wx.EVT_TEXT, self.OnMakeobjTextChange, self.makeobj_box)
+        self.makeobj_filebrowse.Bind(wx.EVT_BUTTON, self.OnBrowseMakeobj, self.makeobj_filebrowse)
         self.logfile_box.Bind(wx.EVT_TEXT, self.OnLogfileTextChange, self.logfile_box)
         self.logfile_checkbox.Bind(wx.EVT_CHECKBOX, self.OnLogfileDefaultToggle, self.logfile_checkbox)
         self.paksize_select.Bind(wx.EVT_COMBOBOX, self.OnPaksizeSelect, self.paksize_select)
@@ -103,6 +113,8 @@ class preferencesDialog(wx.Dialog):
         self.SetLabel(gt("Preferences"))
         self.makeobj_label.SetLabel(gt("Path to makeobj binary:"))
         self.makeobj_box.SetToolTipString(gt("Relative paths are interpreted relative to TileCutter's start location"))
+        self.makeobj_filebrowse.SetLabel(gt("Browse..."))
+        self.makeobj_filebrowse.SetToolTipString(gt("tt_browse_makeobj_location"))
         self.logfile_label.SetLabel(gt("Location of TileCutter log file:"))
         self.logfile_box.SetToolTipString(gt("tt_config_logfile"))
         self.logfile_checkbox.SetLabel(gt("Use system default location"))
@@ -164,6 +176,18 @@ class preferencesDialog(wx.Dialog):
         if config.path_to_makeobj != self.makeobj_box.GetValue():
             config.path_to_makeobj = self.makeobj_box.GetValue()
             debug(u"tcui.PreferencesDialog: OnMakeobjTextChange - Preferences: Text changed in makeobj path entry box, new text: %s" % unicode(self.makeobj_box.GetValue()))
+
+    def OnBrowseMakeobj(self, e):
+        """Triggered when the browse button is clicked for the makeobj path"""
+        debug(u"tcui.ImageFileControl: OnBrowseMakeobj")
+        value = self.ftbox.filePickerDialog(config.path_to_makeobj, 
+                                            None, 
+                                            gt("Select a makeobj binary to use"),
+                                            "", 
+                                            wx.FD_OPEN|wx.FD_FILE_MUST_EXIST)
+        debug(u"tcui.ImageFileControl: OnBrowseMakeobj - Path selected by user is: %s" % value)
+        config.path_to_makeobj = value
+        self.makeobj_box.SetValue(value)
 
     def OnLogfileTextChange(self, e):
         """Triggered when user changes log file location"""
