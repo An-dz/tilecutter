@@ -1,0 +1,18 @@
+TileCutter README
+
+
+-- Build instructions --
+
+Dependencies:
+Python 2.7+
+wxPython 2.8+
+
+
+-- Mac OSX --
+
+py2app required (0.6.4+)
+
+
+-- Windows --
+
+py2exe required ()
