@@ -1,3 +1,17 @@
+# TODO 0.6
+FIX - Source version works again, remove FileControl from tcui init.py  - Done
+FIX - Irregular buildings work again                                    - Needs test
+ADD - Remember last folder location for open/save files
+FIX - Z dimensions now permitted up to 16 (from previous max of 4)      - Done
+ADD - Browse dialog for makeobj path selection
+
+# TODO 0.6.1
+Copyright notice for images
+Should be able to show up to 4 lines on a paksize height black border at bottom
+Saved in tcp file
+Edited via another window
+
+
 # TODO 1.0
 Padding/general layout optimisation                                                   
 -> Layout optimisation for mac                                                        
@@ -5,12 +19,12 @@ Padding/general layout optimisation
 -> Implement UI for each platform seperately to allow for complete control over layout?
 Add tick/cross functionality to input boxes                                           
 Replace current yellow text-highlighting on windows with tick/cross function
-Extend tick/cross functionality to provide more info                                  - POSTPONE 0.6
+Extend tick/cross functionality to provide more info                                  - POSTPONE 0.7
 
-Produce msi installer for windows                                                  - 0.6
+Produce msi installer for windows                                                  - 0.7
 Add unit tests for cutting engine
 
-JSON serialisation of project information with forward-compatible scheme for representing data
+JSON serialisation of project information with forward-compatible scheme for representing data      - DONE
 
 Completely remove dependancy on wx for running in CLI mode
  Need to split App into tcproject/tc.py bits and the UI part
@@ -57,11 +71,6 @@ Standalone script that does the same file registrations as the installer
 Drag+drop support for files onto main window
 Logging - correct place                                                                             - Done
 Config - correct place                                                                              - Done
-
-Copyright notice for images
-Should be able to show up to 4 lines on a paksize height black border at bottom
-Saved in tcp file
-Edited via another window
 
 Add a status bar, displaying status information about the program
 Make icons in main menu much bigger (double size)
@@ -202,8 +211,8 @@ Do the project save/load/new etc. and management functionality (using pickle & h
   This stuff will likely go into tcproject
 
 
-Produce frames picker control                                                         - POSTPONE 0.6
-Dialog to set program options                                                         - 0.7
+Produce frames picker control                                                         - POSTPONE
+Dialog to set program options                                                         - DONE
 Program settings, load from a config file (using json)                                - DONE
 Move all static variables and program option variables into config class              - DONE
 Offset/Mask control - internal functions, click modifies model & triggers redrawing   - DONE
@@ -226,7 +235,7 @@ Source image control (needs current view context)                               
 
 # UI
 Move UI classes into a module to enhance loading speed                                - DONE
-Add display/direct edit boxes to the offset control                                   - 0.7
+Add display/direct edit boxes to the offset control                                   - 
 
 Needs much better error handling, add try/except clauses in critical places
 
@@ -248,8 +257,8 @@ Produce help documentation                                                      
 Dynamic mask generation + caching                                                     - DONE
 New cutting engine able to cope with all settings except frames                       - DONE
   -> Test this cutting engine in all circumstances                                    
-Full .dat editing capability                                                          - 0.6
-"Pretty" output mode                                                                  - 0.6
+Full .dat editing capability                                                          - 0.7
+"Pretty" output mode                                                                  - 0.7
 
 
 # Aims v.0.5
