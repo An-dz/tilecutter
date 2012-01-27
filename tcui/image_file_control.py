@@ -72,27 +72,6 @@ class ImageFileControl(wx.Panel):
         debug(u"tcui.ImageFileControl: update")
         # Setting these values should also cause text highlighting to occur
         self.path_box.ChangeValue(self.app.activeproject.active_image_path())
-#        self.highlight()
-
-#    def SetDependants(self, list):
-#        """When highlight method is called for this control, also call it for the controls in this list
-#        Should be used when the dependant controls rely on this one for their relative path info"""
-#        self.dependants = list
-#
-#    def highlight(self):
-#        """Highlight entry box text"""
-#        debug(u"file_control: highlight - highlighting %s entry box" % self.label)
-#        if self.relative != None:
-#            debug(u"file_control: highlight - highlight with relative, %s | %s" % (self.linked(), self.relative()))
-#            self.highlightText(self.path_box, self.linked(), self.relative())
-#        else:
-#            debug(u"file_control: highlight - highlight without relative, %s" % self.linked())
-#            self.highlightText(self.path_box, self.linked())
-#        if self.dependants:
-#            debug(u"file_control: highlight - highlighting dependants: %s" % (unicode(self.dependants)))
-#            for i in self.dependants:
-#                i.highlight()
-
 
     def OnTextChange(self, e):
         """Triggered when the text in the path box is changed"""
@@ -100,7 +79,6 @@ class ImageFileControl(wx.Panel):
         if self.app.activeproject.active_image_path() != self.path_box.GetValue():
             self.app.activeproject.active_image_path(self.path_box.GetValue())
             debug(u"tcui.ImageFileControl: OnTextChange - Text changed in Active Image entry box, new text: %s" % unicode(self.path_box.GetValue()))
-#            self.highlight()
             # Refresh image in parent window
             self.parent.refresh_if_valid()
 

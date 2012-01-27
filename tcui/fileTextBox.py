@@ -14,6 +14,9 @@ import wx, os
 import logger
 debug = logger.Log()
 
+import config
+config = config.Config()
+
 class fileTextBox(object):
     """Methods for text boxes displaying paths"""
     def __init__(self, parent):
@@ -39,6 +42,12 @@ class fileTextBox(object):
             # path which exists
             a = self.existingPath(path2)
             b = os.path.split(path1)[1]
+
+        # If path directory component empty, use passed-in "last" path as starting location
+        # rather than using default starting location
+        if path1 == u"" and config.last_save_path != u"" and os.path.exists(config.last_save_path):
+            a = config.last_save_path
+
         # Show the dialog
         pickerDialog = wx.FileDialog(self.parent, dialogText,
                                      a, b, dialogFilesAllowed, dialogFlags)
@@ -51,8 +60,12 @@ class fileTextBox(object):
                 # If this directory was joined to the filename we'd get "D:filename.tcp" rather than "D:\filename.tcp"
                 # So add an additional os.path.sep between the two
                 value = os.path.join(pickerDialog.GetDirectory() + os.path.sep, pickerDialog.GetFilename())
+                # Update last save path location (for next file browse action)
+                config.last_save_path = pickerDialog.GetDirectory() + os.path.sep
             else:
                 value = os.path.join(pickerDialog.GetDirectory(), pickerDialog.GetFilename())
+                # Update last save path location (for next file browse action)
+                config.last_save_path = pickerDialog.GetDirectory()
             relative = self.comparePaths(value, path2)
             pickerDialog.Destroy()
             return relative

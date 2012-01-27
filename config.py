@@ -36,17 +36,18 @@ class Config(object):
         "window_position": [-1,-1],
 
         "last_save_path": u"",
+        "last_image_path": u"",
 
         "negative_offset_allowed": False,
-        "default_image_path": u"test.png",
+        "default_image_path": u"",
 
-        "path_to_makeobj": u"./makeobj",
+        "path_to_makeobj": u"",
         "write_dat": True,
 
         "default_language": u"English",
         }
     internals = {
-        "version": u"0.5.9",
+        "version": u"0.6.0",
         "choicelist_paksize": [16,32,48,64,80,96,112,128,144,160,176,192,208,224,240],
         "choicelist_views": [1,2,4],
         "choicelist_dims": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],
