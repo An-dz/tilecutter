@@ -33,46 +33,128 @@ class TCMasks:
 class TCMaskSet:
     """A set of cutting masks, 1bit bitmaps"""
     def __init__(self, p):
-        # -1 -> Nothing (fully masked)
-        # 0 -> Tile only
-        # 1 -> Tile and top-right
-        # 2 -> Tile and top-left
-        # 3 -> Tile and all top
-        # 4 -> Right side only
-        # 5 -> Left side only
-        # 6 -> Everything (no mask)
         self.masks = {}
-        self.masks[-1] = self.makeMaskFromPoints([], p)
-        self.masks[0] = self.makeMaskFromPoints(
-            [(p/2-1,p-1),(0,p/4+p/2),(p/2-1,p/2+1),(p/2,p/2+1),(p-1,p/4+p/2),(p/2,p-1)], p)
-        self.masks[1] = self.makeMaskFromPoints(
-            [(p/2-1,p-1),(0,p/4+p/2),(p/2-1,p/2+1),(p/2,p/2+1),(p/2,0),(p-1,0),(p-1,p/4+p/2),(p/2,p-1)], p)
-        self.masks[2] = self.makeMaskFromPoints(
-            [(p/2-1,p-1),(0,p/4+p/2),(0,0),(p/2-1,0),(p/2-1,p/2+1),(p/2,p/2+1),(p-1,p/4+p/2),(p/2,p-1)], p)
-        self.masks[3] = self.makeMaskFromPoints(
-            [(p/2-1,p-1),(0,p/4+p/2),(0,0),(p-1,0),(p-1,p/4+p/2),(p/2,p-1)], p)
+        # -1 -> Nothing (fully masked)
+        a = self.init_new_mask(p)
+        self.fill_left(a)
+        self.fill_right(a)
+        a.SaveFile("mask_-1.png", wx.BITMAP_TYPE_PNG)
+        self.masks[-1] = a.ConvertToBitmap()
 
-        self.masks[4] = self.makeMaskFromPoints(
-            [(p-1,0),(p-1,p-1),(p/2,p-1),(p/2,0)], p)
-        self.masks[5] = self.makeMaskFromPoints(
-            [(0,0),(p/2-1,0),(p/2-1,p-1),(0,p-1)], p)
-        self.masks[6] = self.makeMaskFromPoints(
-            [(0,0),(p-1,0),(p-1,p-1),(0,p-1)], p)
+        # 0 -> Tile only
+        a = self.init_new_mask(p)
+        self.fill_bottom_triangles(a)
+        self.fill_top_left(a)
+        self.fill_top_right(a)
+        a.SaveFile("mask_00.png", wx.BITMAP_TYPE_PNG)
+        self.masks[0] = a.ConvertToBitmap()
 
-    def makeMaskFromPoints(self, points, p):
-        """Make a mask from a sequence of points"""
-        # Init the DC, for monochrome bitmap/mask white pen/brush draws the bits which are see-through
-        dc = wx.MemoryDC()
-        b = wx.EmptyBitmap(p,p)
-        dc.SelectObject(b)
-        dc.SetPen(wx.BLACK_PEN)
-        dc.SetBrush(wx.BLACK_BRUSH)
-        dc.DrawPolygon([(0,0),(p,0),(p,p),(0,p)])
-        dc.SetPen(wx.WHITE_PEN)
-        dc.SetBrush(wx.WHITE_BRUSH)
-        dc.DrawPolygon(points)
-        dc.SelectObject(wx.NullBitmap)
+        # 1 -> Tile and top-right
+        a = self.init_new_mask(p)
+        self.fill_bottom_triangles(a)
+        self.fill_top_left(a)
+        a.SaveFile("mask_01.png", wx.BITMAP_TYPE_PNG)
+        self.masks[1] = a.ConvertToBitmap()
+
+        # 2 -> Tile and top-left
+        a = self.init_new_mask(p)
+        self.fill_bottom_triangles(a)
+        self.fill_top_right(a)
+        a.SaveFile("mask_02.png", wx.BITMAP_TYPE_PNG)
+        self.masks[2] = a.ConvertToBitmap()
+
+        # 3 -> Tile and all top
+        a = self.init_new_mask(p)
+        self.fill_bottom_triangles(a)
+        a.SaveFile("mask_03.png", wx.BITMAP_TYPE_PNG)
+        self.masks[3] = a.ConvertToBitmap()
+
+        # 4 -> Right side only
+        a = self.init_new_mask(p)
+        self.fill_left(a)
+        a.SaveFile("mask_04.png", wx.BITMAP_TYPE_PNG)
+        self.masks[4] = a.ConvertToBitmap()
+
+        # 5 -> Left side only
+        a = self.init_new_mask(p)
+        self.fill_right(a)
+        a.SaveFile("mask_05.png", wx.BITMAP_TYPE_PNG)
+        self.masks[5] = a.ConvertToBitmap()
+
+        # 6 -> Everything (no mask)
+        a = self.init_new_mask(p)
+        a.SaveFile("mask_06.png", wx.BITMAP_TYPE_PNG)
+        self.masks[6] = a.ConvertToBitmap()
+
+    def init_new_mask(self, p):
+        """Create a blank new cutting mask"""
+
+        a = wx.EmptyImage(p, p)
+        for i in range(p):
+            for j in range(p):
+                a.SetRGB(i, j, 255, 255, 255)
+
+        return a
+
+    def fill_bottom_triangles(self, b):
+        """Fill in the bottom left and right triangles for a cutting mask"""
+        p = b.GetWidth()
+        for y in range(0, p/4):
+            for x in range(0, y * 2):
+                b.SetRGB(x, p/2 + p/4 + y, 0, 0, 0)
+
+        for y in range(0, p/4):
+            for x in range(p - y * 2, p):
+                b.SetRGB(x, p/2 + p/4 + y, 0, 0, 0)
+
         return b
+        
+    def fill_left(self, b):
+        """Fill in the entire left half"""
+        p = b.GetWidth()
+ 
+        for y in range(0, p):
+            for x in range(0, p/2):
+                b.SetRGB(x, y, 0, 0, 0)
+
+        return b
+
+    def fill_right(self, b):
+        """Fill in the entire right half"""
+        p = b.GetWidth()
+ 
+        for y in range(0, p):
+            for x in range(p/2, p):
+                b.SetRGB(x, y, 0, 0, 0)
+
+        return b
+
+    def fill_top_left(self, b):
+        """Fill top-left section of a cutting mask"""
+        p = b.GetWidth()
+        for y in range(0, p/4):
+            for x in range(0, y * 2):
+                b.SetRGB(x, p/2 + p/4 - y, 0, 0, 0)
+ 
+        for y in range(0, p/2 + 1):
+            for x in range(0, p/2):
+                b.SetRGB(x, y, 0, 0, 0)
+
+        return b
+
+    def fill_top_right(self, b):
+        """Fill top-right section of a cutting mask"""
+        p = b.GetWidth()
+        for y in range(0, p/4):
+            for x in range(p - y * 2, p):
+                b.SetRGB(x, p/2 + p/4 - y, 0, 0, 0)
+ 
+        for y in range(0, p/2 + 1):
+            for x in range(p/2, p):
+                b.SetRGB(x, y, 0, 0, 0)
+
+        return b
+
     def __getitem__(self, key):
         return wx.Mask(self.masks[key])
 
