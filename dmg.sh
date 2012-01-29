@@ -1,12 +1,12 @@
 #!/bin/sh
 
+# Size in k (TODO: read size of .dmg and use this)
 size=102400
-source=../dist/osx_dist_0.5.6.4/
+source=../dist/osx_dist_0.6.0/                              # TODO: Version number
 title=TileCutter
-backgroundPictureName=tilecutter_dmg_background.png
 applicationName=TileCutter.app
 finalDMGPath=../dist/
-finalDMGName=TileCutter_osx_0.5.6.4.dmg
+finalDMGName=TileCutter_osx_0.6.0.dmg                       # TODO: Version number
 
 hdiutil create -srcfolder ${source} -volname "${title}" -fs HFS+ \
       -fsargs "-c c=64,a=16,e=16" -format UDRW -size ${size}k pack.temp.dmg
@@ -35,7 +35,6 @@ echo '
                 set icon size to 128
                 set arrangement to not arranged
                 set text size to 14
-#                set background picture to file "'${backgroundPictureName}'"
             end tell
 
             # 128px wide for icon, 400px wide total, 144px padding, split into 4 is 36px, 72px, 36px

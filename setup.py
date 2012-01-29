@@ -4,7 +4,7 @@
 # TileCutter - Distribution build tools
 #
 
-# Copyright © 2008-2011 Timothy Baldock. All Rights Reserved.
+# Copyright © 2008-2012 Timothy Baldock. All Rights Reserved.
 #
 
 from distutils.core import setup
@@ -129,7 +129,7 @@ if len(sys.argv) >= 2 and sys.argv[1] == "py2exe":
         "script":"tilecutter.py",
         "windows":"tilecutter.py",
         "icon_resources": [(1, "graphics/tilecutter.ico"),(42, "graphics/tcp.ico")],
-        "copyright": "2008-2011 Timothy Baldock. All Rights Reserved.",
+        "copyright": "2008-2012 Timothy Baldock. All Rights Reserved.",
         },
     ]
 #    options["data_files"] += [("", ["../dist/msvcp71.dll"]]
@@ -183,7 +183,7 @@ if len(sys.argv) >= 2 and sys.argv[1] == "py2app":
     plist = {
                 "CFBundleIdentifier": u"uk.me.entropy.tilecutter",
                 "CFBundleGetInfoString": u"Simutrans Building Editor",
-                "NSHumanReadableCopyright": u"Copyright © 2008-2011 Timothy Baldock. All Rights Reserved.",
+                "NSHumanReadableCopyright": u"Copyright © 2008-2012 Timothy Baldock. All Rights Reserved.",
                 "CFBundleDocumentTypes": [
                     {
                         "CFBundleTypeName": u"TileCutter Project Document", 
@@ -213,6 +213,7 @@ if len(sys.argv) >= 2 and sys.argv[1] == "py2app":
     options["app"] = ["tilecutter.py"]
     options["options"] = {
         "py2app": {
+            "arch": "i386",
             "dist_dir": dist_dir,
             "argv_emulation": True,
             "iconfile": "graphics/tilecutter.icns",
