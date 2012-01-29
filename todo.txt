@@ -4,9 +4,10 @@ FIX - Infinite loop in dialog                                           - Done
 # Release 0.6.0
 FIX - Source version works again, remove FileControl from tcui init.py  - Done
 FIX - Irregular buildings work again                                    - Needs test
-ADD - Remember last folder location for open/save files                 - Done (needs testing)
+ADD - Remember last folder location for open/save files                 - Done
 FIX - Z dimensions now permitted up to 16 (from previous max of 4)      - Done
 ADD - Browse dialog for makeobj path selection                          - Done
+FIX - Cutting masks incorrectly generated on OSX platform               - Done
 
 
 # TODO 0.6.2
