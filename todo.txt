@@ -1,11 +1,15 @@
-# TODO 0.6
+# Release 0.6.1
+FIX - Infinite loop in dialog                                           - Done
+
+# Release 0.6.0
 FIX - Source version works again, remove FileControl from tcui init.py  - Done
 FIX - Irregular buildings work again                                    - Needs test
 ADD - Remember last folder location for open/save files                 - Done (needs testing)
 FIX - Z dimensions now permitted up to 16 (from previous max of 4)      - Done
 ADD - Browse dialog for makeobj path selection                          - Done
 
-# TODO 0.6.1
+
+# TODO 0.6.2
 Copyright notice for images
 Should be able to show up to 4 lines on a paksize height black border at bottom
 Saved in tcp file
