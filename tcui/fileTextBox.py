@@ -45,8 +45,13 @@ class fileTextBox(object):
 
         # If path directory component empty, use passed-in "last" path as starting location
         # rather than using default starting location
+
         if path1 == u"" and config.last_save_path != u"" and os.path.exists(config.last_save_path):
             a = config.last_save_path
+
+        debug(u"Path a is: %s and path b is: %s" % (a, b))
+
+        # Check path components exist
 
         # Show the dialog
         pickerDialog = wx.FileDialog(self.parent, dialogText,
@@ -159,7 +164,11 @@ class fileTextBox(object):
             if os.path.split(os.path.split(p)[0])[1] != "":
                 p = os.path.split(p)[0]
         while not os.path.exists(p):
+            q = p
             p = os.path.split(p)[0]
+            # Avoid infinite loop
+            if p == q:
+                return u""
         return p
 
     def comparePaths(self, p1, p2):
