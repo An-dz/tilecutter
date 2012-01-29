@@ -3,7 +3,7 @@
 # TileCutter Cutting Engine
 #
 
-# Copyright © 2008-2011 Timothy Baldock. All Rights Reserved.
+# Copyright © 2008-2012 Timothy Baldock. All Rights Reserved.
 
 
 import wx
@@ -38,7 +38,7 @@ class TCMaskSet:
         a = self.init_new_mask(p)
         self.fill_left(a)
         self.fill_right(a)
-        a.SaveFile("mask_-1.png", wx.BITMAP_TYPE_PNG)
+        #a.SaveFile("mask_-1.png", wx.BITMAP_TYPE_PNG)
         self.masks[-1] = a.ConvertToBitmap()
 
         # 0 -> Tile only
@@ -46,49 +46,48 @@ class TCMaskSet:
         self.fill_bottom_triangles(a)
         self.fill_top_left(a)
         self.fill_top_right(a)
-        a.SaveFile("mask_00.png", wx.BITMAP_TYPE_PNG)
+        #a.SaveFile("mask_00.png", wx.BITMAP_TYPE_PNG)
         self.masks[0] = a.ConvertToBitmap()
 
         # 1 -> Tile and top-right
         a = self.init_new_mask(p)
         self.fill_bottom_triangles(a)
         self.fill_top_left(a)
-        a.SaveFile("mask_01.png", wx.BITMAP_TYPE_PNG)
+        #a.SaveFile("mask_01.png", wx.BITMAP_TYPE_PNG)
         self.masks[1] = a.ConvertToBitmap()
 
         # 2 -> Tile and top-left
         a = self.init_new_mask(p)
         self.fill_bottom_triangles(a)
         self.fill_top_right(a)
-        a.SaveFile("mask_02.png", wx.BITMAP_TYPE_PNG)
+        #a.SaveFile("mask_02.png", wx.BITMAP_TYPE_PNG)
         self.masks[2] = a.ConvertToBitmap()
 
         # 3 -> Tile and all top
         a = self.init_new_mask(p)
         self.fill_bottom_triangles(a)
-        a.SaveFile("mask_03.png", wx.BITMAP_TYPE_PNG)
+        #a.SaveFile("mask_03.png", wx.BITMAP_TYPE_PNG)
         self.masks[3] = a.ConvertToBitmap()
 
         # 4 -> Right side only
         a = self.init_new_mask(p)
         self.fill_left(a)
-        a.SaveFile("mask_04.png", wx.BITMAP_TYPE_PNG)
+        #a.SaveFile("mask_04.png", wx.BITMAP_TYPE_PNG)
         self.masks[4] = a.ConvertToBitmap()
 
         # 5 -> Left side only
         a = self.init_new_mask(p)
         self.fill_right(a)
-        a.SaveFile("mask_05.png", wx.BITMAP_TYPE_PNG)
+        #a.SaveFile("mask_05.png", wx.BITMAP_TYPE_PNG)
         self.masks[5] = a.ConvertToBitmap()
 
         # 6 -> Everything (no mask)
         a = self.init_new_mask(p)
-        a.SaveFile("mask_06.png", wx.BITMAP_TYPE_PNG)
+        #a.SaveFile("mask_06.png", wx.BITMAP_TYPE_PNG)
         self.masks[6] = a.ConvertToBitmap()
 
     def init_new_mask(self, p):
         """Create a blank new cutting mask"""
-
         a = wx.EmptyImage(p, p)
         for i in range(p):
             for j in range(p):
@@ -99,6 +98,7 @@ class TCMaskSet:
     def fill_bottom_triangles(self, b):
         """Fill in the bottom left and right triangles for a cutting mask"""
         p = b.GetWidth()
+
         for y in range(0, p/4):
             for x in range(0, y * 2):
                 b.SetRGB(x, p/2 + p/4 + y, 0, 0, 0)
