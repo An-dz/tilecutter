@@ -2,11 +2,11 @@
 
 # Size in k (TODO: read size of .dmg and use this)
 size=102400
-source=../dist/osx_dist_0.6.0/                              # TODO: Version number
+source=../dist/osx_dist_0.6.1/                              # TODO: Version number
 title=TileCutter
 applicationName=TileCutter.app
 finalDMGPath=../dist/
-finalDMGName=TileCutter_osx_0.6.0.dmg                       # TODO: Version number
+finalDMGName=TileCutter_osx_0.6.1.dmg                       # TODO: Version number
 
 hdiutil create -srcfolder ${source} -volname "${title}" -fs HFS+ \
       -fsargs "-c c=64,a=16,e=16" -format UDRW -size ${size}k pack.temp.dmg
