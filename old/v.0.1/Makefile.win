@@ -1,0 +1,36 @@
+# Project: TileCutter
+# Makefile created by Dev-C++ 4.9.9.2
+
+CPP  = g++.exe -D__DEBUG__
+CC   = gcc.exe -D__DEBUG__
+WINDRES = windres.exe
+RES  = TileCutter_private.res
+OBJ  = main.o rdwr_png.o $(RES)
+LINKOBJ  = main.o rdwr_png.o $(RES)
+LIBS =  -L"C:/Dev-Cpp/lib" -L"C:/GTK+/lib" -L"C:/GTK+/libpng/lib" C:/GTK+/lib/cairo.lib C:/GTK+/lib/gdk_pixbuf-2.0.lib C:/GTK+/lib/gdk-win32-2.0.lib C:/GTK+/lib/glib-2.0.lib C:/GTK+/lib/gmodule-2.0.lib C:/GTK+/lib/gobject-2.0.lib C:/GTK+/lib/gthread-2.0.lib C:/GTK+/lib/gtk-win32-2.0.lib C:/GTK+/lib/libatk-1.0.dll.a C:/GTK+/lib/libcairo.dll.a C:/GTK+/lib/libgdk_pixbuf-2.0.dll.a C:/GTK+/lib/libgdk-win32-2.0.dll.a C:/GTK+/lib/libglib-2.0.dll.a C:/GTK+/lib/libgmodule-2.0.dll.a C:/GTK+/lib/libgobject-2.0.dll.a C:/GTK+/lib/libgthread-2.0.dll.a C:/GTK+/lib/libgtk-win32-2.0.dll.a C:/GTK+/lib/libpango-1.0.dll.a C:/GTK+/lib/libpangocairo-1.0.dll.a C:/GTK+/lib/libpangoft2-1.0.dll.a C:/GTK+/lib/libpangowin32-1.0.dll.a C:/GTK+/lib/pango-1.0.lib C:/GTK+/lib/pangocairo-1.0.lib C:/GTK+/lib/pangoft2-1.0.lib C:/GTK+/lib/pangowin32-1.0.lib -mms-bitfields C:/GTK+/libpng/lib/libpng.lib C:/GTK+/libpng/lib/zdll.lib  -g3 
+INCS =  -I"C:/GTK+/include"  -I"C:/GTK+/include/atk-1.0"  -I"C:/GTK+/include/cairo"  -I"C:/GTK+/include/gtk-2.0"  -I"C:/GTK+/include/pango-1.0"  -I"C:/GTK+/include/glib-2.0"  -I"C:/GTK+/lib/glib-2.0/include"  -I"C:/GTK+/lib/gtk-2.0/include"  -I"C:/Dev-Cpp/include"  -I"C:/GTK+/libpng/include" 
+CXXINCS =  -I"C:/Dev-Cpp/lib/gcc/mingw32/3.4.2/include"  -I"C:/Dev-Cpp/include/c++/3.4.2/backward"  -I"C:/Dev-Cpp/include/c++/3.4.2/mingw32"  -I"C:/Dev-Cpp/include/c++/3.4.2"  -I"C:/Dev-Cpp/include"  -I"C:/GTK+/include"  -I"C:/GTK+/include/atk-1.0"  -I"C:/GTK+/include/cairo"  -I"C:/GTK+/include/gtk-2.0"  -I"C:/GTK+/include/pango-1.0"  -I"C:/GTK+/include/glib-2.0"  -I"C:/GTK+/lib/glib-2.0/include"  -I"C:/GTK+/lib/gtk-2.0/include"  -I"C:/GTK+/libpng/include" 
+BIN  = TileCutter.exe
+CXXFLAGS = $(CXXINCS) -mms-bitfields   -g3
+CFLAGS = $(INCS) -mms-bitfields   -g3
+RM = rm -f
+
+.PHONY: all all-before all-after clean clean-custom
+
+all: all-before TileCutter.exe all-after
+
+
+clean: clean-custom
+	${RM} $(OBJ) $(BIN)
+
+$(BIN): $(OBJ)
+	$(CC) $(LINKOBJ) -o "TileCutter.exe" $(LIBS)
+
+main.o: main.c
+	$(CC) -c main.c -o main.o $(CFLAGS)
+
+rdwr_png.o: rdwr_png.c
+	$(CC) -c rdwr_png.c -o rdwr_png.o $(CFLAGS)
+
+TileCutter_private.res: TileCutter_private.rc 
+	$(WINDRES) -i TileCutter_private.rc --input-format=rc -o TileCutter_private.res -O coff 

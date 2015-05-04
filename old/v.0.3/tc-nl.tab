@@ -1,0 +1,537 @@
+﻿Nederlands
+#
+# ----------------------------------------------------------------------------
+#	** Dutch translation file for TileCutter **
+#	
+#
+#	File Encoding: UTF-8
+#
+#	Version 0.3a (18-July-2006) - Timothy Baldock
+#
+#	* Key is denoted by a preceeding "~", translation should be on the line below
+#	* Entries with tt before them are tooltips
+#	* Where "&" appears in a string, the next character will be a control character,
+#	  "%i" indicates a number goes here, "%s" indicates a program-generated string goes here
+#	  these are required!! The key should give an indication of how they work...
+#	* The first line of this file **must** be the translated name of the language for
+#	  the file e.g. "English" for English, or "Deutsch" for German
+#
+# ----------------------------------------------------------------------------
+# General Stuff
+~Ok
+Ok
+#
+# ----------------------------------------------------------------------------
+# Colour Picker Dialog
+~Mapcolour Palette
+Kleuren palette
+~Pick a colour:
+Kies een kleur:
+~Use this colour
+Gebruik deze kleur
+#
+# ----------------------------------------------------------------------------
+# Dat edit dialog
+~Edit .dat information
+Wijzig .dat informatie
+~Building
+Gebouw
+~Factory
+Fabriek
+~Other
+Overige Objecten
+~Global Options:
+Algemene Opties:
+~Object Type:
+Object type:
+~ttObject Type
+Selecteer het type object --gebouw, fabriek of overige objecten--
+~Name:
+Naam:
+~ttName
+Naam van  het gebouw, deze mag geen spaties bevatten
+~Copyright:
+Copyright:
+~ttCopyright
+Naam van de auteur (jij!)
+~Introduced:
+Object komt beschikbaar in:
+~ttIntroMonth
+Introductie-maand van het object  
+~ttIntroYear
+Introductie-jaar van het object
+~Retires:
+Object niet meer beschikbaar vanaf:
+~ttRetiresMonth
+Maand dat het object niet meer beschikbaar is
+~ttRetiresYear
+Jaar dat het object niet meer beschikbaar is
+~Level:
+Level:
+~ttLevel
+'Level' waarde van het gebouw, deze setting is afhankelijk van het type gebouw
+~Level Info:
+Level Info:
+~No info
+'No Info' setting
+~ttNo info
+Selecteer deze optie als je niet wilt dat het 'Info' popup window verschijnt voor dit object
+~No Construction
+'No Construction' setting
+~ttNo Construction
+Selecteer deze optie als je niet wilt dat de "constructie-site" getoond wordt tijdens het bouwen van het gebouw
+#
+# ----------------------------------------------------------------------------
+# Level indicator
+~Level not set
+Level niet opgegeven
+~Type not set
+Type niet opgegeven
+~Level not supported\nfor this object type
+Level niet ondersteund\nvoor dit type object
+~Capacity: %s
+Capaciteit: %s
+~moncurPassenger level: %s\nMail level: %s
+Passagiers level: %s\nPost level; %s
+~Upgrade Stage: %s
+Upgrade Niveau: %s
+~resPassenger level: %s\nMail level: %s
+Passagiers level: %s\nPost level; %s
+~comPassenger level: %s\nMail level: %s
+Passagiers level: %s\nPost level; %s
+~indPassenger level: %s\nMail level: %s
+Passagiers level: %s\nPost level; %s
+~facPassenger level: %s\nMail level: %s
+Passagiers level: %s\nPost level; %s
+~n/a
+niet beschikbaar
+#
+# ----------------------------------------------------------------------------
+# Building dat stuff
+~Type:
+Type:
+~ttType
+Bepaald het type gebouw
+~buiLocation:
+Locatie:
+~ttbuiLocation
+Locatie van het gebouw --in een stad (stad) of buiten de stad (land)-- 
+~buiChance:
+Kans:
+~ttbuiChance
+De kans dat een gebouw daadwerkelijk gebouwd wordt
+~Build Time:
+Bouwtijdstip:
+~ttBuild Time
+Wanneer (bij welk inwonersaantal) moet dit object gebouwd worden?
+~Is Extension Building
+Gebouw is een uitbreiding
+~ttIs Extension Building
+Selecteer deze optie als dit gebouw een uitbreiding voor een 'station'
+~Enables:
+Activeer:
+~EnablesPax
+Passagiers
+~ttEnablesPax
+Selecteer deze optie als dit 'station' passagiers accepteert
+~EnablesMail
+Post
+~ttEnablesMail
+Selecteer deze optie als dit 'station' post accepteert
+~EnablesGoods
+Goederen
+~ttEnablesGoods
+Selecteer deze optie als dit 'station' goederen accepteert
+#
+# ----------------------------------------------------------------------------
+# Factory dat stuff
+~facLocation:
+Locatie:
+~ttfacLocation
+Locatie van de fabriek --in een stad(stad), buiten de stad(land) of op het water(water) --
+~facChance:
+Kans:
+~ttfacChance
+De kans dat de fabriek daadwerkelijk gebouwd wordt
+~Productivity:
+Productie:
+~ttProductivity
+De productie aantallen voor de fabriek
+~Map Colour:
+Minimap kleur:
+~ttMap Colour
+De kleur die de fabriek zal hebben op de Minimap
+~ttMap Colour Display
+Klik hier om een Minimapkleur te kiezen
+~Input Goods:
+Grondstoffen:
+~ttInput Goods:
+Lijst met benodigde grondstoffen
+~ttAdd input good
+Grondstof toevoegen aan lijst met grondstoffen
+~ttRemove input good
+Verwijder de geselecteerde grondstof uit de lijst
+~ttMove input good up
+Grondstof naar boven verplaatsen
+~ttMove input good down
+Grondstof naar beneden verplaatsen
+~Output Goods:
+Producten:
+~ttOutput Goods:
+Lijst met gemaakte producten
+~ttAdd output good
+Product toevoegen aan lijst met producten
+~ttRemove output good
+Verwijder het geselecteerde product uit de lijst
+~ttMove output good up
+Product naar boven verplaatsen
+~ttMove output good down
+Product naar beneden verplaatsen
+~good Name:
+Naam:
+~ttgood Name:
+Naam van het product
+~good Capacity:
+Capaciteit:
+~ttgood Capacity:
+Opslagcapaciteit voor grondstof/product
+~good Factor:
+Factor:
+~ttgood Factor:
+Relatieve productiefactor voor deze grondstof
+~good Suppliers:
+Leveranciers:
+~ttgood Suppliers:
+Aantal leveranciers dat SimuTrans moet proberen te maken voor deze grondstof
+~Input Good #%s
+Grondstof #%s
+~Please add a good...
+Voeg een grondstof/product toe
+~&Save changes and close
+Bewaar wijzigingen en sluit scherm
+~Additional Options:
+Extra opties:
+~ttAdditional Options:
+Je kunt hier extra opties opgeven. Deze zullen toegevoegd worden aan het .dat bestand
+#
+# ----------------------------------------------------------------------------
+# Preferences dialog
+~Preferences
+Voorkeuren
+~PrefsLanguage:
+Taalinstelling:
+~ChangeLanguage...
+Wijzig
+~Note: Changing language requires restart
+Opm: Wijzigen van de taal vereist opnieuw starten van TileCutter
+~Select Language
+Selecteer Taal:
+~Makeobj:
+MakeObj:
+~Path to makeobj:
+Pad naar makeobj:
+~ttPath to makeobj:
+Pad naar makeobj.exe
+~ChangeMakeobj...
+Wijzig
+~Path to palette file:
+Pad naar palette bestand:
+~ttPath to palette:
+pad naar palette-bestand
+~palChange...
+Wijzig
+~palReset
+Reset
+#
+# ----------------------------------------------------------------------------
+# Save changes dialog
+~Document has been modified - do you wish to save your changes?
+Document is gewijzigd - wijzigingen opslaan?
+~Yes
+Ja
+~No
+Nee
+~Cancel
+Annuleren
+#
+# ----------------------------------------------------------------------------
+#About dialog
+~About TileCutter
+Over TileCutter
+~About Text1
+TileCutter is a building editor tool for Simutrans, for detailed help and instructions, see the readme.txt file, or check the website.
+~About Text2
+TileCutter is programmed in Python, and uses the wxPython and PIL libraries.
+~About Text3
+For more information, visit the TileCutter website:
+~About EndText
+TileCutter is free software. Programmed by Timothy Baldock.
+~CloseAbout
+Sluiten
+#
+# ----------------------------------------------------------------------------
+# Main window stuff
+# Frame number x of y
+~Frame %i of %i (%s)
+Frame %i van %i (%s)
+~North
+Noord
+~East
+Oost
+~South
+Zuid
+~West
+West
+~N
+N
+~E
+O
+~S
+Z
+~W
+W
+~ttdirectionselecterN
+Schakel naar aanzicht 'Noord'
+~ttdirectionselecterE
+Schakel naar aanzicht 'Oost'
+~ttdirectionselecterS
+Schakel naar aanzicht 'Zuid'
+~ttdirectionselecterW
+Schakel naar aanzicht 'West'
+~Source:
+Bronbestand:
+~ttinputpath
+Pad naar bronbestand van dit frame
+~Browse...
+Bladeren...
+~ttbrowseinputfile
+Blader naar bronbestand
+~R
+R
+~ttreloadinputfile
+Laad bronbestand opnieuw
+~paksize:
+pakgrootte:
+~ttpaksize:
+pakgrootte
+~Views:
+Aanzichten (N/O/Z/W)
+~ttViews:
+Aantal aanzichten dat het gebouw heeft
+~x dimension:
+x grootte ('tiles')
+~ttx dimension:
+aantal 'tiles' in x richting
+~y dimension:
+y grootte ('tiles')
+~tty dimension:
+aantal 'tiles' in y richting
+~z dimension:
+z grootte ('tiles')
+~ttz dimension:
+aantal 'tiles' in z richting
+~Auto
+Automatisch
+~ttAuto
+Automatisch grootte van huidig frame bepalen
+~ttOffsetUp
+Verplaats masker naar boven
+~ttOffsetLeft
+Verplaats masker naar links
+~ttOffsetRight
+Verplaats masker naar rechts
+~ttOffsetDown
+Verplaats masker naar beneden
+~Choose a Source file...
+Kies een bronbestand...
+#
+# ----------------------------------------------------------------------------
+# Accepted file formats string (doesn't do anything!)
+~PNG files (*.png)|*.png|Other Image files (*.bmp, *.gif, *.jpg)|*.bmp;*.gif;*.jpg
+PNG bestanden (*.png)|*.png|Overige grafische bestanden (*.bmp, *.gif, *.jpg)|*.bmp;*.gif;*.jpg
+~Frames:
+Frames:
+~ttAdd new frame
+Nieuw frame toevoegen
+~ttRemove selected frame
+Geselecteerde frame verwijderen
+~ttList of frames
+Lijst met frames
+~ttMove frame up
+Verplaats frame naar boven
+~ttMove frame down
+verplaats frame naar beneden
+#
+# ----------------------------------------------------------------------------
+# Frame display format
+~F - %i
+Frame - %i
+~Output .png:
+Opslaan .png:
+~ttOutputPNG
+Bestandslocatie voor het bewerkte .png bestand
+~Output .dat:
+Opslaan .dat:
+~ttOutputDAT
+Bestandslocatie voor het gegenereerde .dat bestand
+~Choose a location to output the dat file
+Kies een locatie voor het .dat bestand
+~Choose a location to output the png file
+Kies een locatie voor het bewerkte .png bestand
+#
+# ----------------------------------------------------------------------------
+# Menus
+~&New Project\tCtrl-N
+&Nieuw Project\tCtrl-N
+~&Open Project\tCtrl-O
+&Open Project\tCtrl-O
+~&Save Project\tCtrl-S
+&Bewaar Project\tCtrl-S
+~Save Project &As...\tCtrl-A
+Bewaar Project &Als...\tCtrl-A
+~&Export source\tCtrl-E
+&Exporteer bron\tCtrl-E
+~Ex&port .pak\tCtrl-K
+Ex&porteer .pak\tCtrl-K
+~E&xit\tCtrl-Q
+E&inde\tCtrl-Q
+~Choose a file to save to...
+Kies een bestand om op te slaan...
+~Choose a file to load...
+Kies een bestand om te laden...
+~.&dat file options\tCtrl-D
+.&dat file opties\tCtrl-D
+~&Smoke options\tCtrl-M
+&Rook opties\tCtrl-M
+~&Preferences\tCtrl-P
+&Voorkeuren\tCtrl-P
+~Help Topics\tCtrl-H
+Help Onderwerpen\tCtrl-H
+~&About TileCutter
+&Over TileCutter
+~&File
+&Bestand
+~&Recent
+&Recent
+~&Tools
+&Hulpmiddelen
+~&Help
+&Help
+#
+# ----------------------------------------------------------------------------
+# Language dialog
+~Note: You must restart the program for your changes to take effect!
+Let op: TileCutter moet opnieuw gestart worden om de wijzigingen te activeren!
+#
+# ----------------------------------------------------------------------------
+# Dates
+~January
+Januari
+~Febuary
+Februari
+~March
+Maart
+~April
+April
+~May
+Mei
+~June
+Juni
+~July
+Juli
+~August
+Augustus
+~September
+September
+~October
+Oktober
+~November
+November
+~December
+December
+#
+# ----------------------------------------------------------------------------
+# Type choices
+~carstop
+carstop - laadperron
+~busstop
+busstop - bushalte
+~station
+station - station
+~monorailstop
+monorailstop - monorailhalte
+~harbour
+harbour - haven (aan zee)
+~wharf
+wharf - haven (in kanaal)
+~airport
+airport - luchthaven
+~mon
+mon - monument
+~cur
+cur - toeristische attractie
+~tow
+tow - stadhuis
+~res
+res - huizen
+~com
+com - commerciele gebouwen
+~ind
+ind - industriele gebouwen
+~hall
+hall - hal / wachtruimte (verouderd!!)
+~post
+post - postkantoor (verouderd!!)
+~shed
+shed - schuur (verouderd!!)
+~misc
+misc - divers 
+~hq
+hq - hoofdkantoor
+~any
+any - iedere
+#
+# -- My Remarks --------------------------------------------------------------
+# While translating I bumped into some stuff...
+# Hope I didn't forget something, here it is:
+# ----------------------------------------------------------------------------
+# Lines added , not in empty base-translation file.
+# But hey, they're working.....
+~Select
+Selecteer
+~Building Options:
+Gebouw opties:
+~Factory Options:
+Fabriek opties:
+~Output Good #%s
+Product #%s
+# ----------------------------------------------------------------------------
+# Other Remarks
+# ----------------------------------------------------------------------------
+# Most of the menu-items (dropdown menu's) are not handled correctly
+#
+# Most of the strings defined in 'Level Indicator' section 
+# are not handled correctly
+#
+# ~y dimension: and ~z dimension: are also not handled correctly
+#
+# ~ttPath to makeobj: and ~ttPath to palette: are also not handled correctly
+#
+# Location dropdown box is not translatable (City, Land, Water)
+#
+# Shouldn't the following Textboxes be disabled by default and be enabled 
+# after Input/Output good are defined and when selected in corresponding listboxes?
+#   ~good Name:
+#   ~good Capacity:
+#   ~good Factor:
+#   ~good Suppliers:
+#
+# Just out of curiosity: Why are you listing hall, post and shed in list if building types
+# while they are deprecated? I'd say that someone who still wants to use them can add them in
+# additional options field.
+# ----------------------------------------------------------------------------
+# End of Remarks
+# Martin
+# ----------------------------------------------------------------------------
+#
+Endfile
