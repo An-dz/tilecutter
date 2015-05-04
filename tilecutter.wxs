@@ -210,7 +210,7 @@
                                   WorkingDirectory="APPLICATIONFOLDER" />
                         <util:InternetShortcut Id="sc_tilecutter_online_docs"
                                   Name="TileCutter Online Documentation"
-                                  Target="http://entropy.me.uk/tilecutter/docs/"/>
+                                  Target="http://timothy.baldock.me/tilecutter"/>
                         <RemoveFolder Id="ProgramMenuDir" On="uninstall" />
                         <RegistryValue Root="HKCU" Key="Software\TileCutter Project\TileCutter" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
                     </Component>
@@ -328,9 +328,9 @@
 
 <!--        <Property Id="ARPCOMMENTS">any comments</Property>
         <Property Id="ARPCONTACT">contact info</Property> -->
-        <Property Id="ARPHELPLINK">http://entropy.me.uk/tilecutter/docs/</Property>
-        <Property Id="ARPURLINFOABOUT">http://entropy.me.uk/tilecutter/</Property>
-        <Property Id="ARPURLUPDATEINFO">http://entropy.me.uk/tilecutter/download/</Property>
+        <Property Id="ARPHELPLINK">http://timothy.baldock.me/tilecutter</Property>
+        <Property Id="ARPURLINFOABOUT">http://timothy.baldock.me/tilecutter</Property>
+        <Property Id="ARPURLUPDATEINFO">http://timothy.baldock.me/tilecutter</Property>
         <Property Id="ARPREADME">path</Property>
 <!--        <Property Id="ARPSIZE">17658</Property> -->
         <Property Id="ARPPRODUCTICON">tilecutter.ico</Property>

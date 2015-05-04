@@ -65,8 +65,8 @@ options = {
     "description":      "Simutrans Building Editor",
     "long_description": "",
     "author":           "Timothy Baldock",
-    "author_email":     "tb@entropy.me.uk",
-    "url":              "http://entropy.me.uk/tilecutter",
+    "author_email":     "timothy@baldock.me",
+    "url":              "http://timothy.baldock.me/tilecutter",
     "zipfile":          "python\\library.zip",
     "data_files":       [
                          ("", ["licence.txt", "test.png"]),
