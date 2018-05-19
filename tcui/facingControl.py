@@ -70,7 +70,7 @@ class facingControl(wx.Panel):
         self.s_facing_select_west.Add(self.facing_select_west, 0)
 
         self.facing_enable_label = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_CENTER_HORIZONTAL)
-        self.facing_enable_select = wx.ComboBox(self, wx.ID_ANY, "", (-1, -1), (70, -1), "", wx.CB_READONLY)
+        self.facing_enable_select = wx.ComboBox(self, wx.ID_ANY, "", (-1, -1), (70, -1), style=wx.CB_READONLY)
 
         # Add to sizers
         self.s_facing_flex.Add(self.s_facing_select_west, 0, wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM)
@@ -113,20 +113,19 @@ class facingControl(wx.Panel):
         debug(u"tcui.FacingControl: translate")
         self.label.SetLabel(gt("Direction Facing:"))
         self.facing_select_south_label.SetLabel(gt("South"))
-        self.facing_select_south.SetToolTipString(gt("tt_facing_select_south"))
+        self.facing_select_south.SetToolTip(gt("tt_facing_select_south"))
         self.facing_select_east_label.SetLabel(gt("East"))
-        self.facing_select_east.SetToolTipString(gt("tt_facing_select_east"))
+        self.facing_select_east.SetToolTip(gt("tt_facing_select_east"))
         self.facing_select_north_label.SetLabel(gt("North"))
-        self.facing_select_north.SetToolTipString(gt("tt_facing_select_north"))
+        self.facing_select_north.SetToolTip(gt("tt_facing_select_north"))
         self.facing_select_west_label.SetLabel(gt("West"))
-        self.facing_select_west.SetToolTipString(gt("tt_facing_select_west"))
+        self.facing_select_west.SetToolTip(gt("tt_facing_select_west"))
         self.facing_enable_label.SetLabel(gt("Number\nof views:"))
-        self.facing_enable_select.SetToolTipString(gt("tt_facing_enable_select"))
+        self.facing_enable_select.SetToolTip(gt("tt_facing_enable_select"))
         # Translate the choicelist values for paksize
         self.choicelist_views = gt.translateIntArray(config.choicelist_views)
         self.facing_enable_select.Clear()
-        for i in self.choicelist_views:
-            self.facing_enable_select.Append(i)
+        self.facing_enable_select.Append(self.choicelist_views)
         # And set value to value in the project
         self.facing_enable_select.SetStringSelection(self.choicelist_views[config.choicelist_views.index(self.app.activeproject.directions())])
 

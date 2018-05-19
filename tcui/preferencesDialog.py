@@ -31,14 +31,18 @@ class preferencesDialog(wx.Dialog):
         self.ftbox = tcui.fileTextBox(parent)
 
         # Overall panel sizer
-        self.v_sizer = wx.BoxSizer(wx.VERTICAL)
         self.sizer = wx.BoxSizer(wx.HORIZONTAL)
+        self.v_sizer = wx.BoxSizer(wx.VERTICAL)
+        self.buttons = wx.BoxSizer(wx.HORIZONTAL)
 
         # Path to makeobj
         self.makeobj_sizer = wx.BoxSizer(wx.HORIZONTAL)
         self.makeobj_label = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
         self.makeobj_box = wx.TextCtrl(self, wx.ID_ANY, value="")
         self.makeobj_filebrowse = wx.Button(self, wx.ID_ANY, label="")
+        self.makeobj_sizer.Add(self.makeobj_box, 1)
+        self.makeobj_sizer.Add((5,0))
+        self.makeobj_sizer.Add(self.makeobj_filebrowse, 0)
 
         # Logfile location
         self.logfile_label = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
@@ -47,24 +51,20 @@ class preferencesDialog(wx.Dialog):
 
         # Default paksize
         self.paksize_label = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1))
-        self.paksize_select = wx.ComboBox(self, wx.ID_ANY, "", (-1, -1), (-1, -1), "", wx.CB_READONLY)
+        self.paksize_select = wx.ComboBox(self, wx.ID_ANY, "", (-1, -1), (-1, -1), style=wx.CB_READONLY)
 
         # Logging level
         self.loglevel_label = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1))
-        self.loglevel_select = wx.ComboBox(self, wx.ID_ANY, "", (-1, -1), (-1, -1), "", wx.CB_READONLY)
+        self.loglevel_select = wx.ComboBox(self, wx.ID_ANY, "", (-1, -1), (-1, -1), style=wx.CB_READONLY)
 
         # Add close button at the bottom
         self.close_button = wx.Button(self, wx.ID_OK, "", (-1,-1), (-1,-1), wx.ALIGN_RIGHT)
-        self.buttons = wx.BoxSizer(wx.HORIZONTAL)
         self.buttons.Add(self.close_button, 0 ,wx.ALIGN_RIGHT, 0)
 
         # And finally add that, the language picker and the other static text to the panel sizer
         self.v_sizer.Add((0,10))
         self.v_sizer.Add(self.makeobj_label, 0, wx.EXPAND)
         self.v_sizer.Add((0,3))
-        self.makeobj_sizer.Add(self.makeobj_box, 1)
-        self.makeobj_sizer.Add((5,0))
-        self.makeobj_sizer.Add(self.makeobj_filebrowse, 0)
         self.v_sizer.Add(self.makeobj_sizer, 0, wx.EXPAND)
 
         self.v_sizer.Add((0,15))
@@ -112,36 +112,34 @@ class preferencesDialog(wx.Dialog):
         debug(u"tcui.PreferencesDialog: translate")
         self.SetLabel(gt("Preferences"))
         self.makeobj_label.SetLabel(gt("Path to makeobj binary:"))
-        self.makeobj_box.SetToolTipString(gt("Relative paths are interpreted relative to TileCutter's start location"))
+        self.makeobj_box.SetToolTip(gt("Relative paths are interpreted relative to TileCutter's start location"))
         self.makeobj_filebrowse.SetLabel(gt("Browse..."))
-        self.makeobj_filebrowse.SetToolTipString(gt("tt_browse_makeobj_location"))
+        self.makeobj_filebrowse.SetToolTip(gt("tt_browse_makeobj_location"))
         self.logfile_label.SetLabel(gt("Location of TileCutter log file:"))
-        self.logfile_box.SetToolTipString(gt("tt_config_logfile"))
+        self.logfile_box.SetToolTip(gt("tt_config_logfile"))
         self.logfile_checkbox.SetLabel(gt("Use system default location"))
-        self.logfile_checkbox.SetToolTipString(gt("tt_config_logfile_default"))
+        self.logfile_checkbox.SetToolTip(gt("tt_config_logfile_default"))
 
         # Translate the choicelist values for paksize
         self.paksize_label.SetLabel(gt("Default paksize for new projects:"))
         self.choicelist_paksize = gt.translateIntArray(config.choicelist_paksize)
         self.paksize_select.Clear()
-        for i in self.choicelist_paksize:
-            self.paksize_select.Append(i)
+        self.paksize_select.Append(self.choicelist_paksize)
 
         # Translate the choicelist values for logging level
         self.loglevel_label.SetLabel(gt("Logging verbosity level:"))
         self.choicelist_loglevel = [gt("0 - logging disabled"), gt("1 - normal logging"), gt("2 - verbose logging"),]
         self.loglevel_select.Clear()
-        for i in self.choicelist_loglevel:
-            self.loglevel_select.Append(i)
+        self.loglevel_select.Append(self.choicelist_loglevel)
 
         self.close_button.SetLabel(gt("OK"))
 
         self.update()
 
-        self.Fit()
+        self.SetClientSize(self.sizer.GetSize())
 
         # Set width of panel to be calculated size or 1.4* height
-        self.SetSize(wx.Size(max(self.GetBestSizeTuple()[1] * 1.4, self.GetBestSizeTuple()[0]), self.GetBestSizeTuple()[1]))
+        self.SetSize(wx.Size(max(self.GetBestSize().Get()[1] * 1.4, self.GetBestSize().Get()[0]), self.GetBestSize().Get()[1]))
 
         self.CentreOnParent()
         self.Refresh()

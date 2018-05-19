@@ -112,24 +112,24 @@ class MultiFileControl(wx.Panel):
         """Update the text of all controls to reflect a new translation"""
         debug(u"tcui.MultiFileControl: translate")
         self.save_path_label.SetLabel(gt("Project Save Location"))
-        self.save_path_box.SetToolTipString(gt("tt_save_file_location"))
+        self.save_path_box.SetToolTip(gt("tt_save_file_location"))
         self.save_path_filebrowse.SetLabel(gt("Browse..."))
-        self.save_path_filebrowse.SetToolTipString(gt("tt_browse_save_file"))
+        self.save_path_filebrowse.SetToolTip(gt("tt_browse_save_file"))
 
         self.dat_path_label.SetLabel(gt(".dat Output Location"))
-        self.dat_path_box.SetToolTipString(gt("tt_dat_file_location"))
+        self.dat_path_box.SetToolTip(gt("tt_dat_file_location"))
         self.dat_path_filebrowse.SetLabel(gt("Browse..."))
-        self.dat_path_filebrowse.SetToolTipString(gt("tt_browse_dat_file"))
+        self.dat_path_filebrowse.SetToolTip(gt("tt_browse_dat_file"))
 
         self.png_path_label.SetLabel(gt(".png Output Location"))
-        self.png_path_box.SetToolTipString(gt("tt_png_file_location"))
+        self.png_path_box.SetToolTip(gt("tt_png_file_location"))
         self.png_path_filebrowse.SetLabel(gt("Browse..."))
-        self.png_path_filebrowse.SetToolTipString(gt("tt_browse_png_file"))
+        self.png_path_filebrowse.SetToolTip(gt("tt_browse_png_file"))
 
         self.pak_path_label.SetLabel(gt(".pak Output Location"))
-        self.pak_path_box.SetToolTipString(gt("tt_pak_file_location"))
+        self.pak_path_box.SetToolTip(gt("tt_pak_file_location"))
         self.pak_path_filebrowse.SetLabel(gt("Browse..."))
-        self.pak_path_filebrowse.SetToolTipString(gt("tt_browse_pak_file"))
+        self.pak_path_filebrowse.SetToolTip(gt("tt_browse_pak_file"))
 
         self.Fit()
 
@@ -199,7 +199,7 @@ class MultiFileControl(wx.Panel):
                                             "", 
                                             gt("Choose a location to save project..."),
                                             "TCP files (*.tcp)|*.tcp", 
-                                            wx.FD_SAVE|wx.OVERWRITE_PROMPT)
+                                            wx.FD_SAVE|wx.FD_OVERWRITE_PROMPT)
         debug(u"tcui.MultiFileControl: OnSaveBrowse - Path selected by user is: %s" % value)
         self.save_path_box.SetValue(value)
 
@@ -210,7 +210,7 @@ class MultiFileControl(wx.Panel):
                                             self.app.activeproject.save_location(), 
                                             gt("Choose a location to save .dat file..."),
                                             "DAT files (*.dat)|*.dat", 
-                                            wx.FD_SAVE|wx.OVERWRITE_PROMPT)
+                                            wx.FD_SAVE|wx.FD_OVERWRITE_PROMPT)
         debug(u"tcui.MultiFileControl: OnDatBrowse - Path selected by user is: %s" % value)
         self.dat_path_box.SetValue(value)
 
@@ -221,7 +221,7 @@ class MultiFileControl(wx.Panel):
                                             self.app.activeproject.save_location(), 
                                             gt("Choose a location to save .png file..."),
                                             "PNG files (*.png)|*.png", 
-                                            wx.FD_SAVE|wx.OVERWRITE_PROMPT)
+                                            wx.FD_SAVE|wx.FD_OVERWRITE_PROMPT)
         debug(u"tcui.MultiFileControl: OnPngBrowse - Path selected by user is: %s" % value)
         self.png_path_box.SetValue(value)
 
@@ -232,6 +232,6 @@ class MultiFileControl(wx.Panel):
                                             self.app.activeproject.save_location(), 
                                             gt("Choose a location to export .pak file..."),
                                             "PAK files (*.pak)|*.pak", 
-                                            wx.FD_SAVE|wx.OVERWRITE_PROMPT)
+                                            wx.FD_SAVE|wx.FD_OVERWRITE_PROMPT)
         debug(u"tcui.MultiFileControl: OnPakBrowse - Path selected by user is: %s" % value)
         self.pak_path_box.SetValue(value)

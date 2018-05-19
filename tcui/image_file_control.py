@@ -61,11 +61,11 @@ class ImageFileControl(wx.Panel):
         """Update the text of all controls to reflect a new translation"""
         debug(u"tcui.ImageFileControl: translate")
         self.path_label.SetLabel(gt("Source image location:"))
-        self.path_box.SetToolTipString(gt("tt_image_file_location"))
+        self.path_box.SetToolTip(gt("tt_image_file_location"))
         self.path_filebrowse.SetLabel(gt("Browse..."))
-        self.path_filebrowse.SetToolTipString(gt("tt_browse_input_file"))
+        self.path_filebrowse.SetToolTip(gt("tt_browse_input_file"))
         self.path_reloadfile.SetLabel(gt("Reload Image"))
-        self.path_reloadfile.SetToolTipString(gt("tt_reload_input_file"))
+        self.path_reloadfile.SetToolTip(gt("tt_reload_input_file"))
 
     def update(self):
         """Set the values of the controls in this group to the values in the model"""

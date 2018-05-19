@@ -424,13 +424,13 @@ class Project(object):
         # If path is valid, use it, otherwise use a blank image/image with error message
         abspath = paths.join_paths(self.internals["files"]["save_location"], self.props["images"][d][s][f][l]["path"])
         # If path is valid, load file
-        self.internals["images"][d][s][f][l]["imagedata"] = wx.EmptyImage(1,1)
+        self.internals["images"][d][s][f][l]["imagedata"] = wx.Image(1,1)
         if (paths.is_input_file(abspath) and os.path.exists(abspath)):
             self.internals["images"][d][s][f][l]["imagedata"].LoadFile(abspath, wx.BITMAP_TYPE_ANY)
         # If path isn't valid, just leave it as an empty image (or could display an error image?)
         else:
             pass
-        self.internals["images"][d][s][f][l]["bitmapdata"] = wx.BitmapFromImage(self.internals["images"][d][s][f][l]["imagedata"])
+        self.internals["images"][d][s][f][l]["bitmapdata"] = wx.Bitmap(self.internals["images"][d][s][f][l]["imagedata"])
 
 
     def active_x_offset(self, set=None, validate=False):

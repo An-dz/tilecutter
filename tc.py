@@ -88,7 +88,7 @@ class TCMaskSet:
 
     def init_new_mask(self, p):
         """Create a blank new cutting mask"""
-        a = wx.EmptyImage(p, p)
+        a = wx.Image(p, p)
         for i in range(p):
             for j in range(p):
                 a.SetRGB(i, j, 255, 255, 255)
@@ -346,7 +346,7 @@ def export_writer(project, pak_output=False, return_dat=False, write_dat=True):
     debug(u"e_w: Outputting %s images total, output size %sx%sp (%sx%spx)" % (totalimages, side, side, side*p, side*p))
 
     # Init output bitmap and dc for drawing into it
-    output_bitmap = wx.EmptyBitmap(side*p, side*p)
+    output_bitmap = wx.Bitmap(side*p, side*p)
     outdc = wx.MemoryDC()
     outdc.SelectObject(output_bitmap)
     outdc.SetBackground(wx.Brush(config.transparent))
@@ -490,7 +490,7 @@ def export_cutter(bitmap, dims, offset, p):
         max_width = bitmap.GetWidth()
     if max_height < bitmap.GetHeight():
         max_height = bitmap.GetHeight()
-    source_bitmap = wx.EmptyBitmap(max_width, max_height)
+    source_bitmap = wx.Bitmap(max_width, max_height)
     tdc = wx.MemoryDC()
     tdc.SelectObject(source_bitmap)
     tdc.SetPen(wx.Pen(config.transparent, 1, wx.SOLID))

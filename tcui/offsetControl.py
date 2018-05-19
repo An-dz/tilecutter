@@ -78,13 +78,13 @@ class offsetControl(wx.Panel):
         """Update the text of all controls to reflect a new translation"""
         debug(u"tcui.OffsetControl: translate")
         self.label.SetLabel(gt("Mask Offset:"))
-        self.offset_button_up.SetToolTipString(gt("tt_offset_button_up"))
-        self.offset_button_left.SetToolTipString(gt("tt_offset_button_left"))
-        self.offset_button_reset.SetToolTipString(gt("offset_button_reset"))
-        self.offset_button_right.SetToolTipString(gt("tt_offset_button_right"))
-        self.offset_button_down.SetToolTipString(gt("tt_offset_button_down"))
+        self.offset_button_up.SetToolTip(gt("tt_offset_button_up"))
+        self.offset_button_left.SetToolTip(gt("tt_offset_button_left"))
+        self.offset_button_reset.SetToolTip(gt("offset_button_reset"))
+        self.offset_button_right.SetToolTip(gt("tt_offset_button_right"))
+        self.offset_button_down.SetToolTip(gt("tt_offset_button_down"))
         self.offset_selector.SetLabel(gt("Fine"))
-        self.offset_selector.SetToolTipString(gt("tt_offset_selector"))
+        self.offset_selector.SetToolTip(gt("tt_offset_selector"))
 
         self.Fit()
 

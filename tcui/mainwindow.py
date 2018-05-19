@@ -37,8 +37,7 @@ class MainWindow(wx.Frame):
     """Main frame window inside which all else is put"""
     def __init__(self, parent, app, id, title):
         debug(u"tcui.MainWindow: __init__")
-        wx.Frame.__init__(self, parent, wx.ID_ANY, title, (-1,-1), (-1,-1),
-                                        style=wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL)
+        wx.Frame.__init__(self, parent, wx.ID_ANY, title, (-1,-1), (-1,-1), style=wx.DEFAULT_FRAME_STYLE)
         self.app = app
 
         # Set the program's icon
@@ -207,34 +206,34 @@ class MainWindow(wx.Frame):
 
         # Find size of panel and size of window
         # Difference between the two is the difference between client and surrounding area
-        prev_panel_size = self.panel.GetSizeTuple()
-        prev_window_size = self.GetSizeTuple()
+        prev_panel_size = self.panel.GetSize().Get()
+        prev_window_size = self.GetSize().Get()
 
         if prev_panel_size == (0,0):
             # Must be first time this has been run, panel hasn't been laid out yet
             self.panel.Fit()
             self.SetClientSize(self.panel.GetSize())
-            prev_panel_size = self.panel.GetSizeTuple()
-            prev_window_size = self.GetSizeTuple()
+            prev_panel_size = self.panel.GetSize().Get()
+            prev_window_size = self.GetSize().Get()
 
         debug(u"tcui.MainWindow: translate - previous panel size: %s, previous window size: %s" % (prev_panel_size, prev_window_size))
 
         # Find minimum size of panel
         self.panel.Fit()
-        debug(u"tcui.MainWindow: translate - minimum panel size is: %s" % (str(self.panel.GetBestSizeTuple())))
+        debug(u"tcui.MainWindow: translate - minimum panel size is: %s" % (str(self.panel.GetBestSize().Get())))
 
         # If horizontal or vertical size is smaller than it was before set the size to that value
-        new_panel_size = (max(prev_panel_size[0], self.panel.GetBestSizeTuple()[0]), max(prev_panel_size[1], self.panel.GetBestSizeTuple()[1]))
+        new_panel_size = (max(prev_panel_size[0], self.panel.GetBestSize().Get()[0]), max(prev_panel_size[1], self.panel.GetBestSize().Get()[1]))
         # New window size will be the new panel size plus the difference between the previous window size and panel size
         new_window_size = (prev_window_size[0] - prev_panel_size[0] + new_panel_size[0], 
                            prev_window_size[1] - prev_panel_size[1] + new_panel_size[1])
         debug(u"tcui.MainWindow: translate - new panel size is: %s, new window size is: %s" % (new_panel_size, new_window_size))
 
         # Set minimum panel size to the minimum allowable height and 1.4* ratio width of that height (or the minimum width if this is larger)
-        self.panel.SetMinSize(wx.Size(max(self.panel.GetBestSizeTuple()[1] * 1.4, self.panel.GetBestSizeTuple()[0]), self.panel.GetBestSizeTuple()[1]))
+        self.panel.SetMinSize(wx.Size(max(self.panel.GetBestSize().Get()[1] * 1.4, self.panel.GetBestSize().Get()[0]), self.panel.GetBestSize().Get()[1]))
         # Set minimum window size to minimum panel size plus the difference in the previous sizes
-        self.SetMinSize(wx.Size(prev_window_size[0] - prev_panel_size[0] + max(self.panel.GetBestSizeTuple()[1] * 1.4, self.panel.GetBestSizeTuple()[0]), 
-                                prev_window_size[1] - prev_panel_size[1] + self.panel.GetBestSizeTuple()[1]))
+        self.SetMinSize(wx.Size(prev_window_size[0] - prev_panel_size[0] + max(self.panel.GetBestSize().Get()[1] * 1.4, self.panel.GetBestSize().Get()[0]), 
+                                prev_window_size[1] - prev_panel_size[1] + self.panel.GetBestSize().Get()[1]))
 
         # Finally set size to the calculated new size, which is the larger of the new minimum or pre-existing
         self.panel.SetSize(new_panel_size)

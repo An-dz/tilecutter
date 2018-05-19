@@ -3,7 +3,7 @@
 # TileCutter User Interface Module - menuObject
 #
 
-# Copyright © 2008-2011 Timothy Baldock. All Rights Reserved.
+# Copyright ÂŠ 2008-2011 Timothy Baldock. All Rights Reserved.
 
 # This module creates the program's menus
 
@@ -42,8 +42,7 @@ class menuObject(object):
         # Tools menu
         self.toolsMenu = wx.Menu()
         self.menu_tools_dat = self.AddMenuItem(self.toolsMenu, self.OnDatEdit)
-        self.menu_tools_smoke = self.AddMenuItem(self.toolsMenu, self.OnSmokeEdit)
-        self.menu_tools_smoke.Enable(False)
+        self.menu_tools_smoke = self.AddMenuItem(self.toolsMenu, self.OnSmokeEdit, False)
         self.toolsMenu.AppendSeparator()
         self.menu_tools_sameforall = self.AddMenuItem(self.toolsMenu, self.OnSameForAll)
         self.toolsMenu.AppendSeparator()
@@ -56,9 +55,9 @@ class menuObject(object):
         self.helpMenu.AppendSeparator()
         self.menu_help_about = self.AddMenuItem(self.helpMenu, self.OnAbout, id=wx.ID_ABOUT)
 
-        self.menu.Append(self.fileMenu, "")
-        self.menu.Append(self.toolsMenu, "")
-        self.menu.Append(self.helpMenu, "")
+        self.menu.Append(self.fileMenu, "tc.file")
+        self.menu.Append(self.toolsMenu, "tc.tools")
+        self.menu.Append(self.helpMenu, "tc.help")
 
         self.translate()    # Load the initial translation
 ##        self.update()       # Init this control with the default values from the active project
@@ -111,23 +110,21 @@ class menuObject(object):
             return "\t" + default
 
 
-    def AddMenuItem(self, menu, itemHandler, enabled=1, id=None):
+    def AddMenuItem(self, menu, itemHandler, enabled=True, id=None):
         """"""
         debug(u"tcui.MenuObject: AddMenuItem")
         # Item text must be set to something, or wx thinks this is a stock menu item
         itemText = "--!--"
         if id == None:
-            menuId = wx.NewId()
-            menuItem = wx.MenuItem(menu, menuId, itemText)
-            menu.AppendItem(menuItem)
+            menuItem = wx.MenuItem(menu, wx.ID_ANY, itemText)
+            menuId = menuItem.GetId()
         else:
             menuId = id
             menuItem = wx.MenuItem(menu, menuId)         # Stock menu item based on a specified id
-            menu.AppendItem(menuItem)
+        menu.Append(menuItem)
         # Bind event to parent frame
         self.parent.Bind(wx.EVT_MENU, itemHandler, id=menuId)
-        if enabled == 0:
-            menu.Enable(menuId, 0)
+        menu.Enable(menuId, enabled)
         return menuItem
 
     # Menu event functions
@@ -173,6 +170,7 @@ class menuObject(object):
         self.app.SetTopWindow(dlg)
         if dlg.ShowModal() == wx.ID_OK:
             dlg.Destroy()
+
     def OnSmokeEdit(self, e):
         """"""
         debug(u"tcui.MenuObject: OnSmokeEdit - Menu-Tools-> Open smoke edit dialog")
@@ -198,6 +196,7 @@ class menuObject(object):
         dlg = tcui.translationDialog(self.parent, self.app)
         if dlg.ShowModal() == wx.ID_OK:
             dlg.Destroy()
+
     def OnPreferences(self, e):
         """"""
         debug(u"tcui.MenuObject: OnPreferences - Menu-Tools-> Open preferences dialog")

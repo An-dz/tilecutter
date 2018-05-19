@@ -34,13 +34,13 @@ class aboutDialog(wx.Dialog):
         f = self.GetFont()
         # Bigger font for title
         self.SetFont(wx.Font(18, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL))
-        self.title_text = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_CENTER_HORIZONTAL)
+        self.title_text     = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_CENTER_HORIZONTAL)
         # Medium font for subtitle
         self.SetFont(wx.Font(12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL))
-        self.subtitle_text = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_CENTER_HORIZONTAL)
+        self.subtitle_text  = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_CENTER_HORIZONTAL)
         # Original font for version/copyright
         self.SetFont(f)
-        self.version_text = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_CENTER_HORIZONTAL)
+        self.version_text   = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_CENTER_HORIZONTAL)
         self.copyright_text = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_CENTER_HORIZONTAL)
 
         # Add all items to horizontal sizers, to get horizontal centering and expansion
@@ -48,9 +48,9 @@ class aboutDialog(wx.Dialog):
         self.sizer.Add(self.icon,           0, wx.ALIGN_CENTER_HORIZONTAL)
         self.sizer.Add((0,15))
         self.sizer.Add(self.title_text,     0, wx.ALIGN_CENTER_HORIZONTAL)
-        self.sizer.Add((0,2))
+        self.sizer.Add((0, 2))
         self.sizer.Add(self.subtitle_text,  0, wx.ALIGN_CENTER_HORIZONTAL)
-        self.sizer.Add((0,4))
+        self.sizer.Add((0, 4))
         self.sizer.Add(self.version_text,   0, wx.ALIGN_CENTER_HORIZONTAL)
         self.sizer.Add((0,10))
         self.sizer.Add(self.copyright_text, 0, wx.ALIGN_CENTER_HORIZONTAL)
@@ -80,7 +80,7 @@ class aboutDialog(wx.Dialog):
         self.copyright_text.Wrap(self.size[0]-20)
 
         self.Fit()
-        self.SetSize(wx.Size(400, self.GetBestSizeTuple()[1]))
+        self.SetSize(wx.Size(400, self.GetBestSize().Get()[1]))
         self.CentreOnParent(wx.BOTH)
 
     def update(self):

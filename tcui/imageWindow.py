@@ -31,7 +31,7 @@ class imageWindow(wx.Panel):
         self.bgcolor = bgcolor
         self.app = app
         self.parent = parent
-        self.scrolledwindow = wx.ScrolledWindow(self, id=wx.ID_ANY, style=wx.SUNKEN_BORDER)
+        self.scrolledwindow = wx.ScrolledWindow(self, wx.ID_ANY, style=wx.SUNKEN_BORDER)
 
         # Required for wx.AutoBufferedPaintDC to work
         self.scrolledwindow.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
@@ -77,7 +77,7 @@ class imageWindow(wx.Panel):
 ##            self.Bind(wx.EVT_MOTION, self.OnMotion)
 
         #Need to make intelligent buffer bitmap sizing work!
-        self.buffer = wx.EmptyBitmap(4000,2500)
+        self.buffer = wx.Bitmap(4000, 2500)
         self.lastisopos = (-1,-1)
         self.isopos = (-1,-1)
 

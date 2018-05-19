@@ -65,11 +65,11 @@ class seasonControl(wx.Panel):
         debug(u"tcui.SeasonControl: translate")
         self.label.SetLabel(gt("Season:"))
         self.seasons_select_summer.SetLabel(gt("Summer"))
-        self.seasons_select_summer.SetToolTipString(gt("tt_seasons_select_summer"))
+        self.seasons_select_summer.SetToolTip(gt("tt_seasons_select_summer"))
         self.seasons_select_winter.SetLabel(gt("Winter"))
-        self.seasons_select_winter.SetToolTipString(gt("tt_seasons_select_winter"))
+        self.seasons_select_winter.SetToolTip(gt("tt_seasons_select_winter"))
         self.seasons_enable_winter.SetLabel(gt("Enable Winter"))
-        self.seasons_enable_winter.SetToolTipString(gt("tt_seasons_enable_winter"))
+        self.seasons_enable_winter.SetToolTip(gt("tt_seasons_enable_winter"))
 
         self.Fit()
 

@@ -70,13 +70,13 @@ class ProjectImage(object):
     def reloadImage(self):
         """Refresh the cached image"""
         if self.value_valid_path == "":
-            self.value_image = wx.EmptyImage(1,1)
-            self.value_bitmap = wx.BitmapFromImage(self.value_image)
+            self.value_image = wx.Image(1,1)
+            self.value_bitmap = wx.Bitmap(self.value_image)
         else:
             abspath = paths.join_paths(self.parent.parent.parent.savefile(), self.value_valid_path)
-            self.value_image = wx.EmptyImage(1,1)
+            self.value_image = wx.Image(1,1)
             self.value_image.LoadFile(abspath, wx.BITMAP_TYPE_ANY)
-            self.value_bitmap = wx.BitmapFromImage(self.value_image)
+            self.value_bitmap = wx.Bitmap(self.value_image)
     def valid_path(self):
         """Return the valid/real path of this image"""
         return self.value_valid_path

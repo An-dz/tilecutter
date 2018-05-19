@@ -87,13 +87,14 @@ class App(wx.App):
         if self.gui:
             debug(u"App: OnInit - Create + Show main frame")
             # Create and show main frame
+            # self.frame = tcui.MainWindow(None, self, wx.ID_ANY, "TileCutter")
             self.frame = tcui.MainWindow(None, self, wx.ID_ANY, "TileCutter")
             self.SetTopWindow(self.frame)
 
             debug(u"App: OnInit - Bind Quit Event")
             # Bind quit event
             self.frame.Bind(wx.EVT_CLOSE, self.OnQuit)
-            self.frame.Bind(wx.EVT_CLOSE, self.OnQuit)
+            # self.frame.Bind(wx.EVT_CLOSE, self.OnQuit)
 
             debug(u"App: OnInit - Init window sizes")
             # Window inits itself to its minimum size
@@ -218,7 +219,7 @@ class App(wx.App):
         False if cancelled. Sets project's save location to result file"""
         debug(u"App: dialog_save_location - Grabbing save path from dialog")
         filesAllowed = "TileCutter Project files (*.tcp)|*.tcp"
-        dialogFlags = wx.FD_SAVE|wx.OVERWRITE_PROMPT
+        dialogFlags = wx.FD_SAVE|wx.FD_OVERWRITE_PROMPT
         path = os.path.split(project.save_location())[0]
         filename = os.path.split(project.save_location())[1]
         dlg = wx.FileDialog(self.frame, gt("Choose a location to save to..."),
@@ -402,10 +403,10 @@ class App(wx.App):
     def OnQuit(self, e):
         """Close all windows and quit the application on a quit event in the main window"""
         debug(u"App: OnQuit - Application quitting...")
-        debug(u"App: OnQuit - Saving current application window size (%s) to config file" % unicode(self.frame.GetSizeTuple()))
-        config.window_size = self.frame.GetSizeTuple()
-        debug(u"App: OnQuit - Saving current application window position (%s) to config file" % unicode(self.frame.GetPositionTuple()))
-        config.window_position = self.frame.GetPositionTuple()
+        debug(u"App: OnQuit - Saving current application window size (%s) to config file" % unicode(self.frame.GetSize().Get()))
+        config.window_size = self.frame.GetSize().Get()
+        debug(u"App: OnQuit - Saving current application window position (%s) to config file" % unicode(self.frame.GetPosition().Get()))
+        config.window_position = self.frame.GetPosition().Get()
         debug(u"App: OnQuit - Destroying frame...")
         self.frame.Destroy()
         debug(u"App: OnQuit - End")

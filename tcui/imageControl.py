@@ -65,11 +65,11 @@ class imageControl(wx.Panel):
         debug(u"tcui.ImageControl: translate")
         self.label.SetLabel(gt("Image:"))
         self.images_select_back.SetLabel(gt("BackImage"))
-        self.images_select_back.SetToolTipString(gt("tt_images_select_back"))
+        self.images_select_back.SetToolTip(gt("tt_images_select_back"))
         self.images_select_front.SetLabel(gt("FrontImage"))
-        self.images_select_front.SetToolTipString(gt("tt_images_select_front"))
+        self.images_select_front.SetToolTip(gt("tt_images_select_front"))
         self.images_enable_front.SetLabel(gt("Enable FrontImage"))
-        self.images_enable_front.SetToolTipString(gt("tt_images_enable_front"))
+        self.images_enable_front.SetToolTip(gt("tt_images_enable_front"))
 
         self.Fit()
 
