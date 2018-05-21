@@ -26,9 +26,9 @@ import sys, os
 
 try:
     import wx
-    debug(u"main: WX version is: %s" % wx.version())
+    debug("main: WX version is: %s" % wx.version())
 except ImportError:
-    debug(u"main: WXPython not installed, please install module and try again!")
+    debug("main: WXPython not installed, please install module and try again!")
     raise
 
 import pickle
@@ -51,15 +51,15 @@ import config
 config = config.Config()
 config.save()
 
-debug(u"main: configuration source is %s" % config.source)
-debug(u"main: configuration loaded from file: %s" % config.conf_path)
-debug(unicode(config))
+debug("main: configuration source is %s" % config.source)
+debug("main: configuration loaded from file: %s" % config.conf_path)
+debug(str(config))
 
 class App(wx.App):
     """The main application, pre-window launch stuff should go here"""
     def __init__(self, gui):
         self.gui = gui
-        self.start_directory = os.getcwdu()
+        self.start_directory = os.getcwd()
         wx.App.__init__(self)
         # Catch activate events from other applications (OSX)
         self.Bind(wx.EVT_ACTIVATE_APP, self.OnActivate)
@@ -74,29 +74,29 @@ class App(wx.App):
             sys.stderr = sys.__stderr__
             sys.stdout = sys.__stdout__
 
-        debug(u"App: OnInit - Starting...")
+        debug("App: OnInit - Starting...")
         self.start_directory = os.getcwd()
 
         # Create a default active project
-        debug(u"App: OnInit - Create default project")
+        debug("App: OnInit - Create default project")
         self.projects = {}
         self.projects["default"] = project.Project(self)
         self.activeproject = self.projects["default"]
         self.update_title_text()
 
         if self.gui:
-            debug(u"App: OnInit - Create + Show main frame")
+            debug("App: OnInit - Create + Show main frame")
             # Create and show main frame
             # self.frame = tcui.MainWindow(None, self, wx.ID_ANY, "TileCutter")
             self.frame = tcui.MainWindow(None, self, wx.ID_ANY, "TileCutter")
             self.SetTopWindow(self.frame)
 
-            debug(u"App: OnInit - Bind Quit Event")
+            debug("App: OnInit - Bind Quit Event")
             # Bind quit event
             self.frame.Bind(wx.EVT_CLOSE, self.OnQuit)
             # self.frame.Bind(wx.EVT_CLOSE, self.OnQuit)
 
-            debug(u"App: OnInit - Init window sizes")
+            debug("App: OnInit - Init window sizes")
             # Window inits itself to its minimum size
             # If a larger size is specified in config, set to this instead
             if config.window_size[0] > self.frame.GetBestSize().GetWidth() and config.window_size[1] > self.frame.GetBestSize().GetHeight():
@@ -104,7 +104,7 @@ class App(wx.App):
             else:
                 # Otherwise just use the minimum size
                 self.frame.Fit()
-            debug(u"App: OnInit - Init window position")
+            debug("App: OnInit - Init window position")
             # If a window position is saved, place the window there
             if config.window_position != [-1,-1]:
                 self.frame.SetPosition(config.window_position)
@@ -112,9 +112,9 @@ class App(wx.App):
                 # Otherwise center window on the screen
                 self.frame.CentreOnScreen(wx.BOTH)
         else:
-            debug(u"App: OnInit - Command line mode, not creating GUI")
+            debug("App: OnInit - Command line mode, not creating GUI")
 
-        debug(u"App: OnInit - Completed!")
+        debug("App: OnInit - Completed!")
         return True
 
 
@@ -131,7 +131,7 @@ class App(wx.App):
             pass
     def MacOpenFile(self, filename):
         """Called for files droped on dock icon, or opened via finders context menu"""
-        debug(u"App: MacOpenFile - %s dropped on app" % (filename))
+        debug("App: MacOpenFile - %s dropped on app" % (filename))
         self.OnLoadProject(filename)
     def MacReopenApp(self):
         """Called when the doc icon is clicked, and for other reasons that need to focus the application"""
@@ -155,7 +155,7 @@ class App(wx.App):
         return self.title_text
     def update_title_text(self):
         """Updates the title text with the details of the currently active project"""
-        debug(u"App: update_title_text")
+        debug("App: update_title_text")
         if self.activeproject.saved():
             # Project has been previously saved
             if self.activeproject.has_changed():
@@ -176,7 +176,7 @@ class App(wx.App):
                 # Unsaved and unchanged
                 # Title string will be (New Project) - TileCutter
                 self.title_text = "(%s) - %s" % (_gt("New Project"), "%s")
-        debug(u"App: update_title_text - Setting title_text to: %s" % (self.title_text % _gt("TileCutter")))
+        debug("App: update_title_text - Setting title_text to: %s" % (self.title_text % _gt("TileCutter")))
 
     def set_status_text(self, message, field=0):
         """Updates the status bar text field specified with the message specified"""
@@ -201,23 +201,23 @@ class App(wx.App):
     # Dialogs involved in loading/saving
     def dialog_save_changes(self, project):
         """Prompts user to save file, return wx.ID_YES, wx.ID_NO or wx.ID_CANCEL"""
-        debug(u"App: dialog_save_changes")
+        debug("App: dialog_save_changes")
         dlg = wx.MessageDialog(self.frame, gt("Save changes before proceeding?"),
                                gt("Current project has changed"),
                                style=wx.YES_NO|wx.CANCEL|wx.YES_DEFAULT|wx.ICON_QUESTION)
         result = dlg.ShowModal()
         dlg.Destroy()
         if result == wx.ID_YES:
-            debug(u"App: dialog_save_changes - Result YES")
+            debug("App: dialog_save_changes - Result YES")
         if result == wx.ID_NO:
-            debug(u"App: dialog_save_changes - Result NO")
+            debug("App: dialog_save_changes - Result NO")
         if result == wx.ID_CANCEL:
-            debug(u"App: dialog_save_changes - Result CANCEL")
+            debug("App: dialog_save_changes - Result CANCEL")
         return result
     def dialog_save_location(self, project):
         """Prompts user to select a location to save project to, returns True if location picked,
         False if cancelled. Sets project's save location to result file"""
-        debug(u"App: dialog_save_location - Grabbing save path from dialog")
+        debug("App: dialog_save_location - Grabbing save path from dialog")
         filesAllowed = "TileCutter Project files (*.tcp)|*.tcp"
         dialogFlags = wx.FD_SAVE|wx.FD_OVERWRITE_PROMPT
         path = os.path.split(project.save_location())[0]
@@ -229,17 +229,17 @@ class App(wx.App):
             #project.save_location(os.path.join(dlg.GetDirectory(), dlg.GetFilename()))
             project.save_location(dlg.GetPath())
             config.last_save_path = dlg.GetDirectory()
-            debug(u"App: dialog_save_location - New save_location for project is: %s" % project.save_location())
+            debug("App: dialog_save_location - New save_location for project is: %s" % project.save_location())
             dlg.Destroy()
             return True
         else:
             # Else cancel was pressed, do nothing
-            debug(u"App: dialog_save_location - User cancelled save_location Dialog")
+            debug("App: dialog_save_location - User cancelled save_location Dialog")
             dlg.Destroy()
             return False
     def dialog_load(self):
         """Prompts user to select a location to load a project file from, returns filename or wx.ID_CANCEL"""
-        debug(u"App: dialog_load - Opening Load Dialog to allow location picking")
+        debug("App: dialog_load - Opening Load Dialog to allow location picking")
         filesAllowed = "TileCutter Project files (*.tcp)|*.tcp"
         dialogFlags = wx.FD_OPEN|wx.FD_FILE_MUST_EXIST
         # This probably needs to be more robust
@@ -249,16 +249,16 @@ class App(wx.App):
                             path, file, filesAllowed, dialogFlags)
         result = dlg.ShowModal()
         if result == wx.ID_OK:
-            debug(u"App: dialog_load - directory: %s, filename: %s" % (dlg.GetDirectory(), dlg.GetFilename()))
+            debug("App: dialog_load - directory: %s, filename: %s" % (dlg.GetDirectory(), dlg.GetFilename()))
             #load_location = os.path.join(dlg.GetDirectory(), dlg.GetFilename())
             load_location = dlg.GetPath()
             dlg.Destroy()
-            debug(u"App: dialog_load - User picked location: %s" % load_location)
+            debug("App: dialog_load - User picked location: %s" % load_location)
             return load_location
         else:
             # Else cancel was pressed, do nothing
             dlg.Destroy()
-            debug(u"App: dialog_load - User cancelled location picking")
+            debug("App: dialog_load - User cancelled location picking")
             return False
 
 
@@ -266,7 +266,7 @@ class App(wx.App):
 
     def save_project(self, project):
         """Save project to its save location, returns True if success, False if failed"""
-        debug(u"App: save_project - Save project out to disk")
+        debug("App: save_project - Save project out to disk")
 
         # Create new writer
         t_writer = tcp_writer(self.activeproject.save_location(), "json")
@@ -284,11 +284,11 @@ class App(wx.App):
                 self.frame.update()
                 self.project_has_changed()
                 self.set_status_text(gt("Project was saved successfully"))
-            debug(u"App: save_project - save_project - Save project success")
+            debug("App: save_project - save_project - Save project success")
             return True
         else:
             # Saving failed for some reason
-            debug(u"App: save_project - ERROR: save_project - Saving failed!")
+            debug("App: save_project - ERROR: save_project - Saving failed!")
             if self.gui:
                 self.set_status_text(gt("ERROR: Failed to save project!"), 0)
                 dlg = wx.MessageDialog(None, "Error saving file, please see log file for details", "Error", wx.OK|wx.ICON_ERROR)
@@ -297,7 +297,7 @@ class App(wx.App):
 
     def load_project(self, location):
         """Load a project based on a file location"""
-        debug(u"App: load_project - Load project from file: %s" % location)
+        debug("App: load_project - Load project from file: %s" % location)
 
         t_reader = tcp_reader(location)
 
@@ -305,7 +305,7 @@ class App(wx.App):
         project = t_reader.load([self,])
 
         if project == False:
-            debug(u"App: load_project - ERROR: load_project - Loading failed!")
+            debug("App: load_project - ERROR: load_project - Loading failed!")
             if self.gui:
                 self.set_status_text(gt("ERROR: Failed to load project!"), 0)
                 dlg = wx.MessageDialog(None, "Error loading file, please see log file for details", "Error", wx.OK|wx.ICON_ERROR)
@@ -314,30 +314,30 @@ class App(wx.App):
             return False
 
         # Check parent after
-        debug(u"App: load_project - after - parent of project: %s is: %s" % (str(project), str(project.parent)))
+        debug("App: load_project - after - parent of project: %s is: %s" % (str(project), str(project.parent)))
 
         self.activeproject = project
         if self.gui:
             self.frame.update()
             self.project_has_changed()
             self.set_status_text(gt("Project was loaded successfully"), 0)
-        debug(u"App: load_project - Load Project succeeded")
+        debug("App: load_project - Load Project succeeded")
         return True
 
     def new_project(self):
         """Create a new project"""
-        debug(u"App: new_project - Create new project")
+        debug("App: new_project - Create new project")
         self.activeproject = project.Project(self)
         # Finally update the frame to display changes
         if self.gui:
             self.frame.update()
             self.project_has_changed()
             self.set_status_text(gt("New project created"), 0)
-        debug(u"App: new_project - Complete!")
+        debug("App: new_project - Complete!")
 
     def OnNewProject(self):
         """Init process of starting a new project"""
-        debug(u"App: OnNewProject")
+        debug("App: OnNewProject")
         project = self.activeproject
         if self.activeproject.has_changed():
             ret = self.dialog_save_changes(project)
@@ -353,7 +353,7 @@ class App(wx.App):
 
     def OnLoadProject(self, loadpath=None):
         """Init process of loading a project from file, if optional savepath is specified then skip the load file dialog"""
-        debug(u"App: OnLoadProject")
+        debug("App: OnLoadProject")
         project = self.activeproject
         if self.activeproject.has_changed():
             ret = self.dialog_save_changes(project)                 # Prompt to save project
@@ -369,14 +369,14 @@ class App(wx.App):
         if loadpath is None:                                        # Check if a load path was passed into this function
             loadpath = self.dialog_load()                           # If not prompt for file to load
         if loadpath != wx.ID_CANCEL and loadpath != False:          # If user picked a file and didn't cancel the dialog
-            debug(u"App: OnLoadProject - Load dialog returned a path: %s" % loadpath)
+            debug("App: OnLoadProject - Load dialog returned a path: %s" % loadpath)
             return self.load_project(loadpath)                      # Load the project (returns project object or False depending on success)
         else:                                                       # Otherwise
             return False                                            # Quit out
 
     def OnSaveProject(self, project):
         """Init process of saving a project to file"""
-        debug(u"App: OnSaveProject")
+        debug("App: OnSaveProject")
         if project.saved():
             return self.save_project(project)                       # Returns True on save success, False on failure
         else:
@@ -388,7 +388,7 @@ class App(wx.App):
 
     def OnSaveAsProject(self, project):
         """Init process of saving a project to a new location"""
-        debug(u"App: OnSaveAsProject")
+        debug("App: OnSaveAsProject")
         if self.dialog_save_location(project):
             return self.save_project(project)
         return False
@@ -397,19 +397,19 @@ class App(wx.App):
 
     def Exit(self):
         """Quit the application indirectly"""
-        debug(u"App: Exit -> self.OnQuit()")
+        debug("App: Exit -> self.OnQuit()")
         self.OnQuit(None)
 
     def OnQuit(self, e):
         """Close all windows and quit the application on a quit event in the main window"""
-        debug(u"App: OnQuit - Application quitting...")
-        debug(u"App: OnQuit - Saving current application window size (%s) to config file" % unicode(self.frame.GetSize().Get()))
+        debug("App: OnQuit - Application quitting...")
+        debug("App: OnQuit - Saving current application window size (%s) to config file" % str(self.frame.GetSize().Get()))
         config.window_size = self.frame.GetSize().Get()
-        debug(u"App: OnQuit - Saving current application window position (%s) to config file" % unicode(self.frame.GetPosition().Get()))
+        debug("App: OnQuit - Saving current application window position (%s) to config file" % str(self.frame.GetPosition().Get()))
         config.window_position = self.frame.GetPosition().Get()
-        debug(u"App: OnQuit - Destroying frame...")
+        debug("App: OnQuit - Destroying frame...")
         self.frame.Destroy()
-        debug(u"App: OnQuit - End")
+        debug("App: OnQuit - End")
 
 
 
@@ -422,7 +422,7 @@ def run():
 
     # Command line arguments could indicate files to open (if they are the only things)
     # Use of the "-c" option will invoke the CLI operation mode
-    debug(u"main: run - sys.argv says: %s" % sys.argv)
+    debug("main: run - sys.argv says: %s" % sys.argv)
     # Parse command line arguments (if any)
     usage = "usage: %prog [options] filename1 [filename2 ... ]"
     parser = OptionParser(usage=usage)
@@ -466,14 +466,14 @@ def run():
     # Use of command line argument "-c" disables GUI and uses command line parsing instead
     if options.cli:
         # Create the application without GUI
-        debug(u"main: run - Init - Creating app without GUI")
+        debug("main: run - Init - Creating app without GUI")
         app = App(gui=False)
         # Not making use of app's event handling loop etc., so don't start it
         #app.MainLoop()
 
         if options.verbose is True:
-            print "options: %s" % str(options)
-            print "args: %s" % str(args)
+            print("options: %s" % str(options))
+            print("args: %s" % str(args))
         # Another good option would be to support "stub" datfiles
         # produced as part of a pakset, which would have some kind of
         # marker to allow inserting the image array matrix in a particular location
@@ -483,12 +483,12 @@ def run():
 
         for file in args:
             if options.verbose is not False:
-                print "processing file: %s" % file
+                print("processing file: %s" % file)
             # For every filename specified by the user, perform export
             # Try to load in project, if this fails skip this filename and print an error
             if app.load_project(file):
                 if options.verbose is not False:
-                    print "loaded file, preparing to export"
+                    print("loaded file, preparing to export")
                 # Apply any command line overrides specified by user
                 # For PNG file
                 if options.png_directory is not None:
@@ -523,10 +523,10 @@ def run():
 
                 app.export_project(app.activeproject, pak_output=options.pak_output, return_dat=False, write_dat=options.dat_output)
                 if options.verbose is not False:
-                    print "...Done!"
+                    print("...Done!")
             else:
                 if options.verbose is not False:
-                    print "loading file failed, skipping: %s" % file
+                    print("loading file failed, skipping: %s" % file)
 
         # Finally destroy app
         app.Destroy()
@@ -535,17 +535,17 @@ def run():
         # Redirect stdout/err to internal logging mechanism
         # Only do this redirection if running in GUI mode
         # Needs tweaks to the debug module for -q option etc., different logging levels?
-        debug(u"main: run - options: %s" % str(options))
-        debug(u"main: run - args: %s" % str(args))
+        debug("main: run - options: %s" % str(options))
+        debug("main: run - args: %s" % str(args))
         sys.stderr = debug
         sys.stdout = debug
         # Create the application with GUI
-        debug(u"main: run - Init - Creating app with GUI")
+        debug("main: run - Init - Creating app with GUI")
         app = App(gui=True)
 
         # If a project was specified on the command line, open it for editing (open the first one)
         if len(args) > 0:
-            debug(u"main: run - Activating load_project based on CLI args (in GUI mode)")
+            debug("main: run - Activating load_project based on CLI args (in GUI mode)")
             app.load_project(args[0])
 
         # Init all main frame controls

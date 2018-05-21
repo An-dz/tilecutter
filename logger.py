@@ -29,7 +29,7 @@ class Log(object):
             file = os.path.expanduser("~/Library/Logs/tilecutter.log")
             source = "darwin"
         elif sys.platform == "win32":
-            file = os.path.join(getenvvar(u"APPDATA"), "tilecutter\\tilecutter.log")
+            file = os.path.join(getenvvar("APPDATA"), "tilecutter\\tilecutter.log")
             #file = os.path.normpath(os.path.expanduser("~/Application Data/tilecutter/tilecutter.log"))
             #file = unicode(file, sys.getfilesystemencoding())
             source = "win32"
@@ -55,7 +55,7 @@ class Log(object):
 
             Log.file = codecs.open(file, "a", "UTF-8")
             # First time logger is initialised write something useful to the start of the log
-            self.out(u"-----------------------------------------------------------------------------------------\nLogger opened file (%s) from source: %s" % (file, source))
+            self.out("-----------------------------------------------------------------------------------------\nLogger opened file (%s) from source: %s" % (file, source))
 
     # Default debug level for statements without a level specified is 1, which will appear on all debug levels except off
     def __call__(self, s, level=1):
@@ -67,12 +67,8 @@ class Log(object):
         # If currently configured debug level is less than debug level of this statement, do nothing
         if config.debug_level < level:
             return False
-        # If it's a unicode string don't convert it
-        if type(s) != type(u""):
-            s = unicode(s, "UTF-8")
-            s = u"Converted to unicode:\n" + s
-        s = s.replace(u"\r", u"")
-        splits = s.split(u"\n")
+        s = s.replace("\r", "")
+        splits = s.split("\n")
         writedate = True
         for k in splits:
             outline = k + "\n"
@@ -86,12 +82,12 @@ class Log(object):
         dt = datetime.now().replace(microsecond=0).isoformat(" ")
         # Check if next line will need the date prepending
         if date:
-            outline = dt + u" | " + s
+            outline = dt + " | " + s
         else:
-            outline = u" " * len(dt) + u" | " + s
+            outline = " " * len(dt) + " | " + s
         # Check last character of line is a newline
-        if outline[-1] != u"\n":
-            outline = outline + u"\n"
+        if outline[-1] != "\n":
+            outline = outline + "\n"
         Log.file.write(outline)
         Log.file.flush()
 

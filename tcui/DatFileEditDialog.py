@@ -18,7 +18,7 @@ class DatFileEditDialog(wx.Dialog):
     """Dialog for editing dat file parameters"""
     def __init__(self, parent, app):
         """Intialise the dialog"""
-        debug(u"tcui.DatFileDialog: __init__")
+        debug("tcui.DatFileDialog: __init__")
         self.app = app
         # Height will be 0.7*width
         self.min_width = 500
@@ -58,7 +58,7 @@ class DatFileEditDialog(wx.Dialog):
 
     def translate(self):
         """Update the text of all controls to reflect a new translation"""
-        debug(u"tcui.DatFileDialog: translate")
+        debug("tcui.DatFileDialog: translate")
         self.SetLabel(gt("Datfile Properties"))
         self.description.SetLabel(gt("Here you can enter the datfile properties necessary to produce a building using makeobj"))
 
@@ -72,17 +72,17 @@ class DatFileEditDialog(wx.Dialog):
 
     def update(self):
         """Set the values of the controls in this group to the values in the model"""
-        debug(u"tcui.DatFileDialog: update")
+        debug("tcui.DatFileDialog: update")
         self.text_input.ChangeValue(self.app.activeproject.dat_lump())
 
     def OnTextChange(self, e):
         """Triggered when the text in the path box is changed"""
-        debug(u"tcui.DatFileDialog: OnTextChange")
+        debug("tcui.DatFileDialog: OnTextChange")
         if self.app.activeproject.dat_lump() != self.text_input.GetValue():
             self.app.activeproject.dat_lump(self.text_input.GetValue())
-            debug(u"tcui.DatFileDialog: OnTextChange - Text changed in dat file properties entry box, new text: %s" % (unicode(self.text_input.GetValue())))
+            debug("tcui.DatFileDialog: OnTextChange - Text changed in dat file properties entry box, new text: %s" % (str(self.text_input.GetValue())))
 
     def OnClose(self,e):
         """On click of the close button"""
-        debug(u"tcui.DatFileDialog: OnClose")
+        debug("tcui.DatFileDialog: OnClose")
         self.EndModal(wx.ID_OK)

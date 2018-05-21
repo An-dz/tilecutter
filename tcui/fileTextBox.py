@@ -21,11 +21,11 @@ class fileTextBox(object):
     """Methods for text boxes displaying paths"""
     def __init__(self, parent):
         """"""
-        debug(u"tcui.FileTextBox: __init__")
+        debug("tcui.FileTextBox: __init__")
         self.parent = parent
     def filePickerDialog(self, path1, path2=None, dialogText="", dialogFilesAllowed="", dialogFlags=None):
         """File picker dialog with additional methods"""
-        debug(u"tcui.FileTextBox: filePickerDialog")
+        debug("tcui.FileTextBox: filePickerDialog")
         if path2 == None:
             path2 = ""
         # If path exists, and is a file, or the path up to the last bit exists and is a directory
@@ -46,10 +46,10 @@ class fileTextBox(object):
         # If path directory component empty, use passed-in "last" path as starting location
         # rather than using default starting location
 
-        if path1 == u"" and config.last_save_path != u"" and os.path.exists(config.last_save_path):
+        if path1 == "" and config.last_save_path != "" and os.path.exists(config.last_save_path):
             a = config.last_save_path
 
-        debug(u"Path a is: %s and path b is: %s" % (a, b))
+        debug("Path a is: %s and path b is: %s" % (a, b))
 
         # Check path components exist
 
@@ -58,7 +58,7 @@ class fileTextBox(object):
                                      a, b, dialogFilesAllowed, dialogFlags)
         if pickerDialog.ShowModal() == wx.ID_OK:
             # This needs to calculate a relative path between the location of the output png and the location of the output dat
-            debug(u"tcui.FileTextBox: filePickerDialog - File picker dialog, ID_OK, Directory is: %s, Filename is: %s" % (pickerDialog.GetDirectory(), pickerDialog.GetFilename()))
+            debug("tcui.FileTextBox: filePickerDialog - File picker dialog, ID_OK, Directory is: %s, Filename is: %s" % (pickerDialog.GetDirectory(), pickerDialog.GetFilename()))
             drivesplit = os.path.splitdrive(pickerDialog.GetDirectory())
             if drivesplit[0] != "" and drivesplit[1] == "":
                 # There is a drive specified in the string, and nothing else in the path
@@ -97,7 +97,7 @@ class fileTextBox(object):
 
     def highlightText(self, box, p1, p2=None):
         """Update the highlighting in a text entry box"""
-        debug(u"tcui.FileTextBox: highlightText")
+        debug("tcui.FileTextBox: highlightText")
 ##        debug(u"highlightText, p1: %s, p2: %s" % (p1, p2))
         # Path value, optionally relative to a second path
         a = self.splitPath(p1, p2)
@@ -122,7 +122,7 @@ class fileTextBox(object):
         """Split a path into an array, index[0] being the first path section, index[len-1] being the last
         Optionally takes a second path which is joined with the first for existence checks, to allow for
         checking existence of relative paths"""
-        debug(u"tcui.FileTextBox: splitPath")
+        debug("tcui.FileTextBox: splitPath")
         if os.path.split(p1)[1] == "":
             # Check to make sure there isn't a trailing slash
             if os.path.split(os.path.split(p1)[0])[1] != "":
@@ -141,7 +141,7 @@ class fileTextBox(object):
 
     def joinPaths(self, p1, p2):
         """Join p2 to p1, accounting for end cases (is directory, is file etc.)"""
-        debug(u"tcui.FileTextBox: joinPaths")
+        debug("tcui.FileTextBox: joinPaths")
         if p1 != None:
             # Need to check the end component
             if os.path.isfile(p1):
@@ -158,7 +158,7 @@ class fileTextBox(object):
     def existingPath(self, p):
         """Take a path and return the largest section of this path that exists
         on the filesystem"""
-        debug(u"tcui.FileTextBox: existingPath")
+        debug("tcui.FileTextBox: existingPath")
         if os.path.split(p)[1] == "":
             # Check to make sure there isn't a trailing slash
             if os.path.split(os.path.split(p)[0])[1] != "":
@@ -168,12 +168,12 @@ class fileTextBox(object):
             p = os.path.split(p)[0]
             # Avoid infinite loop
             if p == q:
-                return u""
+                return ""
         return p
 
     def comparePaths(self, p1, p2):
         """Compare two absolute paths, returning either a relative path from p1 to p2, or p1 if no relative path exists"""
-        debug(u"tcui.FileTextBox: comparePaths")
+        debug("tcui.FileTextBox: comparePaths")
         # Check that p2 is not an empty string, or None, and that drive letters match
         if p2 == None or p2 == "" or os.path.splitdrive(p1)[0] != os.path.splitdrive(p2)[0]:
             return p1

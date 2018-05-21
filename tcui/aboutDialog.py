@@ -18,7 +18,7 @@ class aboutDialog(wx.Dialog):
     """Dialog which displays information about the program"""
     def __init__(self, parent, app, version_number):
         """Intialise the dialog"""
-        debug(u"tcui.AboutDialog: __init__")
+        debug("tcui.AboutDialog: __init__")
         self.app = app
         self.version_number = version_number
         self.size = (400,1)
@@ -68,12 +68,12 @@ class aboutDialog(wx.Dialog):
 
     def translate(self):
         """Update the text of all controls to reflect a new translation"""
-        debug(u"tcui.AboutDialog: translate")
+        debug("tcui.AboutDialog: translate")
         self.SetLabel(gt("About TileCutter"))
         self.title_text.SetLabel(gt("TileCutter"))
         self.subtitle_text.SetLabel(gt("Simutrans Building Editor"))
         self.version_text.SetLabel(gt("Version %s") % self.version_number)
-        self.copyright_text.SetLabel(u"\nCopyright \u00A9 2008-2012 Timothy Baldock. All rights reserved.\n\nThis program makes use of the wxWidgets library, which is Copyright \u00A9 1992-2006 Julian Smart, Robert Roebling, Vadim Zeitlin and other members of the wxWidgets team.\n\nTileCutter is written in Python.")
+        self.copyright_text.SetLabel("\nCopyright \\u00A9 2008-2012 Timothy Baldock. All rights reserved.\n\nThis program makes use of the wxWidgets library, which is Copyright \\u00A9 1992-2006 Julian Smart, Robert Roebling, Vadim Zeitlin and other members of the wxWidgets team.\n\nTileCutter is written in Python.")
         self.title_text.Wrap(self.size[0]-20)
         self.subtitle_text.Wrap(self.size[0]-20)
         self.version_text.Wrap(self.size[0]-20)
@@ -85,9 +85,9 @@ class aboutDialog(wx.Dialog):
 
     def update(self):
         """Set the values of the controls in this group to the values in the model"""
-        debug(u"tcui.AboutDialog: update")
+        debug("tcui.AboutDialog: update")
 
     def OnClose(self,e):
         """On click of the close button"""
-        debug(u"tcui.AboutDialog: OnClose")
+        debug("tcui.AboutDialog: OnClose")
         self.EndModal(wx.ID_OK)

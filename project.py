@@ -81,13 +81,13 @@ class Project(object):
                 "frontimage": 0,
             },
             "files": {
-                "datfile_location": u"output.dat",
+                "datfile_location": "output.dat",
                 "datfile_write": True,
-                "pngfile_location": os.path.join(u"images", u"output.png"),
-                "pakfile_location": u"",
+                "pngfile_location": os.path.join("images", "output.png"),
+                "pakfile_location": "",
             },
             "dat": {
-                "dat_lump": u"Obj=building\nName=test_1\nType=cur\nPassengers=100\nintro_year=1900\nchance=100",
+                "dat_lump": "Obj=building\nName=test_1\nType=cur\nPassengers=100\nintro_year=1900\nchance=100",
             },
         }
 
@@ -135,35 +135,35 @@ class Project(object):
         # This function will alter the current project's representation through the standard access methods
         # It also keeps track of all changes and will eventually return a dict which will match the internal state of the project
         props = {}
-        for k, v in validators.iteritems():
-            debug(u"project: load_dict - processing node with key value: %s" % k)
-            if loaded.has_key(k):
+        for k, v in list(validators.items()):
+            debug("project: load_dict - processing node with key value: %s" % k)
+            if k in loaded:
                 # If this is a key, validate value + set if valid
                 if callable(v):
-                    debug(u"project: load_dict - callable object in validators dict, this is a node, running validation on data: %s" % loaded[k])
+                    debug("project: load_dict - callable object in validators dict, this is a node, running validation on data: %s" % loaded[k])
                     if v(loaded[k], validate=True):
-                        debug(u"project: load_dict - validation succeeds, using value: %s from input" % loaded[k])
+                        debug("project: load_dict - validation succeeds, using value: %s from input" % loaded[k])
                         props[k] = loaded[k]
                     else:
-                        debug(u"project: load_dict - validation failed, using value: %s from defaults" % defaults[k])
+                        debug("project: load_dict - validation failed, using value: %s from defaults" % defaults[k])
                         props[k] = defaults[k]
                 # If this is a node call function to determine what to set
-                elif type(v) == type({}):
-                    if type(loaded[k]) == type({}):
-                        debug(u"project: load_dict - dict-type object in both validators and input, recursing to process subset of keys: %s" % repr(loaded[k]))
+                elif isinstance(v, type({})):
+                    if isinstance(loaded[k], type({})):
+                        debug("project: load_dict - dict-type object in both validators and input, recursing to process subset of keys: %s" % repr(loaded[k]))
                         props[k] = self.load_dict(loaded[k], v, defaults[k])
                     else:
                         # Validators defines this to be a dict, but the loaded data for this key isn't a dict - data must be invalid so use defaults
-                        debug(u"project: load_dict - Validators defines this value to be a dict, but input data isn't, using defaults values from node: %s" % k)
+                        debug("project: load_dict - Validators defines this value to be a dict, but input data isn't, using defaults values from node: %s" % k)
                         props[k] = defaults[k]
                 else:
                     # This should not happen, panic
-                    debug(u"project: load_dict - ERROR: invalid state for load_dict decode, offending data is: %s (type: %s)" % (repr(v), type(v)))
+                    debug("project: load_dict - ERROR: invalid state for load_dict decode, offending data is: %s (type: %s)" % (repr(v), type(v)))
                     raise ValueError
             else:
-                debug(u"project: load_dict - Input data does not contain key: %s, using defaults for this node" % k)
+                debug("project: load_dict - Input data does not contain key: %s, using defaults for this node" % k)
                 props[k] = defaults[k]
-        debug(u"project: load_dict - done processing this level, returning properties dict: %s" % repr(props))
+        debug("project: load_dict - done processing this level, returning properties dict: %s" % repr(props))
         return props
 
 
@@ -179,7 +179,7 @@ class Project(object):
                     imagearray = []
                     for image in range(2):
                         imdefault = {
-                            "path": u"",
+                            "path": "",
                             "offset": [0,0],
                         }
                         imagearray.append(imdefault)
@@ -194,45 +194,45 @@ class Project(object):
         # Produce a fresh image array to read values into
         fresh_image_array = self.init_image_array()
         if set is not None:
-            if type(set) == type([]) and len(set) == 4:
+            if isinstance(set, type([])) and len(set) == 4:
                 for d, direction in enumerate(set):
                     # Each direction should be a list containing 2 items
-                    if type(direction) == type([]) and len(direction) == 2:
+                    if isinstance(direction, type([])) and len(direction) == 2:
                         for s, season in enumerate(direction):
                             # Each season should contain a variable number of frames (greater than 1) of type list
-                            if type(season) == type([]) and len(season) >= 1:
+                            if isinstance(season, type([])) and len(season) >= 1:
                                 for f, frame in enumerate(season):
                                     # Each frame should be a list containing 2 items
-                                    if type(frame) == type([]) and len(frame) == 2:
+                                    if isinstance(frame, type([])) and len(frame) == 2:
                                         for l, layer in enumerate(frame):
                                             # Each layer should be a dict containing optional keys
-                                            if type(layer) == type({}):
-                                                if layer.has_key("path"):
+                                            if isinstance(layer, type({})):
+                                                if "path" in layer:
                                                     if self.image_path(d, s, f, l, layer["path"], validate=True):
                                                         fresh_image_array[d][s][f][l]["path"] = layer["path"]
                                                     else:
                                                         # non-fatal validation error, just use the default instead
-                                                        debug(u"project: image_array - Validation failed for property \"path\" with value: %s, using default instead" % layer["path"])
-                                                if layer.has_key("offset"):
+                                                        debug("project: image_array - Validation failed for property \"path\" with value: %s, using default instead" % layer["path"])
+                                                if "offset" in layer:
                                                     if self.offset(d, s, f, l, layer["offset"], validate=True):
                                                         fresh_image_array[d][s][f][l]["offset"] = layer["path"]
                                                     else:
                                                         # non-fatal validation error, just use the default instead
-                                                        debug(u"project: image_array - Validation failed for property \"offset\" with value: %s, using default instead" % layer["offset"])
+                                                        debug("project: image_array - Validation failed for property \"offset\" with value: %s, using default instead" % layer["offset"])
                                             else:
-                                                debug(u"project: image_array - Validation failed, type of potential layer was incorrect, should've been dict but was: %s" % type(layer))
+                                                debug("project: image_array - Validation failed, type of potential layer was incorrect, should've been dict but was: %s" % type(layer))
                                                 return False
                                     else:
-                                        debug(u"project: image_array - Validation failed, type or length of potential frame was incorrect, should've been array,2 but was: %s,%s" % (type(frame),len(frame)))
+                                        debug("project: image_array - Validation failed, type or length of potential frame was incorrect, should've been array,2 but was: %s,%s" % (type(frame),len(frame)))
                                         return False
                             else:
-                                debug(u"project: image_array - Validation failed, type or length of potential season was incorrect, should've been array,>1 but was: %s,%s" % (type(season),len(season)))
+                                debug("project: image_array - Validation failed, type or length of potential season was incorrect, should've been array,>1 but was: %s,%s" % (type(season),len(season)))
                                 return False
                     else:
-                        debug(u"project: image_array - Validation failed, type or length of potential direction was incorrect, should've been array,2 but was: %s,%s" % (type(direction),len(direction)))
+                        debug("project: image_array - Validation failed, type or length of potential direction was incorrect, should've been array,2 but was: %s,%s" % (type(direction),len(direction)))
                         return False
             else:
-                debug(u"project: image_array - Validation failed, type of potential image array was incorrect, should've been array but was: %s,%s" % type(set))
+                debug("project: image_array - Validation failed, type of potential image array was incorrect, should've been array but was: %s,%s" % type(set))
                 return False
             # If nothing is invalid with the image_array set it and return True
             if not validate:
@@ -248,15 +248,15 @@ class Project(object):
         """Return our initial save location based on platform-specific settings"""
         # Use userprofile on all platforms as default
         if sys.platform == "darwin":
-            save_location = os.path.expanduser(u"~")
+            save_location = os.path.expanduser("~")
         elif sys.platform == "win32":
-            save_location = getenvvar(u"USERPROFILE")
+            save_location = getenvvar("USERPROFILE")
         else:
-            save_location = os.path.expanduser(u"~")
+            save_location = os.path.expanduser("~")
 
         # Otherwise use location of program
         # Depending on how/when os.path.expanduser can fail this may not be needed but just in case!
-        if save_location == u"~":
+        if save_location == "~":
             save_location = self.test_path(self.parent.parent.start_directory)
         else:
             save_location = self.test_path(save_location)
@@ -282,10 +282,10 @@ class Project(object):
         # When something in the project has changed, notify containing app to
         # allow for updating of UI
         if self.parent is not None:
-            debug(u"project: on_change - Root on_change triggered, sending message to App")
+            debug("project: on_change - Root on_change triggered, sending message to App")
             self.parent.project_has_changed()
         else:
-            debug(u"project: on_change - Root on_change triggered but no parent specified, doing nothing")
+            debug("project: on_change - Root on_change triggered but no parent specified, doing nothing")
 
 
     # Functions related to checking whether the project has changed
@@ -293,10 +293,10 @@ class Project(object):
         """An indication of whether this project has been changed since the last time it was saved"""
         current = self.hash_props()
         if current == self.internals["hash"]:
-            debug(u"project: has_changed - Check Project for changes - Project Unchanged")
+            debug("project: has_changed - Check Project for changes - Project Unchanged")
             return False
         else:
-            debug(u"project: has_changed - Check Project for changes - Project Changed")
+            debug("project: has_changed - Check Project for changes - Project Changed")
             return True
     def hash_props(self):
         """Return a hash of the representation of the properties dict for use in comparisons"""
@@ -311,14 +311,14 @@ class Project(object):
     def dat_lump(self, set=None, validate=False):
         """Sets or returns a string containing arbitrary .dat file properties"""
         if set is not None:
-            if type(set) in [type(""), type(u"")]:
+            if type(set) in [type(""), type("")]:
                 if not validate:
                     self.props["dat"]["dat_lump"] = set
-                    debug(u"project: dat_lump - properties set to %s" % self.props["dat"]["dat_lump"])
+                    debug("project: dat_lump - properties set to %s" % self.props["dat"]["dat_lump"])
                     self.on_change()
                 return True
             else:
-                debug(u"project: dat_lump - type of value (%s) outside of acceptable range" % unicode(set))
+                debug("project: dat_lump - type of value (%s) outside of acceptable range" % str(set))
                 return False
         else:
             return self.props["dat"]["dat_lump"]
@@ -336,16 +336,16 @@ class Project(object):
     def image_path(self, d, s, f, l, set=None, validate=False):
         """Set or return the path of the specified image"""
         if set is not None:
-            if type(set) in [type(""), type(u"")]:
+            if type(set) in [type(""), type("")]:
                 if not validate:
                     self.props["images"][d][s][f][l]["path"] = set
-                    debug(u"project: image_path - for image d:%s,s:%s,f:%s,l:%s set to %s" % (d, s, f, l, self.props["images"][d][s][f][l]["path"]))
+                    debug("project: image_path - for image d:%s,s:%s,f:%s,l:%s set to %s" % (d, s, f, l, self.props["images"][d][s][f][l]["path"]))
                     # This will either load the image (if the path exists) or set a default image if it doesn't
                     self.reload_image(d, s, f, l)
                     self.on_change()
                 return True
             else:
-                debug(u"project: image_path - type of value (%s) outside of acceptable range" % unicode(set))
+                debug("project: image_path - type of value (%s) outside of acceptable range" % str(set))
                 return False
         else:
             return self.props["images"][d][s][f][l]["path"]
@@ -447,11 +447,11 @@ class Project(object):
             if set >= 0:
                 if not validate:
                     self.props["images"][d][s][f][l]["offset"][0] = set
-                    debug(u"project: x_offset - X Offset for image d:%s,s:%s,f:%s,l:%s set to %i" % (d, s, f, l, self.props["images"][d][s][f][l]["offset"][0]))
+                    debug("project: x_offset - X Offset for image d:%s,s:%s,f:%s,l:%s set to %i" % (d, s, f, l, self.props["images"][d][s][f][l]["offset"][0]))
                     self.on_change()
                 return True
             else:
-                debug(u"project: x_offset - Value (%s) outside of acceptable range" % unicode(set))
+                debug("project: x_offset - Value (%s) outside of acceptable range" % str(set))
                 return False
         else:
             return self.props["images"][d][s][f][l]["offset"][0]
@@ -470,11 +470,11 @@ class Project(object):
             if set >= 0:
                 if not validate:
                     self.props["images"][d][s][f][l]["offset"][1] = set
-                    debug(u"project: y_offset - Y Offset for image d:%s,s:%s,f:%s,l:%s set to %i" % (d, s, f, l, self.props["images"][d][s][f][l]["offset"][1]))
+                    debug("project: y_offset - Y Offset for image d:%s,s:%s,f:%s,l:%s set to %i" % (d, s, f, l, self.props["images"][d][s][f][l]["offset"][1]))
                     self.on_change()
                 return True
             else:
-                debug(u"project: y_offset - Value (%s) outside of acceptable range" % unicode(set))
+                debug("project: y_offset - Value (%s) outside of acceptable range" % str(set))
                 return False
         else:
             return self.props["images"][d][s][f][l]["offset"][1]
@@ -494,11 +494,11 @@ class Project(object):
             if self.x_offset(d, s, f, l, set[0], True) and self.y_offset(d, s, f, l, set[1], True):
                 if not validate:
                     self.props["images"][d][s][f][l]["offset"] = [set[0], set[1]]
-                    debug(u"project: offset - Offset for image d:%s,s:%s,f:%s,l:%s set to %i" % (d, s, f, l, self.props["images"][d][s][f][l]["offset"][1]))
+                    debug("project: offset - Offset for image d:%s,s:%s,f:%s,l:%s set to %i" % (d, s, f, l, self.props["images"][d][s][f][l]["offset"][1]))
                     self.on_change()
                 return True
             else:
-                debug(u"project: offset - Value (%s) outside of acceptable range" % unicode(set))
+                debug("project: offset - Value (%s) outside of acceptable range" % str(set))
                 return False
         else:
             return self.props["images"][d][s][f][l]["offset"]
@@ -511,11 +511,11 @@ class Project(object):
             if set in [0,1,2,3]:
                 if not validate:
                     self.internals["activeimage"]["direction"] = set
-                    debug(u"project: direction - Active image direction set to %i" % self.internals["activeimage"]["direction"])
+                    debug("project: direction - Active image direction set to %i" % self.internals["activeimage"]["direction"])
                     self.on_change()
                 return True
             else:
-                debug(u"project: direction - Attempt to set active image direction failed - Value (%s) outside of acceptable range" % unicode(set))
+                debug("project: direction - Attempt to set active image direction failed - Value (%s) outside of acceptable range" % str(set))
                 return False
         else:
             return self.internals["activeimage"]["direction"]
@@ -526,11 +526,11 @@ class Project(object):
             if set in [0, 1]:
                 if not validate:
                     self.internals["activeimage"]["season"] = set
-                    debug(u"project: season - Active image season set to %i" % self.internals["activeimage"]["season"])
+                    debug("project: season - Active image season set to %i" % self.internals["activeimage"]["season"])
                     self.on_change()
                 return True
             else:
-                debug(u"project: season - Attempt to set active image season failed - Value (%s) outside of acceptable range" % unicode(set))
+                debug("project: season - Attempt to set active image season failed - Value (%s) outside of acceptable range" % str(set))
                 return False
         else:
             return self.internals["activeimage"]["season"]
@@ -541,11 +541,11 @@ class Project(object):
             if set in range(self.props["dims"]["frames"]):
                 if not validate:
                     self.internals["activeimage"]["frame"] = set
-                    debug(u"project: frame - Active image frame set to %i" % self.internals["activeimage"]["frame"])
+                    debug("project: frame - Active image frame set to %i" % self.internals["activeimage"]["frame"])
                     self.on_change()
                 return True
             else:
-                debug(u"project: frame - Attempt to set active image frame failed - Value (%s) outside of acceptable range" % unicode(set))
+                debug("project: frame - Attempt to set active image frame failed - Value (%s) outside of acceptable range" % str(set))
                 return False
         else:
             return self.internals["activeimage"]["frame"]
@@ -556,11 +556,11 @@ class Project(object):
             if set in [0, 1]:
                 if not validate:
                     self.internals["activeimage"]["layer"] = set
-                    debug(u"project: layer - Active image layer set to %i" % self.internals["activeimage"]["layer"])
+                    debug("project: layer - Active image layer set to %i" % self.internals["activeimage"]["layer"])
                     self.on_change()
                 return True
             else:
-                debug(u"project: layer - Attempt to set active image layer failed - Value (%s) outside of acceptable range" % unicode(set))
+                debug("project: layer - Attempt to set active image layer failed - Value (%s) outside of acceptable range" % str(set))
                 return False
         else:
             return self.internals["activeimage"]["layer"]
@@ -586,11 +586,11 @@ class Project(object):
             if set in config.choicelist_dims:
                 if not validate:
                     self.props["dims"]["x"] = int(set)
-                    debug(u"project: x - set to %i" % self.props["dims"]["x"])
+                    debug("project: x - set to %i" % self.props["dims"]["x"])
                     self.on_change()
                 return True
             else:
-                debug(u"project: x - Attempt to set X dimension failed - Value (%s) outside of acceptable range" % unicode(set))
+                debug("project: x - Attempt to set X dimension failed - Value (%s) outside of acceptable range" % str(set))
                 return False
         else:
             return self.props["dims"]["x"]
@@ -601,11 +601,11 @@ class Project(object):
             if set in config.choicelist_dims:
                 if not validate:
                     self.props["dims"]["y"] = int(set)
-                    debug(u"project: y - set to %i" % self.props["dims"]["y"])
+                    debug("project: y - set to %i" % self.props["dims"]["y"])
                     self.on_change()
                 return True
             else:
-                debug(u"project: y - Attempt to set Y dimension failed - Value (%s) outside of acceptable range" % unicode(set))
+                debug("project: y - Attempt to set Y dimension failed - Value (%s) outside of acceptable range" % str(set))
                 return False
         else:
             return self.props["dims"]["y"]
@@ -616,11 +616,11 @@ class Project(object):
             if set in config.choicelist_dims_z:
                 if not validate:
                     self.props["dims"]["z"] = int(set)
-                    debug(u"project: z - set to %i" % self.props["dims"]["z"])
+                    debug("project: z - set to %i" % self.props["dims"]["z"])
                     self.on_change()
                 return True
             else:
-                debug(u"project: z - Attempt to set Z dimension failed - Value (%s) outside of acceptable range" % unicode(set))
+                debug("project: z - Attempt to set Z dimension failed - Value (%s) outside of acceptable range" % str(set))
                 return False
         else:
             return self.props["dims"]["z"]
@@ -631,11 +631,11 @@ class Project(object):
             if set in config.choicelist_paksize:
                 if not validate:
                     self.props["dims"]["paksize"] = int(set)
-                    debug(u"project: paksize - set to %i" % self.props["dims"]["paksize"])
+                    debug("project: paksize - set to %i" % self.props["dims"]["paksize"])
                     self.on_change()
                 return True
             else:
-                debug(u"project: paksize - Attempt to set Paksize failed - Value (%s) outside of acceptable range" % unicode(set))
+                debug("project: paksize - Attempt to set Paksize failed - Value (%s) outside of acceptable range" % str(set))
                 return False
         else:
             return self.props["dims"]["paksize"]
@@ -646,17 +646,17 @@ class Project(object):
             if set in [True, 1]:
                 if not validate:
                     self.props["dims"]["winter"] = 1
-                    debug(u"project: winter - set to %i" % self.props["dims"]["winter"])
+                    debug("project: winter - set to %i" % self.props["dims"]["winter"])
                     self.on_change()
                 return True
             elif set in [False, 0]:
                 if not validate:
                     self.props["dims"]["winter"] = 0
-                    debug(u"project: winter - set to %i" % self.props["dims"]["winter"])
+                    debug("project: winter - set to %i" % self.props["dims"]["winter"])
                     self.on_change()
                 return True
             else:
-                debug(u"project: winter - Attempt to set winter failed - Value (%s) outside of acceptable range" % unicode(set))
+                debug("project: winter - Attempt to set winter failed - Value (%s) outside of acceptable range" % str(set))
                 return False
         else:
             return self.props["dims"]["winter"]
@@ -667,17 +667,17 @@ class Project(object):
             if set in [True, 1]:
                 if not validate:
                     self.props["dims"]["frontimage"] = 1
-                    debug(u"project: frontimage - set to %i" % self.props["dims"]["frontimage"])
+                    debug("project: frontimage - set to %i" % self.props["dims"]["frontimage"])
                     self.on_change()
                 return True
             elif set in [False, 0]:
                 if not validate:
                     self.props["dims"]["frontimage"] = 0
-                    debug(u"project: frontimage - set to %i" % self.props["dims"]["frontimage"])
+                    debug("project: frontimage - set to %i" % self.props["dims"]["frontimage"])
                     self.on_change()
                 return True
             else:
-                debug(u"project: frontimage - Attempt to set frontimage failed - Value (%s) outside of acceptable range" % unicode(set))
+                debug("project: frontimage - Attempt to set frontimage failed - Value (%s) outside of acceptable range" % str(set))
                 return False
         else:
             return self.props["dims"]["frontimage"]
@@ -688,11 +688,11 @@ class Project(object):
             if set == 1:
                 if not validate:
                     self.props["dims"]["frames"] = int(set)
-                    debug(u"project: frames - set to %i" % self.props["dims"]["frames"])
+                    debug("project: frames - set to %i" % self.props["dims"]["frames"])
                     self.on_change()
                 return True
             else:
-                debug(u"project: frames - attempt to set frames failed - value (%s) outside of acceptable range" % unicode(set))
+                debug("project: frames - attempt to set frames failed - value (%s) outside of acceptable range" % str(set))
                 return False
         else:
             return self.props["dims"]["frames"]
@@ -703,11 +703,11 @@ class Project(object):
             if set in config.choicelist_views:
                 if not validate:
                     self.props["dims"]["directions"] = int(set)
-                    debug(u"project: directions - set to %i" % self.props["dims"]["directions"])
+                    debug("project: directions - set to %i" % self.props["dims"]["directions"])
                     self.on_change()
                 return True
             else:
-                debug(u"project: directions - attempt to set directions failed - value (%s) outside of acceptable range" % unicode(set))
+                debug("project: directions - attempt to set directions failed - value (%s) outside of acceptable range" % str(set))
                 return False
         else:
             return self.props["dims"]["directions"]
@@ -717,14 +717,14 @@ class Project(object):
     def datfile_location(self, set=None, validate=False):
         """Set or return (relative) path to dat file"""
         if set is not None:
-            if type(set) in [type(""), type(u"")]:
+            if type(set) in [type(""), type("")]:
                 if not validate:
-                    self.props["files"]["datfile_location"] = unicode(set)
-                    debug(u"project: datfile_location - set to %s" % self.props["files"]["datfile_location"])
+                    self.props["files"]["datfile_location"] = str(set)
+                    debug("project: datfile_location - set to %s" % self.props["files"]["datfile_location"])
                     self.on_change()
                 return True
             else:
-                debug(u"project: datfile_location - attempt to set datfile_location failed - type of value (%s) outside of acceptable range" % unicode(set))
+                debug("project: datfile_location - attempt to set datfile_location failed - type of value (%s) outside of acceptable range" % str(set))
                 return False
         else:
             return self.props["files"]["datfile_location"]
@@ -735,17 +735,17 @@ class Project(object):
             if set in [True, 1]:
                 if not validate:
                     self.props["files"]["datfile_write"] = True
-                    debug(u"project: datfile_write - set to %s" % self.props["files"]["datfile_write"])
+                    debug("project: datfile_write - set to %s" % self.props["files"]["datfile_write"])
                     self.on_change()
                 return True
             elif set in [False, 0]:
                 if not validate:
                     self.props["files"]["datfile_write"] = False
-                    debug(u"project: datfile_write - set to %s" % self.props["files"]["datfile_write"])
+                    debug("project: datfile_write - set to %s" % self.props["files"]["datfile_write"])
                     self.on_change()
                 return True
             else:
-                debug(u"project: datfile_write - Attempt to set datfile_write failed - Value (%s) outside of acceptable range" % unicode(set))
+                debug("project: datfile_write - Attempt to set datfile_write failed - Value (%s) outside of acceptable range" % str(set))
                 return False
         else:
             return self.props["files"]["datfile_write"]
@@ -753,14 +753,14 @@ class Project(object):
     def pngfile_location(self, set=None, validate=False):
         """Set or return (relative) path to png file"""
         if set is not None:
-            if type(set) in [type(""), type(u"")]:
+            if type(set) in [type(""), type("")]:
                 if not validate:
-                    self.props["files"]["pngfile_location"] = unicode(set)
-                    debug(u"project: pngfile_location - set to %s" % self.props["files"]["pngfile_location"])
+                    self.props["files"]["pngfile_location"] = str(set)
+                    debug("project: pngfile_location - set to %s" % self.props["files"]["pngfile_location"])
                     self.on_change()
                 return True
             else:
-                debug(u"project: pngfile_location - Attempt to set pngfile_location failed - type of value (%s) outside of acceptable range" % unicode(set))
+                debug("project: pngfile_location - Attempt to set pngfile_location failed - type of value (%s) outside of acceptable range" % str(set))
                 return False
         else:
             return self.props["files"]["pngfile_location"]
@@ -768,14 +768,14 @@ class Project(object):
     def pakfile_location(self, set=None, validate=False):
         """Set or return (relative) path to pak file"""
         if set is not None:
-            if type(set) in [type(""), type(u"")]:
+            if type(set) in [type(""), type("")]:
                 if not validate:
-                    self.props["files"]["pakfile_location"] = unicode(set)
-                    debug(u"project: pakfile_location - set to %s" % self.props["files"]["pakfile_location"])
+                    self.props["files"]["pakfile_location"] = str(set)
+                    debug("project: pakfile_location - set to %s" % self.props["files"]["pakfile_location"])
                     self.on_change()
                 return True
             else:
-                debug(u"project: pakfile_location - Attempt to set pakfile_location failed - type of value (%s) outside of acceptable range" % unicode(set))
+                debug("project: pakfile_location - Attempt to set pakfile_location failed - type of value (%s) outside of acceptable range" % str(set))
                 return False
         else:
             return self.props["files"]["pakfile_location"]
@@ -787,16 +787,16 @@ class Project(object):
         if set is not None:
             if set in [True, 1]:
                 self.internals["files"]["saved"] = True
-                debug(u"project: saved - set to %s" % self.internals["files"]["saved"])
+                debug("project: saved - set to %s" % self.internals["files"]["saved"])
                 self.on_change()
                 return True
             elif set in [False, 0]:
                 self.internals["files"]["saved"] = False
-                debug(u"project: saved - set to %s" % self.internals["files"]["saved"])
+                debug("project: saved - set to %s" % self.internals["files"]["saved"])
                 self.on_change()
                 return True
             else:
-                debug(u"Attempt to set project saved status failed - Value (%s) outside of acceptable range" % unicode(set))
+                debug("Attempt to set project saved status failed - Value (%s) outside of acceptable range" % str(set))
                 return False
         else:
             return self.internals["files"]["saved"]
@@ -804,13 +804,13 @@ class Project(object):
     def save_location(self, set=None, validate=False):
         """Set or return (absolute) path to project save file location"""
         if set is not None:
-            if type(set) in [type(""), type(u"")]:
-                self.internals["files"]["save_location"] = unicode(set)
-                debug(u"project: save_location - set to %s" % self.internals["files"]["save_location"])
+            if type(set) in [type(""), type("")]:
+                self.internals["files"]["save_location"] = str(set)
+                debug("project: save_location - set to %s" % self.internals["files"]["save_location"])
                 self.on_change()
                 return True
             else:
-                debug(u"project: save_location - Attempt to set project save_location status failed - type of value (%s) outside of acceptable range" % unicode(set))
+                debug("project: save_location - Attempt to set project save_location status failed - type of value (%s) outside of acceptable range" % str(set))
                 return False
         else:
             return self.internals["files"]["save_location"]

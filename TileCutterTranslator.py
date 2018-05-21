@@ -86,13 +86,13 @@ if ENCODE_WIN:
 else:
     stoutfile = f
 
-name = u"English"
-name_translated = u"English"
-language_code = u"en"
-created_by = u"Timothy Baldock"
-created_date = time.strftime(u"%d-%m-%Y")
+name = "English"
+name_translated = "English"
+language_code = "en"
+created_by = "Timothy Baldock"
+created_date = time.strftime("%d-%m-%Y")
 
-outfile.write(u"""#{"name": "%s", "name_translated": "%s", "language_code": "%s", "created_by": "%s", "created_date": "%s"}
+outfile.write("""#{"name": "%s", "name_translated": "%s", "language_code": "%s", "created_by": "%s", "created_date": "%s"}
 #
 #	** English translation file for TileCutter **
 #
@@ -137,7 +137,7 @@ strings = []
 dupestrings = []
 # For each entry in rawstrings, check if it's in the DB
 for s in rawstrings:
-    if s not in db.keys():
+    if s not in list(db.keys()):
         # If there's no key for this, add one
         if logging:
             error_file.write("New key found: %s\n" % s)
@@ -158,19 +158,19 @@ f.close()
 # This file is in the same format as you get if you export a translation from SimuTranslator
 # Should provide an easy way to preview the translation strings as they appear before translation
 # The production version of the English translation should come from SimuTranslator though
-for k, v in db.items():
+for k, v in list(db.items()):
     # If value is blank (no translation) make the default be the same
-    if v in ["", u""]:
-        outfile.write(u"%s\n%s\n" % (unicode(k), unicode(k)))
+    if v in ["", ""]:
+        outfile.write("%s\n%s\n" % (str(k), str(k)))
     else:
-        outfile.write(u"%s\n%s\n" % (unicode(k), unicode(v)))
+        outfile.write("%s\n%s\n" % (str(k), str(v)))
 
 # Also write them out to the simutranslator file ready for import
 # Include the obj= and name= bits at the start of each one, with a ---- seperator between them
-for k, v in db.items():
-    stoutfile.write(u"obj=program_text\nname=%s\n----------\n" % unicode(k))
+for k, v in list(db.items()):
+    stoutfile.write("obj=program_text\nname=%s\n----------\n" % str(k))
 
-outfile.write(u"#End of File - Total of %i string pairs\n" % len(db))
+outfile.write("#End of File - Total of %i string pairs\n" % len(db))
 if logging:
     error_file.write("...Process completed, output %i translation string pairs\n" % len(db))
 

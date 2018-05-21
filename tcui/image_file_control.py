@@ -17,7 +17,7 @@ debug = logger.Log()
 class ImageFileControl(wx.Panel):
     def __init__(self, parent, app):
         """parent, ref to app"""
-        debug(u"tcui.ImageFileControl: __init__")
+        debug("tcui.ImageFileControl: __init__")
         wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
 
         self.ftbox = tcui.fileTextBox(parent)
@@ -59,7 +59,7 @@ class ImageFileControl(wx.Panel):
 
     def translate(self):
         """Update the text of all controls to reflect a new translation"""
-        debug(u"tcui.ImageFileControl: translate")
+        debug("tcui.ImageFileControl: translate")
         self.path_label.SetLabel(gt("Source image location:"))
         self.path_box.SetToolTip(gt("tt_image_file_location"))
         self.path_filebrowse.SetLabel(gt("Browse..."))
@@ -69,33 +69,33 @@ class ImageFileControl(wx.Panel):
 
     def update(self):
         """Set the values of the controls in this group to the values in the model"""
-        debug(u"tcui.ImageFileControl: update")
+        debug("tcui.ImageFileControl: update")
         # Setting these values should also cause text highlighting to occur
         self.path_box.ChangeValue(self.app.activeproject.active_image_path())
 
     def OnTextChange(self, e):
         """Triggered when the text in the path box is changed"""
-        debug(u"tcui.ImageFileControl: OnTextChange")
+        debug("tcui.ImageFileControl: OnTextChange")
         if self.app.activeproject.active_image_path() != self.path_box.GetValue():
             self.app.activeproject.active_image_path(self.path_box.GetValue())
-            debug(u"tcui.ImageFileControl: OnTextChange - Text changed in Active Image entry box, new text: %s" % unicode(self.path_box.GetValue()))
+            debug("tcui.ImageFileControl: OnTextChange - Text changed in Active Image entry box, new text: %s" % str(self.path_box.GetValue()))
             # Refresh image in parent window
             self.parent.refresh_if_valid()
 
     def OnBrowse(self, e):
         """Triggered when the browse button is clicked"""
-        debug(u"tcui.ImageFileControl: OnBrowse")
+        debug("tcui.ImageFileControl: OnBrowse")
         value = self.ftbox.filePickerDialog(self.app.activeproject.active_image_path(), 
                                             self.app.activeproject.save_location(), 
                                             gt("Choose an image file to open..."),
                                             "PNG files (*.png)|*.png", 
                                             wx.FD_OPEN|wx.FD_FILE_MUST_EXIST)
-        debug(u"tcui.ImageFileControl: OnBrowse - Path selected by user is: %s" % value)
+        debug("tcui.ImageFileControl: OnBrowse - Path selected by user is: %s" % value)
         self.path_box.SetValue(value)
 
     def OnReloadImage(self,e):
         """When reload image button clicked"""
-        debug(u"tcui.ImageFileControl: OnReloadImage")
+        debug("tcui.ImageFileControl: OnReloadImage")
         self.app.activeproject.reload_active_image()
 #        self.parent.update()
 

@@ -18,7 +18,7 @@ class seasonControl(wx.Panel):
     """Box containing season alteration controls"""
     def __init__(self, parent, app):
         """"""
-        debug(u"tcui.SeasonControl: __init__")
+        debug("tcui.SeasonControl: __init__")
         wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
         self.app = app
         # Setup sizers
@@ -62,7 +62,7 @@ class seasonControl(wx.Panel):
 
     def translate(self):
         """Update the text of all controls to reflect a new translation"""
-        debug(u"tcui.SeasonControl: translate")
+        debug("tcui.SeasonControl: translate")
         self.label.SetLabel(gt("Season:"))
         self.seasons_select_summer.SetLabel(gt("Summer"))
         self.seasons_select_summer.SetToolTip(gt("tt_seasons_select_summer"))
@@ -75,7 +75,7 @@ class seasonControl(wx.Panel):
 
     def update(self):
         """Set the values of the controls in this group to the values in the model"""
-        debug(u"tcui.SeasonControl: update")
+        debug("tcui.SeasonControl: update")
         if self.app.activeproject.winter() == 0:  # Turn winter image off
             self.seasons_enable_winter.SetValue(False)
             # If currently have winter image selected, switch to summer image
@@ -94,19 +94,19 @@ class seasonControl(wx.Panel):
 
     def OnToggle(self,e):
         """Toggling winter image on and off"""
-        debug(u"tcui.SeasonControl: OnToggle")
+        debug("tcui.SeasonControl: OnToggle")
         self.app.activeproject.winter(self.seasons_enable_winter.GetValue())
         self.update()
     def OnSummer(self,e):
         """Change to Summer image"""
-        debug(u"tcui.SeasonControl: OnSummer")
+        debug("tcui.SeasonControl: OnSummer")
         # Set active image to Summer
         self.app.activeproject.active_image(season = 0)
         # Redraw active image
         self.app.frame.display.update()
     def OnWinter(self,e):
         """Change to Winter image"""
-        debug(u"tcui.SeasonControl: OnWinter")
+        debug("tcui.SeasonControl: OnWinter")
         # Set active image to Winter
         self.app.activeproject.active_image(season = 1)
         # Redraw active image

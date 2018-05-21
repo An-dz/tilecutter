@@ -18,7 +18,7 @@ class imageControl(wx.Panel):
     """Box containing Front/Back image controls"""
     def __init__(self, parent, app):
         """"""
-        debug(u"tcui.ImageControl: __init__")
+        debug("tcui.ImageControl: __init__")
         wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
         self.app = app
         # Setup sizers
@@ -62,7 +62,7 @@ class imageControl(wx.Panel):
 
     def translate(self):
         """Update the text of all controls to reflect a new translation"""
-        debug(u"tcui.ImageControl: translate")
+        debug("tcui.ImageControl: translate")
         self.label.SetLabel(gt("Image:"))
         self.images_select_back.SetLabel(gt("BackImage"))
         self.images_select_back.SetToolTip(gt("tt_images_select_back"))
@@ -75,7 +75,7 @@ class imageControl(wx.Panel):
 
     def update(self):
         """Set the values of the controls in this group to the values in the model"""
-        debug(u"tcui.ImageControl: update")
+        debug("tcui.ImageControl: update")
         if self.app.activeproject.frontimage() == 0:  # Turn frontimage off
             self.images_enable_front.SetValue(0)
             # If currently have frontimage selected, switch to backimage
@@ -94,19 +94,19 @@ class imageControl(wx.Panel):
 
     def OnToggle(self,e):
         """Toggling frontimage on and off"""
-        debug(u"tcui.ImageControl: OnToggle")
+        debug("tcui.ImageControl: OnToggle")
         self.app.activeproject.frontimage(self.images_enable_front.GetValue())
         self.update()
     def OnBackImage(self,e):
         """Called when user wishes to display back image"""
-        debug(u"tcui.ImageControl: OnBackImage")
+        debug("tcui.ImageControl: OnBackImage")
         # Set active image to Back
         self.app.activeproject.active_image(layer=0)
         # Redraw active image
         self.app.frame.display.update()
     def OnFrontImage(self,e):
         """Called when user wishes to display front image"""
-        debug(u"tcui.ImageControl: OnFrontImage")
+        debug("tcui.ImageControl: OnFrontImage")
         # Set active image to Front
         self.app.activeproject.active_image(layer=1)
         # Redraw active image

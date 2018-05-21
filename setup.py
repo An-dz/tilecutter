@@ -80,44 +80,44 @@ options = {
 
 # Source distribution specific
 if len(sys.argv) >= 2 and sys.argv[1] == "source":
-    print "Running source distribution"
+    print("Running source distribution")
     try:
         import shutil
     except ImportError:
-        print "Could not import shutil module. Aborting source distribution creation"
+        print("Could not import shutil module. Aborting source distribution creation")
         sys.exit(1)
 
     dist_dir = os.path.join("..", "dist", "src_dist_%s" % version)
     dist_zip = os.path.join("..", "dist", "TileCutter_src_%s.zip" % version) 
 
     for recdir in ["translator", "languages", "tcui"]:
-        print "Copying contents of: %s/" % recdir
+        print("Copying contents of: %s/" % recdir)
         shutil.copytree(recdir, os.path.join(dist_dir, recdir), ignore=shutil.ignore_patterns(".svn", "tmp*", "*.pyc", "*.py~", "*.tab~"))
 
     for distfile in ["config.py", "imres.py", "licence.txt", "environment.py", "logger.py", "tcp.py", "tc.py", "project.py", "tcproject.py", "test.png", "tilecutter.py", "tilecutter.pyw", "main.py"]:
-        print "Copying file: %s" % distfile
+        print("Copying file: %s" % distfile)
         shutil.copy(distfile, dist_dir)
 
     # After building this, run post-setup actions (e.g. creating distribution packages etc.)
     # Produce .zip file
-    print "Adding distribution files to .zip..."
+    print("Adding distribution files to .zip...")
     zip = zipfile.ZipFile(dist_zip, "w", zipfile.ZIP_DEFLATED)
     for root, dirs, files in os.walk(dist_dir):
         for name in files:
             fn = os.path.join(root, name) 
             rel_fn = os.path.relpath(os.path.join(root, name), dist_dir) 
-            print "  Adding \"%s\" to zip as \"%s\"" % (fn, rel_fn)
+            print("  Adding \"%s\" to zip as \"%s\"" % (fn, rel_fn))
             zip.write(fn, rel_fn)
     zip.close()
 
 
 # Windows specific
 if len(sys.argv) >= 2 and sys.argv[1] == "py2exe":
-    print "Running py2exe distribution"
+    print("Running py2exe distribution")
     try:
         import py2exe
     except ImportError:
-        print "Could not import py2exe. Aborting windows exe output"
+        print("Could not import py2exe. Aborting windows exe output")
         sys.exit(1)
 
     dist_dir = os.path.join("..", "dist", "win_dist_%s" % version)
@@ -149,13 +149,13 @@ if len(sys.argv) >= 2 and sys.argv[1] == "py2exe":
 
     # After building this, run post-setup actions (e.g. creating distribution packages etc.)
     # Produce .zip file
-    print "Adding distribution files to .zip..."
+    print("Adding distribution files to .zip...")
     zip = zipfile.ZipFile(dist_zip, "w", zipfile.ZIP_DEFLATED)
     for root, dirs, files in os.walk(dist_dir):
         for name in files:
             fn = os.path.join(root, name) 
             rel_fn = os.path.relpath(os.path.join(root, name), dist_dir) 
-            print "  Adding \"%s\" to zip as \"%s\"" % (fn, rel_fn)
+            print("  Adding \"%s\" to zip as \"%s\"" % (fn, rel_fn))
             zip.write(fn, rel_fn)
     zip.close()
 
@@ -164,11 +164,11 @@ if len(sys.argv) >= 2 and sys.argv[1] == "py2exe":
 
 # OSX specific
 if len(sys.argv) >= 2 and sys.argv[1] == "py2app":
-    print "Running py2app distribution"
+    print("Running py2app distribution")
     try:
         import py2app
     except ImportError:
-        print "Could not import py2app.   Mac bundle could not be built."
+        print("Could not import py2app.   Mac bundle could not be built.")
         sys.exit(1)
 
     dist_dir = os.path.join("..", "dist", "osx_dist_%s" % version)
@@ -181,29 +181,29 @@ if len(sys.argv) >= 2 and sys.argv[1] == "py2app":
     # Bindings to allow drag+drop of project files onto icon
     # Also registers filetype with OSX
     plist = {
-                "CFBundleIdentifier": u"uk.me.entropy.tilecutter",
-                "CFBundleGetInfoString": u"Simutrans Building Editor",
-                "NSHumanReadableCopyright": u"Copyright © 2008-2012 Timothy Baldock. All Rights Reserved.",
+                "CFBundleIdentifier": "uk.me.entropy.tilecutter",
+                "CFBundleGetInfoString": "Simutrans Building Editor",
+                "NSHumanReadableCopyright": "Copyright © 2008-2012 Timothy Baldock. All Rights Reserved.",
                 "CFBundleDocumentTypes": [
                     {
-                        "CFBundleTypeName": u"TileCutter Project Document", 
-                        "CFBundleTypeRole": u"Editor", 
-                        "CFBundleTypeExtensions": [u"tcp",],
-                        "LSItemContentTypes": [u"uk.me.entropy.tcp",],
-                        "CFBundleTypeIconFile": u"tcp.icns",
+                        "CFBundleTypeName": "TileCutter Project Document", 
+                        "CFBundleTypeRole": "Editor", 
+                        "CFBundleTypeExtensions": ["tcp",],
+                        "LSItemContentTypes": ["uk.me.entropy.tcp",],
+                        "CFBundleTypeIconFile": "tcp.icns",
                     },
                 ],
                 "UTExportedTypeDeclarations": [
                     {
-                        "UTTypeIdentifier": u"uk.me.entropy.tcp", 
-                        "UTTypeReferenceURL": u"http://entropy.me.uk/tilecutter/docs/tcpformat/",
-                        "UTTypeDescription": u"TileCutter Project File",
-                        "UTTypeIconFile": u"tcp.icns",
-                        "UTTypeConformsTo": [u"public.data",],
+                        "UTTypeIdentifier": "uk.me.entropy.tcp", 
+                        "UTTypeReferenceURL": "http://entropy.me.uk/tilecutter/docs/tcpformat/",
+                        "UTTypeDescription": "TileCutter Project File",
+                        "UTTypeIconFile": "tcp.icns",
+                        "UTTypeConformsTo": ["public.data",],
                         "UTTypeTagSpecification": {
-                            "com.apple.ostype": u"TCPF",
-                            "public.filename-extension": [u"tcp",],
-                            "public.mimetype": u"application/x-tilecutter-project",
+                            "com.apple.ostype": "TCPF",
+                            "public.filename-extension": ["tcp",],
+                            "public.mimetype": "application/x-tilecutter-project",
                         },
                     },
                 ],

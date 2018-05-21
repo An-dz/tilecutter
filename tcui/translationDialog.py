@@ -18,7 +18,7 @@ class translationDialog(wx.Dialog):
     """Dialog for choosing which translation to use"""
     def __init__(self, parent, app):
         """Initialise the dialog and populate lists"""
-        debug(u"tcui.TranslationDialog: __init__")
+        debug("tcui.TranslationDialog: __init__")
         self.app = app
         size = (300,200)
         wx.Dialog.__init__(self, parent, wx.ID_ANY, "", (-1,-1), size)
@@ -74,7 +74,7 @@ class translationDialog(wx.Dialog):
 
     def translate(self):
         """Update the text of all controls to reflect a new translation"""
-        debug(u"tcui.TranslationDialog: translate")
+        debug("tcui.TranslationDialog: translate")
         self.SetLabel(gt("Language"))
         self.top_label.SetLabel(gt("Select from the options below:"))
         self.close_button.SetLabel(gt("Close"))
@@ -91,16 +91,16 @@ class translationDialog(wx.Dialog):
 
     def update(self):
         """Set the values of the controls in this group to the values in the model"""
-        debug(u"tcui.TranslationDialog: update")
+        debug("tcui.TranslationDialog: update")
 
     def OnClose(self, e):
         """On click of the close button"""
-        debug(u"tcui.TranslationDialog: OnClose")
+        debug("tcui.TranslationDialog: OnClose")
         self.EndModal(wx.ID_OK)
     def OnSelection(self, e):
         """When user changes the language selection"""
         # Set active translation to the one specified
-        debug(u"tcui.TranslationDialog: OnSelection - User selected language: %s" % gt.longnameToName(self.language_picker.GetValue()))
+        debug("tcui.TranslationDialog: OnSelection - User selected language: %s" % gt.longnameToName(self.language_picker.GetValue()))
         gt.setActiveTranslation(gt.longnameToName(self.language_picker.GetValue()))
         # Call own translate function
         self.translate()

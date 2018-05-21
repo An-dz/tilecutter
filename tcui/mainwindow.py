@@ -5,16 +5,16 @@
 
 # Copyright © 2008-2011 Timothy Baldock. All Rights Reserved.
 
-import sys, os, StringIO, pickle
+import sys, os, io, pickle
 
 import logger
 debug = logger.Log()
 
 try:
     import wx
-    debug(u"WX version is: %s" % wx.version())
+    debug("WX version is: %s" % wx.version())
 except ImportError:
-    debug(u"WXPython not installed, please install module and try again!")
+    debug("WXPython not installed, please install module and try again!")
     raise
 
 import translator
@@ -36,7 +36,7 @@ config.save()
 class MainWindow(wx.Frame):
     """Main frame window inside which all else is put"""
     def __init__(self, parent, app, id, title):
-        debug(u"tcui.MainWindow: __init__")
+        debug("tcui.MainWindow: __init__")
         wx.Frame.__init__(self, parent, wx.ID_ANY, title, (-1,-1), (-1,-1), style=wx.DEFAULT_FRAME_STYLE)
         self.app = app
 
@@ -55,7 +55,7 @@ class MainWindow(wx.Frame):
         # Create the status bar
         self.statusbar = wx.StatusBar(self, wx.ID_ANY)
         self.SetStatusBar(self.statusbar)
-        self.statusbar.SetStatusText(u"", 0)
+        self.statusbar.SetStatusText("", 0)
 
         # self.panel contains all other elements within this frame and must be their parent
         self.panel = wx.Panel(self, wx.ID_ANY)
@@ -162,28 +162,28 @@ class MainWindow(wx.Frame):
 
     def get_active_image_path(self, val=None):
         """Return activeproject's active image path"""
-        debug(u"tcui.MainWindow: get_active_image_path")
+        debug("tcui.MainWindow: get_active_image_path")
         return self.app.activeproject.active_image_path(val)
     def get_active_savefile_path(self, val=None):
         """Return activeproject's save path"""
-        debug(u"tcui.MainWindow: get_active_savefile_path")
+        debug("tcui.MainWindow: get_active_savefile_path")
         return self.app.activeproject.save_location(val)
     def get_active_datfile_path(self, val=None):
         """Return activeproject's datfile path"""
-        debug(u"tcui.MainWindow: get_active_datfile_path")
+        debug("tcui.MainWindow: get_active_datfile_path")
         return self.app.activeproject.datfile_location(val)
     def get_active_pngfile_path(self, val=None):
         """Return activeproject's pngfile path"""
-        debug(u"tcui.MainWindow: get_active_pngfile_path")
+        debug("tcui.MainWindow: get_active_pngfile_path")
         return self.app.activeproject.pngfile_location(val)
     def get_active_pakfile_path(self, val=None):
         """Return activeproject's pakfile path"""
-        debug(u"tcui.MainWindow: get_active_pakfile_path")
+        debug("tcui.MainWindow: get_active_pakfile_path")
         return self.app.activeproject.pakfile_location(val)
 
     def translate(self):
         """Master translate function for the mainwindow object"""
-        debug(u"tcui.MainWindow: translate")
+        debug("tcui.MainWindow: translate")
         self.Freeze()
         self.cut_button.SetLabel(gt("Cut image"))
         self.export_button.SetLabel(gt("Compile pak"))
@@ -216,18 +216,18 @@ class MainWindow(wx.Frame):
             prev_panel_size = self.panel.GetSize().Get()
             prev_window_size = self.GetSize().Get()
 
-        debug(u"tcui.MainWindow: translate - previous panel size: %s, previous window size: %s" % (prev_panel_size, prev_window_size))
+        debug("tcui.MainWindow: translate - previous panel size: %s, previous window size: %s" % (prev_panel_size, prev_window_size))
 
         # Find minimum size of panel
         self.panel.Fit()
-        debug(u"tcui.MainWindow: translate - minimum panel size is: %s" % (str(self.panel.GetBestSize().Get())))
+        debug("tcui.MainWindow: translate - minimum panel size is: %s" % (str(self.panel.GetBestSize().Get())))
 
         # If horizontal or vertical size is smaller than it was before set the size to that value
         new_panel_size = (max(prev_panel_size[0], self.panel.GetBestSize().Get()[0]), max(prev_panel_size[1], self.panel.GetBestSize().Get()[1]))
         # New window size will be the new panel size plus the difference between the previous window size and panel size
         new_window_size = (prev_window_size[0] - prev_panel_size[0] + new_panel_size[0], 
                            prev_window_size[1] - prev_panel_size[1] + new_panel_size[1])
-        debug(u"tcui.MainWindow: translate - new panel size is: %s, new window size is: %s" % (new_panel_size, new_window_size))
+        debug("tcui.MainWindow: translate - new panel size is: %s, new window size is: %s" % (new_panel_size, new_window_size))
 
         # Set minimum panel size to the minimum allowable height and 1.4* ratio width of that height (or the minimum width if this is larger)
         self.panel.SetMinSize(wx.Size(max(self.panel.GetBestSize().Get()[1] * 1.4, self.panel.GetBestSize().Get()[0]), self.panel.GetBestSize().Get()[1]))
@@ -243,17 +243,17 @@ class MainWindow(wx.Frame):
 
     def set_title(self):
         # Set title text of window
-        debug(u"tcui.MainWindow: set_title")
+        debug("tcui.MainWindow: set_title")
         self.SetTitle(self.app.get_title_text() % _gt("TileCutter"))
 
     def set_status_text(self, message, field=0):
         """Set the status bar text field specified to the message specified"""
-        debug(u"tcui.MainWindow: set_status_text - setting field: %s to string: %s" % (field, message))
+        debug("tcui.MainWindow: set_status_text - setting field: %s to string: %s" % (field, message))
         self.statusbar.SetStatusText(message, field)
 
     def update(self):
         """Update frame and all its children to reflect values in the active project"""
-        debug(u"tcui.MainWindow: update")
+        debug("tcui.MainWindow: update")
         self.Freeze()
         self.export_dat_toggle.SetValue(config.write_dat)
         self.control_seasons.update()
@@ -267,7 +267,7 @@ class MainWindow(wx.Frame):
 
     def OnToggleDatExport(self, e):
         """Toggle whether .dat file info should be exported, or just the cut image"""
-        debug(u"tcui.MainWindow: OnToggleDatExport")
+        debug("tcui.MainWindow: OnToggleDatExport")
         if config.write_dat != self.export_dat_toggle.GetValue():
             config.write_dat = self.export_dat_toggle.GetValue()
-            debug(u"tcui.MainWindow: OnToggleDatExport - Set config.write_dat to %s" % config.write_dat)
+            debug("tcui.MainWindow: OnToggleDatExport - Set config.write_dat to %s" % config.write_dat)

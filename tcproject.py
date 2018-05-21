@@ -84,12 +84,12 @@ class ProjectImage(object):
         """Set or return the path of this image as entered"""
         if path != None:
             self.value_path = path
-            debug(u"value_path set to: \"%s\"" % self.value_path)
+            debug("value_path set to: \"%s\"" % self.value_path)
             abspath = paths.join_paths(self.parent.parent.parent.savefile(), self.value_path)
             if (paths.is_input_file(abspath) and os.path.exists(abspath)) or path == "":
                 self.value_valid_path = path
                 self.reloadImage()
-                debug(u"Valid image path set to \"%s\", new cached image will be loaded" % unicode(self.value_valid_path))
+                debug("Valid image path set to \"%s\", new cached image will be loaded" % str(self.value_valid_path))
                 self.on_change()
         else:
             return self.value_path
@@ -153,12 +153,12 @@ class Project(object):
         self.files = ProjectFiles(self)
         self.active = ActiveImage(self)
 
-        self.val_temp_dat = u"Obj=building\nName=test_1\nType=cur\nPassengers=100\nintro_year=1900\nchance=100"
+        self.val_temp_dat = "Obj=building\nName=test_1\nType=cur\nPassengers=100\nintro_year=1900\nchance=100"
 
     def on_change(self):
         # When something in the project has changed, notify containing app to
         # allow for updating of UI
-        debug(u"Root on_change triggered, sending message to App")
+        debug("Root on_change triggered, sending message to App")
         self.parent.project_has_changed()
 
     def __getitem__(self, key):
@@ -168,7 +168,7 @@ class Project(object):
         """References a string containing arbitrary dat properties for the project"""
         if set != None:
             self.val_temp_dat = set
-            debug(u"TEMP dat properties set to %s" % self.val_temp_dat)
+            debug("TEMP dat properties set to %s" % self.val_temp_dat)
             self.on_change()
             return 0
         else:
@@ -244,7 +244,7 @@ class Project(object):
                     self.active.image.offset[1] = 0     # Limit to 0
             changed = True
         if changed == True:
-            debug(u"Active Image offset changed to: %s" % unicode(self.active.image.offset))
+            debug("Active Image offset changed to: %s" % str(self.active.image.offset))
             self.on_change()
             if old_x != self.active.image.offset[0] or old_y != self.active.image.offset[1]:
                 return 1
@@ -264,19 +264,19 @@ class Project(object):
         if direction != self.active.direction and direction != None:
             self.active.direction = direction
             changed = True
-            debug(u"Active Image direction changed to: %s" % unicode(self.active.direction))
+            debug("Active Image direction changed to: %s" % str(self.active.direction))
         if season != self.active.season and season != None:
             self.active.season = season
             changed = True
-            debug(u"Active Image season changed to: %s" % unicode(self.active.season))
+            debug("Active Image season changed to: %s" % str(self.active.season))
         if frame != self.active.frame and frame != None:
             self.active.frame = frame
             changed = True
-            debug(u"Active Image frame changed to: %s" % unicode(self.active.frame))
+            debug("Active Image frame changed to: %s" % str(self.active.frame))
         if layer != self.active.layer and layer != None:
             self.active.layer = layer
             changed = True
-            debug(u"Active Image layer changed to: %s" % unicode(self.active.layer))
+            debug("Active Image layer changed to: %s" % str(self.active.layer))
         if changed == True:
             self.active.UpdateImage()
         else:
@@ -287,11 +287,11 @@ class Project(object):
         if set != None:
             if set in config.choicelist_dims:
                 self.dims.x = int(set)
-                debug(u"X dimension set to %i" % self.dims.x)
+                debug("X dimension set to %i" % self.dims.x)
                 self.on_change()
                 return 0
             else:
-                debug(u"Attempt to set X dimension failed - Value (%s) outside of acceptable range" % unicode(set))
+                debug("Attempt to set X dimension failed - Value (%s) outside of acceptable range" % str(set))
                 return 1
         else:
             return self.dims.x
@@ -300,11 +300,11 @@ class Project(object):
         if set != None:
             if set in config.choicelist_dims:
                 self.dims.y = int(set)
-                debug(u"Y dimension set to %i" % self.dims.y)
+                debug("Y dimension set to %i" % self.dims.y)
                 self.on_change()
                 return 0
             else:
-                debug(u"Attempt to set Y dimension failed - Value (%s) outside of acceptable range" % unicode(set))
+                debug("Attempt to set Y dimension failed - Value (%s) outside of acceptable range" % str(set))
                 return 1
         else:
             return self.dims.y
@@ -313,11 +313,11 @@ class Project(object):
         if set != None:
             if set in config.choicelist_dims_z:
                 self.dims.z = int(set)
-                debug(u"Z dimension set to %i" % self.dims.z)
+                debug("Z dimension set to %i" % self.dims.z)
                 self.on_change()
                 return 0
             else:
-                debug(u"Attempt to set Z dimension failed - Value (%s) outside of acceptable range" % unicode(set))
+                debug("Attempt to set Z dimension failed - Value (%s) outside of acceptable range" % str(set))
                 return 1
         else:
             return self.dims.z
@@ -326,11 +326,11 @@ class Project(object):
         if set != None:
             if set in config.choicelist_paksize:
                 self.dims.paksize = int(set)
-                debug(u"Paksize set to %i" % self.dims.paksize)
+                debug("Paksize set to %i" % self.dims.paksize)
                 self.on_change()
                 return 0
             else:
-                debug(u"Attempt to set Paksize failed - Value (%s) outside of acceptable range" % unicode(set))
+                debug("Attempt to set Paksize failed - Value (%s) outside of acceptable range" % str(set))
                 return 1
         else:
             return self.dims.paksize
@@ -339,16 +339,16 @@ class Project(object):
         if set != None:
             if set == 1 or set == True:
                 self.dims.winter = 1
-                debug(u"WinterViewEnable set to %i" % self.dims.winter)
+                debug("WinterViewEnable set to %i" % self.dims.winter)
                 self.on_change()
                 return 0
             elif set == 0 or set == False:
                 self.dims.winter = 0
-                debug(u"WinterViewEnable set to %i" % self.dims.winter)
+                debug("WinterViewEnable set to %i" % self.dims.winter)
                 self.on_change()
                 return 0
             else:
-                debug(u"Attempt to set WinterViewEnable failed - Value (%s) outside of acceptable range" % unicode(set))
+                debug("Attempt to set WinterViewEnable failed - Value (%s) outside of acceptable range" % str(set))
                 return 1
         else:
             return self.dims.winter
@@ -357,16 +357,16 @@ class Project(object):
         if set != None:
             if set == 1 or set == True:
                 self.dims.frontimage = 1
-                debug(u"FrontImageEnable set to %i" % self.dims.frontimage)
+                debug("FrontImageEnable set to %i" % self.dims.frontimage)
                 self.on_change()
                 return 0
             elif set == 0 or set == False:
                 self.dims.frontimage = 0
-                debug(u"FrontImageEnable set to %i" % self.dims.frontimage)
+                debug("FrontImageEnable set to %i" % self.dims.frontimage)
                 self.on_change()
                 return 0
             else:
-                debug(u"Attempt to set FrontImageEnable failed - Value (%s) outside of acceptable range" % unicode(set))
+                debug("Attempt to set FrontImageEnable failed - Value (%s) outside of acceptable range" % str(set))
                 return 1
         else:
             return self.dims.frontimage
@@ -375,18 +375,18 @@ class Project(object):
         if set != None:
             if set in config.choicelist_views:
                 self.dims.views = int(set)
-                debug(u"Views set to %i" % self.dims.views)
+                debug("Views set to %i" % self.dims.views)
                 self.on_change()
                 return 0
             else:
-                debug(u"Attempt to set Views failed - Value (%s) outside of acceptable range" % unicode(set))
+                debug("Attempt to set Views failed - Value (%s) outside of acceptable range" % str(set))
                 return 1
         return self.dims.views
 
     def datfile(self, set=None):
         """Set or return (relative) path to dat file"""
         if set != None:
-            self.files.datfile_location = unicode(set)
+            self.files.datfile_location = str(set)
             self.on_change()
         else:
             return self.files.datfile_location
@@ -403,14 +403,14 @@ class Project(object):
     def pngfile(self, set=None):
         """Set or return (relative) path to png file"""
         if set != None:
-            self.files.pngfile_location = unicode(set)
+            self.files.pngfile_location = str(set)
             self.on_change()
         else:
             return self.files.pngfile_location
     def pakfile(self, set=None):
         """Set or return (relative) path to pak file"""
         if set != None:
-            self.files.pakfile_location = unicode(set)
+            self.files.pakfile_location = str(set)
             self.on_change()
         else:
             return self.files.pakfile_location
@@ -427,13 +427,13 @@ class Project(object):
                 self.files.saved = False
                 self.on_change()
             else:
-                debug(u"Attempt to set project saved status failed - Value (%s) outside of acceptable range" % unicode(set))
+                debug("Attempt to set project saved status failed - Value (%s) outside of acceptable range" % str(set))
         else:
             return self.files.saved
     def savefile(self, set=None):
         """Set or return (absolute) path to project save file location"""
         if set != None:
-            self.files.save_location = unicode(set)
+            self.files.save_location = str(set)
             self.on_change()
         else:
             return self.files.save_location
@@ -455,15 +455,15 @@ class ProjectFiles(object):
 
         # Use userprofile on all platforms as default
         if sys.platform == "darwin":
-            location = os.path.expanduser(u"~")
+            location = os.path.expanduser("~")
         elif sys.platform == "win32":
-            location = getenvvar(u"USERPROFILE")
+            location = getenvvar("USERPROFILE")
         else:
-            location = os.path.expanduser(u"~")
+            location = os.path.expanduser("~")
 
         # Otherwise use location of program
         # Depending on how/when os.path.expanduser can fail this may not be needed but just in case!
-        if location == u"~":
+        if location == "~":
             self.save_location = self.test_path(self.parent.parent.start_directory)
         else:
             self.save_location = self.test_path(location)
@@ -472,22 +472,22 @@ class ProjectFiles(object):
         self.saved = False
 
         # Location of .dat file output (relative to save location)
-        self.datfile_location = u"output.dat"
+        self.datfile_location = "output.dat"
         self.writedat = True
         # Location of .png file output (relative to dat file)
-        self.pngfile_location = os.path.join(u"images", u"output.png")
+        self.pngfile_location = os.path.join("images", "output.png")
 
         # Location of .pak output file (relative to save location)
         # Blank by default so that pak file name is produced by building type/name
-        self.pakfile_location = u""
+        self.pakfile_location = ""
 
         try:
-            debug(u"save_location: %s, datfile_location: %s, pngfile_location: %s, pakfile_location: %s" % (self.save_location,
+            debug("save_location: %s, datfile_location: %s, pngfile_location: %s, pakfile_location: %s" % (self.save_location,
                                                                                                            self.datfile_location,
                                                                                                            self.pngfile_location,
                                                                                                            self.pakfile_location))
         except UnicodeDecodeError:
-            debug(u"Unicode Decode Error")
+            debug("Unicode Decode Error")
             debug(self.save_location)
             debug(self.datfile_location)
             debug(self.pngfile_location)

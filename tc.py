@@ -8,7 +8,7 @@
 
 import wx
 import sys, os, string, tempfile
-import pickle, copy, math, StringIO
+import pickle, copy, math, io
 
 import logger
 debug = logger.Log()
@@ -24,10 +24,10 @@ class TCMasks:
     # and if not makes them
     masksets = {}
     def __init__(self, paksize):
-        if not TCMasks.masksets.has_key(paksize):
+        if paksize not in TCMasks.masksets:
             # Generate new masks
             TCMasks.masksets[paksize] = TCMaskSet(paksize)
-            debug(u"TCMasks - Generated new TCMaskSet for paksize: %s" % paksize)
+            debug("TCMasks - Generated new TCMaskSet for paksize: %s" % paksize)
         self.mask = TCMasks.masksets[paksize]
 
 class TCMaskSet:
@@ -189,9 +189,9 @@ class Makeobj:
         args = [self.path_to_makeobj, "pak%s" % paksize, path_to_pak, path_to_dat]
         # Need to convert to system encoding on Windows as CMD interpreter can't do unicode
         for n, arg in enumerate(args):
-            if isinstance(arg, unicode):
+            if isinstance(arg, str):
                 args[n] = arg.encode(sys.getfilesystemencoding())
-        debug(u"Activating Makeobj with arguments: %s" % str(args))
+        debug("Activating Makeobj with arguments: %s" % str(args))
         process = subprocess.Popen(args, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
         process.wait()
         # Write out makeobj log information to main log
@@ -200,7 +200,7 @@ class Makeobj:
             debug(output[0])
         if output[1] != "":
             debug(output[1])
-        debug(u"Makeobj output complete")
+        debug("Makeobj output complete")
 
 class Paths(object):
     """Advanced path manipulation functions"""
@@ -300,16 +300,16 @@ def export_writer(project, pak_output=False, return_dat=False, write_dat=True):
     dat_path = paths.join_paths(project.save_location(), project.datfile_location())
     png_path = paths.join_paths(project.save_location(), project.pngfile_location())
     pak_path = paths.join_paths(project.save_location(), project.pakfile_location())
-    debug(u"e_w: export_writer init")
-    debug(u"e_w: Writing .png to file: %s" % png_path)
+    debug("e_w: export_writer init")
+    debug("e_w: Writing .png to file: %s" % png_path)
     if project.datfile_write():
-        debug(u"e_w: Writing .dat info to file: %s" % dat_path)
+        debug("e_w: Writing .dat info to file: %s" % dat_path)
     else:
-        debug(u"e_w: Writing .dat info to console")
+        debug("e_w: Writing .dat info to console")
 
     # Get path from dat file location to png file location
     dat_to_png = os.path.splitext(paths.compare_paths(png_path, dat_path))[0]
-    debug(u"e_w: Path from .dat to .png is: %s" % dat_to_png)
+    debug("e_w: Path from .dat to .png is: %s" % dat_to_png)
 
     # First calculate the size of output image required, this depends on a number of factors
     # - Dimensions of the image, x*y images for first layer + (x+y-1)*(z-1) images for higher layers
@@ -332,18 +332,18 @@ def export_writer(project, pak_output=False, return_dat=False, write_dat=True):
     views = project.directions()
     seasons = project.winter() + 1          # +1 as this value is stored as an 0 or 1, we need 1 or 2
 
-    debug(u"e_w: Outputting using paksize: %s" % p)
-    debug(u"e_w: Outputting %s front/backimages" % layers)
-    debug(u"e_w: Outputting %s views" % views)
-    debug(u"e_w: Outputting %s seasons" % seasons)
-    debug(u"e_w: Outputting dims: x:%s, y:%s, z:%s" % (xdims, ydims, zdims))
+    debug("e_w: Outputting using paksize: %s" % p)
+    debug("e_w: Outputting %s front/backimages" % layers)
+    debug("e_w: Outputting %s views" % views)
+    debug("e_w: Outputting %s seasons" % seasons)
+    debug("e_w: Outputting dims: x:%s, y:%s, z:%s" % (xdims, ydims, zdims))
 
     # Calculate dimensions of output image
     dims = xdims*ydims + (xdims+ydims-1)*(zdims-1)
     totalimages = dims * layers * views * seasons
     side = int(math.ceil(math.sqrt(totalimages)))
 
-    debug(u"e_w: Outputting %s images total, output size %sx%sp (%sx%spx)" % (totalimages, side, side, side*p, side*p))
+    debug("e_w: Outputting %s images total, output size %sx%sp (%sx%spx)" % (totalimages, side, side, side*p, side*p))
 
     # Init output bitmap and dc for drawing into it
     output_bitmap = wx.Bitmap(side*p, side*p)
@@ -388,10 +388,10 @@ def export_writer(project, pak_output=False, return_dat=False, write_dat=True):
     outdc.SelectObject(wx.NullBitmap)
 
     # output_bitmap now contains the image array
-    debug(u"e_w: Image output complete")
+    debug("e_w: Image output complete")
 
 
-    output_text = StringIO.StringIO()
+    output_text = io.StringIO()
     # Test text
     output_text.write(project.dat_lump() + "\n")
     # dims=East-West, North-south, Views
@@ -410,13 +410,13 @@ def export_writer(project, pak_output=False, return_dat=False, write_dat=True):
 
     # Write out to files if required
     if write_dat:
-        debug(u"e_w: Writing out .dat file to %s" % dat_path)
+        debug("e_w: Writing out .dat file to %s" % dat_path)
         # Check that each component in dat_path exists, create directories if needed
         if not os.path.isdir(os.path.split(dat_path)[0]):
             os.makedirs(os.path.split(dat_path)[0])
         f = open(dat_path, "w")
     else:
-        debug(u"e_w: Writing out .dat file to temporary file")
+        debug("e_w: Writing out .dat file to temporary file")
         tempfile.tempdir = os.path.split(dat_path)[0]
         f = tempfile.NamedTemporaryFile("w", suffix=".tmp", delete=False)
         dat_path = f.name
@@ -434,20 +434,20 @@ def export_writer(project, pak_output=False, return_dat=False, write_dat=True):
 
     if pak_output:
         # Output .pak file using makeobj if required
-        debug(u"e_w: Use makeobj to output pak file")
+        debug("e_w: Use makeobj to output pak file")
         path_to_makeobj = paths.join_paths(os.getcwd(), config.path_to_makeobj)
         makeobj = Makeobj(path_to_makeobj)
-        print repr(pak_path)
-        print repr(dat_path)
+        print(repr(pak_path))
+        print(repr(dat_path))
         makeobj.pak(project.paksize(), paths.win_to_unix(pak_path), paths.win_to_unix(dat_path))
 
     # Delete temporary file if needed
     if not write_dat:
-        debug(u"e_w: deleting temporary file used: %s" % dat_path)
+        debug("e_w: deleting temporary file used: %s" % dat_path)
         os.remove(dat_path)
 
     # Log .dat file generated
-    debug(u"e_w: .dat file text is:")
+    debug("e_w: .dat file text is:")
     debug(dat_text)
     # Return dat file text (e.g. for output within the program in a dialog box etc.)
     if return_dat:
@@ -457,10 +457,10 @@ def export_writer(project, pak_output=False, return_dat=False, write_dat=True):
 
 def export_cutter(bitmap, dims, offset, p):
     """Takes a bitmap and dimensions, and returns an array of masked bitmaps"""
-    debug(u"e_c: export_cutter init")
-    debug(u"e_c: Passed in bitmap of size (x, y): (%s, %s)" % (bitmap.GetWidth(), bitmap.GetHeight()))
-    debug(u"e_c: Dims (x, y, z, d): %s" % str(dims))
-    debug(u"e_c: Offset (offx, offy): %s" % str(offset))
+    debug("e_c: export_cutter init")
+    debug("e_c: Passed in bitmap of size (x, y): (%s, %s)" % (bitmap.GetWidth(), bitmap.GetHeight()))
+    debug("e_c: Dims (x, y, z, d): %s" % str(dims))
+    debug("e_c: Offset (offx, offy): %s" % str(offset))
 
     # To account for irregularly shaped buildings, the values of x and y dims
     # need to be swapped where dims[3] (view#) is in [1,3]
@@ -478,7 +478,7 @@ def export_cutter(bitmap, dims, offset, p):
     # Init mask provider
     masks = TCMasks(p)
 
-    debug(u"e_c: Building output array...")
+    debug("e_c: Building output array...")
     output_array = []
     # Must ensure that the source bitmap is large enough so that all subbitmap operations succeed
     # Extend to the right and up
@@ -539,7 +539,7 @@ def export_cutter(bitmap, dims, offset, p):
                 zarray.append(submap)
             yarray.append(zarray)
         output_array.append(yarray)
-    debug(u"e_c: Build output array complete, exiting")
+    debug("e_c: Build output array complete, exiting")
     return output_array
 
 

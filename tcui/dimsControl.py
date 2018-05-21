@@ -19,7 +19,7 @@ class dimsControl(wx.Panel):
     """Box containing dimensions controls"""
     def __init__(self, parent, app):
         """"""
-        debug(u"tcui.DimsControl: __init__")
+        debug("tcui.DimsControl: __init__")
         wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
         self.app = app
         # Setup sizers
@@ -76,7 +76,7 @@ class dimsControl(wx.Panel):
 
     def translate(self):
         """Update the text of all controls to reflect a new translation"""
-        debug(u"tcui.DimsControl: translate")
+        debug("tcui.DimsControl: translate")
         self.label.SetLabel(gt("Dimensions:"))
         self.dims_p_label.SetLabel(gt("Paksize"))
         self.dims_p_select.SetToolTip(gt("tt_dims_paksize_select"))
@@ -125,7 +125,7 @@ class dimsControl(wx.Panel):
 
     def update(self):
         """Set the values of the controls in this group to the values in the model"""
-        debug(u"tcui.DimsControl: update")
+        debug("tcui.DimsControl: update")
         self.dims_p_select.SetSelection(config.choicelist_paksize.index(self.app.activeproject.paksize()))
         self.dims_z_select.SetSelection(config.choicelist_dims_z.index(self.app.activeproject.z()))
         self.dims_x_select.SetSelection(config.choicelist_dims.index(self.app.activeproject.x()))
@@ -133,21 +133,21 @@ class dimsControl(wx.Panel):
 
     def OnPaksizeSelect(self,e):
         """Change value of the paksize"""
-        debug(u"tcui.DimsControl: OnPaksizeSelect")
+        debug("tcui.DimsControl: OnPaksizeSelect")
         self.app.activeproject.paksize(config.choicelist_paksize[self.choicelist_packsize.index(self.dims_p_select.GetValue())])
         self.app.frame.display.update()
     def OnZdimsSelect(self,e):
         """Change value of the Z dims"""
-        debug(u"tcui.DimsControl: OnZdimsSelect")
+        debug("tcui.DimsControl: OnZdimsSelect")
         self.app.activeproject.z(config.choicelist_dims_z[self.choicelist_dims_z.index(self.dims_z_select.GetValue())])
         self.app.frame.display.update()
     def OnXdimsSelect(self,e):
         """Change value of the X dims"""
-        debug(u"tcui.DimsControl: OnXdimsSelect")
+        debug("tcui.DimsControl: OnXdimsSelect")
         self.app.activeproject.x(config.choicelist_dims[self.choicelist_dims.index(self.dims_x_select.GetValue())])
         self.app.frame.display.update()
     def OnYdimsSelect(self,e):
         """Change value of the Y dims"""
-        debug(u"tcui.DimsControl: OnYdimsSelect")
+        debug("tcui.DimsControl: OnYdimsSelect")
         self.app.activeproject.y(config.choicelist_dims[self.choicelist_dims.index(self.dims_y_select.GetValue())])
         self.app.frame.display.update()

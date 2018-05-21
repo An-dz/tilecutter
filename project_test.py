@@ -18,9 +18,8 @@ class image_path(unittest.TestCase):
     frames = [0]
     layers = [0,1]
     knownvalues = (
-                   (None,u""),
+                   (None,""),
                    ("string",True),
-                   (u"string",True),
                    (True,False),
                    (1,False),
                    (-1,False),
@@ -58,22 +57,21 @@ class image_path(unittest.TestCase):
             for s in self.seasons:
                 for f in self.frames:
                     for l in self.layers:
-                        testvalue = unicode(d) + unicode(s) + unicode(f) + unicode(l)
+                        testvalue = str(d) + str(s) + str(f) + str(l)
                         result = p.image_path(d,s,f,l,testvalue)
                         self.assertEqual(result, True)
         for d in self.directions:
             for s in self.seasons:
                 for f in self.frames:
                     for l in self.layers:
-                        expected = unicode(d) + unicode(s) + unicode(f) + unicode(l)
+                        expected = str(d) + str(s) + str(f) + str(l)
                         self.assertEqual(expected, p.image_path(d,s,f,l))
 
 class dat_lump_knownvalues(unittest.TestCase):
     """Test dat_lump validator"""
     knownvalues = (
-                   (None,u"Obj=building\nName=test_1\nType=cur\nPassengers=100\nintro_year=1900\nchance=100"),
+                   (None,"Obj=building\nName=test_1\nType=cur\nPassengers=100\nintro_year=1900\nchance=100"),
                    ("string",True),
-                   (u"string",True),
                    (True,False),
                    (1,False),
                    (-1,False),

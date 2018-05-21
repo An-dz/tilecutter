@@ -26,7 +26,7 @@ class imageWindow(wx.Panel):
     bmp = []
     def __init__(self, parent, app, bgcolor, extended=0):
         """"""
-        debug(u"tcui.ImageWindow: __init__")
+        debug("tcui.ImageWindow: __init__")
         wx.Panel.__init__(self, parent=parent.panel, id=wx.ID_ANY)
         self.bgcolor = bgcolor
         self.app = app
@@ -87,19 +87,19 @@ class imageWindow(wx.Panel):
     # Device Context events and methods
     def OnPaint(self, e):
         """Event handler for scrolled window repaint requests"""
-        debug(u"tcui.ImageWindow: OnPaint", 2)
+        debug("tcui.ImageWindow: OnPaint", 2)
         dc = wx.AutoBufferedPaintDC(self.scrolledwindow)
         self.refresh_screen(dc)
 
     def translate(self):
         """Update the text of all controls to reflect a new translation"""
-        debug(u"tcui.ImageWindow: translate")
+        debug("tcui.ImageWindow: translate")
         self.control_imagepath.translate()
 
     # Update refreshes both textbox (if it's changed) and the device context
     def update(self):
         """Set the values of the controls in this group to the values in the model"""
-        debug(u"tcui.ImageWindow: update")
+        debug("tcui.ImageWindow: update")
         self.control_imagepath.update()
         self.scrolledwindow.Refresh()
 
@@ -111,13 +111,13 @@ class imageWindow(wx.Panel):
 #            # If valid_path and path are same, then refresh screen
 #            self.Refresh()
         # Always refresh the screen to show either blank/noimage graphic or the valid graphic
-        debug(u"tcui.ImageWindow: refresh_if_valid - new image path: %s, calling Refresh()" % self.app.activeproject.active_image_path())
+        debug("tcui.ImageWindow: refresh_if_valid - new image path: %s, calling Refresh()" % self.app.activeproject.active_image_path())
         self.app.activeproject.reload_active_image()
         self.scrolledwindow.Refresh()
 
     def refresh_screen(self, dc):
         """Refresh the screen display"""
-        debug(u"tcui.ImageWindow: refresh_screen")
+        debug("tcui.ImageWindow: refresh_screen")
         # Redraw the active image in the window, with mask etc.
         bitmap = self.app.activeproject.get_active_bitmap()
 
@@ -212,7 +212,7 @@ class imageWindow(wx.Panel):
             # Then the bottom ones
             pos = self.tileToScreen((x, yy, 1), (x,y,z), (mask_offset_x,mask_offset_y), p, bitmap.GetHeight() + bmp_offset_y)
             dc.DrawLine(pos[0],pos[1] - p4, pos[0]+p2,pos[1])
-        debug(u"tcui.ImageWindow: refresh_screen - Done")
+        debug("tcui.ImageWindow: refresh_screen - Done")
 
     # Take tile coords and convert into screen coords
     # This function is replicated in tc, and references to it should be made there!
@@ -220,7 +220,7 @@ class imageWindow(wx.Panel):
         """Take tile coords and convert to screen coords
         by default converts into bottom-left screen coords, but with height attribute supplied converts to top-left
         returns the bottom-left position of the tile on the screen"""
-        debug(u"tcui.ImageWindow: tileToScreen")
+        debug("tcui.ImageWindow: tileToScreen")
         offx, offy = off
         if offx < 0:
             offx = 0

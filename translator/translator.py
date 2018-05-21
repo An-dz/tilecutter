@@ -9,8 +9,8 @@
 import wx
 import sys, os, re, codecs
 # Custom platform codecs
-import u_newlines
-import w_newlines
+# from . import u_newlines
+# from . import w_newlines
 import json
 
 import logger
@@ -63,10 +63,10 @@ class Translator(object):
             # If preference does not exist, use English instead
             if config.default_language in Translator.language_names_list:
                 active = config.default_language
-                debug(u"Language setting found in config file - Setting active translation to %s" % active)
+                debug("Language setting found in config file - Setting active translation to %s" % active)
             else:
                 active = "English"
-            debug(u"Using default language - Setting active translation to %s" % active)
+            debug("Using default language - Setting active translation to %s" % active)
             self.setActiveTranslation(active)
 
     def __call__(self, vars):
@@ -79,7 +79,7 @@ class Translator(object):
 
     def gt(self, text):
         """Return translated version of a string"""
-        text = unicode(text)
+        text = str(text)
         try:
             translation = Translator.active.translation[text]
             if len(translation) == 0:
@@ -121,7 +121,7 @@ class translation:
     """An individual translation file object"""
     def __init__(self, filename):
         """Load translation, translation details and optionally a translation image"""
-        debug(u"Begin loading translation from file: %s" % filename)
+        debug("Begin loading translation from file: %s" % filename)
         # Open file & read in contents
         try:
             # Language files should be saved as UTF-8 - this conversation done now by directly reading as UTF-8
@@ -129,29 +129,29 @@ class translation:
             block = f.read()
             f.close()
         except IOError:
-            debug(u"Problem loading information from file, aborting load of translation file")
+            debug("Problem loading information from file, aborting load of translation file")
             raise TranslationLoadError()
         # Language files should be saved as UTF-8 - this conversion done now by directly reading as UTF-8
         #block = block.decode("UTF-8")
         # Convert newlines to unix style
-        block = block.decode("u_newlines")
+        # block = block.decode("u_newlines")
         # Scan document for block between {}, this is our config section
         dicts = re.findall("(?={).+?(?<=})", block, re.DOTALL)
         if len(dicts) > 1:
-            debug(u"Found more than one dict-like structure (e.g. pair of \"{}\") in file: \"%s\" - assuming config is the first one" % filename)
+            debug("Found more than one dict-like structure (e.g. pair of \"{}\") in file: \"%s\" - assuming config is the first one" % filename)
         configstring = dicts[0]
         
-        debug(u"Translation file config string is: %s" % configstring)
+        debug("Translation file config string is: %s" % configstring)
 
         config = json.loads(configstring)
         conf_items = ["name", "name_translated", "language_code", "created_by", "created_date"]
         func_items = [self.name, self.longname, self.language_code, self.created_by, self.created_date]
         for ci, func in zip(conf_items, func_items):
-            if config.has_key(ci):
+            if ci in config:
                 func(config[ci])
             else:
                 # Translation file invalid, error out of read process
-                debug(u"Error loading translation from %s, %s field not found, aborting load of translation" % (filename, ci))
+                debug("Error loading translation from %s, %s field not found, aborting load of translation" % (filename, ci))
                 raise TranslationLoadError()
 
         # Split block up into lines
@@ -202,7 +202,7 @@ class translation:
             try:
                 values.append(block_lines3[i+1])
             except IndexError:
-                print block_lines2[i]
+                print(block_lines2[i])
         # Make dict from keys
         translation.fromkeys(keys)
         # Populate dict with values
