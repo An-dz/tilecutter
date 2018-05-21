@@ -73,7 +73,7 @@ class aboutDialog(wx.Dialog):
         self.title_text.SetLabel(gt("TileCutter"))
         self.subtitle_text.SetLabel(gt("Simutrans Building Editor"))
         self.version_text.SetLabel(gt("Version %s") % self.version_number)
-        self.copyright_text.SetLabel("\nCopyright \\u00A9 2008-2012 Timothy Baldock. All rights reserved.\n\nThis program makes use of the wxWidgets library, which is Copyright \\u00A9 1992-2006 Julian Smart, Robert Roebling, Vadim Zeitlin and other members of the wxWidgets team.\n\nTileCutter is written in Python.")
+        self.copyright_text.SetLabel("\nCopyright © 2018 André Zanghelini. All rights reserved.\nCopyright © 2008-2015 Timothy Baldock. All rights reserved.\n\nThis program uses the wxPython library\nCopyright © 1992-2018 Julian Smart, Robert Roebling, Vadim Zeitlin\nand other members of the wxPython team.\n\nTileCutter is written in Python.")
         self.title_text.Wrap(self.size[0]-20)
         self.subtitle_text.Wrap(self.size[0]-20)
         self.version_text.Wrap(self.size[0]-20)
