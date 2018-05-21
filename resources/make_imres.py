@@ -5,7 +5,7 @@
 # Uses wx:img2py to compile a python script with all the image resources used by TileCutter
 #
 
-import img2py, os
+import wx.tools.img2py, os
 
 OUTPUT_FILE = ".." + os.path.sep + "imres.py"
 
@@ -25,6 +25,6 @@ for i in list:
         name = split[0].replace("-icon","")
         # Convert any "-" in filename to "_"
         name = name.replace("-","_")
-        img2py.img2py(i, OUTPUT_FILE, append=appen, imgName=name, icon=True, catalog=True)
+        wx.tools.img2py.img2py(i, OUTPUT_FILE, append=appen, imgName=name, icon=True, catalog=True)
         appen = True
 
