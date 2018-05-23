@@ -209,7 +209,7 @@ class menuObject(object):
     def OnHelp(self, e):
         """"""
         debug("tcui.MenuObject: OnHelp - Menu-Help-> Open online help")
-        wx.LaunchDefaultBrowser("http://timothy.baldock.me/tilecutter")
+        wx.LaunchDefaultBrowser("https://github.com/An-dz/tilecutter")
     def OnAbout(self, e):
         """"""
         debug("tcui.MenuObject: OnAbout - Menu-Help-> Open about dialog")
