@@ -34,6 +34,7 @@ class imageControl(wx.Panel):
         self.images_select_front_im = wx.StaticBitmap(self, wx.ID_ANY, imres.catalog["ImageFront"].getBitmap())
         self.images_select_front = wx.RadioButton(self, wx.ID_ANY, "", (-1,-1), (-1,-1))
         self.images_enable_front = wx.CheckBox(self, wx.ID_ANY, "", (-1,-1), (-1,-1))
+        self.images_enable_transparency = wx.CheckBox(self, wx.ID_ANY, "", (-1,-1), (-1,-1))
         # Add to sizers
         self.s_images_flex.Add(self.images_select_back_im, 0, wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL)
         self.s_images_flex.Add((4,0))
@@ -48,11 +49,14 @@ class imageControl(wx.Panel):
         self.sizer.Add((0,2))
         self.sizer.Add(self.label, 0, wx.LEFT, 2)
         self.sizer.Add((0,4))
+        self.sizer.Add(self.images_enable_transparency, 0, wx.ALIGN_CENTER_HORIZONTAL)
+        self.sizer.Add((0,2))
         self.sizer.Add(self.s_images_flex, 0, wx.ALIGN_CENTER_HORIZONTAL)
         self.sizer.Add((0,6))
         self.sizer.Add(self.images_enable_front, 0, wx.ALIGN_CENTER_HORIZONTAL)
         self.sizer.Add((0,2))
         # Bind events
+        self.images_enable_transparency.Bind(wx.EVT_CHECKBOX, self.OnToggleTransparency, self.images_enable_transparency)
         self.images_enable_front.Bind(wx.EVT_CHECKBOX, self.OnToggle, self.images_enable_front)
         self.images_select_back.Bind(wx.EVT_RADIOBUTTON, self.OnBackImage, self.images_select_back)
         self.images_select_front.Bind(wx.EVT_RADIOBUTTON, self.OnFrontImage, self.images_select_front)
@@ -70,12 +74,17 @@ class imageControl(wx.Panel):
         self.images_select_front.SetToolTip(gt("tt_images_select_front"))
         self.images_enable_front.SetLabel(gt("Enable FrontImage"))
         self.images_enable_front.SetToolTip(gt("tt_images_enable_front"))
+        self.images_enable_transparency.SetLabel(gt("Transparency"))
+        self.images_enable_transparency.SetToolTip(gt("tt_images_enable_transparency"))
 
         self.Fit()
 
     def update(self):
         """Set the values of the controls in this group to the values in the model"""
         debug("tcui.ImageControl: update")
+
+        self.images_enable_transparency.SetValue(self.app.activeproject.transparency())
+
         if self.app.activeproject.frontimage() == 0:  # Turn frontimage off
             self.images_enable_front.SetValue(0)
             # If currently have frontimage selected, switch to backimage
@@ -92,6 +101,11 @@ class imageControl(wx.Panel):
             # User must select the frontimage if they wish to view it, so just enable the control
             self.images_select_front.Enable()
 
+    # Toggling transparency on and off
+    def OnToggleTransparency(self,e):
+        debug("tcui.ImageControl: OnToggle")
+        self.app.activeproject.transparency(self.images_enable_transparency.GetValue())
+        self.update()
     def OnToggle(self,e):
         """Toggling frontimage on and off"""
         debug("tcui.ImageControl: OnToggle")

@@ -70,6 +70,7 @@ class Project(object):
         self.defaults = {
             # project[view][season][frame][layer][xdim][ydim][zdim]
             "images": self.init_image_array(),
+            "transparency": True,
             "dims": {
                 "x": 1,
                 "y": 1,
@@ -95,6 +96,7 @@ class Project(object):
         # ALL items in validators must be either dicts (implying subkeys) or functions (implying keys to be validated)
         self.validators = {
             "images": self.image_array,
+            "transparency": self.transparency,
             "dims": {
                 "x": self.x,
                 "y": self.y,
@@ -399,12 +401,18 @@ class Project(object):
                         self.reload_image(d,s,f,l)
                         # Call cutting function on image and store data on the internals array
                         # Cutting function by convention takes args: wxbitmap, dims(x,y,z,direction), offset, paksize
-                        self.internals["images"][d][s][f][l]["cutimageset"] = cutting_function(self.internals["images"][d][s][f][l]["bitmapdata"],
-                                                                                               (self.props["dims"]["x"], 
-                                                                                                self.props["dims"]["y"], 
-                                                                                                self.props["dims"]["z"], d),
-                                                                                               self.props["images"][d][s][f][l]["offset"],
-                                                                                               self.props["dims"]["paksize"])
+                        self.internals["images"][d][s][f][l]["cutimageset"] = cutting_function(
+                            self.internals["images"][d][s][f][l]["bitmapdata"],
+                            (
+                                self.props["dims"]["x"],
+                                self.props["dims"]["y"],
+                                self.props["dims"]["z"],
+                                d
+                            ),
+                            self.props["images"][d][s][f][l]["offset"],
+                            self.props["dims"]["paksize"],
+                            self.props["transparency"]
+                        )
 
     def reload_all_images(self):
         """Reloads all images"""
@@ -624,6 +632,26 @@ class Project(object):
                 return False
         else:
             return self.props["dims"]["z"]
+
+    def transparency(self, set=None, validate=False):
+        if set is not None:
+            if set in [True, 1]:
+                if not validate:
+                    self.props["transparency"] = True
+                    debug("project: transparency - set to %s" % str(self.props["transparency"]))
+                    self.on_change()
+                return True
+            elif set in [False, 0]:
+                if not validate:
+                    self.props["transparency"] = False
+                    debug("project: transparency - set to %s" % str(self.props["transparency"]))
+                    self.on_change()
+                return True
+            else:
+                debug("project: transparency - Attempt to set transparency failed - Value (%s) outside of acceptable range" % str(set))
+                return False
+        else:
+            return self.props["transparency"]
 
     def paksize(self, set=None, validate=False):
         """Set or return paksize"""

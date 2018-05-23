@@ -29,6 +29,7 @@ class Config(object):
         "logfile": "",
         "logfile_platform_default": True,
         "transparent": [231,255,255],
+        "transparent_bg": [[153, 153, 153], [103, 103, 103]],
         "default_paksize": 64,
         "valid_image_extensions": [".png"],
         "OFFSET_NEGATIVE_ALLOWED": False,

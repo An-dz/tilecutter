@@ -84,6 +84,18 @@ class imageWindow(wx.Panel):
         self.lastpath = ""  # Stores the last path entered, to check for differences
         self.translate()    # Load the initial translation
 
+        # Transparent grid background
+        self.transparent_bg = wx.Bitmap(16, 16)
+        tdc = wx.MemoryDC()
+        tdc.SelectObject(self.transparent_bg)
+        tdc.SetBackground(wx.Brush(config.transparent_bg[0]))
+        tdc.Clear()
+        tdc.SetPen(wx.Pen(config.transparent_bg[1]))
+        tdc.SetBrush(wx.Brush(config.transparent_bg[1]))
+        tdc.DrawRectangle(0, 0, 8, 8)
+        tdc.DrawRectangle(8, 8, 15, 15)
+        tdc.SelectObject(wx.NullBitmap)
+
     # Device Context events and methods
     def OnPaint(self, e):
         """Event handler for scrolled window repaint requests"""
@@ -120,6 +132,7 @@ class imageWindow(wx.Panel):
         debug("tcui.ImageWindow: refresh_screen")
         # Redraw the active image in the window, with mask etc.
         bitmap = self.app.activeproject.get_active_bitmap()
+        transparency = self.app.activeproject.transparency()
 
         # Setup image properties for mask generation
         # If direction is 1 or 3, then reverse x/y to take account of irregular buildings
@@ -171,16 +184,22 @@ class imageWindow(wx.Panel):
 
         # Setup default brushes
         dc.SetBackground(wx.Brush(self.bgcolor))
-        dc.SetPen(wx.Pen((255,0,0)))
-##        dc.SetPen(wx.Pen(config.transparent))
-        
-        dc.SetBrush(wx.Brush((0,128,0)))
-        dc.SetBrush(wx.Brush(config.transparent))
         # Clear ready for drawing
         dc.Clear()
 
+        # Transparent grid background
+        if transparency:
+            dc.SetPen(wx.Pen((0, 0, 0), style=wx.PENSTYLE_TRANSPARENT))
+            dc.SetBrush(wx.Brush(self.transparent_bg))
+            w, h = self.scrolledwindow.GetVirtualSize()
+            # +50 because I have no idea how to get the "real virtual" size
+            dc.DrawRectangle(0, 0, w + 50, h + 50)
+
+        # Mask colour
+        dc.SetPen(wx.Pen((255, 0, 0)))
+
         # Test rectangle to indicate virtual size area of DC (shows extent of mask at present however)
-##        dc.DrawRectangle(bmp_offset_x,bitmap.GetHeight() + bmp_offset_y, mask_width_off, -mask_height_off)
+        # dc.DrawRectangle(bmp_offset_x,bitmap.GetHeight() + bmp_offset_y, mask_width_off, -mask_height_off)
 
         # Draw the bitmap
         dc.DrawBitmap(bitmap, bmp_offset_x, bmp_offset_y, True)

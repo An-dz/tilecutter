@@ -346,6 +346,7 @@ def export_writer(project, pak_output=False, return_dat=False, write_dat=True):
     layers = project.frontimage() + 1       # +1 as this value is stored as an 0 or 1, we need 1 or 2
     views = project.directions()
     seasons = project.winter() + 1          # +1 as this value is stored as an 0 or 1, we need 1 or 2
+    bgcolor = (0,0,0,0) if project.transparency() else config.transparent
 
     debug("e_w: Outputting using paksize: %s" % p)
     debug("e_w: Outputting %s front/backimages" % layers)
@@ -364,8 +365,9 @@ def export_writer(project, pak_output=False, return_dat=False, write_dat=True):
     output_bitmap = wx.Bitmap(side*p, side*p)
     outdc = wx.MemoryDC()
     outdc.SelectObject(output_bitmap)
-    outdc.SetBackground(wx.Brush(config.transparent))
-    outdc.Clear()
+    gdc = wx.GCDC(outdc)
+    gdc.SetBackground(wx.Brush(bgcolor, wx.SOLID))
+    gdc.Clear()
 
     # A list can now be produced of all images to be output
     # project[view][season][frame][layer][xdim][ydim][zdim] = [bitmap, (xposout, yposout)]
@@ -392,7 +394,9 @@ def export_writer(project, pak_output=False, return_dat=False, write_dat=True):
     x = 0
     y = 0
     for k in output_list:
-        outdc.DrawBitmap(k[0], x*p, y*p, True)
+        k[0].SaveFile("tc_temp.png", wx.BITMAP_TYPE_PNG)
+        cut_image = wx.Bitmap("tc_temp.png")
+        gdc.DrawBitmap(cut_image, x*p, y*p, True)
         # Makeobj references the image array by row,column, e.g. y,x, so switch these
         k[2] = (y,x)
         x += 1
@@ -401,6 +405,7 @@ def export_writer(project, pak_output=False, return_dat=False, write_dat=True):
             y += 1
     # Select bitmap out of dc ready for saving
     outdc.SelectObject(wx.NullBitmap)
+    os.remove("tc_temp.png")
 
     # output_bitmap now contains the image array
     debug("e_w: Image output complete")
@@ -470,12 +475,13 @@ def export_writer(project, pak_output=False, return_dat=False, write_dat=True):
     else:
         return True
 
-def export_cutter(bitmap, dims, offset, p):
+def export_cutter(bitmap, dims, offset, p, transparency):
     """Takes a bitmap and dimensions, and returns an array of masked bitmaps"""
     debug("e_c: export_cutter init")
     debug("e_c: Passed in bitmap of size (x, y): (%s, %s)" % (bitmap.GetWidth(), bitmap.GetHeight()))
     debug("e_c: Dims (x, y, z, d): %s" % str(dims))
     debug("e_c: Offset (offx, offy): %s" % str(offset))
+    debug("e_c: Transparency: %s" % str(transparency))
 
     # To account for irregularly shaped buildings, the values of x and y dims
     # need to be swapped where dims[3] (view#) is in [1,3]
@@ -506,14 +512,15 @@ def export_cutter(bitmap, dims, offset, p):
     if max_height < bitmap.GetHeight():
         max_height = bitmap.GetHeight()
     source_bitmap = wx.Bitmap(max_width, max_height)
+    bgcolor = (0,0,0,0) if transparency else config.transparent
     tdc = wx.MemoryDC()
     tdc.SelectObject(source_bitmap)
-    tdc.SetPen(wx.Pen(config.transparent, 1, wx.SOLID))
-    tdc.SetBrush(wx.Brush(config.transparent, wx.SOLID))
-    tdc.DrawRectangle(0,0,max_width, max_height)
-    tdc.DrawBitmap(bitmap, 0, max_height - bitmap.GetHeight())
+    gdc = wx.GCDC(tdc)
+    gdc.SetBackground(wx.Brush(bgcolor, wx.SOLID))
+    gdc.Clear()
+    gdc.DrawBitmap(bitmap, 0, max_height - bitmap.GetHeight(), True)
     tdc.SelectObject(wx.NullBitmap)
-    
+
     for x in range(dims[0]):
         yarray = []
         for y in range(dims[1]):
@@ -540,14 +547,15 @@ def export_cutter(bitmap, dims, offset, p):
                     else:
                         submap.SetMask(masks.mask[-1])
 
-##                tdc = wx.MemoryDC()
-##                kk = wx.EmptyBitmap(p,p)
-##                tdc.SelectObject(kk)
-##                tdc.DrawBitmap(submap, 0, 0, True)
-##                tdc.SelectObject(wx.NullBitmap)
-##                tdc = 0
-##                kk.SaveFile("test_%s%s%s.png" % (x,y, z), wx.BITMAP_TYPE_PNG)
-##                kk = 0
+                # sub = wx.Bitmap(p, p)
+                # tdc = wx.MemoryDC()
+                # tdc.SelectObject(sub)
+                # gdc = wx.GCDC(tdc)
+                # gdc.SetBackground(wx.Brush(bgcolor, wx.SOLID))
+                # gdc.Clear()
+                # gdc.DrawBitmap(submap, 0, 0, True)
+                # tdc.SelectObject(wx.NullBitmap)
+                # submap.SaveFile("test_%s%s%s.png" % (x,y,z), wx.BITMAP_TYPE_PNG)
 
                 # submap = Bitmap+Mask, Second variable stores location of this tile within
                 #                       the output image as a tuple
