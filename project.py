@@ -83,7 +83,7 @@ class Project(object):
             "files": {
                 "datfile_location": "output.dat",
                 "datfile_write": True,
-                "pngfile_location": os.path.join("images", "output.png"),
+                "pngfile_location": "output.png",
                 "pakfile_location": "",
             },
             "dat": {
