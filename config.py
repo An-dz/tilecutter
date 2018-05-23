@@ -35,6 +35,7 @@ class Config(object):
         "OFFSET_NEGATIVE_ALLOWED": False,
         "window_size": [-1,-1],
         "window_position": [-1,-1],
+        "window_maximised": False,
 
         "last_save_path": "",
         "last_image_path": "",

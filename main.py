@@ -98,12 +98,16 @@ class App(wx.App):
 
             debug("App: OnInit - Init window sizes")
             # Window inits itself to its minimum size
+            if config.window_maximised:
+                self.frame.Maximize()
+
             # If a larger size is specified in config, set to this instead
             if config.window_size[0] > self.frame.GetBestSize().GetWidth() and config.window_size[1] > self.frame.GetBestSize().GetHeight():
                 self.frame.SetSize(config.window_size)
             else:
                 # Otherwise just use the minimum size
                 self.frame.Fit()
+
             debug("App: OnInit - Init window position")
             # If a window position is saved, place the window there
             if config.window_position != [-1,-1]:
@@ -403,10 +407,18 @@ class App(wx.App):
     def OnQuit(self, e):
         """Close all windows and quit the application on a quit event in the main window"""
         debug("App: OnQuit - Application quitting...")
-        debug("App: OnQuit - Saving current application window size (%s) to config file" % str(self.frame.GetSize().Get()))
-        config.window_size = self.frame.GetSize().Get()
-        debug("App: OnQuit - Saving current application window position (%s) to config file" % str(self.frame.GetPosition().Get()))
-        config.window_position = self.frame.GetPosition().Get()
+
+        maximised = self.frame.IsMaximized()
+
+        debug("App: OnQuit - Saving current application window state (%s) to config file" % str(maximised))
+        config.window_maximised = maximised
+
+        if not maximised:
+            debug("App: OnQuit - Saving current application window size (%s) to config file" % str(self.frame.GetSize().Get()))
+            config.window_size = self.frame.GetSize().Get()
+            debug("App: OnQuit - Saving current application window position (%s) to config file" % str(self.frame.GetPosition().Get()))
+            config.window_position = self.frame.GetPosition().Get()
+
         debug("App: OnQuit - Destroying frame...")
         self.frame.Destroy()
         debug("App: OnQuit - End")
