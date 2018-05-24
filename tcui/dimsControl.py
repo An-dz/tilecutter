@@ -5,7 +5,7 @@
 
 # Copyright © 2008-2011 Timothy Baldock. All Rights Reserved.
 
-import wx, imres
+import wx
 
 # Utility functions
 import translator

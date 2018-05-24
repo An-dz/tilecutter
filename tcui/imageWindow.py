@@ -5,20 +5,18 @@
 
 # Copyright © 2008-2011 Timothy Baldock. All Rights Reserved.
 
-import os, wx, imres, tcui, tc
+import wx
+
+import tcui
 
 # Utility functions
 import translator
-gt = translator.Translator()
-_gt = gt.loop
 
 import config
 config = config.Config()
 
 import logger
 debug = logger.Log()
-
-from tc import Paths
 
 class imageWindow(wx.Panel):
     """Window onto which bitmaps may be drawn, background colour is set by bgcolor

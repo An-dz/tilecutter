@@ -31,9 +31,7 @@ except ImportError:
     debug("main: WXPython not installed, please install module and try again!")
     raise
 
-import pickle
-import tcui, tc, imres, codecs
-import project
+import tcui, tc, project
 from optparse import OptionParser
 
 # Classes to read/write TileCutter files

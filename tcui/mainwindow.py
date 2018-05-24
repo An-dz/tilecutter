@@ -5,17 +5,10 @@
 
 # Copyright © 2008-2011 Timothy Baldock. All Rights Reserved.
 
-import sys, os, io, pickle
+import wx
 
 import logger
 debug = logger.Log()
-
-try:
-    import wx
-    debug("WX version is: %s" % wx.version())
-except ImportError:
-    debug("WXPython not installed, please install module and try again!")
-    raise
 
 import translator
 gt = translator.Translator()
@@ -23,8 +16,7 @@ gt = translator.Translator()
 # script to pick it up for the translation file
 _gt = gt.loop
 
-
-import tcui, tc, imres
+import tcui, imres
 
 import config
 config = config.Config()

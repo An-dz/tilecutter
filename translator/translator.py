@@ -6,9 +6,7 @@
 # Copyright © 2008-2010 Timothy Baldock. All Rights Reserved.
 
 
-import sys, os, re, codecs
-# Custom platform codecs
-import json
+import os, re, codecs, json
 
 import logger
 debug = logger.Log()

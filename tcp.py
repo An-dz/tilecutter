@@ -9,15 +9,9 @@
 import logger
 debug = logger.Log()
 
-import sys, os, traceback
+import os, traceback, pickle, json
 
-import pickle
-import json
-
-import tcproject
-import project
-
-import config
+import tcproject, project, config
 config = config.Config()
 
 class tcp_writer(object):

@@ -5,7 +5,7 @@
 
 # Copyright © 2010-2012 Timothy Baldock. All Rights Reserved.
 
-import wx, imres
+import wx
 
 import tcui
 

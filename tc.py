@@ -7,8 +7,7 @@
 
 
 import wx
-import sys, os, string, tempfile
-import pickle, copy, math, io
+import sys, os, tempfile, math, io
 
 import logger
 debug = logger.Log()

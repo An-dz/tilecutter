@@ -7,12 +7,14 @@
 
 # This module creates the program's menus
 
-import wx, imres, tcui
-import os
+import wx
+
+import tcui
 
 # Utility functions
 import translator
 gt = translator.Translator()
+
 import config
 config = config.Config()
 
