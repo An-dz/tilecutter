@@ -6,11 +6,8 @@
 # Copyright © 2008-2010 Timothy Baldock. All Rights Reserved.
 
 
-import wx
 import sys, os, re, codecs
 # Custom platform codecs
-# from . import u_newlines
-# from . import w_newlines
 import json
 
 import logger
@@ -131,10 +128,6 @@ class translation:
         except IOError:
             debug("Problem loading information from file, aborting load of translation file")
             raise TranslationLoadError()
-        # Language files should be saved as UTF-8 - this conversion done now by directly reading as UTF-8
-        #block = block.decode("UTF-8")
-        # Convert newlines to unix style
-        # block = block.decode("u_newlines")
         # Scan document for block between {}, this is our config section
         dicts = re.findall("(?={).+?(?<=})", block, re.DOTALL)
         if len(dicts) > 1:
