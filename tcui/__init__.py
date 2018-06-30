@@ -3,26 +3,26 @@
 # TileCutter User Interface Library
 
 # Subclasses (dependent upon by controls, must come first)
-from .filePicker import fileTextBox
+from .filePicker import filePicker
 
 # Menus
 from .menuObject import menuObject
 
 # Views
-from .viewMain  import MainWindow
-from .viewImage import imageWindow
+from .viewMain  import viewMain
+from .viewImage import viewImage
 
 # Controls
-from .controlImageFile import ImageFileControl
-from .controlFiles     import MultiFileControl
-from .controlSeason    import seasonControl
-from .controlImage     import imageControl
-from .controlFacing    import facingControl
-from .controlDims      import dimsControl
-from .controlOffset    import offsetControl
+from .controlImageFile import controlImageFile
+from .controlFiles     import controlFiles
+from .controlSeason    import controlSeason
+from .controlImage     import controlImage
+from .controlFacing    import controlFacing
+from .controlDims      import controlDims
+from .controlOffset    import controlOffset
 
 # Dialogs
-from .dialogAbout       import aboutDialog
-from .dialogLanguage    import translationDialog
-from .dialogPreferences import preferencesDialog
-from .dialogDatFileEdit import DatFileEditDialog
+from .dialogAbout       import dialogAbout
+from .dialogLanguage    import dialogLanguage
+from .dialogPreferences import dialogPreferences
+from .dialogDatFileEdit import dialogDatFileEdit

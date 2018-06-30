@@ -62,7 +62,7 @@ class App(wx.App):
         if self.gui:
             debug("App: OnInit - Create + Show main frame")
             # Create and show main frame
-            self.frame = tcui.MainWindow(None, self, wx.ID_ANY, "TileCutter")
+            self.frame = tcui.viewMain(None, self, wx.ID_ANY, "TileCutter")
             self.SetTopWindow(self.frame)
 
             debug("App: OnInit - Bind Quit Event")
