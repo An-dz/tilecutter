@@ -1,34 +1,28 @@
 # coding: UTF-8
 #
 # TileCutter User Interface Library
-#
 
-# Copyright © 2008-2011 Timothy Baldock. All Rights Reserved.
-
-# Subclasses (depended upon by controls, must come first)
-from .fileTextBox import fileTextBox
+# Subclasses (dependent upon by controls, must come first)
+from .filePicker import fileTextBox
 
 # Menus
 from .menuObject import menuObject
 
-from .multi_file_control import MultiFileControl
-from .image_file_control import ImageFileControl
-
-from .mainwindow import MainWindow
+# Views
+from .viewMain  import MainWindow
+from .viewImage import imageWindow
 
 # Controls
-from .seasonControl import seasonControl
-from .imageControl import imageControl
-from .facingControl import facingControl
-from .dimsControl import dimsControl
-from .offsetControl import offsetControl
-from .imageWindow import imageWindow
+from .controlImageFile import ImageFileControl
+from .controlFiles     import MultiFileControl
+from .controlSeason    import seasonControl
+from .controlImage     import imageControl
+from .controlFacing    import facingControl
+from .controlDims      import dimsControl
+from .controlOffset    import offsetControl
 
 # Dialogs
-from .translationDialog import translationDialog
-from .preferencesDialog import preferencesDialog
-from .aboutDialog import aboutDialog
-from .DatFileEditDialog import DatFileEditDialog
-
-### Set value of * in import
-##__all__ = ["facingControl", "seasonControl", "dimsControl", "translationDialog"]
+from .dialogAbout       import aboutDialog
+from .dialogLanguage    import translationDialog
+from .dialogPreferences import preferencesDialog
+from .dialogDatFileEdit import DatFileEditDialog
