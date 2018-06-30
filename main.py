@@ -1,28 +1,12 @@
 #!/usr/bin/python
 # coding: UTF-8
-#
-# TileCutter, version 0.5
-#
-
-# Copyright © 2008-2011 Timothy Baldock. All Rights Reserved.
-#
-# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
-#
-# 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-#
-# 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-#
-# 3. The name of the author may not be used to endorse or promote products derived from this software without specific prior written permission from the author.
-#
-# 4. Products derived from this software may not be called "TileCutter" nor may "TileCutter" appear in their names without specific prior written permission from the author.
-#
-# THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
 
 # First thing imported is logger, so that other imports can use logging too
 import logger
 debug = logger.Log()
 
 import sys, os
+from optparse import OptionParser
 
 try:
     import wx
@@ -32,8 +16,6 @@ except ImportError:
     raise
 
 import tcui, tc, project
-from optparse import OptionParser
-
 # Classes to read/write TileCutter files
 from tcp import tcp_writer
 from tcp import tcp_reader
@@ -53,6 +35,9 @@ debug("main: configuration source is %s" % config.source)
 debug("main: configuration loaded from file: %s" % config.conf_path)
 debug(str(config))
 
+#########################################
+# Main class, controls most of the code #
+#########################################
 class App(wx.App):
     """The main application, pre-window launch stuff should go here"""
     def __init__(self, gui):
@@ -64,14 +49,6 @@ class App(wx.App):
 
     def OnInit(self):
         """Called after app has been initialised"""
-        # Wx also overrides stderr/stdout, override this
-        if self.gui:
-            sys.stderr = debug
-            sys.stdout = debug
-        else:
-            sys.stderr = sys.__stderr__
-            sys.stdout = sys.__stdout__
-
         debug("App: OnInit - Starting...")
         self.start_directory = os.getcwd()
 
@@ -85,14 +62,12 @@ class App(wx.App):
         if self.gui:
             debug("App: OnInit - Create + Show main frame")
             # Create and show main frame
-            # self.frame = tcui.MainWindow(None, self, wx.ID_ANY, "TileCutter")
             self.frame = tcui.MainWindow(None, self, wx.ID_ANY, "TileCutter")
             self.SetTopWindow(self.frame)
 
             debug("App: OnInit - Bind Quit Event")
             # Bind quit event
             self.frame.Bind(wx.EVT_CLOSE, self.OnQuit)
-            # self.frame.Bind(wx.EVT_CLOSE, self.OnQuit)
 
             debug("App: OnInit - Init window sizes")
             # Window inits itself to its minimum size
@@ -108,7 +83,7 @@ class App(wx.App):
 
             debug("App: OnInit - Init window position")
             # If a window position is saved, place the window there
-            if config.window_position != [-1,-1]:
+            if config.window_position != [-1, -1]:
                 self.frame.SetPosition(config.window_position)
             else:
                 # Otherwise center window on the screen
@@ -119,26 +94,27 @@ class App(wx.App):
         debug("App: OnInit - Completed!")
         return True
 
-
     # Mac-specific stuff
     def OnActivate(self, e):
         # if this is an activate event, rather than something else, like iconize.
         if e.GetActive():
             self.BringWindowToFront()
         e.Skip()
+
     def BringWindowToFront(self):
         try: # it's possible for this event to come when the frame is closed
             self.GetTopWindow().Raise()
         except:
             pass
+
     def MacOpenFile(self, filename):
         """Called for files droped on dock icon, or opened via finders context menu"""
         debug("App: MacOpenFile - %s dropped on app" % (filename))
         self.OnLoadProject(filename)
+
     def MacReopenApp(self):
         """Called when the doc icon is clicked, and for other reasons that need to focus the application"""
         self.BringWindowToFront()
-
 
     # Called by the currently active project
     def project_has_changed(self):
@@ -149,12 +125,13 @@ class App(wx.App):
             self.frame.set_title()
             # On Mac OSX due to bug with wx 2.8 we need to refresh the display window
             # this is due to the SetTitle method forcibly refreshing all child windows
-            self.frame.update()
+            # self.frame.update()
 
     # Functions concerning the title text of the program window
     def get_title_text(self):
         """Get a string to use for the window's title text"""
         return self.title_text
+
     def update_title_text(self):
         """Updates the title text with the details of the currently active project"""
         debug("App: update_title_text")
@@ -178,6 +155,7 @@ class App(wx.App):
                 # Unsaved and unchanged
                 # Title string will be (New Project) - TileCutter
                 self.title_text = "(%s) - %s" % (_gt("New Project"), "%s")
+
         debug("App: update_title_text - Setting title_text to: %s" % (self.title_text % _gt("TileCutter")))
 
     def set_status_text(self, message, field=0):
@@ -189,10 +167,13 @@ class App(wx.App):
         """Trigger exporting of specified project"""
         if return_dat is None:
             return_dat = not config.write_dat
+
         if write_dat is None:
             write_dat = config.write_dat
+
         # First trigger project to generate cut images
         project.cut_images(tc.export_cutter)
+
         # Then feed project into outputting routine
         # Will need a way to report back progress to a progress bar/indicator
         ret = tc.export_writer(project, pak_output, return_dat, write_dat)
@@ -204,11 +185,10 @@ class App(wx.App):
     def dialog_save_changes(self, project):
         """Prompts user to save file, return wx.ID_YES, wx.ID_NO or wx.ID_CANCEL"""
         debug("App: dialog_save_changes")
-        dlg = wx.MessageDialog(self.frame, gt("Save changes before proceeding?"),
-                               gt("Current project has changed"),
-                               style=wx.YES_NO|wx.CANCEL|wx.YES_DEFAULT|wx.ICON_QUESTION)
+        dlg = wx.MessageDialog(self.frame, gt("Save changes before proceeding?"), gt("Current project has changed"), style=wx.YES_NO|wx.CANCEL|wx.YES_DEFAULT|wx.ICON_QUESTION)
         result = dlg.ShowModal()
         dlg.Destroy()
+
         if result == wx.ID_YES:
             debug("App: dialog_save_changes - Result YES")
         if result == wx.ID_NO:
@@ -216,6 +196,7 @@ class App(wx.App):
         if result == wx.ID_CANCEL:
             debug("App: dialog_save_changes - Result CANCEL")
         return result
+
     def dialog_save_location(self, project):
         """Prompts user to select a location to save project to, returns True if location picked,
         False if cancelled. Sets project's save location to result file"""
@@ -224,9 +205,9 @@ class App(wx.App):
         dialogFlags = wx.FD_SAVE|wx.FD_OVERWRITE_PROMPT
         path = os.path.split(project.save_location())[0]
         filename = os.path.split(project.save_location())[1]
-        dlg = wx.FileDialog(self.frame, gt("Choose a location to save to..."),
-                            path, filename, filesAllowed, dialogFlags)
+        dlg = wx.FileDialog(self.frame, gt("Choose a location to save to..."), path, filename, filesAllowed, dialogFlags)
         result = dlg.ShowModal()
+
         if result == wx.ID_OK:
             #project.save_location(os.path.join(dlg.GetDirectory(), dlg.GetFilename()))
             project.save_location(dlg.GetPath())
@@ -239,6 +220,7 @@ class App(wx.App):
             debug("App: dialog_save_location - User cancelled save_location Dialog")
             dlg.Destroy()
             return False
+
     def dialog_load(self):
         """Prompts user to select a location to load a project file from, returns filename or wx.ID_CANCEL"""
         debug("App: dialog_load - Opening Load Dialog to allow location picking")
@@ -247,9 +229,9 @@ class App(wx.App):
         # This probably needs to be more robust
         path = os.path.split(self.activeproject.save_location())[0]
         file = os.path.split(self.activeproject.save_location())[1]
-        dlg = wx.FileDialog(self.frame, gt("Choose a project file to open..."),
-                            path, file, filesAllowed, dialogFlags)
+        dlg = wx.FileDialog(self.frame, gt("Choose a project file to open..."), path, file, filesAllowed, dialogFlags)
         result = dlg.ShowModal()
+
         if result == wx.ID_OK:
             debug("App: dialog_load - directory: %s, filename: %s" % (dlg.GetDirectory(), dlg.GetFilename()))
             #load_location = os.path.join(dlg.GetDirectory(), dlg.GetFilename())
@@ -263,9 +245,7 @@ class App(wx.App):
             debug("App: dialog_load - User cancelled location picking")
             return False
 
-
     # Methods for loading/saving projects
-
     def save_project(self, project):
         """Save project to its save location, returns True if success, False if failed"""
         debug("App: save_project - Save project out to disk")
@@ -380,10 +360,12 @@ class App(wx.App):
         """Init process of saving a project to file"""
         debug("App: OnSaveProject")
         if project.saved():
-            return self.save_project(project)                       # Returns True on save success, False on failure
+            # Returns True on save success, False on failure
+            return self.save_project(project)
         else:
             if self.dialog_save_location(project):
-                return self.save_project(project)                   # Returns True on save success, False on failure
+                # Returns True on save success, False on failure
+                return self.save_project(project)
             return False
         # Project already saved
         return True
@@ -395,8 +377,7 @@ class App(wx.App):
             return self.save_project(project)
         return False
 
-
-
+    # exit functions
     def Exit(self):
         """Quit the application indirectly"""
         debug("App: Exit -> self.OnQuit()")
@@ -411,6 +392,7 @@ class App(wx.App):
         debug("App: OnQuit - Saving current application window state (%s) to config file" % str(maximised))
         config.window_maximised = maximised
 
+        # we only save size when not maximised otherwise we will just get screen size
         if not maximised:
             debug("App: OnQuit - Saving current application window size (%s) to config file" % str(self.frame.GetSize().Get()))
             config.window_size = self.frame.GetSize().Get()
@@ -421,11 +403,13 @@ class App(wx.App):
         self.frame.Destroy()
         debug("App: OnQuit - End")
 
-
-
+##################################################
+# Starting function, this is the first thing run #
+##################################################
 def run():
     """Initialise the application in either GUI or CLI mode"""
-    # Create app, but don't show the frame if command line being used
+
+    # Create app, but don't show the frame if command line is being used
     # For each file in the input list, load the file (abort if load fails),
     # then do a standard export, plus compilation if needed
     # If any override flags are set, modify the output paths of the project before continuing
@@ -433,40 +417,76 @@ def run():
     # Command line arguments could indicate files to open (if they are the only things)
     # Use of the "-c" option will invoke the CLI operation mode
     debug("main: run - sys.argv says: %s" % sys.argv)
-    # Parse command line arguments (if any)
     usage = "usage: %prog [options] filename1 [filename2 ... ]"
-    parser = OptionParser(usage=usage)
 
+    # Parse command line arguments (if any)
+    parser = OptionParser(usage=usage)
     parser.set_defaults(pak_output=False, dat_output=True, cli=False)
 
-    parser.add_option("-c", action="store_true", dest="cli",
-                      help="run program in CLI mode (must be specified or program will run in GUI mode and load the first file specified on the command line)")
+    parser.add_option("-c",
+                      action="store_true",
+                      dest="cli",
+                      help="run program in CLI mode (must be specified or program will run in GUI mode and load the first file specified on the command line)"
+                     )
 
-    parser.add_option("-i", dest="png_directory",
-                      help="override .png file output location to DIRECTORY", metavar="DIRECTORY")
-    parser.add_option("-I", dest="png_filename",
-                      help="override .png file output name to FILENAME", metavar="FILENAME")
+    parser.add_option("-i",
+                      dest="png_directory",
+                      help="override .png file output location to DIRECTORY",
+                      metavar="DIRECTORY"
+                     )
+    parser.add_option("-I",
+                      dest="png_filename",
+                      help="override .png file output name to FILENAME",
+                      metavar="FILENAME"
+                     )
 
-    parser.add_option("-n", action="store_false", dest="dat_output",
-                      help="disable .dat file output (if -m specified, dat info will be output to tempfile)")
-    parser.add_option("-d", dest="dat_directory",
-                      help="override .dat file output location to DIRECTORY", metavar="DIRECTORY")
-    parser.add_option("-D", dest="dat_filename",
-                      help="override .dat file output name to FILENAME", metavar="FILENAME")
+    parser.add_option("-n",
+                      action="store_false",
+                      dest="dat_output",
+                      help="disable .dat file output (if -m specified, dat info will be output to tempfile)"
+                     )
+    parser.add_option("-d",
+                      dest="dat_directory",
+                      help="override .dat file output location to DIRECTORY",
+                      metavar="DIRECTORY"
+                     )
+    parser.add_option("-D",
+                      dest="dat_filename",
+                      help="override .dat file output name to FILENAME",
+                      metavar="FILENAME"
+                     )
 
-    parser.add_option("-m", action="store_true", dest="pak_output",
-                      help="enable .pak file output (requires Makeobj)")
-#        parser.add_option("-M", dest="makeobj_directory",
-#                          help="override object specific makeobj with PATH", metavar="PATH")
-    parser.add_option("-p", dest="pak_directory",
-                      help="override .pak file output location to DIRECTORY", metavar="DIRECTORY")
-    parser.add_option("-P", dest="pak_filename",
-                      help="override .pak file output name to FILENAME", metavar="FILENAME")
+    parser.add_option("-m",
+                      action="store_true",
+                      dest="pak_output",
+                      help="enable .pak file output (requires Makeobj)"
+                     )
+    # parser.add_option("-M",
+        #               dest="makeobj_directory",
+        #               help="override object specific makeobj with PATH",
+        #               metavar="PATH"
+        #              )
+    parser.add_option("-p",
+                      dest="pak_directory",
+                      help="override .pak file output location to DIRECTORY",
+                      metavar="DIRECTORY"
+                     )
+    parser.add_option("-P",
+                      dest="pak_filename",
+                      help="override .pak file output name to FILENAME",
+                      metavar="FILENAME"
+                     )
 
-    parser.add_option("-v", action="store_true", dest="verbose",
-                      help="enable verbose output")
-    parser.add_option("-q", action="store_false", dest="verbose",
-                      help="suppress stdout")
+    parser.add_option("-v",
+                      action="store_true",
+                      dest="verbose",
+                      help="enable verbose output"
+                     )
+    parser.add_option("-q",
+                      action="store_false",
+                      dest="verbose",
+                      help="suppress stdout"
+                     )
 
     # options are the defined options, args are the list of files to process
     options, args = parser.parse_args()
@@ -478,12 +498,10 @@ def run():
         # Create the application without GUI
         debug("main: run - Init - Creating app without GUI")
         app = App(gui=False)
-        # Not making use of app's event handling loop etc., so don't start it
-        #app.MainLoop()
 
         if options.verbose is True:
-            print("options: %s" % str(options))
-            print("args: %s" % str(args))
+            debug("options: %s" % str(options))
+            debug("args: %s" % str(args))
         # Another good option would be to support "stub" datfiles
         # produced as part of a pakset, which would have some kind of
         # marker to allow inserting the image array matrix in a particular location
@@ -493,32 +511,37 @@ def run():
 
         for file in args:
             if options.verbose is not False:
-                print("processing file: %s" % file)
+                debug("processing file: %s" % file)
             # For every filename specified by the user, perform export
             # Try to load in project, if this fails skip this filename and print an error
             if app.load_project(file):
                 if options.verbose is not False:
-                    print("loaded file, preparing to export")
+                    debug("loaded file, preparing to export")
+
                 # Apply any command line overrides specified by user
                 # For PNG file
                 if options.png_directory is not None:
                     png_dir = options.png_directory
                 else:
                     png_dir = os.path.split(app.activeproject.pngfile_location())[0]
+
                 if options.png_filename is not None:
                     png_file = options.png_filename
                 else:
                     png_file = os.path.split(app.activeproject.pngfile_location())[1]
+
                 app.activeproject.pngfile(os.path.join(png_dir, png_file))
                 # For DAT file
                 if options.dat_directory is not None:
                     dat_dir = options.dat_directory
                 else:
                     dat_dir = os.path.split(app.activeproject.datfile_location())[0]
+
                 if options.dat_filename is not None:
                     dat_file = options.dat_filename
                 else:
                     dat_file = os.path.split(app.activeproject.datfile_location())[1]
+
                 app.activeproject.datfile(os.path.join(dat_dir, dat_file))
                 # For PAK file
                 if options.pak_directory is not None:
@@ -533,22 +556,17 @@ def run():
 
                 app.export_project(app.activeproject, pak_output=options.pak_output, return_dat=False, write_dat=options.dat_output)
                 if options.verbose is not False:
-                    print("...Done!")
+                    debug("...Done!")
             else:
                 if options.verbose is not False:
-                    print("loading file failed, skipping: %s" % file)
+                    debug("loading file failed, skipping: %s" % file)
 
         # Finally destroy app
         app.Destroy()
     else:
         # Create the application with GUI
-        # Redirect stdout/err to internal logging mechanism
-        # Only do this redirection if running in GUI mode
-        # Needs tweaks to the debug module for -q option etc., different logging levels?
         debug("main: run - options: %s" % str(options))
         debug("main: run - args: %s" % str(args))
-        sys.stderr = debug
-        sys.stdout = debug
         # Create the application with GUI
         debug("main: run - Init - Creating app with GUI")
         app = App(gui=True)
@@ -566,10 +584,8 @@ def run():
         app.MainLoop()
         app.Destroy()
 
-
-
+#####################
+# Run main function #
+#####################
 if __name__ == "__main__":
     run()
-
-# BackImage[direction][ydim][xdim][zdim][frame][season]=path.ypos.xpos
-
