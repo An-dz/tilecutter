@@ -24,10 +24,10 @@ class controlSeason(wx.Panel):
         self.label = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
 
         # Add items
-        self.seasons_select_summer_im = wx.StaticBitmap(self, wx.ID_ANY, imres.catalog["ImageSummer"].getBitmap())
+        self.seasons_select_summer_im = wx.StaticBitmap(self, wx.ID_ANY, imres.ImageSummer.GetBitmap())
         self.seasons_select_summer    =  wx.RadioButton(self, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.RB_GROUP)
         self.seasons_select_summer.SetValue(True)
-        self.seasons_select_winter_im = wx.StaticBitmap(self, wx.ID_ANY, imres.catalog["ImageWinter"].getBitmap())
+        self.seasons_select_winter_im = wx.StaticBitmap(self, wx.ID_ANY, imres.ImageWinter.GetBitmap())
         self.seasons_select_winter    =  wx.RadioButton(self, wx.ID_ANY, "", (-1, -1), (-1, -1))
         self.seasons_enable_winter    =     wx.CheckBox(self, wx.ID_ANY, "", (-1, -1), (-1, -1))
 

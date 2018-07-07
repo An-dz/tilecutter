@@ -27,11 +27,11 @@ class controlFacing(wx.Panel):
         # Header text
         self.label = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
         # Components which make up the tile graphic
-        self.facing_tile_left   = wx.StaticBitmap(self, wx.ID_ANY, imres.catalog["tilegraphic_left"].getBitmap())
-        self.facing_tile_right  = wx.StaticBitmap(self, wx.ID_ANY, imres.catalog["tilegraphic_right"].getBitmap())
-        self.facing_tile_middle = wx.StaticBitmap(self, wx.ID_ANY, imres.catalog["tilegraphic_middle"].getBitmap())
-        self.facing_tile_bottom = wx.StaticBitmap(self, wx.ID_ANY, imres.catalog["tilegraphic_bottom"].getBitmap())
-        self.facing_tile_top    = wx.StaticBitmap(self, wx.ID_ANY, imres.catalog["tilegraphic_top"].getBitmap())
+        self.facing_tile_left   = wx.StaticBitmap(self, wx.ID_ANY, imres.tilegraphic_left.GetBitmap())
+        self.facing_tile_right  = wx.StaticBitmap(self, wx.ID_ANY, imres.tilegraphic_right.GetBitmap())
+        self.facing_tile_middle = wx.StaticBitmap(self, wx.ID_ANY, imres.tilegraphic_middle.GetBitmap())
+        self.facing_tile_bottom = wx.StaticBitmap(self, wx.ID_ANY, imres.tilegraphic_bottom.GetBitmap())
+        self.facing_tile_top    = wx.StaticBitmap(self, wx.ID_ANY, imres.tilegraphic_top.GetBitmap())
 
         # Add items
         self.s_facing_select_south = wx.BoxSizer(wx.HORIZONTAL)

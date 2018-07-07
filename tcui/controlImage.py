@@ -24,10 +24,10 @@ class controlImage(wx.Panel):
         self.label = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
 
         # Add items
-        self.images_select_back_im      = wx.StaticBitmap(self, wx.ID_ANY, imres.catalog["ImageBack"].getBitmap())
+        self.images_select_back_im      = wx.StaticBitmap(self, wx.ID_ANY, imres.ImageBack.GetBitmap())
         self.images_select_back         =  wx.RadioButton(self, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.RB_GROUP)
         self.images_select_back.SetValue(True)
-        self.images_select_front_im     = wx.StaticBitmap(self, wx.ID_ANY, imres.catalog["ImageFront"].getBitmap())
+        self.images_select_front_im     = wx.StaticBitmap(self, wx.ID_ANY, imres.ImageFront.GetBitmap())
         self.images_select_front        =  wx.RadioButton(self, wx.ID_ANY, "", (-1, -1), (-1, -1))
         self.images_enable_front        =     wx.CheckBox(self, wx.ID_ANY, "", (-1, -1), (-1, -1))
         self.images_enable_transparency =     wx.CheckBox(self, wx.ID_ANY, "", (-1, -1), (-1, -1))

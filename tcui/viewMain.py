@@ -22,10 +22,10 @@ class viewMain(wx.Frame):
 
         # Set the program's icon
         self.icons = wx.IconBundle()
-        self.icons.AddIcon(imres.catalog["tc_icon2_16_plain"].getIcon())
-        self.icons.AddIcon(imres.catalog["tc_icon2_32_plain"].getIcon())
-        self.icons.AddIcon(imres.catalog["tc_icon2_48_plain"].getIcon())
-        self.icons.AddIcon(imres.catalog["tc_icon2_128_plain"].getIcon())
+        self.icons.AddIcon(imres.tc_icon2_16_plain.GetIcon())
+        self.icons.AddIcon(imres.tc_icon2_32_plain.GetIcon())
+        self.icons.AddIcon(imres.tc_icon2_48_plain.GetIcon())
+        self.icons.AddIcon(imres.tc_icon2_128_plain.GetIcon())
         self.SetIcons(self.icons)
 
         # Create the menus

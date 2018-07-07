@@ -24,7 +24,7 @@ class dialogAbout(wx.Dialog):
         self.sizer = wx.BoxSizer(wx.VERTICAL)
 
         # Big TileCutter icon
-        self.icon = wx.StaticBitmap(self, wx.ID_ANY, imres.catalog["tc_icon2_128_plain"].getBitmap())
+        self.icon = wx.StaticBitmap(self, wx.ID_ANY, imres.tc_icon2_128_plain.GetBitmap())
 
         # Store default font to reset to later
         f = self.GetFont()
