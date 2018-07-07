@@ -1,23 +1,15 @@
 # coding: UTF-8
 #
 # TileCutter Project Module (Old version)
-#
-
-# Copyright © 2008-2011 Timothy Baldock. All Rights Reserved.
-
 
 import os, sys
 import wx
-
-import logger
-debug = logger.Log()
-import config
-config = config.Config()
-
+import logger, config
 from tc import Paths
-paths = Paths()
-
 from environment import getenvvar
+debug = logger.Log()
+config = config.Config()
+paths = Paths()
 
 # project[view][season][frame][image][xdim][ydim][zdim]
 # view=NSEW, 0,1,2,3 - array - controlled by global enable
@@ -25,27 +17,31 @@ from environment import getenvvar
 # frame=0,++ - array - controlled by global number of frames variable
 # image=back/front, 0,1 - array - controlled by global bool enable
 
-
 class ProjectImage(object):
     """An individual image object, consisting of a cached image, path to that image and offset dimensions"""
+
     def __init__(self, parent, b):
         """Initialise default values, new image, empty path, zeroed offsets"""
         self.parent = parent
+
         # Also needs some provision for setting the cutting mask on a per-image basis (like the offset)
         # given that fine-tuning of the mask is a desirable feature
         if b in [True, 1]:
             self.b = True
         elif b in [False, 0]:
             self.b = False
+
         # Whatever is in the path entry box
         self.value_path = ""
         # Last valid/real path entered
         self.value_valid_path = ""
         self.reloadImage()
-        self.offset = [0,0]
+        self.offset = [0, 0]
         self.cutimageset = None
+
     def __getitem__(self, key):
         return self.cutimageset[key]
+
     def cutImage(self, cutting_function, dims, p):
         """Generates an array of cut images based on this image
         using the cutting routine"""
@@ -56,85 +52,106 @@ class ProjectImage(object):
         """Return a wxImage representation of the cached image"""
         if self.value_image == None:
             self.reloadImage()
+
         return self.value_image
+
     def bitmap(self):
         """Return a wxBitmap representation of the cached image"""
         if self.value_bitmap == None:
             self.reloadImage()
+
         return self.value_bitmap
+
     def delImage(self):
         """Delete stored images, to enable pickling"""
         self.value_image = None
         self.value_bitmap = None
         self.cutimageset = None
+
     def reloadImage(self):
         """Refresh the cached image"""
         if self.value_valid_path == "":
-            self.value_image = wx.Image(1,1)
+            self.value_image = wx.Image(1, 1)
             self.value_bitmap = wx.Bitmap(self.value_image)
         else:
             abspath = paths.join_paths(self.parent.parent.parent.savefile(), self.value_valid_path)
-            self.value_image = wx.Image(1,1)
+            self.value_image = wx.Image(1, 1)
             self.value_image.LoadFile(abspath, wx.BITMAP_TYPE_ANY)
             self.value_bitmap = wx.Bitmap(self.value_image)
+
     def valid_path(self):
         """Return the valid/real path of this image"""
         return self.value_valid_path
+
     def path(self, path=None):
         """Set or return the path of this image as entered"""
         if path != None:
             self.value_path = path
             debug("value_path set to: \"%s\"" % self.value_path)
             abspath = paths.join_paths(self.parent.parent.parent.savefile(), self.value_path)
+
             if (paths.is_input_file(abspath) and os.path.exists(abspath)) or path == "":
                 self.value_valid_path = path
                 self.reloadImage()
                 debug("Valid image path set to \"%s\", new cached image will be loaded" % str(self.value_valid_path))
                 self.on_change()
+
         else:
             return self.value_path
+
     def back(self):
         """Returns True if this is a backimage, false if it is a frontimage"""
         return self.b
+
     def on_change(self):
         # When something in the project has changed
         self.parent.on_change()
 
 class ProjectFrame(object):
     """Contains a single frame of the project, with a front and back image"""
+
     def __init__(self, parent):
         """Initialise array containing two images"""
         self.parent = parent
         self.images = []
         self.images.append(ProjectImage(self, 0))
         self.images.append(ProjectImage(self, 1))
+
     def __getitem__(self, key):
         return self.images[key]
+
     def __len__(self):
         return len(self.images)
+
     def on_change(self):
         # When something in the project has changed
         self.parent.on_change()
 
 class ProjectFrameset(object):
     """Contains a sequence of ProjectFrame objects for each animation frame of this direction/season combination"""
+
     def __init__(self, parent, season):
         self.parent = parent
         # 0 for summer, 1 for winter
         self.season = season
         self.frames = []
         self.frames.append(ProjectFrame(self))
+
     def __getitem__(self, key):
         return self.frames[key]
+
     def __len__(self):
         return len(self.frames)
+
     # Needs methods to add a frame, remove a frame, move frames up/down etc. (To be added with animation support)
+
     def on_change(self):
         # When something in the project has changed
         self.parent.on_change()
 
 class Project(object):
     """Model containing all information about a project."""
+
     def __init__(self, parent):
         """Initialise this project, and set default values"""
         self.parent = parent
@@ -143,6 +160,7 @@ class Project(object):
         # [0]->South, [1]->East, [2]->North, [3]->West
         # [0][0]->Summer, [0][1]->Winter
         self.images = []
+
         for a in range(4):
             b = []
             b.append(ProjectFrameset(self, 0))
@@ -181,6 +199,7 @@ class Project(object):
                 for f in range(len(self.images[d][s])):
                     for i in range(len(self.images[d][s][f])):
                         self.images[d][s][f][i].path(path)
+
         self.on_change()
 
     def cutImages(self, cutting_function):
@@ -207,7 +226,7 @@ class Project(object):
         # Return parent reference so it can be added back by post_serialise
         parent = self.parent
         self.del_parent()
-        return [parent, ]
+        return [parent,]
 
     def post_serialise(self, params):
         """After serialisation re-add parameters removed by prep_serialise"""
@@ -216,6 +235,7 @@ class Project(object):
     def del_parent(self):
         """Delete the parent reference ready for pickling"""
         self.parent = None
+
     def set_parent(self, parent):
         """Set the parent for Event references"""
         self.parent = parent
@@ -225,27 +245,35 @@ class Project(object):
         old_x = self.active.image.offset[0]
         old_y = self.active.image.offset[1]
         changed = False
+
         if x == 0:
             self.active.image.offset[0] = 0
             changed = True
         elif x != None:
             self.active.image.offset[0] += x
+
             if not config.negative_offset_allowed:
                 if self.active.image.offset[0] < 0:
-                    self.active.image.offset[0] = 0     # Limit to 0
+                    self.active.image.offset[0] = 0 # Limit to 0
+
             changed = True
+
         if y == 0:
             self.active.image.offset[1] = 0
             changed = True
         elif y != None:
             self.active.image.offset[1] += y
+
             if not config.negative_offset_allowed:
                 if self.active.image.offset[1] < 0:
-                    self.active.image.offset[1] = 0     # Limit to 0
+                    self.active.image.offset[1] = 0 # Limit to 0
+
             changed = True
+
         if changed == True:
             debug("Active Image offset changed to: %s" % str(self.active.image.offset))
             self.on_change()
+
             if old_x != self.active.image.offset[0] or old_y != self.active.image.offset[1]:
                 return 1
             else:
@@ -261,22 +289,26 @@ class Project(object):
         """Set or return the currently active image"""
         # If parameters have been changed at all, update
         changed = False
-        if direction != self.active.direction and direction != None:
+        if direction != None and direction != self.active.direction:
             self.active.direction = direction
             changed = True
             debug("Active Image direction changed to: %s" % str(self.active.direction))
-        if season != self.active.season and season != None:
+
+        if season != None and season != self.active.season:
             self.active.season = season
             changed = True
             debug("Active Image season changed to: %s" % str(self.active.season))
-        if frame != self.active.frame and frame != None:
+
+        if frame != None and frame != self.active.frame:
             self.active.frame = frame
             changed = True
             debug("Active Image frame changed to: %s" % str(self.active.frame))
-        if layer != self.active.layer and layer != None:
+
+        if layer != None and layer != self.active.layer:
             self.active.layer = layer
             changed = True
             debug("Active Image layer changed to: %s" % str(self.active.layer))
+
         if changed == True:
             self.active.UpdateImage()
         else:
@@ -295,6 +327,7 @@ class Project(object):
                 return 1
         else:
             return self.dims.x
+
     def y(self, set=None):
         """Set or return Y dimension"""
         if set != None:
@@ -308,6 +341,7 @@ class Project(object):
                 return 1
         else:
             return self.dims.y
+
     def z(self, set=None):
         """Set or return Z dimension"""
         if set != None:
@@ -321,6 +355,7 @@ class Project(object):
                 return 1
         else:
             return self.dims.z
+
     def paksize(self, set=None):
         """Set or return paksize"""
         if set != None:
@@ -334,6 +369,7 @@ class Project(object):
                 return 1
         else:
             return self.dims.paksize
+
     def winter(self, set=None):
         """Set or return if Winter image is enabled"""
         if set != None:
@@ -352,6 +388,7 @@ class Project(object):
                 return 1
         else:
             return self.dims.winter
+
     def frontimage(self, set=None):
         """Set or return if Front image is enabled"""
         if set != None:
@@ -370,6 +407,7 @@ class Project(object):
                 return 1
         else:
             return self.dims.frontimage
+
     def views(self, set=None):
         """Set or return number of views (1, 2 or 4)"""
         if set != None:
@@ -390,6 +428,7 @@ class Project(object):
             self.on_change()
         else:
             return self.files.datfile_location
+
     def writedat(self, set=None):
         """Set or return if dat file should be written"""
         if set in [True, 1]:
@@ -400,6 +439,7 @@ class Project(object):
             self.on_change()
         else:
             return self.files.writedat
+
     def pngfile(self, set=None):
         """Set or return (relative) path to png file"""
         if set != None:
@@ -407,6 +447,7 @@ class Project(object):
             self.on_change()
         else:
             return self.files.pngfile_location
+
     def pakfile(self, set=None):
         """Set or return (relative) path to pak file"""
         if set != None:
@@ -414,9 +455,11 @@ class Project(object):
             self.on_change()
         else:
             return self.files.pakfile_location
+
     def has_save_location(self):
         """Return True if project has a save location, False otherwise"""
         return self.files.saved
+
     def saved(self, set=None):
         """Set or return whether a save path has been set for this project"""
         if set != None:
@@ -430,6 +473,7 @@ class Project(object):
                 debug("Attempt to set project saved status failed - Value (%s) outside of acceptable range" % str(set))
         else:
             return self.files.saved
+
     def savefile(self, set=None):
         """Set or return (absolute) path to project save file location"""
         if set != None:
@@ -444,9 +488,9 @@ class Project(object):
     # e.g. blah = Project(), blah[0][0][0][0] = south, summer, frame 1, backimage
     # and: blah[0][0][0][0].setPath("") will set that path
 
-
 class ProjectFiles(object):
     """Information relating to file paths"""
+
     def __init__(self, parent):
         self.parent = parent
         # Location of save file, by default this is the user's home directory
@@ -482,10 +526,8 @@ class ProjectFiles(object):
         self.pakfile_location = ""
 
         try:
-            debug("save_location: %s, datfile_location: %s, pngfile_location: %s, pakfile_location: %s" % (self.save_location,
-                                                                                                           self.datfile_location,
-                                                                                                           self.pngfile_location,
-                                                                                                           self.pakfile_location))
+            debug("save_location: %s, datfile_location: %s, pngfile_location: %s, pakfile_location: %s" % (
+                  self.save_location, self.datfile_location, self.pngfile_location, self.pakfile_location))
         except UnicodeDecodeError:
             debug("Unicode Decode Error")
             debug(self.save_location)
@@ -504,17 +546,17 @@ class ProjectFiles(object):
         else:
             return os.path.join(path, "new_project.tcp") 
 
-
 class ActiveImage(object):
     """Details of the active image"""
+
     def __init__(self, parent):
         self.parent = parent
         self.direction = 0      # 0 South, 1 East, 2 North, 3 West
         self.season = 0         # 0 Summer/All, 1 Winter
         self.frame = 0          # Index
         self.layer = 0          # 0 BackImage, 1 FrontImage
-
         self.UpdateImage()      # And set the image this refers to
+
     def UpdateImage(self):
         self.image = self.parent.images[self.direction][self.season][self.frame][self.layer]
 
@@ -522,6 +564,7 @@ class ProjectDims(object):
     """Dimensions of the project, X, Y, Z, paksize, also whether winter/frontimage are enabled
     Note that the number of frames per frameset is not set outside of the length of the frameset,
     and can only be altered by adding or removing frames"""
+
     # All of these defaults should be loaded from a config file, and sanity checked on load
     def __init__(self, parent):
         self.x = 1
@@ -531,4 +574,3 @@ class ProjectDims(object):
         self.views = 1
         self.winter = 0
         self.frontimage = 0
-

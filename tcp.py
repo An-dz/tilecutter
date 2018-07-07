@@ -1,23 +1,17 @@
 # coding: UTF-8
 #
 # TileCutter - .tcp file reading/writing functions
-#
 
-# Copyright © 2011 Timothy Baldock. All Rights Reserved.
-
-
-import logger
+import json, os, pickle, traceback
+import logger, config, project, tcproject
 debug = logger.Log()
-
-import os, traceback, pickle, json
-
-import tcproject, project, config
 config = config.Config()
 
 class tcp_writer(object):
-    """"""
+    """Write TCP file"""
+
     def __init__(self, filename, mode):
-        """"""
+        """Initialise TCP file"""
         debug("tcp_writer: Initialising new tcp_writer, file: %s, mode: %s" % (filename, mode))
 
         # Confirm if path exists, create directories if needed
@@ -30,16 +24,18 @@ class tcp_writer(object):
     def write(self, obj):
         """Write object to file, return success"""
         debug("tcp_writer: write - Writing object: %s to file" % str(obj))
+
         if self.mode == "pickle":
             debug("tcp_writer: write - Deprecation warning, pickle save mode no longer supported!")
             output_string = self.pickle_object(obj, 2)
         elif self.mode == "json":
             debug("tcp_writer: write - Preparing output in JSON format.")
-            saveobj = {"type": "TCP_JSON",
-                       "version": "%s" % config.version,
-                       "comment": "This is a TileCutter Project file (JSON formatted). You may edit it by hand if you are careful.",
-                       "data": obj.props,
-                       }
+            saveobj = {
+                "type": "TCP_JSON",
+                "version": "%s" % config.version,
+                "comment": "This is a TileCutter Project file (JSON formatted). You may edit it by hand if you are careful.",
+                "data": obj.props,
+            }
             try:
                 output_string = json.dumps(saveobj, ensure_ascii=False, sort_keys=True, indent=4)
             except:
@@ -71,31 +67,35 @@ class tcp_writer(object):
         params = obj.prep_serialise()
         pickle_string = pickle.dumps(obj, picklemode)
         obj.post_serialise(params)
-
         return pickle_string
 
 class tcp_reader(object):
     """The main application, pre-window launch stuff should go here"""
+
     def __init__(self, filename):
-        """"""
+        """Get filename for other function calls"""
         debug("Initialising new tcp_reader, file: %s" % filename)
         self.filename = filename
 
     def load(self, params):
         """Load object from file, return deserialised object"""
         debug("tcp_reader: load - Loading object from file")
+
         # Optional params argument which contains values which should be passed to post_serialise method of object to initalise it
         try:
             f = open(self.filename, "rb")
         except IOError:
             debug("Opening file for reading failed, file probably does not exist!")
             debug(traceback.format_exc())
+
         str = f.read()
         f.close()
+
         # Try to load file as JSON format first, if this fails try to load it as pickle
         try:
             debug("tcp_reader: load - attempting to load as JSON")
             loadobj = json.loads(str)
+
             if isinstance(loadobj, type({})) and "type" in loadobj and loadobj["type"] == "TCP_JSON":
                 debug("tcp_reader: load - JSON load successful, attempting to load in object")
                 # Init new project using loaded data from dict
@@ -172,9 +172,10 @@ class tcp_reader(object):
         """Unpickle an object from the pickled string str, optionally call post_serialise with params"""
         debug("tcp_reader: unpickle_object - WARNING: pickle-style .tcp projects are considered a legacy format!")
         obj = pickle.loads(str)
+
         if params is not None:
             debug("tcp_reader: unpickle_object - running post_serialise")
             obj.post_serialise(params)
+
         debug("tcp_reader: unpickle_object - unpickled object: %s" % repr(obj))
         return obj
-

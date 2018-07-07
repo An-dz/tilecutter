@@ -1,19 +1,10 @@
 # coding: UTF-8
 #
 # Config Management Utility
-#
 
-# Copyright © 2008-2011 Timothy Baldock. All Rights Reserved.
-
-##import simplejson as json
-import json
-import codecs
-
+import codecs, json, os, sys
 from environment import getenvvar
 
-import sys, os
-
-# Better to use json module in python 2.6 here
 # Tuples probably need to be converted to arrays here
 
 class Config(object):
@@ -28,13 +19,13 @@ class Config(object):
         "debug_level": 2,
         "logfile": "",
         "logfile_platform_default": True,
-        "transparent": [231,255,255],
+        "transparent":     [231, 255, 255],
         "transparent_bg": [[153, 153, 153], [103, 103, 103]],
         "default_paksize": 64,
         "valid_image_extensions": [".png"],
         "OFFSET_NEGATIVE_ALLOWED": False,
-        "window_size": [-1,-1],
-        "window_position": [-1,-1],
+        "window_size":     [-1, -1],
+        "window_position": [-1, -1],
         "window_maximised": False,
 
         "last_save_path": "",
@@ -47,42 +38,43 @@ class Config(object):
         "write_dat": True,
 
         "default_language": "English",
-        }
+    }
     internals = {
         "version": "1.0.0",
-        "choicelist_paksize": [16,32,48,64,80,96,112,128,144,160,176,192,208,224,240],
-        "choicelist_views": [1,2,4],
-        "choicelist_dims": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],
-        "choicelist_dims_z": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],
-        }
+        "choicelist_paksize": [16, 32, 48, 64, 80, 96, 112, 128, 144, 160, 176, 192, 208, 224, 240],
+        "choicelist_views":  [1, 2, 4],
+        "choicelist_dims":   [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
+        "choicelist_dims_z": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
+    }
 
     # If a tc.config or tilecutter.config file exists in the program directory use that to load config from 
     # (to permit setting of global config, or for backwards compatibility with existing installs)
     if os.path.isfile("tc.config"):
-        conf_path = os.path.abspath("tc.config")
+        main_path = os.path.abspath(".")
+        conf_path = os.path.join(main_path, "tc.config")
         source = "legacy: tc.config in program directory"
     elif os.path.isfile("tilecutter.config"):
-        conf_path = os.path.abspath("tilecutter.config")
+        main_path = os.path.abspath(".")
+        conf_path = os.path.join(main_path, "tilecutter.config")
         source = "override: tilecutter.config in program directory"
     else:
         if sys.platform == "darwin":
-            conf_path = os.path.expanduser("~/.tilecutter/tilecutter.config")
+            main_path = os.path.expanduser("~/.tilecutter/")
             source = "darwin auto location"
         elif sys.platform == "win32":
-            conf_path = os.path.join(getenvvar("APPDATA"), "tilecutter\\tilecutter.config")
-            #conf_path = os.path.normpath(os.path.expanduser("~/Application Data/tilecutter/tilecutter.config"))
-            #conf_path = unicode(conf_path, sys.getfilesystemencoding())
+            main_path = os.path.join(getenvvar("APPDATA"), "tilecutter\\")
             source = "win32 auto location"
         else:
-            conf_path = os.path.expanduser("~/.tilecutter/tilecutter.config")
+            main_path = os.path.expanduser("~/.tilecutter/")
             source = "unix auto location"
 
+        conf_path = os.path.join(main_path, "tilecutter.config")
+
     def __init__(self):
-        """"""
-        # First time Config is intialised call the read_in function to init all the settings
-        # from file. Subsequent instances of Config all refer to the same in-memory copy of
-        # the settings, can add a setting by name, set a setting's value, remove a setting
-        # re-read settings from file etc.
+        """First time Config is intialised, call the read_in function to init all the settings
+        from file. Subsequent instances of Config all refer to the same in-memory copy of
+        the settings, can add a setting by name, set a setting's value, remove a setting
+        re-read settings from file etc."""
         if Config.config == {}:
             try:
                 f = codecs.open(self.conf_path, "r", "UTF-8")
@@ -98,9 +90,11 @@ class Config(object):
                     Config.config[k] = file_config.pop(k)
                 else:
                     Config.config[k] = Config.defaults[k]
+
     def __str__(self):
         """Return a string representing this object"""
         return str(Config.config)
+
     def __getattr__(self, name):
         """Lookup method by . access e.g. z = x.y"""
         if name in Config.internals:
@@ -109,6 +103,7 @@ class Config(object):
             return Config.config[name]
         else:
             raise AttributeError(name)
+
     def __setattr__(self, name, value):
         """Set method by . access e.g. x.y = z"""
         # Internal attributes are immutable
@@ -119,16 +114,18 @@ class Config(object):
             self.save()
         else:
             object.__setattr__(self, name, value)
+
     def __getitem__(self, key):
-        """Lookup method by dict access e.g. z = x["y"]"""
+        """Lookup method by dict access e.g. z = x['y']"""
         if key in Config.internals:
             return Config.internals[key]
         elif key in Config.config:
             return Config.config[key]
         else:
             raise KeyError(key)
+
     def __setitem__(self, key, value):
-        """Set method by dict access e.g. x["y"] = z"""
+        """Set method by dict access e.g. x['y'] = z"""
         # Again, internals are immutable
         if name in Config.internals:
             pass
@@ -137,11 +134,13 @@ class Config(object):
             self.save()
         else:
             raise KeyError(key)
+
     def save(self):
         """Save the current config out to the config file"""
         # Confirm if path exists, create directories if needed
         if not os.path.isdir(os.path.split(self.conf_path)[0]):
             os.makedirs(os.path.split(self.conf_path)[0])
+
         try:
             f = codecs.open(self.conf_path, "w", "UTF-8")
             f.write(json.dumps(Config.config, ensure_ascii=False, sort_keys=True, indent=4))
@@ -149,5 +148,5 @@ class Config(object):
         except IOError:
             debug("IOError working with file %s, likely this path doesn't exist or the user I am running as doesn't have permission to write to it" % self.conf_path)
             return False
-        return True
 
+        return True

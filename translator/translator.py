@@ -1,17 +1,10 @@
 # coding: UTF-8
 #
 # TileCutter translation module
-#
 
-# Copyright © 2008-2010 Timothy Baldock. All Rights Reserved.
-
-
-import os, re, codecs, json
-
-import logger
+import codecs, json, os, re
+import logger, config
 debug = logger.Log()
-
-import config
 config = config.Config()
 config.save()
 
@@ -32,24 +25,29 @@ class Translator(object):
     PATH_TO_TRANSLATIONS = "languages"
     TRANSLATION_FILE_EXTENSION = ".tab"
     DEFAULT_LANGFILE_ENCODING = "UTF-8"
+
     def __init__(self):
         """Load translation files"""
         if Translator.language_list is None:
             # Obtain directory listing of available languages
             list = os.listdir(Translator.PATH_TO_TRANSLATIONS)
             language_file_list = []
+
             for i in list:
                 split = os.path.splitext(i)
                 if split[1] == Translator.TRANSLATION_FILE_EXTENSION:
                     language_file_list.append(Translator.PATH_TO_TRANSLATIONS + os.path.sep + i)
+
             # Next produce a translation object for each file in language_file_list
             Translator.language_list = []
             Translator.language_names_list = []
             Translator.language_longnames_list = []
+
             for i in range(len(language_file_list)):
                 Translator.language_list.append(translation(language_file_list[i]))
                 Translator.language_names_list.append(Translator.language_list[i].name())
                 Translator.language_longnames_list.append(Translator.language_list[i].longname())
+
             # Make dicts
             Translator.longnametoname = self.arraysToDict(Translator.language_longnames_list, Translator.language_names_list)
             Translator.nametotranslation = self.arraysToDict(Translator.language_names_list, Translator.language_list)
@@ -61,6 +59,7 @@ class Translator(object):
                 debug("Language setting found in config file - Setting active translation to %s" % active)
             else:
                 active = "English"
+
             debug("Using default language - Setting active translation to %s" % active)
             self.setActiveTranslation(active)
 
@@ -88,20 +87,26 @@ class Translator(object):
     def translateIntArray(self, intlist):
         """Takes an array of int values and translates them"""
         stringlist = []
+
         for i in intlist:
             stringlist.append(self.gt(str(i)))
+
         return stringlist
 
     def arraysToDict(self, keys, values):
         """Convert two arrays into a dict (assuming keys[x] relates to values[x])"""
         newdict = {}
         newdict.fromkeys(keys)
+
         for i in range(len(values)):
             newdict[keys[i]] = values[i]
+
         return newdict
+
     def longnameToName(self, longname):
         """Converts a long translation name to the short version"""
         return Translator.longnametoname[longname]
+
     def setActiveTranslation(self, name):
         """Set which translation should be used"""
         Translator.active = Translator.nametotranslation[name]
@@ -114,9 +119,11 @@ class TranslationLoadError(Exception):
 
 class translation:
     """An individual translation file object"""
+
     def __init__(self, filename):
         """Load translation, translation details and optionally a translation image"""
         debug("Begin loading translation from file: %s" % filename)
+
         # Open file & read in contents
         try:
             # Language files should be saved as UTF-8 - this conversation done now by directly reading as UTF-8
@@ -126,17 +133,21 @@ class translation:
         except IOError:
             debug("Problem loading information from file, aborting load of translation file")
             raise TranslationLoadError()
+
         # Scan document for block between {}, this is our config section
         dicts = re.findall("(?={).+?(?<=})", block, re.DOTALL)
+
         if len(dicts) > 1:
             debug("Found more than one dict-like structure (e.g. pair of \"{}\") in file: \"%s\" - assuming config is the first one" % filename)
+
         configstring = dicts[0]
-        
+
         debug("Translation file config string is: %s" % configstring)
 
         config = json.loads(configstring)
         conf_items = ["name", "name_translated", "language_code", "created_by", "created_date"]
         func_items = [self.name, self.longname, self.language_code, self.created_by, self.created_date]
+
         for ci, func in zip(conf_items, func_items):
             if ci in config:
                 func(config[ci])
@@ -148,6 +159,7 @@ class translation:
         # Split block up into lines
         block_lines = re.split("\n", block)
         block_lines2 = []
+
         # Delete all items of block_lines which begin with "#"
         # Two pass system, first strip out comments
         for line in block_lines:
@@ -169,6 +181,7 @@ class translation:
 
         block_lines3 = []
         looking_for_key = True
+
         for i in block_lines2:
             if looking_for_key:
                 if len(i) != 0:
@@ -182,18 +195,21 @@ class translation:
         # (The array of items must be an even number not including comments)
         # Now need to check through for escaped characters (\n mostly) and convert them to non-escaped versions
         for i in range(len(block_lines3)):
-            block_lines3[i] = block_lines3[i].replace("\\n","\n")
+            block_lines3[i] = block_lines3[i].replace("\\n", "\n")
+
         # Then go over the rest, two lines at a time, first line key, second line translation
         translation = {}
         keys = []
         values = []
+
         for i in range(0, len(block_lines3), 2):
             # Populate keys and values lists
             keys.append(block_lines3[i])
             try:
-                values.append(block_lines3[i+1])
+                values.append(block_lines3[i + 1])
             except IndexError:
                 print(block_lines2[i])
+
         # Make dict from keys
         translation.fromkeys(keys)
         # Populate dict with values
@@ -208,24 +224,28 @@ class translation:
             self.value_name = value
         else:
             return self.value_name
+
     def longname(self, value=None):
         """Return or set the translated name"""
         if value != None:
             self.value_longname = value
         else:
             return self.value_longname
+
     def language_code(self, value=None):
         """Return or set the country/language code"""
         if value != None:
             self.value_language_code = value
         else:
             return self.language_code
+
     def created_by(self, value=None):
         """Return or set the created by string"""
         if value != None:
             self.value_created_by = value
         else:
             return self.value_created_by
+
     def created_date(self, value=None):
         """Return or set the created on value"""
         if value != None:

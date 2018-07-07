@@ -1,36 +1,30 @@
 # coding: UTF-8
 #
 # TileCutter Cutting Engine
-#
 
-# Copyright © 2008-2012 Timothy Baldock. All Rights Reserved.
-
-
+import io, math, os, sys, subprocess, tempfile
 import wx
-import sys, os, tempfile, math, io
-
-import logger
+import logger, config
 debug = logger.Log()
-
-import config
 config = config.Config()
-
-import subprocess
 
 class TCMasks:
     """Generates and contains cutting masks for various paksizes"""
     # Whenever a TCMask is made, it checks if that paksize of masks has been generated
     # and if not makes them
     masksets = {}
+
     def __init__(self, paksize):
         if paksize not in TCMasks.masksets:
             # Generate new masks
             TCMasks.masksets[paksize] = TCMaskSet(paksize)
             debug("TCMasks - Generated new TCMaskSet for paksize: %s" % paksize)
+
         self.mask = TCMasks.masksets[paksize]
 
 class TCMaskSet:
     """A set of cutting masks, 1bit bitmaps"""
+
     def __init__(self, p):
         self.masks = {}
         # -1 -> Nothing (fully masked)
@@ -112,12 +106,12 @@ class TCMaskSet:
                 mask.SetRGB(x, half + fourth + y, 0, 0, 0)
 
         return mask
-        
+
     def fill_left(self, mask):
         """Fill in the entire left half"""
         paksize = mask.GetWidth()
         half = paksize >> 1
- 
+
         for y in range(0, paksize):
             for x in range(0, half):
                 mask.SetRGB(x, y, 0, 0, 0)
@@ -128,7 +122,7 @@ class TCMaskSet:
         """Fill in the entire right half"""
         paksize = mask.GetWidth()
         half = paksize >> 1
- 
+
         for y in range(0, paksize):
             for x in range(half, paksize):
                 mask.SetRGB(x, y, 0, 0, 0)
@@ -145,7 +139,7 @@ class TCMaskSet:
             doubleY = y << 1
             for x in range(0, doubleY):
                 mask.SetRGB(x, half + fourth - y, 0, 0, 0)
- 
+
         for y in range(0, half + 1):
             for x in range(0, half):
                 mask.SetRGB(x, y, 0, 0, 0)
@@ -162,7 +156,7 @@ class TCMaskSet:
             yLeft = paksize - (y << 1)
             for x in range(yLeft, paksize):
                 mask.SetRGB(x, half + fourth - y, 0, 0, 0)
- 
+
         for y in range(0, half + 1):
             for x in range(half, paksize):
                 mask.SetRGB(x, y, 0, 0, 0)
@@ -179,23 +173,29 @@ def tile_to_screen(pos, dims, off, p, screen_height=None):
     but with height attribute supplied converts to top-left
     returns the bottom-left position of the tile on the screen"""
     offx, offy = off
+
     if offx < 0:
         offx = 0
-    xpos, ypos, zpos = pos          # x, y and z position
-    xdims, ydims, zdims = dims      # Total size of x, y and z
-    xx = (xdims - 1 - xpos + ypos) * p/2 + offx
+
+    xpos,  ypos,  zpos  = pos  # x, y and z position
+    xdims, ydims, zdims = dims # Total size of x, y and z
+
+    xx = (xdims - 1 - xpos + ypos) * (p / 2) + offx
     # Gives top-left position of subsection
-    yy = ((xdims - xpos) + (ydims - ypos)) * (p/4) + (zpos * p) + offy + p/2
+    yy = ((xdims - xpos) + (ydims - ypos)) * (p / 4) + (zpos * p) + offy + (p / 2)
+
     if screen_height != None:
         yy = screen_height - yy
-    return (xx,yy)
 
+    return (xx, yy)
 
 class Makeobj:
     """Interface class to Makeobj"""
+
     def __init__(self, path_to_makeobj):
         """Takes absolute path to makeobj and returns a makeobj control object"""
         self.path_to_makeobj = path_to_makeobj
+
     def pak(self, paksize, path_to_pak, path_to_dat):
         """Calls makeobj with appropriate arguments for generating a pakfile"""
         # path_to_makeobj pak[paksize] path_to_pak path_to_dat
@@ -205,15 +205,19 @@ class Makeobj:
         for n, arg in enumerate(args):
             if isinstance(arg, str):
                 args[n] = arg.encode(sys.getfilesystemencoding())
+
         debug("Activating Makeobj with arguments: %s" % str(args))
         process = subprocess.Popen(args, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
         process.wait()
         # Write out makeobj log information to main log
         output = process.communicate()
+
         if output[0] != "":
             debug(output[0])
+
         if output[1] != "":
             debug(output[1])
+
         debug("Makeobj output complete")
 
 class Paths(object):
@@ -222,6 +226,7 @@ class Paths(object):
     # joinPaths     joins two paths together, taking end components (filenames etc.) into account
     # existingPath  returns the largest section of a path which exists on the filesystem
     # comparePaths  produces a relative path from two absolute ones
+
     def splitPath(self, p1, p2=None):
         """Split a path into an array, index[0] being the first path section, index[len-1] being the last
         Optionally takes a second path which is joined with the first for existence checks, to allow for
@@ -230,16 +235,19 @@ class Paths(object):
             # Check to make sure there isn't a trailing slash
             if os.path.split(os.path.split(p1)[0])[1] != "":
                 p1 = os.path.split(p1)[0]
+
         a = []
         if p2 == None:
             p2 = ""
+
         while os.path.split(p1)[1] != "":
             n = os.path.split(p1)
             # Add at front, text,   offset,             length,     exists or not,      File or Directory?
-##            debug(u"path1: %s, path2: %s" % (p1, p2))
-##            debug(u"exists? %s, %s" % (self.joinPaths(p2, p1), os.path.exists(self.joinPaths(p2, p1))))
-            a.insert(0,    [n[1],  len(p1)-len(n[1]),   len(n[1]),  os.path.exists(self.joinPaths(p2, p1))])#, existsAsType(p)])
+            ## debug(u"path1: %s, path2: %s" % (p1, p2))
+            ## debug(u"exists? %s, %s" % (self.joinPaths(p2, p1), os.path.exists(self.joinPaths(p2, p1))))
+            a.insert(0, [n[1], len(p1) - len(n[1]), len(n[1]), os.path.exists(self.joinPaths(p2, p1))])#, existsAsType(p)])
             p1 = n[0]
+
         return a
 
     def join_paths(self, p1, p2):
@@ -248,7 +256,9 @@ class Paths(object):
         if os.path.isfile(p1) or os.path.splitext(p1)[1] != "" and not os.path.isdir(p1):
             # Split off end section
             p1 = os.path.split(p1)[0]
+
         p3 = os.path.join(p1, p2)
+
         if os.path.isfile(p3) or os.path.splitext(p3)[1] != "" and not os.path.isdir(p3):
             return p3
         else:
@@ -265,8 +275,10 @@ class Paths(object):
             # Check to make sure there isn't a trailing slash
             if os.path.split(os.path.split(p)[0])[1] != "":
                 p = os.path.split(p)[0]
+
         while not os.path.exists(p):
             p = os.path.split(p)[0]
+
         return p
 
     def is_input_file(self, path):
@@ -281,21 +293,26 @@ class Paths(object):
         # Check that p2 is not an empty string, or None, and that drive letters match
         if p2 == None or p2 == "" or os.path.splitdrive(p1)[0] != os.path.splitdrive(p2)[0]:
             return p1
+
         p1s = self.splitPath(os.path.normpath(p1))
         p2s = self.splitPath(os.path.normpath(p2))
         k = 0
+
         while p1s[k][0] == p2s[k][0]:
             k += 1
+
         # Number of /../'s is length of p2s minus k (number of sections which match, but remember this will be one more
         # than the number which match, which is what we want as the length is one more than we need anyway
         p3 = ""
         # If p2's last component is a file, need to subtract one more to give correct path
         e = 1
-        for a in range(len(p2s)-k-e):
+        for a in range(len(p2s) - k - e):
             p3 = os.path.join(p3, "..")
+
         # Then just add on all of the remaining parts of p1s past the sections which match
-        for a in range(k,len(p1s)):
+        for a in range(k, len(p1s)):
             p3 = os.path.join(p3, p1s[a][0])
+
         return p3
 
     def comparePaths(self, p1, p2):
@@ -303,9 +320,9 @@ class Paths(object):
         return self.compare_paths(p1, p2)
 
     def win_to_unix(self, path):
-        """Convert windows style path blah\meh to unix style blah/meh"""
+        """Convert windows style path blah\\meh to unix style blah/meh"""
         return path.replace("\\", "/")
-    
+
 def export_writer(project, pak_output=False, return_dat=False, write_dat=True):
     """Write a project's dat and png files"""
     # Runs after export_cutter has been called for all active images in the project,
@@ -316,6 +333,7 @@ def export_writer(project, pak_output=False, return_dat=False, write_dat=True):
     pak_path = paths.join_paths(project.save_location(), project.pakfile_location())
     debug("e_w: export_writer init")
     debug("e_w: Writing .png to file: %s" % png_path)
+
     if project.datfile_write():
         debug("e_w: Writing .dat info to file: %s" % dat_path)
     else:
@@ -342,10 +360,10 @@ def export_writer(project, pak_output=False, return_dat=False, write_dat=True):
     xdims = project.x()
     ydims = project.y()
     zdims = project.z()
-    layers = project.frontimage() + 1       # +1 as this value is stored as an 0 or 1, we need 1 or 2
+    layers = project.frontimage() + 1 # +1 as this value is stored as an 0 or 1, we need 1 or 2
     views = project.directions()
-    seasons = project.winter() + 1          # +1 as this value is stored as an 0 or 1, we need 1 or 2
-    bgcolor = (0,0,0,0) if project.transparency() else config.transparent
+    seasons = project.winter() + 1 # +1 as this value is stored as an 0 or 1, we need 1 or 2
+    bgcolor = (0, 0, 0, 0) if project.transparency() else config.transparent
 
     debug("e_w: Outputting using paksize: %s" % p)
     debug("e_w: Outputting %s front/backimages" % layers)
@@ -354,7 +372,7 @@ def export_writer(project, pak_output=False, return_dat=False, write_dat=True):
     debug("e_w: Outputting dims: x:%s, y:%s, z:%s" % (xdims, ydims, zdims))
 
     # Calculate dimensions of output image
-    dims = xdims*ydims + (xdims+ydims-1)*(zdims-1)
+    dims = (xdims * ydims) + ((xdims + ydims - 1) * (zdims - 1))
     totalimages = dims * layers * views * seasons
     side = int(math.ceil(math.sqrt(totalimages)))
 
@@ -373,35 +391,42 @@ def export_writer(project, pak_output=False, return_dat=False, write_dat=True):
     output_list = []
     for d in range(views):
         for s in range(seasons):
-            for f in range(1):              # Change for multi-frame
+            # Change for multi-frame
+            for f in range(1):
                 for l in range(layers):
-                    if d in [1,3]:          # Reverse x and y dims for rotation views
+                    # Reverse x and y dims for rotation views
+                    if d in [1, 3]:
                         xx = ydims
                         yy = xdims
                     else:
                         xx = xdims
                         yy = ydims
+
                     for x in range(xx):
                         for y in range(yy):
                             for z in range(zdims):
                                 # No need to write out middle bits of higher levels
                                 if (z > 0 and (x == 0 or y == 0)) or z == 0:
-#                                    output_list.append([project[d][s][f][l][x][y][z], {"d":d,"s":s,"f":f,"l":l,"x":x,"y":y,"z":z}, None])
-                                    output_list.append([project.get_cut_image(d, s, f, l, x, y, z), {"d":d,"s":s,"f":f,"l":l,"x":x,"y":y,"z":z}, None])
+                                    # output_list.append([project[d][s][f][l][x][y][z], {"d":d, "s":s, "f":f, "l":l, "x":x, "y":y, "z":z}, None])
+                                    output_list.append([project.get_cut_image(d, s, f, l, x, y, z), {"d":d, "s":s, "f":f, "l":l, "x":x, "y":y, "z":z}, None])
 
     # Now that a list of component images has been generated, output these in sequence
     x = 0
     y = 0
+
     for k in output_list:
+        # a bug in wxWidget doesn't keep transparency when done in memory for more than two operations
         k[0].SaveFile("tc_temp.png", wx.BITMAP_TYPE_PNG)
         cut_image = wx.Bitmap("tc_temp.png")
         gdc.DrawBitmap(cut_image, x*p, y*p, True)
         # Makeobj references the image array by row,column, e.g. y,x, so switch these
-        k[2] = (y,x)
+        k[2] = (y, x)
         x += 1
+
         if x == side:
             x = 0
             y += 1
+
     # Select bitmap out of dc ready for saving
     outdc.SelectObject(wx.NullBitmap)
     os.remove("tc_temp.png")
@@ -409,22 +434,25 @@ def export_writer(project, pak_output=False, return_dat=False, write_dat=True):
     # output_bitmap now contains the image array
     debug("e_w: Image output complete")
 
-
     output_text = io.StringIO()
     # Test text
     output_text.write(project.dat_lump() + "\n")
     # dims=East-West, North-south, Views
     output_text.write("dims=%s,%s,%s\n" % (ydims, xdims, views))
+
     for k in output_list:
-        # (d,s,f,l,x,y,z)
+        # (d, s, f, l, x, y, z)
         j = k[1]
+
         if j["l"] == 0:
             imtext = "BackImage"
         else:
             imtext = "FrontImage"
+
         # imtext[direction][x][y][z][frame][season]=filename.xpos.ypos
         output_text.write("%s[%s][%s][%s][%s][%s][%s]=%s.%s.%s\n" % (
             imtext, j["d"], j["x"], j["y"], j["z"], j["f"], j["s"], paths.win_to_unix(dat_to_png), k[2][0], k[2][1]))
+
     dat_text = output_text.getvalue()
 
     # Write out to files if required
@@ -433,6 +461,7 @@ def export_writer(project, pak_output=False, return_dat=False, write_dat=True):
         # Check that each component in dat_path exists, create directories if needed
         if not os.path.isdir(os.path.split(dat_path)[0]):
             os.makedirs(os.path.split(dat_path)[0])
+
         f = open(dat_path, "w")
     else:
         debug("e_w: Writing out .dat file to temporary file")
@@ -468,6 +497,7 @@ def export_writer(project, pak_output=False, return_dat=False, write_dat=True):
     # Log .dat file generated
     debug("e_w: .dat file text is:")
     debug(dat_text)
+
     # Return dat file text (e.g. for output within the program in a dialog box etc.)
     if return_dat:
         return dat_text
@@ -483,11 +513,11 @@ def export_cutter(bitmap, dims, offset, p, transparency):
     debug("e_c: Transparency: %s" % str(transparency))
 
     # To account for irregularly shaped buildings, the values of x and y dims
-    # need to be swapped where dims[3] (view#) is in [1,3]
-    if dims[3] in [1,3]:
-        dims = (dims[1],dims[0],dims[2])
+    # need to be swapped where dims[3] (view#) is in [1, 3]
+    if dims[3] in [1, 3]:
+        dims = (dims[1], dims[0], dims[2])
     else:
-        dims = (dims[0],dims[1],dims[2])
+        dims = (dims[0], dims[1], dims[2])
 
     # Based on the paksize of the project, cut it into little bits which are stored in an array
     # ready for the next stage of the process
@@ -504,14 +534,18 @@ def export_cutter(bitmap, dims, offset, p, transparency):
     # Extend to the right and up
     # Max height will be offy + (dimsx+dimsy)*p/4 + p/2 + p*(dimsz-1)
     # Max width will be offx + (dimsx+dimsy)*p/2
-    max_width = offset[0] + (dims[0]+dims[1])*(p/2)
-    max_height = offset[1] + (dims[0]+dims[1])*(p/4) + p/2 + p*(dims[2]-1)
+    max_width  = offset[0] + (dims[0] + dims[1]) * (p / 2)
+    max_height = offset[1] + (dims[0] + dims[1]) * (p / 4) + (p / 2) + (p * (dims[2] - 1))
+
     if max_width < bitmap.GetWidth():
         max_width = bitmap.GetWidth()
+
     if max_height < bitmap.GetHeight():
         max_height = bitmap.GetHeight()
+
     source_bitmap = wx.Bitmap(max_width, max_height)
-    bgcolor = (0,0,0,0) if transparency else config.transparent
+    bgcolor = (0, 0, 0, 0) if transparency else config.transparent
+
     tdc = wx.MemoryDC()
     tdc.SelectObject(source_bitmap)
     gdc = wx.GCDC(tdc)
@@ -525,8 +559,8 @@ def export_cutter(bitmap, dims, offset, p, transparency):
         for y in range(dims[1]):
             zarray = []
             for z in range(dims[2]):
-                pos = tile_to_screen((x,y,z), dims, offset, p, source_bitmap.GetHeight())
-                submap = source_bitmap.GetSubBitmap((pos[0], pos[1], p,p))
+                pos = tile_to_screen((x, y, z), dims, offset, p, source_bitmap.GetHeight())
+                submap = source_bitmap.GetSubBitmap((pos[0], pos[1], p, p))
                 if z == 0:
                     if x == 0 and y == 0:
                         submap.SetMask(masks.mask[3])
@@ -554,15 +588,12 @@ def export_cutter(bitmap, dims, offset, p, transparency):
                 # gdc.Clear()
                 # gdc.DrawBitmap(submap, 0, 0, True)
                 # tdc.SelectObject(wx.NullBitmap)
-                # submap.SaveFile("test_%s%s%s.png" % (x,y,z), wx.BITMAP_TYPE_PNG)
+                # submap.SaveFile("test_%s%s%s.png" % (x, y, z), wx.BITMAP_TYPE_PNG)
 
-                # submap = Bitmap+Mask, Second variable stores location of this tile within
-                #                       the output image as a tuple
+                # submap = Bitmap + Mask, Second variable stores location of this tile within
+                #                         the output image as a tuple
                 zarray.append(submap)
             yarray.append(zarray)
         output_array.append(yarray)
     debug("e_c: Build output array complete, exiting")
     return output_array
-
-
-
