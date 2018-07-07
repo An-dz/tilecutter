@@ -3,15 +3,10 @@
 # TileCutter User Interface Module
 #        Image/Editor view
 
+import logging
 import wx
-
-# imports from tilecutter
-import tcui
-import translator
-import config
+import config, tcui
 config = config.Config()
-import logger
-debug = logger.Log()
 
 class viewImage(wx.Panel):
     """Window onto which bitmaps may be drawn, background colour is set by bgcolor
@@ -19,7 +14,7 @@ class viewImage(wx.Panel):
     bmp = []
 
     def __init__(self, parent, app, bgcolor, extended=0):
-        debug("tcui.viewImage: __init__")
+        logging.info("tcui.viewImage: __init__")
 
         wx.Panel.__init__(self, parent=parent.panel, id=wx.ID_ANY)
         self.bgcolor = bgcolor
@@ -77,37 +72,37 @@ class viewImage(wx.Panel):
     # Device Context events and methods
     def OnPaint(self, e):
         """Event handler for scrolled window repaint requests"""
-        debug("tcui.viewImage: OnPaint", 2)
+        logging.info("tcui.viewImage: OnPaint")
         dc = wx.AutoBufferedPaintDC(self.scrolledwindow)
         self.refresh_screen(dc)
 
     def translate(self):
         """Update the text of all controls to reflect a new translation"""
-        debug("tcui.viewImage: translate")
+        logging.info("tcui.viewImage: translate")
         self.control_imagepath.translate()
 
     # Update refreshes both textbox (if it's changed) and the device context
     def update(self):
         """Set the values of the controls in this group to the values in the model"""
-        debug("tcui.viewImage: update")
+        logging.info("tcui.viewImage: update")
         self.control_imagepath.update()
         self.scrolledwindow.Refresh()
 
     def refresh_if_valid(self):
         """Called when child in path entry box text changes
         Only updates the displayed image if a new valid file has been entered"""
-        ## debug("valid: %s, path: %s" % (self.app.activeproject.active_image().valid_path(), self.app.activeproject.activeImage().path()))
+        ## logging.debug("valid: %s, path: %s" % (self.app.activeproject.active_image().valid_path(), self.app.activeproject.activeImage().path()))
         ## if self.app.activeproject.activeImage().valid_path() == self.app.activeproject.activeImage().path():
         ##     # If valid_path and path are same, then refresh screen
         ##     self.Refresh()
         # Always refresh the screen to show either blank/noimage graphic or the valid graphic
-        debug("tcui.viewImage: refresh_if_valid - new image path: %s, calling Refresh()" % self.app.activeproject.active_image_path())
+        logging.info("tcui.viewImage: refresh_if_valid - new image path: %s, calling Refresh()" % self.app.activeproject.active_image_path())
         self.app.activeproject.reload_active_image()
         self.scrolledwindow.Refresh()
 
     def refresh_screen(self, dc):
         """Refresh the screen display"""
-        debug("tcui.viewImage: refresh_screen")
+        logging.info("tcui.viewImage: refresh_screen")
 
         # Redraw the active image in the window, with mask etc.
         bitmap = self.app.activeproject.get_active_bitmap()
@@ -217,7 +212,7 @@ class viewImage(wx.Panel):
             pos = self.tileToScreen((x, yy, 1), (x, y, z), (mask_offset_x, mask_offset_y), p, bitmap.GetHeight() + bmp_offset_y)
             dc.DrawLine(    pos[0],         pos[1] - p4,           pos[0] + p2,     pos[1])
 
-        debug("tcui.viewImage: refresh_screen - Done")
+        logging.info("tcui.viewImage: refresh_screen - Done")
 
     # Take tile coords and convert into screen coords
     # This function is replicated in tc, and references to it should be made there!
@@ -226,7 +221,7 @@ class viewImage(wx.Panel):
         by default converts into bottom-left screen coords,
         but with height attribute supplied converts to top-left
         returns the bottom-left position of the tile on the screen"""
-        debug("tcui.viewImage: tileToScreen")
+        logging.info("tcui.viewImage: tileToScreen")
 
         offx, offy = off
 

@@ -1,27 +1,24 @@
 # coding: UTF-8
 #
-# TileCutter User Interface Module - filePicker
+# TileCutter User Interface Module
+#            File Picker
 #
 # This class provides additional methods for filename input controls, including highlighting
 
-import os
+import logging, os
 import wx
-
-# imports from tilecutter
-import logger
-debug = logger.Log()
 import config
 config = config.Config()
 
 class filePicker(object):
     """Methods for text boxes displaying paths"""
     def __init__(self, parent):
-        debug("tcui.filePicker: __init__")
+        logging.info("tcui.filePicker: __init__")
         self.parent = parent
 
     def filePickerDialog(self, path1, path2=None, dialogText="", dialogFilesAllowed="", dialogFlags=None):
         """File picker dialog with additional methods"""
-        debug("tcui.filePicker: filePickerDialog")
+        logging.info("tcui.filePicker: filePickerDialog")
 
         if path2 == None:
             path2 = ""
@@ -52,7 +49,7 @@ class filePicker(object):
         if path1 == "" and config.last_save_path != "" and os.path.exists(config.last_save_path):
             a = config.last_save_path
 
-        debug("Path a is: %s and path b is: %s" % (a, b))
+        logging.debug("Path a is: %s and path b is: %s" % (a, b))
 
         # Check path components exist
 
@@ -60,7 +57,7 @@ class filePicker(object):
         pickerDialog = wx.FileDialog(self.parent, dialogText, a, b, dialogFilesAllowed, dialogFlags)
 
         if pickerDialog.ShowModal() == wx.ID_OK:
-            debug("tcui.filePicker: filePickerDialog - File picker dialog, ID_OK, Directory is: %s, Filename is: %s" % (pickerDialog.GetDirectory(), pickerDialog.GetFilename()))
+            logging.debug("tcui.filePicker: filePickerDialog - File picker dialog, ID_OK, Directory is: %s, Filename is: %s" % (pickerDialog.GetDirectory(), pickerDialog.GetFilename()))
 
             # This needs to calculate a relative path between the location of the output png and the location of the output dat
             drivesplit = os.path.splitdrive(pickerDialog.GetDirectory())
@@ -102,12 +99,12 @@ class filePicker(object):
 
     def highlightText(self, box, p1, p2=None):
         """Update the highlighting in a text entry box"""
-        debug("tcui.filePicker: highlightText")
-        ## debug("highlightText, p1: %s, p2: %s" % (p1, p2))
+        logging.info("tcui.filePicker: highlightText")
+        logging.debug("highlightText, p1: %s, p2: %s" % (p1, p2))
 
         # Path value, optionally relative to a second path
         a = self.splitPath(p1, p2)
-        ## debug(str(a))
+        logging.debug(str(a))
 
         # Set entire length of the box to default colour
         box.SetStyle(0, len(p1), wx.TextAttr(None, "white"))
@@ -133,7 +130,7 @@ class filePicker(object):
         """Split a path into an array, index[0] being the first path section, index[len-1] being the last
         Optionally takes a second path which is joined with the first for existence checks, to allow for
         checking existence of relative paths"""
-        debug("tcui.filePicker: splitPath")
+        logging.info("tcui.filePicker: splitPath")
 
         if os.path.split(p1)[1] == "":
             # Check to make sure there isn't a trailing slash
@@ -148,8 +145,8 @@ class filePicker(object):
         while os.path.split(p1)[1] != "":
             n = os.path.split(p1)
             # Add at front, text,   offset,             length,     exists or not,      File or Directory?
-            ## debug("path1: %s, path2: %s" % (p1, p2))
-            ## debug("exists? %s, %s" % (self.joinPaths(p2, p1), os.path.exists(self.joinPaths(p2, p1))))
+            logging.debug("path1: %s, path2: %s" % (p1, p2))
+            logging.debug("exists? %s, %s" % (self.joinPaths(p2, p1), os.path.exists(self.joinPaths(p2, p1))))
             a.insert(0, [n[1], len(p1) - len(n[1]), len(n[1]), os.path.exists(self.joinPaths(p2, p1))])
             p1 = n[0]
 
@@ -157,7 +154,7 @@ class filePicker(object):
 
     def joinPaths(self, p1, p2):
         """Join p2 to p1, accounting for end cases (is directory, is file etc.)"""
-        debug("tcui.filePicker: joinPaths")
+        logging.info("tcui.filePicker: joinPaths")
 
         if p1 != None:
             # Need to check the end component
@@ -176,7 +173,7 @@ class filePicker(object):
     def existingPath(self, p):
         """Take a path and return the largest section of this path that exists
         on the filesystem"""
-        debug("tcui.filePicker: existingPath")
+        logging.info("tcui.filePicker: existingPath")
 
         if os.path.split(p)[1] == "":
             # Check to make sure there isn't a trailing slash
@@ -194,7 +191,7 @@ class filePicker(object):
 
     def comparePaths(self, p1, p2):
         """Compare two absolute paths, returning either a relative path from p1 to p2, or p1 if no relative path exists"""
-        debug("tcui.filePicker: comparePaths")
+        logging.info("tcui.filePicker: comparePaths")
 
         # Check that p2 is not an empty string, or None, and that drive letters match
         if p2 == None or p2 == "" or os.path.splitdrive(p1)[0] != os.path.splitdrive(p2)[0]:

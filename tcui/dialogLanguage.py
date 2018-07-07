@@ -3,19 +3,16 @@
 # TileCutter User Interface Module
 #    Language Selection Dialog
 
+import logging
 import wx
-
-# imports from tilecutter
 import translator
 gt = translator.Translator()
-import logger
-debug = logger.Log()
 
 class dialogLanguage(wx.Dialog):
     """Dialog for choosing which translation to use"""
     def __init__(self, parent, app):
         """Initialise the dialog and populate lists"""
-        debug("tcui.dialogLanguage: __init__")
+        logging.info("tcui.dialogLanguage: __init__")
         self.app = app
         size = (300, 200)
         wx.Dialog.__init__(self, parent, wx.ID_ANY, "", (-1, -1), size)
@@ -73,7 +70,7 @@ class dialogLanguage(wx.Dialog):
 
     def translate(self):
         """Update the text of all controls to reflect a new translation"""
-        debug("tcui.dialogLanguage: translate")
+        logging.info("tcui.dialogLanguage: translate")
 
         self.SetLabel(gt("Language"))
         self.top_label.SetLabel(gt("Select from the options below:"))
@@ -91,13 +88,13 @@ class dialogLanguage(wx.Dialog):
 
     def OnClose(self, e):
         """On click of the close button"""
-        debug("tcui.dialogLanguage: OnClose")
+        logging.info("tcui.dialogLanguage: OnClose")
         self.EndModal(wx.ID_OK)
 
     def OnSelection(self, e):
         """When user changes the language selection"""
         # Set active translation to the one specified
-        debug("tcui.dialogLanguage: OnSelection - User selected language: %s" % gt.longnameToName(self.language_picker.GetValue()))
+        logging.info("tcui.dialogLanguage: OnSelection - User selected language: %s" % gt.longnameToName(self.language_picker.GetValue()))
 
         gt.setActiveTranslation(gt.longnameToName(self.language_picker.GetValue()))
         # Call own translate function

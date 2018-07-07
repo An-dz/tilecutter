@@ -3,19 +3,16 @@
 # TileCutter, User Interface Module
 #     Dat File Editor Dialogue
 
+import logging
 import wx
-
-# imports from tilecutter
 import translator
 gt = translator.Translator()
-import logger
-debug = logger.Log()
 
 class dialogDatFileEdit(wx.Dialog):
     """Dialog for editing dat file parameters"""
     def __init__(self, parent, app):
         """Intialise the dialog"""
-        debug("tcui.DatFileDialog: __init__")
+        logging.info("tcui.DatFileDialog: __init__")
 
         self.app = app
         # Height will be 0.7*width
@@ -54,7 +51,7 @@ class dialogDatFileEdit(wx.Dialog):
 
     def translate(self):
         """Update the text of all controls to reflect a new translation"""
-        debug("tcui.DatFileDialog: translate")
+        logging.info("tcui.DatFileDialog: translate")
 
         self.SetLabel(gt("Datfile Properties"))
         self.description.SetLabel(gt("Here you can enter the datfile properties necessary to produce a building using makeobj"))
@@ -69,17 +66,17 @@ class dialogDatFileEdit(wx.Dialog):
 
     def update(self):
         """Set the values of the controls to the values in the project"""
-        debug("tcui.DatFileDialog: update")
+        logging.info("tcui.DatFileDialog: update")
         self.text_input.ChangeValue(self.app.activeproject.dat_lump())
 
     def OnTextChange(self, e):
         """Triggered when the text in the path box is changed"""
-        debug("tcui.DatFileDialog: OnTextChange")
+        logging.info("tcui.DatFileDialog: OnTextChange")
         if self.app.activeproject.dat_lump() != self.text_input.GetValue():
             self.app.activeproject.dat_lump(self.text_input.GetValue())
-            debug("tcui.DatFileDialog: OnTextChange - Text changed in dat file properties entry box, new text: %s" % (str(self.text_input.GetValue())))
+            logging.debug("tcui.DatFileDialog: OnTextChange - Text changed in dat file properties entry box, new text: %s" % (str(self.text_input.GetValue())))
 
     def OnClose(self, e):
         """On click of the close button"""
-        debug("tcui.DatFileDialog: OnClose")
+        logging.info("tcui.DatFileDialog: OnClose")
         self.EndModal(wx.ID_OK)

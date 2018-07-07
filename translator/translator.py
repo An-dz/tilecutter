@@ -2,9 +2,8 @@
 #
 # TileCutter translation module
 
-import codecs, json, os, re
-import logger, config
-debug = logger.Log()
+import logging, codecs, json, os, re
+import config
 config = config.Config()
 config.save()
 
@@ -56,11 +55,11 @@ class Translator(object):
             # If preference does not exist, use English instead
             if config.default_language in Translator.language_names_list:
                 active = config.default_language
-                debug("Language setting found in config file - Setting active translation to %s" % active)
+                logging.info("Language setting found in config file - Setting active translation to %s" % active)
             else:
                 active = "English"
+                logging.info("Using default language - Setting active translation to %s" % active)
 
-            debug("Using default language - Setting active translation to %s" % active)
             self.setActiveTranslation(active)
 
     def __call__(self, vars):
@@ -122,7 +121,7 @@ class translation:
 
     def __init__(self, filename):
         """Load translation, translation details and optionally a translation image"""
-        debug("Begin loading translation from file: %s" % filename)
+        logging.info("Begin loading translation from file: %s" % filename)
 
         # Open file & read in contents
         try:
@@ -131,18 +130,18 @@ class translation:
             block = f.read()
             f.close()
         except IOError:
-            debug("Problem loading information from file, aborting load of translation file")
+            logging.error("Problem loading information from file, aborting load of translation file")
             raise TranslationLoadError()
 
         # Scan document for block between {}, this is our config section
         dicts = re.findall("(?={).+?(?<=})", block, re.DOTALL)
 
         if len(dicts) > 1:
-            debug("Found more than one dict-like structure (e.g. pair of \"{}\") in file: \"%s\" - assuming config is the first one" % filename)
+            logging.warn("Found more than one dict-like structure (e.g. pair of \"{}\") in file: \"%s\" - assuming config is the first one" % filename)
 
         configstring = dicts[0]
 
-        debug("Translation file config string is: %s" % configstring)
+        ## logging.debug("Translation file config string is: %s" % configstring)
 
         config = json.loads(configstring)
         conf_items = ["name", "name_translated", "language_code", "created_by", "created_date"]
@@ -153,7 +152,7 @@ class translation:
                 func(config[ci])
             else:
                 # Translation file invalid, error out of read process
-                debug("Error loading translation from %s, %s field not found, aborting load of translation" % (filename, ci))
+                logging.error("Error loading translation from %s, %s field not found, aborting load of translation" % (filename, ci))
                 raise TranslationLoadError()
 
         # Split block up into lines

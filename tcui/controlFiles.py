@@ -3,20 +3,16 @@
 # TileCutter User Interface Module
 #       Project Files Panel
 
+import logging
 import wx
-
-# imports from tilecutter
-import tcui
-import translator
+import tcui, translator
 gt = translator.Translator()
-import logger
-debug = logger.Log()
 
 class controlFiles(wx.Panel):
     """Box containing the project files locations"""
     def __init__(self, parent, app):
         """parent, ref to app"""
-        debug("tcui.controlFiles: __init__")
+        logging.info("tcui.controlFiles: __init__")
 
         wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
         self.ftbox = tcui.filePicker(parent)
@@ -89,7 +85,7 @@ class controlFiles(wx.Panel):
 
     def translate(self):
         """Update the text of all controls to reflect a new translation"""
-        debug("tcui.controlFiles: translate")
+        logging.info("tcui.controlFiles: translate")
 
         self.save_path_label.SetLabel(gt("Project Save Location"))
         self.save_path_box.SetToolTip(gt("tt_save_file_location"))
@@ -116,7 +112,7 @@ class controlFiles(wx.Panel):
     def update(self):
         """Set the values of the controls in this group to the values in the project"""
         # Setting these values should also cause text highlighting to occur
-        debug("tcui.controlFiles: update")
+        logging.info("tcui.controlFiles: update")
         self.save_path_box.ChangeValue(self.app.activeproject.save_location())
         self.dat_path_box.ChangeValue( self.app.activeproject.datfile_location())
         self.png_path_box.ChangeValue( self.app.activeproject.pngfile_location())
@@ -130,90 +126,90 @@ class controlFiles(wx.Panel):
 
     ## def highlight(self):
     ##     """Highlight entry box text"""
-    ##     debug(u"file_control: highlight - highlighting %s entry box" % self.label)
+    ##     logging.debug("file_control: highlight - highlighting %s entry box" % self.label)
     ##     if self.relative != None:
-    ##         debug(u"file_control: highlight - highlight with relative, %s | %s" % (self.linked(), self.relative()))
+    ##         logging.debug("file_control: highlight - highlight with relative, %s | %s" % (self.linked(), self.relative()))
     ##         self.ftbox.highlightText(self.path_box, self.linked(), self.relative())
     ##     else:
-    ##         debug(u"file_control: highlight - highlight without relative, %s" % self.linked())
+    ##         logging.debug("file_control: highlight - highlight without relative, %s" % self.linked())
     ##         self.ftbox.highlightText(self.path_box, self.linked())
     ##     if self.dependants:
-    ##         debug(u"file_control: highlight - highlighting dependants: %s" % (unicode(self.dependants)))
+    ##         logging.debug("file_control: highlight - highlighting dependants: %s" % (unicode(self.dependants)))
     ##         for i in self.dependants:
     ##             i.highlight()
 
     def OnSaveTextChange(self, e):
         """Triggered when the text in the save path box is changed"""
-        debug("tcui.controlFiles: OnSaveTextChange")
+        logging.info("tcui.controlFiles: OnSaveTextChange")
         if self.app.activeproject.save_location() != self.save_path_box.GetValue():
             self.app.activeproject.save_location(self.save_path_box.GetValue())
-            debug("tcui.controlFiles: OnSaveTextChange - Text changed in save path entry box, new text: %s" % str(self.save_path_box.GetValue()))
+            logging.debug("tcui.controlFiles: OnSaveTextChange - Text changed in save path entry box, new text: %s" % str(self.save_path_box.GetValue()))
             ## self.highlight()
 
     def OnDatTextChange(self, e):
         """Triggered when the text in the dat path box is changed"""
-        debug("tcui.controlFiles: OnDatTextChange")
+        logging.info("tcui.controlFiles: OnDatTextChange")
         if self.app.activeproject.datfile_location() != self.dat_path_box.GetValue():
             self.app.activeproject.datfile_location(self.dat_path_box.GetValue())
-            debug("tcui.controlFiles: OnDatTextChange - Text changed in dat path entry box, new text: %s" % str(self.dat_path_box.GetValue()))
+            logging.debug("tcui.controlFiles: OnDatTextChange - Text changed in dat path entry box, new text: %s" % str(self.dat_path_box.GetValue()))
             ## self.highlight()
 
     def OnPngTextChange(self, e):
         """Triggered when the text in the png path box is changed"""
-        debug("tcui.controlFiles: OnPngTextChange")
+        logging.info("tcui.controlFiles: OnPngTextChange")
         if self.app.activeproject.pngfile_location() != self.png_path_box.GetValue():
             self.app.activeproject.pngfile_location(self.png_path_box.GetValue())
-            debug("tcui.controlFiles: OnPngTextChange - Text changed in png path entry box, new text: %s" % str(self.png_path_box.GetValue()))
+            logging.debug("tcui.controlFiles: OnPngTextChange - Text changed in png path entry box, new text: %s" % str(self.png_path_box.GetValue()))
             ## self.highlight()
 
     def OnPakTextChange(self, e):
         """Triggered when the text in the pak path box is changed"""
-        debug("tcui.controlFiles: OnPakTextChange")
+        logging.info("tcui.controlFiles: OnPakTextChange")
         if self.app.activeproject.pakfile_location() != self.pak_path_box.GetValue():
             self.app.activeproject.pakfile_location(self.pak_path_box.GetValue())
-            debug("tcui.controlFiles: OnePakTextChange - Text changed in pak path entry box, new text: %s" % str(self.pak_path_box.GetValue()))
+            logging.debug("tcui.controlFiles: OnePakTextChange - Text changed in pak path entry box, new text: %s" % str(self.pak_path_box.GetValue()))
             ## self.highlight()
 
     def OnSaveBrowse(self, e):
         """Triggered when the save browse button is clicked"""
-        debug("tcui.controlFiles: OnSaveBrowse")
+        logging.info("tcui.controlFiles: OnSaveBrowse")
         value = self.ftbox.filePickerDialog(self.app.activeproject.save_location(), 
                                             "", 
                                             gt("Choose a location to save project..."),
                                             "TCP files (*.tcp)|*.tcp", 
                                             wx.FD_SAVE|wx.FD_OVERWRITE_PROMPT)
-        debug("tcui.controlFiles: OnSaveBrowse - Path selected by user is: %s" % value)
+        logging.debug("tcui.controlFiles: OnSaveBrowse - Path selected by user is: %s" % value)
         self.save_path_box.SetValue(value)
 
     def OnDatBrowse(self, e):
         """Triggered when the dat browse button is clicked"""
-        debug("tcui.controlFiles: OnDatBrowse")
+        logging.info("tcui.controlFiles: OnDatBrowse")
         value = self.ftbox.filePickerDialog(self.app.activeproject.datfile_location(), 
                                             self.app.activeproject.save_location(), 
                                             gt("Choose a location to save .dat file..."),
                                             "DAT files (*.dat)|*.dat", 
                                             wx.FD_SAVE|wx.FD_OVERWRITE_PROMPT)
-        debug("tcui.controlFiles: OnDatBrowse - Path selected by user is: %s" % value)
+        logging.debug("tcui.controlFiles: OnDatBrowse - Path selected by user is: %s" % value)
         self.dat_path_box.SetValue(value)
 
     def OnPngBrowse(self, e):
         """Triggered when the png browse button is clicked"""
-        debug("tcui.controlFiles: OnPngBrowse")
+        logging.info("tcui.controlFiles: OnPngBrowse")
         value = self.ftbox.filePickerDialog(self.app.activeproject.pngfile_location(), 
                                             self.app.activeproject.save_location(), 
                                             gt("Choose a location to save .png file..."),
                                             "PNG files (*.png)|*.png", 
                                             wx.FD_SAVE|wx.FD_OVERWRITE_PROMPT)
-        debug("tcui.controlFiles: OnPngBrowse - Path selected by user is: %s" % value)
+        logging.debug("tcui.controlFiles: OnPngBrowse - Path selected by user is: %s" % value)
         self.png_path_box.SetValue(value)
 
     def OnPakBrowse(self, e):
         """Triggered when the pak browse button is clicked"""
-        debug("tcui.controlFiles: OnPakBrowse")
+        logging.info("tcui.controlFiles: OnPakBrowse")
         value = self.ftbox.filePickerDialog(self.app.activeproject.pakfile_location(), 
                                             self.app.activeproject.save_location(), 
                                             gt("Choose a location to export .pak file..."),
                                             "PAK files (*.pak)|*.pak", 
                                             wx.FD_SAVE|wx.FD_OVERWRITE_PROMPT)
-        debug("tcui.controlFiles: OnPakBrowse - Path selected by user is: %s" % value)
+        logging.debug("tcui.controlFiles: OnPakBrowse - Path selected by user is: %s" % value)
         self.pak_path_box.SetValue(value)

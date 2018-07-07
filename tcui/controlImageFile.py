@@ -3,20 +3,16 @@
 # TileCutter User Interface Module
 #       Image File Controls
 
+import logging
 import wx
-
-# imports from tilecutter
-import tcui
-import translator
+import tcui, translator
 gt = translator.Translator()
-import logger
-debug = logger.Log()
 
 class controlImageFile(wx.Panel):
     """Box containig the Image location controls"""
     def __init__(self, parent, app):
         """parent, ref to app"""
-        debug("tcui.controlImageFile: __init__")
+        logging.info("tcui.controlImageFile: __init__")
 
         wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
         self.ftbox = tcui.filePicker(parent)
@@ -52,7 +48,7 @@ class controlImageFile(wx.Panel):
 
     def translate(self):
         """Update the text of all controls to reflect a new translation"""
-        debug("tcui.controlImageFile: translate")
+        logging.info("tcui.controlImageFile: translate")
 
         self.path_label.SetLabel(gt("Source image location:"))
         self.path_box.SetToolTip(gt("tt_image_file_location"))
@@ -63,32 +59,32 @@ class controlImageFile(wx.Panel):
 
     def update(self):
         """Set the values of the controls in this group to the values in the model"""
-        debug("tcui.controlImageFile: update")
+        logging.info("tcui.controlImageFile: update")
         # Setting these values should also cause text highlighting to occur
         self.path_box.ChangeValue(self.app.activeproject.active_image_path())
 
     def OnTextChange(self, e):
         """Triggered when the text in the path box is changed"""
-        debug("tcui.controlImageFile: OnTextChange")
+        logging.info("tcui.controlImageFile: OnTextChange")
 
         if self.app.activeproject.active_image_path() != self.path_box.GetValue():
             self.app.activeproject.active_image_path(self.path_box.GetValue())
-            debug("tcui.controlImageFile: OnTextChange - Text changed in Active Image entry box, new text: %s" % str(self.path_box.GetValue()))
+            logging.debug("tcui.controlImageFile: OnTextChange - Text changed in Active Image entry box, new text: %s" % str(self.path_box.GetValue()))
             # Refresh image in parent window
             self.parent.refresh_if_valid()
 
     def OnBrowse(self, e):
         """Triggered when the browse button is clicked"""
-        debug("tcui.controlImageFile: OnBrowse")
+        logging.info("tcui.controlImageFile: OnBrowse")
         value = self.ftbox.filePickerDialog(self.app.activeproject.active_image_path(), 
                                             self.app.activeproject.save_location(), 
                                             gt("Choose an image file to open..."),
                                             "PNG files (*.png)|*.png", 
                                             wx.FD_OPEN|wx.FD_FILE_MUST_EXIST)
-        debug("tcui.controlImageFile: OnBrowse - Path selected by user is: %s" % value)
+        logging.debug("tcui.controlImageFile: OnBrowse - Path selected by user is: %s" % value)
         self.path_box.SetValue(value)
 
     def OnReloadImage(self, e):
         """When reload image button clicked"""
-        debug("tcui.controlImageFile: OnReloadImage")
+        logging.info("tcui.controlImageFile: OnReloadImage")
         self.app.activeproject.reload_active_image()

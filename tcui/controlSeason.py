@@ -3,18 +3,15 @@
 # TileCutter User Interface Module
 #      Season Images Control
 
+import logging
 import wx, imres
-
-# imports from tilecutter
 import translator
 gt = translator.Translator()
-import logger
-debug = logger.Log()
 
 class controlSeason(wx.Panel):
     """Box containing season image controls"""
     def __init__(self, parent, app):
-        debug("tcui.controlSeason: __init__")
+        logging.info("tcui.controlSeason: __init__")
 
         wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
         self.app = app
@@ -64,7 +61,7 @@ class controlSeason(wx.Panel):
 
     def translate(self):
         """Update the text of all controls to reflect a new translation"""
-        debug("tcui.controlSeason: translate")
+        logging.info("tcui.controlSeason: translate")
 
         self.label.SetLabel(gt("Season:"))
         self.seasons_select_summer.SetLabel(gt("Summer"))
@@ -78,7 +75,7 @@ class controlSeason(wx.Panel):
 
     def update(self):
         """Set the values of the controls in this group to the values in the project"""
-        debug("tcui.controlSeason: update")
+        logging.info("tcui.controlSeason: update")
 
         # Turn winter image off
         if self.app.activeproject.winter() == 0:
@@ -101,13 +98,13 @@ class controlSeason(wx.Panel):
 
     def OnToggle(self, e):
         """Toggling winter image on and off"""
-        debug("tcui.controlSeason: OnToggle")
+        logging.info("tcui.controlSeason: OnToggle")
         self.app.activeproject.winter(self.seasons_enable_winter.GetValue())
         self.update()
 
     def OnSummer(self, e):
         """Change to Summer image"""
-        debug("tcui.controlSeason: OnSummer")
+        logging.info("tcui.controlSeason: OnSummer")
         # Set active image to Summer
         self.app.activeproject.active_image(season=0)
         # Redraw active image
@@ -115,7 +112,7 @@ class controlSeason(wx.Panel):
 
     def OnWinter(self, e):
         """Change to Winter image"""
-        debug("tcui.controlSeason: OnWinter")
+        logging.info("tcui.controlSeason: OnWinter")
         # Set active image to Winter
         self.app.activeproject.active_image(season=1)
         # Redraw active image

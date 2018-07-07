@@ -3,19 +3,16 @@
 # TileCutter, User Interface Module
 #            About dialog
 
+import logging
 import wx, imres
-
-# imports from tilecutter
 import translator
 gt = translator.Translator()
-import logger
-debug = logger.Log()
 
 class dialogAbout(wx.Dialog):
     """Dialog which displays information about the program"""
     def __init__(self, parent, app, version_number):
         """Intialise the dialog"""
-        debug("tcui.dialogAbout: __init__")
+        logging.info("tcui.dialogAbout: __init__")
 
         self.app = app
         self.version_number = version_number
@@ -68,7 +65,7 @@ class dialogAbout(wx.Dialog):
 
     def translate(self):
         """Update the text of all controls to reflect a new translation"""
-        debug("tcui.dialogAbout: translate")
+        logging.info("tcui.dialogAbout: translate")
 
         self.SetLabel(gt("About TileCutter"))
         self.title_text.SetLabel(gt("TileCutter"))
@@ -87,5 +84,5 @@ class dialogAbout(wx.Dialog):
 
     def OnClose(self, e):
         """On click of the close button"""
-        debug("tcui.dialogAbout: OnClose")
+        logging.info("tcui.dialogAbout: OnClose")
         self.EndModal(wx.ID_OK)

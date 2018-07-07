@@ -3,22 +3,17 @@
 # TileCutter User Interface Module
 #        Preferences Dialog
 
+import logging
 import wx
-
-# imports from tilecutter
-import tcui
-import translator
-gt = translator.Translator()
-import logger
-debug = logger.Log()
-import config
+import config, tcui, translator
 config = config.Config()
+gt = translator.Translator()
 
 class dialogPreferences(wx.Dialog):
     """Dialog for setting program preferences"""
     def __init__(self, parent, app):
         """Initialise the dialog and populate lists"""
-        debug("tcui.dialogPreferences: __init__")
+        logging.info("tcui.dialogPreferences: __init__")
 
         self.app = app
         wx.Dialog.__init__(self, parent, wx.ID_ANY, "", (-1, -1), (-1, -1))
@@ -103,7 +98,7 @@ class dialogPreferences(wx.Dialog):
 
     def translate(self):
         """Update the text of all controls to reflect a new translation"""
-        debug("tcui.dialogPreferences: translate")
+        logging.info("tcui.dialogPreferences: translate")
 
         self.SetLabel(gt("Preferences"))
         self.makeobj_label.SetLabel(gt("Path to makeobj binary:"))
@@ -143,11 +138,11 @@ class dialogPreferences(wx.Dialog):
 
     def update(self):
         """Set the values of the controls in this group to the values in the model"""
-        debug("tcui.dialogPreferences: update")
+        logging.info("tcui.dialogPreferences: update")
         self.makeobj_box.SetValue(config.path_to_makeobj)
 
         if config.logfile_platform_default:
-            self.logfile_box.SetValue(debug.platform_default_log_location()[0])
+            self.logfile_box.SetValue(config.logs_path)
             self.logfile_box.Disable()
             self.logfile_checkbox.SetValue(1)
         else:
@@ -160,38 +155,38 @@ class dialogPreferences(wx.Dialog):
 
     def OnClose(self, e):
         """On click of the close button"""
-        debug("tcui.dialogPreferences: OnClose")
+        logging.info("tcui.dialogPreferences: OnClose")
         self.EndModal(wx.ID_OK)
 
     def OnMakeobjTextChange(self, e):
         """When user changes the makeobj path text"""
-        debug("tcui.dialogPreferences: OnMakeobjTextChange")
+        logging.info("tcui.dialogPreferences: OnMakeobjTextChange")
         if config.path_to_makeobj != self.makeobj_box.GetValue():
             config.path_to_makeobj = self.makeobj_box.GetValue()
-            debug("tcui.dialogPreferences: OnMakeobjTextChange - Preferences: Text changed in makeobj path entry box, new text: %s" % str(self.makeobj_box.GetValue()))
+            logging.debug("tcui.dialogPreferences: OnMakeobjTextChange - Preferences: Text changed in makeobj path entry box, new text: %s" % str(self.makeobj_box.GetValue()))
 
     def OnBrowseMakeobj(self, e):
         """Triggered when the browse button is clicked for the makeobj path"""
-        debug("tcui.dialogPreferences: OnBrowseMakeobj")
+        logging.info("tcui.dialogPreferences: OnBrowseMakeobj")
         value = self.ftbox.filePickerDialog(config.path_to_makeobj, 
                                             None, 
                                             gt("Select a makeobj binary to use"),
                                             "", 
                                             wx.FD_OPEN|wx.FD_FILE_MUST_EXIST)
-        debug("tcui.dialogPreferences: OnBrowseMakeobj - Path selected by user is: %s" % value)
+        logging.debug("tcui.dialogPreferences: OnBrowseMakeobj - Path selected by user is: %s" % value)
         config.path_to_makeobj = value
         self.makeobj_box.SetValue(value)
 
     def OnLogfileTextChange(self, e):
         """Triggered when user changes log file location"""
-        debug("tcui.dialogPreferences: OnLogfileTextChange")
+        logging.info("tcui.dialogPreferences: OnLogfileTextChange")
         if config.logfile != self.logfile_box.GetValue():
             config.logfile = self.logfile_box.GetValue()
-            debug("tcui.dialogPreferences: OnLogfileTextChange - Text changed in logfile path entry box, new text: %s" % str(config.logfile))
+            logging.debug("tcui.dialogPreferences: OnLogfileTextChange - Text changed in logfile path entry box, new text: %s" % str(config.logfile))
 
     def OnLogfileDefaultToggle(self, e):
         """Triggered when user selects the system default location for the log file"""
-        debug("tcui.dialogPreferences: OnLogfileDefaultToggle - set to %s" % self.logfile_checkbox.GetValue())
+        logging.info("tcui.dialogPreferences: OnLogfileDefaultToggle - set to %s" % self.logfile_checkbox.GetValue())
 
         if self.logfile_checkbox.GetValue():
             config.logfile_platform_default = True
@@ -203,9 +198,9 @@ class dialogPreferences(wx.Dialog):
     def OnPaksizeSelect(self, e):
         """Triggered when user selects a default pakset size"""
         config.default_paksize = config.choicelist_paksize[self.choicelist_paksize.index(self.paksize_select.GetValue())]
-        debug("tcui.dialogPreferences: OnPaksizeSelect - set to: %s" % config.default_paksize)
+        logging.debug("tcui.dialogPreferences: OnPaksizeSelect - set to: %s" % config.default_paksize)
 
     def OnLoglevelSelect(self, e):
         """Triggered when user selects a logging level"""
         config.debug_level = self.choicelist_loglevel.index(self.loglevel_select.GetValue())
-        debug("tcui.dialogPreferences: OnLoglevelSelect - set to: %s" % config.debug_level)
+        logging.debug("tcui.dialogPreferences: OnLoglevelSelect - set to: %s" % config.debug_level)

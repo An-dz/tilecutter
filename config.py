@@ -11,13 +11,39 @@ class Config(object):
     """Program configuration object"""
     # The first time this object is instantiated, config is populated
     config = {}
+
+    # If a tc.config or tilecutter.config file exists in the program directory use that to load config from 
+    # (to permit setting of global config, or for backwards compatibility with existing installs)
+    if os.path.isfile("tc.config"):
+        main_path = os.path.abspath(".")
+        logs_path = os.path.join(main_path, "tilecutter.log")
+        conf_path = os.path.join(main_path, "tc.config")
+        source = "legacy: tc.config in program directory"
+    else:
+        if os.path.isfile("tilecutter.config"):
+            main_path = os.path.abspath(".")
+            source = "override: tilecutter.config in program directory"
+        elif sys.platform == "win32":
+            main_path = os.path.join(getenvvar("APPDATA"), "tilecutter\\")
+            source = "win32 auto location"
+        else:
+            main_path = os.path.expanduser("~/.tilecutter/")
+            source = "unix auto location"
+
+        conf_path = os.path.join(main_path, "tilecutter.config")
+        logs_path = os.path.join(main_path, "tilecutter.log")
+
+        if sys.platform == "darwin":
+            logs_path = os.path.expanduser("~/Library/Logs/tilecutter.log")
+            source = "darwin auto location"
+
     # All externally settable variables must be included in defaults, or they won't be read
     # by Config on loading. Non-externally settable variables can be placed in internals
     # Internals will always be checked before config
     defaults = {
         "debug_on": True,
         "debug_level": 2,
-        "logfile": "",
+        "logfile": logs_path,
         "logfile_platform_default": True,
         "transparent":     [231, 255, 255],
         "transparent_bg": [[153, 153, 153], [103, 103, 103]],
@@ -46,29 +72,6 @@ class Config(object):
         "choicelist_dims":   [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
         "choicelist_dims_z": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
     }
-
-    # If a tc.config or tilecutter.config file exists in the program directory use that to load config from 
-    # (to permit setting of global config, or for backwards compatibility with existing installs)
-    if os.path.isfile("tc.config"):
-        main_path = os.path.abspath(".")
-        conf_path = os.path.join(main_path, "tc.config")
-        source = "legacy: tc.config in program directory"
-    elif os.path.isfile("tilecutter.config"):
-        main_path = os.path.abspath(".")
-        conf_path = os.path.join(main_path, "tilecutter.config")
-        source = "override: tilecutter.config in program directory"
-    else:
-        if sys.platform == "darwin":
-            main_path = os.path.expanduser("~/.tilecutter/")
-            source = "darwin auto location"
-        elif sys.platform == "win32":
-            main_path = os.path.join(getenvvar("APPDATA"), "tilecutter\\")
-            source = "win32 auto location"
-        else:
-            main_path = os.path.expanduser("~/.tilecutter/")
-            source = "unix auto location"
-
-        conf_path = os.path.join(main_path, "tilecutter.config")
 
     def __init__(self):
         """First time Config is intialised, call the read_in function to init all the settings
