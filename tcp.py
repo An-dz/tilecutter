@@ -25,7 +25,7 @@ class tcp_writer(object):
         logging.info("tcp_writer: write - Writing object: %s to file" % str(obj))
 
         if self.mode == "pickle":
-            logging.debug("tcp_writer: write - Deprecation warning, pickle save mode no longer supported!")
+            logging.warn("tcp_writer: write - Deprecation warning, pickle save mode no longer supported!")
             output_string = self.pickle_object(obj, 2)
         elif self.mode == "json":
             logging.debug("tcp_writer: write - Preparing output in JSON format.")
@@ -101,7 +101,7 @@ class tcp_reader(object):
                 obj = project.Project(params[0], load=loadobj["data"], save_location=self.filename, saved=True)
             else:
                 # This isn't a well-formed json tcp file, abort
-                logging.debug("tcp_reader: load - JSON file is not well-formed, type incorrect, aborting load")
+                logging.error("tcp_reader: load - JSON file is not well-formed, type incorrect, aborting load")
                 return False
         except ValueError:
             logging.debug("tcp_reader: load - loading as JSON failed, attempting to load as pickle (legacy format)")
