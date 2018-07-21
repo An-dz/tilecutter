@@ -3,7 +3,7 @@
 # TileCutter - .tcp file reading/writing functions
 
 import logging, json, os, pickle, traceback
-import config, project, tcproject
+import config, project
 config = config.Config()
 
 class tcp_writer(object):
@@ -169,7 +169,7 @@ class tcp_reader(object):
 
     def unpickle_object(self, str, params=None):
         """Unpickle an object from the pickled string str, optionally call post_serialise with params"""
-        logging.info("tcp_reader: unpickle_object - WARNING: pickle-style .tcp projects are considered a legacy format!")
+        logging.warn("tcp_reader: unpickle_object - WARNING: pickle-style .tcp projects are considered a legacy format!")
         obj = pickle.loads(str)
 
         if params is not None:
