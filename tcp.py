@@ -45,7 +45,7 @@ class tcp_writer(object):
 
         # Needs addition of exception handling for IO
         try:
-            f = open(self.filename, "wb")
+            f = open(self.filename, "wt")
         except IOError:
             logging.error("tcp_writer: write - IOError attempting to open file: %s for writing" % filename)
             logging.error(traceback.format_exc())
