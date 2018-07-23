@@ -129,9 +129,8 @@ class App(wx.App):
         if self.gui:
             self.update_title_text()
             self.frame.set_title()
-            # On Mac OSX due to bug with wx 2.8 we need to refresh the display window
-            # this is due to the SetTitle method forcibly refreshing all child windows
-            # self.frame.update()
+            # update frame to not have to call this on every single function
+            self.frame.update()
 
     # Functions concerning the title text of the program window
     def get_title_text(self):
