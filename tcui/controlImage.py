@@ -107,8 +107,7 @@ class controlImage(wx.Panel):
         """Toggling transparency on and off"""
         logging.info("tcui.controlImage: OnTransparency")
         self.app.activeproject.transparency(self.images_enable_transparency.GetValue())
-        # Redraw active image
-        self.app.frame.display.update()
+        self.update()
 
     def OnFrontBack(self, e):
         """Toggling frontimage on and off"""
