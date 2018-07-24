@@ -31,7 +31,8 @@ class tcp_writer(object):
             logging.debug("tcp_writer: write - Preparing output in JSON format.")
             saveobj = {
                 "type": "TCP_JSON",
-                "version": "%s" % config.version,
+                "version": "%s" % config.TCPversion,
+                "version_tc": "%s" % config.version,
                 "comment": "This is a TileCutter Project file (JSON formatted). You may edit it by hand if you are careful.",
                 "data": obj.props,
             }
