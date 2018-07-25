@@ -40,6 +40,8 @@ logging.info("main: configuration source is %s" % config.source)
 logging.info("main: configuration loaded from file: %s" % config.conf_path)
 logging.debug(str(config))
 
+wx.Log.SetLogLevel(wx.LOG_Error)
+
 #########################################
 # Main class, controls most of the code #
 #########################################
