@@ -24,7 +24,7 @@ paths = Paths()
 
 # project[view][season][frame][image][xdim][ydim][zdim]
 # view = NSEW, 0,1,2,3 - array - controlled by global enable
-# season = summer/winter, 0,1 - array - controlled by global bool enable
+# season = summer/snow/autumn/winter/spring, 0,1,2,3,4 - array - controlled by global bool enable
 # frame=0,++ - array - controlled by global number of frames variable
 # image=back/front, 0,1 - array - controlled by global bool enable
 
@@ -69,7 +69,12 @@ class Project(object):
                 "paksize": int(config.default_paksize),
                 "directions": 1,
                 "frames": 1,
-                "winter": 0,
+                "seasons": {
+                    "snow":   0,
+                    "autumn": 0,
+                    "winter": 0,
+                    "spring": 0,
+                },
                 "frontimage": 0,
             },
             "files": {
@@ -95,12 +100,17 @@ class Project(object):
                 "paksize": self.paksize,
                 "directions": self.directions,
                 "frames": self.frames,
-                "winter": self.winter,
+                "seasons": {
+                    "snow":   self.seasons,
+                    "autumn": self.seasons,
+                    "winter": self.seasons,
+                    "spring": self.seasons,
+                },
                 "frontimage": self.frontimage,
             },
             "files": {
                 "datfile_location": self.datfile_location,
-                "datfile_write": self.datfile_write,
+                "datfile_write":    self.datfile_write,
                 "pngfile_location": self.pngfile_location,
                 "pakfile_location": self.pakfile_location,
             },
@@ -113,6 +123,10 @@ class Project(object):
             # Brand new project
             self.props = self.defaults
         else:
+            if "winter" in load["dims"]:
+                logging.debug("project: __init__ - old 'winter' value found replaced with 'seasons.snow'")
+                load["dims"]["seasons"] = {"snow": load["dims"].pop("winter")}
+
             # Loading project from potential props dict specified (needs validation)
             self.props = self.load_dict(load, self.validators, self.defaults)
 
@@ -166,7 +180,7 @@ class Project(object):
         viewarray = []
         for view in range(4):
             seasonarray = []
-            for season in range(2):
+            for season in range(5):
                 framearray = []
                 for frame in range(1):
                     imagearray = []
@@ -190,8 +204,8 @@ class Project(object):
         if set is not None:
             if isinstance(set, type([])) and len(set) == 4:
                 for d, direction in enumerate(set):
-                    # Each direction should be a list containing 2 items
-                    if isinstance(direction, type([])) and len(direction) == 2:
+                    # Each direction should be a list containing 5 seasons
+                    if isinstance(direction, type([])) and len(direction) == 5:
                         for s, season in enumerate(direction):
                             # Each season should contain a variable number of frames (greater than 1) of type list
                             if isinstance(season, type([])) and len(season) >= 1:
@@ -532,7 +546,7 @@ class Project(object):
     def season(self, set=None, validate=False):
         """Set or query active image's season"""
         if set is not None:
-            if set in [0, 1]:
+            if set in range(5):
                 if not validate:
                     self.internals["activeimage"]["season"] = set
                     logging.debug("project: season - Active image season set to %i" % self.internals["activeimage"]["season"])
@@ -681,28 +695,28 @@ class Project(object):
         else:
             return self.props["dims"]["paksize"]
 
-    def winter(self, set=None, validate=False):
-        """Set or return if Winter image is enabled"""
+    def seasons(self, set=None, validate=False, season="snow"):
+        """Set or return if a season image is enabled"""
         if set is not None:
             if set in [True, 1]:
                 if not validate:
-                    self.props["dims"]["winter"] = 1
-                    logging.debug("project: winter - set to %i" % self.props["dims"]["winter"])
+                    self.props["dims"]["seasons"][season] = 1
+                    logging.debug("project: seasons - %s set to %i" % (season, self.props["dims"]["seasons"][season]))
                     self.on_change()
 
                 return True
             elif set in [False, 0]:
                 if not validate:
-                    self.props["dims"]["winter"] = 0
-                    logging.debug("project: winter - set to %i" % self.props["dims"]["winter"])
+                    self.props["dims"]["seasons"][season] = 0
+                    logging.debug("project: seasons - %s set to %i" % (season, self.props["dims"]["seasons"][season]))
                     self.on_change()
 
                 return True
             else:
-                logging.warn("project: winter - Attempt to set winter failed - Value (%s) outside of acceptable range" % str(set))
+                logging.warn("project: seasons - Attempt to set %s failed - Value (%s) outside of acceptable range" % (str(set), season))
                 return False
         else:
-            return self.props["dims"]["winter"]
+            return self.props["dims"]["seasons"][season]
 
     def frontimage(self, set=None, validate=False):
         """Set or return if Front image is enabled"""

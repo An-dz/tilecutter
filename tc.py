@@ -345,7 +345,7 @@ def export_writer(project, pak_output=False, return_dat=False, write_dat=True):
     # First calculate the size of output image required, this depends on a number of factors
     # - Dimensions of the image, x*y images for first layer + (x+y-1)*(z-1) images for higher layers
     # - Number of views, 1-4
-    # - Number of seasons, 1-2
+    # - Number of seasons, 1,2,4,5 > 1=summer only, 2=summer+snow, 4=all seasons without snow, 5=all seasons and snow
     # - Whether there is a frontimage, 1-2
     # - Number of frames (this will always be 1 in the current version)
     #       However, it's likely animation will be implemented such that it's possible for only the front
@@ -361,8 +361,16 @@ def export_writer(project, pak_output=False, return_dat=False, write_dat=True):
     zdims = project.z()
     layers = project.frontimage() + 1 # +1 as this value is stored as an 0 or 1, we need 1 or 2
     views = project.directions()
-    seasons = project.winter() + 1 # +1 as this value is stored as an 0 or 1, we need 1 or 2
     bgcolor = (0, 0, 0, 0) if project.transparency() else config.transparent
+    seasons = 1 + project.seasons(season="snow"); # +1 for summer, +1 if has snow
+    seasons_img = [0, 1] # image indexes in project
+    autumn = project.seasons(season="autumn")
+    winter = project.seasons(season="winter")
+    spring = project.seasons(season="spring")
+    if autumn == 1 or winter == 1 or spring == 1:
+        # +3 if has any other season
+        seasons += 3
+        seasons_img = [0, 2*autumn, 3*winter, 4*spring, 1]
 
     logging.info("e_w: Outputting using paksize: %s" % p)
     logging.info("e_w: Outputting %s front/backimages" % layers)
@@ -406,8 +414,7 @@ def export_writer(project, pak_output=False, return_dat=False, write_dat=True):
                             for z in range(zdims):
                                 # No need to write out middle bits of higher levels
                                 if (z > 0 and (x == 0 or y == 0)) or z == 0:
-                                    # output_list.append([project[d][s][f][l][x][y][z], {"d":d, "s":s, "f":f, "l":l, "x":x, "y":y, "z":z}, None])
-                                    output_list.append([project.get_cut_image(d, s, f, l, x, y, z), {"d":d, "s":s, "f":f, "l":l, "x":x, "y":y, "z":z}, None])
+                                    output_list.append([project.get_cut_image(d, seasons_img[s], f, l, x, y, z), {"d":d, "s":s, "f":f, "l":l, "x":x, "y":y, "z":z}, None])
 
     # Now that a list of component images has been generated, output these in sequence
     x = 0

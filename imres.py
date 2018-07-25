@@ -64,43 +64,52 @@ index.append('ImageFront')
 catalog['ImageFront'] = ImageFront
 
 #----------------------------------------------------------------------
-ImageSummer = PyEmbeddedImage(
-    b'iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAACXBIWXMAAB7CAAAewgFu0HU+'
-    b'AAABL1BMVEX42AD52AD42ADmzAD52QD21wDnzQDgyAD42AD42AD52AD42AD42AD42AD62AD6'
-    b'2AD42AD42AD42AD42AD42AD42AD52QDt0QD52QL42AD42AD42AD42AD41wD01QD42AD42AD4'
-    b'2AD42AD42AD42AD42AH62QD11gDpzwDhyQD62QD52QD42AD42AD42AD41wD42AD32AD11gD0'
-    b'1QD11gD21wD32AD42AD42AD42AX52ADqzgDu0QD11gD52AD52QH52QLiyQDozQD01QD62AD5'
-    b'2QHhyADnzAD01QD62AD52QH44CP44jP4517451L46nv46Xz46Xj46I342w/46FX44jb46I74'
-    b'6Ir46Iz41wD43BH43Rb46In43BP46Yv42AD44CT46F344ST46Iv46Iizg8ZOAAAAS3RSTlMA'
-    b'AojENj43tGY2CJTuFovQFLV0Lon88RL2NXJ/ZLe/OgkYIy3p9wwNAjgLM4eRhMOGqkxBBDmp'
-    b'3/T9pAASSqX+6j5BP4zstr620fdDap/LAAABE0lEQVR4XnWS1W4rYQyE/2yYmZmZmRmXKczp'
-    b'+z9Dj04itb3w3H6SPZ4xekuSSKbSSmU6lUxI0G9pZHKnQipVOOUyzR+gL5Ur1UCgWimX9D8g'
-    b'qFKbtLqOwWg0dHRak1oV/ACf2WK12R0jl2vksNusFrPvA9weL+a/XfD7Hb/c/JjX4/7vJxSO'
-    b'RLFYnBcpQaBEPh7DopFwSIIy2Vy+UDwcCZKlaZYkjodiIZ/LZlCt3mi22jzxYHb7/Y55EHy7'
-    b'1WzUa6jb6w+GJ5Fkrtx2y10ZUjwNB/1eF40n09kcp9gz9/VP3Jml8PlsOhmjxXK13jwF+vUG'
-    b'L1p4btar5QIE4ChwOWgXPBCMBAgRih0uCq4Wfgbwfb4BqqVirblXjlEAAAAASUVORK5CYII=')
-index.append('ImageSummer')
-catalog['ImageSummer'] = ImageSummer
+ImageSeasonsAutumn = PyEmbeddedImage(
+    b'iVBORw0KGgoAAAANSUhEUgAAABMAAAATCAMAAABFjsb+AAAAGXRFWHRTb2Z0d2FyZQBBZG9i'
+    b'ZSBJbWFnZVJlYWR5ccllPAAAAA9QTFRFAAAAtWU0bDYUlFEn////N2NCbQAAAAV0Uk5T////'
+    b'/wD7tg5TAAAAXElEQVR42pSPgQoAIQhDp+v/v/mm2dFVBDcK9DF0ou3ClR0qOFYGc8PK6Pww'
+    b'SOGTBoMb00fLoYOZfDYz9ZSPtSd/NP0R7w7BUEeVBTUPcz6l8Epyv+1ctd/sEWAASZUEd400'
+    b'uSwAAAAASUVORK5CYII=')
+index.append('ImageSeasonsAutumn')
+catalog['ImageSeasonsAutumn'] = ImageSeasonsAutumn
 
 #----------------------------------------------------------------------
-ImageWinter = PyEmbeddedImage(
-    b'iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAACXBIWXMAAB7CAAAewgFu0HU+'
-    b'AAABLFBMVEXh4eH8/Pzd3d3+/v7x8fHw8PD6+vrs7OzIyMjb29vd3d3Hx8fa2trd3d3Dw8P/'
-    b'///AwMDExMTW1tbv7+/Hx8f09PT8/Pzx8fH39/fa2trGxsba2trd3d3GxsbY2Njd3d3ExMTj'
-    b'4+Pt7e27u7u+vr7Z2dnj4+PR0dHHx8fJycn39/fy8vLt7e3S0tLi4uLJycnb29vd3d3IyMjd'
-    b'3d3X19e+vr7FxcXExMTS0tLd3d3t7e2/v7/Dw8PHx8fS0tLMzMzZ2dns7Oy7u7u/v7/Dw8PG'
-    b'xsbJycnLy8vMzMzV1dXX19fY2NjZ2dnb29vc3Nzd3d3f39/h4eHi4uLj4+Pl5eXm5ubn5+fo'
-    b'6Ojr6+vu7u7w8PDx8fHy8vL09PT19fX29vb39/f5+fn6+vr7+/uQJ2l4AAAAQnRSTlMAAQIF'
-    b'CA4ODxERERISEhYZGyEkJSZCQkVJS1BQUFRWVn19lZaZnZ2foKSvuru8vdPT09/i5Ojo7u7u'
-    b'7vHz8/P8/v46SY9UAAABOElEQVQoz3WSZ7aCQBSDR7GXZ++99957BwFBBhvCqKD738Nbwfy+'
-    b'5+QmXwJ0hMlmsRr17tx4Oh3n3Hqj1WIzETpAuILxaCxk+ysLCAnlP1soFo0HXQQwBaudVrse'
-    b'8ReQpqGCP1JvtzrVoAk4Uz2eP68r6cbj/X400pX1med7KSewJ7qcJJKzwZx5Ppn5YEaKEtdN'
-    b'2IEj2eegyB521AWhC7U7sCLk+kkHMARqkxVzZY+8oqoKf2SvzGpSCxgAMIeLoz0jQg7KMuSg'
-    b'yOxHxbAZAI/XlxluKXijaUmi6RuktsOMz+sB+VK2uSA5nj7dEbqfaJ4jF81sKQ+WgnJnLgqk'
-    b'b9rvp91oqFyYuyIswUb+oOdLlSX0+35/SJLV1xN95A3+gJXCPsfaxQbEIsFCxGLHFoWtFjsG'
-    b'3Hz+AUcggek+nfmPAAAAAElFTkSuQmCC')
-index.append('ImageWinter')
-catalog['ImageWinter'] = ImageWinter
+ImageSeasonsSnow = PyEmbeddedImage(
+    b'iVBORw0KGgoAAAANSUhEUgAAABMAAAATCAMAAABFjsb+AAAAGXRFWHRTb2Z0d2FyZQBBZG9i'
+    b'ZSBJbWFnZVJlYWR5ccllPAAAAAlQTFRFAAAA////////c3ilYwAAAAN0Uk5T//8A18oNQQAA'
+    b'AElJREFUeNqckAkKACAIBHf9/6O71JCWoERFB48MdgpeGOARsBmRlr09WWqFkaxswkCxI+py'
+    b'3shJ95c6OU/uFe9Td6h7P/+vCTAAlUsCIWud1wkAAAAASUVORK5CYII=')
+index.append('ImageSeasonsSnow')
+catalog['ImageSeasonsSnow'] = ImageSeasonsSnow
+
+#----------------------------------------------------------------------
+ImageSeasonsSpring = PyEmbeddedImage(
+    b'iVBORw0KGgoAAAANSUhEUgAAABMAAAATCAMAAABFjsb+AAAAGXRFWHRTb2Z0d2FyZQBBZG9i'
+    b'ZSBJbWFnZVJlYWR5ccllPAAAAAxQTFRFAAAAtES/6OFo////SgTbJwAAAAR0Uk5T////AEAq'
+    b'qfQAAABMSURBVHjarJBBDgAhCAOn7P//bJSGaDReXBI4TKAF+PbgmQFVi0lkWZhGznoMhjUs'
+    b'J0Visz6liJAW5r409g7U4NX3uN/hjv9+1QQYAGsaA0HzqSRWAAAAAElFTkSuQmCC')
+index.append('ImageSeasonsSpring')
+catalog['ImageSeasonsSpring'] = ImageSeasonsSpring
+
+#----------------------------------------------------------------------
+ImageSeasonsSummer = PyEmbeddedImage(
+    b'iVBORw0KGgoAAAANSUhEUgAAABMAAAATCAMAAABFjsb+AAAAGXRFWHRTb2Z0d2FyZQBBZG9i'
+    b'ZSBJbWFnZVJlYWR5ccllPAAAAA9QTFRF/98AAAAA//CI/+pL////ZmevhgAAAAV0Uk5T////'
+    b'/wD7tg5TAAAAUklEQVR42pyQAQ6AIAwDe+D/32xHwGlQjI5sCZd2sGmbQx8Z7ZwZVOQkme9I'
+    b'UUgWRI0OFsbOKukdkTrpAh915ehXWLx7+z8LbXfyMu+//e0CDADo4gPpaL/tZAAAAABJRU5E'
+    b'rkJggg==')
+index.append('ImageSeasonsSummer')
+catalog['ImageSeasonsSummer'] = ImageSeasonsSummer
+
+#----------------------------------------------------------------------
+ImageSeasonsWinter = PyEmbeddedImage(
+    b'iVBORw0KGgoAAAANSUhEUgAAABMAAAATCAMAAABFjsb+AAAAGXRFWHRTb2Z0d2FyZQBBZG9i'
+    b'ZSBJbWFnZVJlYWR5ccllPAAAAA9QTFRFAAAAdVI8RCweYEIv////aZRIsgAAAAV0Uk5T////'
+    b'/wD7tg5TAAAAWElEQVR42pSPUQ6AIAxDXxn3P7NlIhIlEvfBupeuC9R38ckWisKToSL2PpIx'
+    b'MwIzvzezQ84T19jyPTRfqs5CPU/B2DVsvhONG5k333BLH/u/rVX9zQ4BBgBb8QSFQRmJRAAA'
+    b'AABJRU5ErkJggg==')
+index.append('ImageSeasonsWinter')
+catalog['ImageSeasonsWinter'] = ImageSeasonsWinter
 
 #----------------------------------------------------------------------
 MoveCenter = PyEmbeddedImage(

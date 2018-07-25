@@ -135,7 +135,9 @@ class tcp_reader(object):
                 "paksize": tcproj.paksize(),
                 "directions": tcproj.views(),
                 "frames": 1,
-                "winter": tcproj.winter(),
+                "seasons": {
+                    "snow": tcproj.winter(),
+                },
                 "frontimage": tcproj.frontimage(),
             },
             "files": {
