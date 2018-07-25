@@ -296,7 +296,9 @@ class Project(object):
         else:
             logging.warn("project: on_change - Root on_change triggered but no parent specified, doing nothing")
 
-    # Functions related to checking whether the project has changed
+    #################################################################
+    # Functions related to checking whether the project has changed #
+    #################################################################
     def has_changed(self):
         """An indication of whether this project has been changed since the last time it was saved"""
         current = self.hash_props()
@@ -317,7 +319,9 @@ class Project(object):
         self.internals["hash"] = self.hash_props()
         return True
 
-    # These functions deal with dat file properties
+    #################################################
+    # These functions deal with dat file properties #
+    #################################################
     def dat_lump(self, set=None, validate=False):
         """Sets or returns a string containing arbitrary .dat file properties"""
         if set is not None:
@@ -333,7 +337,9 @@ class Project(object):
         else:
             return self.props["dat"]["dat_lump"]
 
-    # These functions deal with image data
+    ########################################
+    # These functions deal with image data #
+    ########################################
     def active_image_path(self, set=None, validate=False):
         """Set or return the path of the active image"""
         return self.image_path(self.internals["activeimage"]["direction"], 
@@ -526,7 +532,9 @@ class Project(object):
         else:
             return self.props["images"][d][s][f][l]["offset"]
 
-    # Methods which deal with properties of the currently active image
+    ######################################################################
+    # Functions which deal with properties of the currently active image #
+    ######################################################################
     def direction(self, set=None, validate=False):
         """Set or query active image's direction"""
         if set is not None:
@@ -608,7 +616,9 @@ class Project(object):
         # Returns dict containing active image's properties
         return self.props["images"][self.internals["activeimage"]["direction"]][self.internals["activeimage"]["season"]][self.internals["activeimage"]["frame"]][self.internals["activeimage"]["layer"]]
 
-    # Functions which deal with dimensions properties of the project
+    ##################################################################
+    # Functions which deal with dimensions properties of the project #
+    ##################################################################
     def x(self, set=None, validate=False):
         """Set or return X dimension"""
         if set is not None:
@@ -773,7 +783,9 @@ class Project(object):
         else:
             return self.props["dims"]["directions"]
 
-    # Functions with deal with file properties of the project
+    ############################################################
+    # Functions which deal with file properties of the project #
+    ############################################################
     def datfile_location(self, set=None, validate=False):
         """Set or return (relative) path to dat file"""
         if set is not None:
@@ -845,7 +857,11 @@ class Project(object):
         else:
             return self.props["files"]["pakfile_location"]
 
-    # The following functions deal with the save file for the project and are saved to the internals set (since we don't need to preserve these values when saving)
+    ############################################################
+    # Functions which deal with the save file for the project  #
+    # and are saved to the internals set                       #
+    # since we don't need to preserve these values when saving #
+    ############################################################
     def saved(self, set=None, validate=False):
         """Set or return whether a save path has been set for this project"""
         if set is not None:
