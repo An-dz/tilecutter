@@ -1,8 +1,13 @@
+#!/usr/bin/env python3
 # coding: UTF-8
 
 # First thing imported is logger, so that other imports can use logging too
 import logging, os, sys
 from optparse import OptionParser
+
+if sys.version_info[0] < 3:
+    logging.critical("main: Python 3 is required to run TileCutter!")
+    sys.exit(1)
 
 # Must be imported here to get logging level and file location
 import config
@@ -20,10 +25,16 @@ logging.basicConfig(level=loglevel, filename=config.logfile)
 
 try:
     import wx
-    logging.info("main: WX version is: %s" % wx.version())
+    wxversion = wx.version()
+    logging.info("main: WX version is: %s" % wxversion)
+    if int(wxversion[:wxversion.find(".")]) < 4:
+        logging.critical("main: wxPython 4 is required to run TileCutter! You have version %s!", wxversion)
+        print("main: wxPython 4 is required to run TileCutter! You have version", wxversion)
+        sys.exit(1)
 except ImportError:
     logging.critical("main: WXPython not installed, please install module and try again!")
-    raise
+    print("main: WXPython not installed, please install module and try again!")
+    sys.exit(1)
 
 import project, tc, tcui, translator
 # Classes to read/write TileCutter files
