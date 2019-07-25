@@ -166,9 +166,13 @@ class viewImage(wx.Panel):
         if transparency:
             dc.SetPen(wx.Pen((0, 0, 0), style=wx.PENSTYLE_TRANSPARENT))
             dc.SetBrush(wx.Brush(self.transparent_bg))
-            w, h = self.scrolledwindow.GetVirtualSize()
-            # +50 because I have no idea how to get the "real virtual" size
-            dc.DrawRectangle(0, 0, w + 50, h + 50)
+        else:
+            dc.SetPen(wx.Pen(self.bgcolor))
+            dc.SetBrush(wx.Brush(self.bgcolor))
+
+        w, h = self.scrolledwindow.GetVirtualSize()
+        # +50 because I have no idea how to get the "real virtual" size
+        dc.DrawRectangle(0, 0, w + 50, h + 50)
 
         # Mask colour
         dc.SetPen(wx.Pen((255, 0, 0)))
