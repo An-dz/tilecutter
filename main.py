@@ -21,7 +21,7 @@ elif config.debug_level == 1:
 elif config.debug_level == 0:
     loglevel = logging.WARN
 
-logging.basicConfig(level=loglevel, filename=config.logfile)
+logging.basicConfig(level=loglevel, filename=config.logfile, filemode="w")
 
 try:
     import wx
