@@ -361,7 +361,6 @@ def export_writer(project, pak_output=False, return_dat=False, write_dat=True):
     zdims = project.z()
     layers = project.frontimage() + 1 # +1 as this value is stored as an 0 or 1, we need 1 or 2
     views = project.directions()
-    bgcolor = (0, 0, 0, 0) if project.transparency() else config.transparent
     seasons = 1 + project.seasons(season="snow"); # +1 for summer, +1 if has snow
     seasons_img = [0, 1] # image indexes in project
     autumn = project.seasons(season="autumn")
@@ -384,14 +383,6 @@ def export_writer(project, pak_output=False, return_dat=False, write_dat=True):
     side = int(math.ceil(math.sqrt(totalimages)))
 
     logging.info("e_w: Outputting %s images total, output size %sx%sp (%sx%spx)" % (totalimages, side, side, side*p, side*p))
-
-    # Init output bitmap and dc for drawing into it
-    output_bitmap = wx.Bitmap(side*p, side*p)
-    outdc = wx.MemoryDC()
-    outdc.SelectObject(output_bitmap)
-    gdc = wx.GCDC(outdc)
-    gdc.SetBackground(wx.Brush(bgcolor, wx.SOLID))
-    gdc.Clear()
 
     # A list can now be produced of all images to be output
     # project[view][season][frame][layer][xdim][ydim][zdim] = [bitmap, (xposout, yposout)]
@@ -420,11 +411,34 @@ def export_writer(project, pak_output=False, return_dat=False, write_dat=True):
     x = 0
     y = 0
 
+    # Init output bitmap and dc for drawing into it
+    output = wx.Image(side*p, side*p)
+    if project.transparency():
+        output.InitAlpha()
+        for xa in range(0, side*p):
+            for ya in range(0, side*p):
+                output.SetAlpha(xa, ya, 0)
+
+    output_bitmap = wx.Bitmap(output)
+    outdc = wx.MemoryDC()
+    outdc.SelectObjectAsSource(output_bitmap)
+
+    gc = wx.GraphicsContext.Create(outdc)
+    gc.SetInterpolationQuality(wx.INTERPOLATION_BEST)
+
+    if not project.transparency():
+        gc.SetBrush(wx.Brush(config.transparent, wx.SOLID))
+        gc.DrawRectangle(0, 0, side*p, side*p)
+
     for k in output_list:
-        # a bug in wxWidget doesn't keep transparency when done in memory for more than two operations
-        k[0].SaveFile("tc_temp.png", wx.BITMAP_TYPE_PNG)
-        cut_image = wx.Bitmap("tc_temp.png")
-        gdc.DrawBitmap(cut_image, x*p, y*p, True)
+        # a bug in wxWidget kills the transparency inside the mask
+        buf = io.BytesIO()
+        k[0].ConvertToImage().SaveFile(buf, wx.BITMAP_TYPE_PNG)
+        buf.seek(0)
+        cut_image = wx.Bitmap(wx.Image(buf, wx.BITMAP_TYPE_PNG))
+        gc.DrawBitmap(cut_image, x*p, y*p, p, p)
+        outdc.SelectObject(wx.NullBitmap)
+        gc.Flush()
         # Makeobj references the image array by row,column, e.g. y,x, so switch these
         k[2] = (y, x)
         x += 1
@@ -434,8 +448,7 @@ def export_writer(project, pak_output=False, return_dat=False, write_dat=True):
             y += 1
 
     # Select bitmap out of dc ready for saving
-    outdc.SelectObject(wx.NullBitmap)
-    os.remove("tc_temp.png")
+    gc.Flush()
 
     # output_bitmap now contains the image array
     logging.info("e_w: Image output complete")
@@ -540,8 +553,8 @@ def export_cutter(bitmap, dims, offset, p, transparency):
     # Extend to the right and up
     # Max height will be offy + (dimsx+dimsy)*p/4 + p/2 + p*(dimsz-1)
     # Max width will be offx + (dimsx+dimsy)*p/2
-    max_width  = offset[0] + (dims[0] + dims[1]) * (p / 2)
-    max_height = offset[1] + (dims[0] + dims[1]) * (p / 4) + (p / 2) + (p * (dims[2] - 1))
+    max_width  = offset[0] + (dims[0] + dims[1]) * (p >> 1)
+    max_height = offset[1] + (dims[0] + dims[1]) * (p >> 2) + (p >> 1) + (p * (dims[2] - 1))
 
     if max_width < bitmap.GetWidth():
         max_width = bitmap.GetWidth()
@@ -549,16 +562,28 @@ def export_cutter(bitmap, dims, offset, p, transparency):
     if max_height < bitmap.GetHeight():
         max_height = bitmap.GetHeight()
 
-    source_bitmap = wx.Bitmap(max_width, max_height)
-    bgcolor = (0, 0, 0, 0) if transparency else config.transparent
+    # Init output bitmap and dc for drawing into it
+    output = wx.Image(max_width, max_height)
+    if transparency:
+        output.InitAlpha()
+        for xa in range(0, max_width):
+            for ya in range(0, max_height):
+                output.SetAlpha(xa, ya, 0)
 
-    tdc = wx.MemoryDC()
-    tdc.SelectObject(source_bitmap)
-    gdc = wx.GCDC(tdc)
-    gdc.SetBackground(wx.Brush(bgcolor, wx.SOLID))
-    gdc.Clear()
-    gdc.DrawBitmap(bitmap, 0, max_height - bitmap.GetHeight(), True)
-    tdc.SelectObject(wx.NullBitmap)
+    source_bitmap = wx.Bitmap(output)
+    outdc = wx.MemoryDC()
+    outdc.SelectObjectAsSource(source_bitmap)
+
+    gc = wx.GraphicsContext.Create(outdc)
+    gc.SetInterpolationQuality(wx.INTERPOLATION_BEST)
+
+    if not transparency:
+        gc.SetBrush(wx.Brush(config.transparent, wx.SOLID))
+        gc.DrawRectangle(0, 0, max_width, max_height)
+
+    gc.DrawBitmap(bitmap, 0, max_height - bitmap.GetHeight(), bitmap.GetWidth(), bitmap.GetHeight())
+    outdc.SelectObject(wx.NullBitmap)
+    gc.Flush()
 
     for x in range(dims[0]):
         yarray = []
@@ -586,18 +611,9 @@ def export_cutter(bitmap, dims, offset, p, transparency):
                     else:
                         submap.SetMask(masks.mask[-1])
 
-                # sub = wx.Bitmap(p, p)
-                # tdc = wx.MemoryDC()
-                # tdc.SelectObject(sub)
-                # gdc = wx.GCDC(tdc)
-                # gdc.SetBackground(wx.Brush(bgcolor, wx.SOLID))
-                # gdc.Clear()
-                # gdc.DrawBitmap(submap, 0, 0, True)
-                # tdc.SelectObject(wx.NullBitmap)
-                # submap.SaveFile("test_%s%s%s.png" % (x, y, z), wx.BITMAP_TYPE_PNG)
-
-                # submap = Bitmap + Mask, Second variable stores location of this tile within
-                #                         the output image as a tuple
+                # submap = Bitmap + Mask, Second variable stores
+                # location of this tile within the output image
+                # as a tuple
                 zarray.append(submap)
             yarray.append(zarray)
         output_array.append(yarray)
