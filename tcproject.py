@@ -358,7 +358,7 @@ class Project(object):
     def paksize(self, set=None):
         """Set or return paksize"""
         if set != None:
-            if set in config.choicelist_paksize:
+            if int(set) in range(16, 32766):
                 self.dims.paksize = int(set)
                 logging.info("Paksize set to %i" % self.dims.paksize)
                 self.on_change()

@@ -24,7 +24,7 @@ class controlDims(wx.Panel):
 
         # Add items
         self.dims_p_label  = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1))
-        self.dims_p_select = wx.ComboBox(  self, wx.ID_ANY, "", (-1, -1), (-1, -1), style=wx.CB_READONLY)
+        self.dims_p_select = wx.ComboBox(  self, wx.ID_ANY, "", (-1, -1), (-1, -1))
         self.dims_z_label  = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1))
         self.dims_z_select = wx.ComboBox(  self, wx.ID_ANY, "", (-1, -1), (-1, -1), style=wx.CB_READONLY)
         self.dims_pz_sizer = wx.BoxSizer(wx.VERTICAL)
@@ -65,7 +65,7 @@ class controlDims(wx.Panel):
         self.SetSizer(self.sizer)
 
         # Bind functions
-        self.dims_p_select.Bind(wx.EVT_COMBOBOX, self.OnPaksizeSelect, self.dims_p_select)
+        self.dims_p_select.Bind(wx.EVT_TEXT,     self.OnPaksizeSelect, self.dims_p_select)
         self.dims_z_select.Bind(wx.EVT_COMBOBOX, self.OnZdimsSelect,   self.dims_z_select)
         self.dims_x_select.Bind(wx.EVT_COMBOBOX, self.OnXdimsSelect,   self.dims_x_select)
         self.dims_y_select.Bind(wx.EVT_COMBOBOX, self.OnYdimsSelect,   self.dims_y_select)
@@ -129,7 +129,7 @@ class controlDims(wx.Panel):
     def update(self):
         """Set the values of the controls in this group to the values in the project"""
         logging.info("tcui.controlDims: update")
-        self.dims_p_select.SetSelection(config.choicelist_paksize.index(self.app.activeproject.paksize()))
+        self.dims_p_select.SetValue(str(self.app.activeproject.paksize()))
         self.dims_z_select.SetSelection(config.choicelist_dims_z.index( self.app.activeproject.z()))
         self.dims_x_select.SetSelection(config.choicelist_dims.index(   self.app.activeproject.x()))
         self.dims_y_select.SetSelection(config.choicelist_dims.index(   self.app.activeproject.y()))
@@ -137,8 +137,9 @@ class controlDims(wx.Panel):
     def OnPaksizeSelect(self, e):
         """Change value of the paksize"""
         logging.info("tcui.controlDims: OnPaksizeSelect")
-        self.app.activeproject.paksize(config.choicelist_paksize[self.choicelist_packsize.index(self.dims_p_select.GetValue())])
-        self.app.frame.display.update()
+        if self.app.activeproject.paksize() != int(self.dims_p_select.GetValue()):
+            self.app.activeproject.paksize(self.dims_p_select.GetValue())
+            self.app.frame.display.update()
 
     def OnZdimsSelect(self, e):
         """Change value of the Z dims"""

@@ -692,7 +692,7 @@ class Project(object):
     def paksize(self, set=None, validate=False):
         """Set or return paksize"""
         if set is not None:
-            if set in config.choicelist_paksize:
+            if int(set) in range(16, 32766):
                 if not validate:
                     self.props["dims"]["paksize"] = int(set)
                     logging.debug("project: paksize - set to %i" % self.props["dims"]["paksize"])

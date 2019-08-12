@@ -118,7 +118,7 @@ Here you can enter the datfile properties necessary to produce a building using 
 240
 240
 tt_dims_paksize_select
-Select the paksize of the project from the dropdown list
+Select the paksize of the project from the dropdown list (allowed: 16-32765)
 tt_facing_select_north
 View/modify the North-facing view of this building
 tt_menu_help_help
