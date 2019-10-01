@@ -1,5 +1,3 @@
-# coding: UTF-8
-#
 # Config Management Utility
 
 import codecs, json, os, sys

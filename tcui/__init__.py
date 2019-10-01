@@ -1,5 +1,3 @@
-# coding: UTF-8
-#
 # TileCutter User Interface Library
 
 # Subclasses (dependent upon by controls, must come first)

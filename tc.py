@@ -1,5 +1,3 @@
-# coding: UTF-8
-#
 # TileCutter Cutting Engine
 
 import logging, io, math, os, sys, subprocess, tempfile

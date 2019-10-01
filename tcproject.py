@@ -1,5 +1,3 @@
-# coding: UTF-8
-#
 # TileCutter Project Module (Old version)
 
 import logging, os, sys

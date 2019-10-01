@@ -1,5 +1,3 @@
-# coding: UTF-8
-#
 # TileCutter translation module
 
 import logging, codecs, json, os, re

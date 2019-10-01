@@ -1,5 +1,3 @@
-# coding: UTF-8
-#
 # TileCutter User Interface Module
 #        Image/Editor view
 

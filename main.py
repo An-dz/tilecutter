@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# coding: UTF-8
 
 # First thing imported is logger, so that other imports can use logging too
 import logging, os, sys

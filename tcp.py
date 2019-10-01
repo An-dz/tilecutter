@@ -1,5 +1,3 @@
-# coding: UTF-8
-#
 # TileCutter - .tcp file reading/writing functions
 
 import logging, json, os, pickle, traceback

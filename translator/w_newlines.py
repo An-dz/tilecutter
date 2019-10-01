@@ -1,5 +1,3 @@
-# coding: UTF-8
-
 import codecs
 
 # Codec for converting unix-style newlines to windows-style ones
