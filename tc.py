@@ -199,7 +199,7 @@ class Makeobj:
             if isinstance(arg, str):
                 args[n] = arg.encode(sys.getfilesystemencoding())
 
-        logging.info("Activating Makeobj with arguments: %s" % str(args))
+        logging.debug("Activating Makeobj with arguments: %s" % str(args))
         process = subprocess.Popen(args, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
         process.wait()
         # Write out makeobj log information to main log
@@ -323,17 +323,17 @@ def export_writer(project, pak_output=False, return_dat=False, write_dat=True):
     dat_path = paths.join_paths(project.save_location(), project.datfile_location())
     png_path = paths.join_paths(project.save_location(), project.pngfile_location())
     pak_path = paths.join_paths(project.save_location(), project.pakfile_location())
-    logging.info("e_w: export_writer init")
-    logging.info("e_w: Writing .png to file: %s" % png_path)
+    logging.info("Writing dat and png")
+    logging.debug("Writing .png to file: %s" % png_path)
 
     if project.datfile_write():
-        logging.debug("e_w: Writing .dat info to file: %s" % dat_path)
+        logging.debug("Writing .dat info to file: %s" % dat_path)
     else:
-        logging.debug("e_w: Writing .dat info to console")
+        logging.debug("Writing .dat info to console")
 
     # Get path from dat file location to png file location
     dat_to_png = os.path.splitext(paths.compare_paths(png_path, dat_path))[0]
-    logging.debug("e_w: Path from .dat to .png is: %s" % dat_to_png)
+    logging.debug("Path from .dat to .png is: %s" % dat_to_png)
 
     # First calculate the size of output image required, this depends on a number of factors
     # - Dimensions of the image, x*y images for first layer + (x+y-1)*(z-1) images for higher layers
@@ -364,18 +364,18 @@ def export_writer(project, pak_output=False, return_dat=False, write_dat=True):
         seasons += 3
         seasons_img = [0, 2 * autumn, 3 * winter, 4 * spring, 1]
 
-    logging.info("e_w: Outputting using paksize: %s" % p)
-    logging.info("e_w: Outputting %s front/backimages" % layers)
-    logging.info("e_w: Outputting %s views" % views)
-    logging.info("e_w: Outputting %s seasons" % seasons)
-    logging.info("e_w: Outputting dims: x:%s, y:%s, z:%s" % (xdims, ydims, zdims))
+    logging.debug("Outputting using paksize: %s" % p)
+    logging.debug("Outputting %s front/backimages" % layers)
+    logging.debug("Outputting %s views" % views)
+    logging.debug("Outputting %s seasons" % seasons)
+    logging.debug("Outputting dims: x:%s, y:%s, z:%s" % (xdims, ydims, zdims))
 
     # Calculate dimensions of output image
     dims = (xdims * ydims) + ((xdims + ydims - 1) * (zdims - 1))
     totalimages = dims * layers * views * seasons
     side = int(math.ceil(math.sqrt(totalimages)))
 
-    logging.info("e_w: Outputting %s images total, output size %sx%sp (%sx%spx)" % (totalimages, side, side, side * p, side * p))
+    logging.debug("Outputting %s images total, output size %sx%sp (%sx%spx)" % (totalimages, side, side, side * p, side * p))
 
     # A list can now be produced of all images to be output
     # project[view][season][frame][layer][xdim][ydim][zdim] = [bitmap, (xposout, yposout)]
@@ -444,7 +444,7 @@ def export_writer(project, pak_output=False, return_dat=False, write_dat=True):
     gc.Flush()
 
     # output_bitmap now contains the image array
-    logging.info("e_w: Image output complete")
+    logging.info("Image output complete")
 
     output_text = io.StringIO()
     # Test text
@@ -469,14 +469,14 @@ def export_writer(project, pak_output=False, return_dat=False, write_dat=True):
 
     # Write out to files if required
     if write_dat:
-        logging.info("e_w: Writing out .dat file to %s" % dat_path)
+        logging.debug("Writing out .dat file to %s" % dat_path)
         # Check that each component in dat_path exists, create directories if needed
         if not os.path.isdir(os.path.split(dat_path)[0]):
             os.makedirs(os.path.split(dat_path)[0])
 
         f = open(dat_path, "w")
     else:
-        logging.info("e_w: Writing out .dat file to temporary file")
+        logging.debug("Writing out .dat file to temporary file")
         tempfile.tempdir = os.path.split(dat_path)[0]
         f = tempfile.NamedTemporaryFile("w", suffix=".tmp", delete=False)
         dat_path = f.name
@@ -494,7 +494,7 @@ def export_writer(project, pak_output=False, return_dat=False, write_dat=True):
 
     if pak_output:
         # Output .pak file using makeobj if required
-        logging.info("e_w: Use makeobj to output pak file")
+        logging.debug("Use makeobj to output pak file")
         path_to_makeobj = paths.join_paths(os.getcwd(), config.path_to_makeobj)
         makeobj = Makeobj(path_to_makeobj)
         print(repr(pak_path))
@@ -503,11 +503,11 @@ def export_writer(project, pak_output=False, return_dat=False, write_dat=True):
 
     # Delete temporary file if needed
     if not write_dat:
-        logging.debug("e_w: deleting temporary file used: %s" % dat_path)
+        logging.debug("deleting temporary file used: %s" % dat_path)
         os.remove(dat_path)
 
     # Log .dat file generated
-    logging.debug("e_w: .dat file text is:")
+    logging.debug(".dat file text is:")
     logging.debug(dat_text)
 
     # Return dat file text (e.g. for output within the program in a dialog box etc.)
@@ -519,11 +519,11 @@ def export_writer(project, pak_output=False, return_dat=False, write_dat=True):
 
 def export_cutter(bitmap, dims, offset, p, transparency):
     """Takes a bitmap and dimensions, and returns an array of masked bitmaps"""
-    logging.info("e_c: export_cutter init")
-    logging.debug("e_c: Passed in bitmap of size (x, y): (%s, %s)" % (bitmap.GetWidth(), bitmap.GetHeight()))
-    logging.debug("e_c: Dims (x, y, z, d): %s" % str(dims))
-    logging.debug("e_c: Offset (offx, offy): %s" % str(offset))
-    logging.debug("e_c: Transparency: %s" % str(transparency))
+    logging.info("Cut image")
+    logging.debug("Passed in bitmap of size (x, y): (%s, %s)" % (bitmap.GetWidth(), bitmap.GetHeight()))
+    logging.debug("Dims (x, y, z, d): %s" % str(dims))
+    logging.debug("Offset (offx, offy): %s" % str(offset))
+    logging.debug("Transparency: %s" % str(transparency))
 
     # To account for irregularly shaped buildings, the values of x and y dims
     # need to be swapped where dims[3] (view#) is in [1, 3]
@@ -541,7 +541,7 @@ def export_cutter(bitmap, dims, offset, p, transparency):
     # Init mask provider
     masks = TCMasks(p)
 
-    logging.info("e_c: Building output array...")
+    logging.info("Building output array...")
     output_array = []
     # Must ensure that the source bitmap is large enough so that all subbitmap operations succeed
     # Extend to the right and up
@@ -611,5 +611,5 @@ def export_cutter(bitmap, dims, offset, p, transparency):
                 zarray.append(submap)
             yarray.append(zarray)
         output_array.append(yarray)
-    logging.info("e_c: Build output array complete, exiting")
+    logging.info("Build output array complete, exiting")
     return output_array

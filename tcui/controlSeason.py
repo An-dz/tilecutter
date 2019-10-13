@@ -13,7 +13,7 @@ class ControlSeason(wx.Panel):
     season_title = ["Summer", "Snow", "Autumn", "Winter", "Spring"]
 
     def __init__(self, parent, app):
-        logging.info("tcui.controlSeason: __init__")
+        logging.info("Create season controls")
 
         wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
         self.app = app
@@ -62,7 +62,7 @@ class ControlSeason(wx.Panel):
 
     def translate(self):
         """Update the text of all controls to reflect a new translation"""
-        logging.info("tcui.controlSeason: translate")
+        logging.info("Translate UI")
 
         self.label.SetLabel(gt("Season:"))
 
@@ -75,7 +75,7 @@ class ControlSeason(wx.Panel):
 
     def update(self):
         """Set the values of the controls in this group to the values in the project"""
-        logging.info("tcui.controlSeason: update")
+        logging.info("Update controls")
 
         # check enabled state for each station skipping summer that is always enabled
         for i in range(1, 5):
@@ -93,7 +93,7 @@ class ControlSeason(wx.Panel):
     def OnToggle(self, arg):
         def OnChoice(e):
             """Toggling season image on and off"""
-            logging.info("tcui.controlSeason: OnToggle %i" % arg)
+            logging.info("OnToggle changed to %i" % arg)
             self.app.activeproject.seasons(self.seasons_enable[arg].GetValue(), season=self.season_names[arg])
             self.update()
         return OnChoice
@@ -101,7 +101,7 @@ class ControlSeason(wx.Panel):
     def OnSelect(self, arg):
         def OnChoice(e):
             """Change to a selected season image"""
-            logging.info("tcui.controlSeason: OnSelect %i" % arg)
+            logging.info("OnSelect changed to %i" % arg)
             # Set active image to Winter
             self.app.activeproject.active_image(season=arg)
             # Redraw active image

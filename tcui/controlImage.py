@@ -10,7 +10,7 @@ gt = translator.Translator()
 class ControlImage(wx.Panel):
     """Box containing Front/Back image and Transparency controls"""
     def __init__(self, parent, app):
-        logging.info("tcui.controlImage: __init__")
+        logging.info("Creating image controls")
 
         wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
         self.app = app
@@ -63,7 +63,7 @@ class ControlImage(wx.Panel):
 
     def translate(self):
         """Update the text of all controls to reflect a new translation"""
-        logging.info("tcui.controlImage: translate")
+        logging.info("Translate UI")
 
         self.label.SetLabel(gt("Image:"))
         self.images_select_back.SetLabel(gt("BackImage"))
@@ -79,7 +79,7 @@ class ControlImage(wx.Panel):
 
     def update(self):
         """Set the values of the controls in this group to the values in the project"""
-        logging.info("tcui.controlImage: update")
+        logging.info("Update controls")
 
         self.images_enable_transparency.SetValue(self.app.activeproject.transparency())
 
@@ -104,19 +104,19 @@ class ControlImage(wx.Panel):
 
     def OnTransparency(self, e):
         """Toggling transparency on and off"""
-        logging.info("tcui.controlImage: OnTransparency")
+        logging.info("Transparency changed")
         self.app.activeproject.transparency(self.images_enable_transparency.GetValue())
         self.update()
 
     def OnFrontBack(self, e):
         """Toggling frontimage on and off"""
-        logging.info("tcui.controlImage: OnFrontBack")
+        logging.info("FrontImage/BackImage changed")
         self.app.activeproject.frontimage(self.images_enable_front.GetValue())
         self.update()
 
     def OnBackImage(self, e):
         """Called when user wishes to display back image"""
-        logging.info("tcui.controlImage: OnBackImage")
+        logging.info("Display BackImage")
         # Set active image to Back
         self.app.activeproject.active_image(layer=0)
         # Redraw active image
@@ -124,7 +124,7 @@ class ControlImage(wx.Panel):
 
     def OnFrontImage(self, e):
         """Called when user wishes to display front image"""
-        logging.info("tcui.controlImage: OnFrontImage")
+        logging.info("Display FrontImage")
         # Set active image to Front
         self.app.activeproject.active_image(layer=1)
         # Redraw active image

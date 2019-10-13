@@ -11,7 +11,7 @@ config = config.Config()
 class ControlFacing(wx.Panel):
     """Box containing direction facing controls"""
     def __init__(self, parent, app):
-        logging.info("tcui.controlFacing: __init__")
+        logging.info("Creating facing direction controls")
 
         wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
         self.app = app
@@ -103,7 +103,7 @@ class ControlFacing(wx.Panel):
 
     def translate(self):
         """Update the text of all controls to reflect a new translation"""
-        logging.info("tcui.controlFacing: translate")
+        logging.info("Translate UI")
 
         self.label.SetLabel(gt("Direction Facing:"))
         self.facing_select_south_label.SetLabel(gt("South"))
@@ -127,11 +127,11 @@ class ControlFacing(wx.Panel):
 
     def update(self):
         """Set the values of the controls in this group to the values in the project"""
-        logging.info("tcui.controlFacing: update")
+        logging.info("Update controls")
 
         # Set value of the toggle control (to set number of directions)
         if self.app.activeproject.directions() == 1:
-            logging.debug("tcui.controlFacing: update - self.app.activeproject.directions = 1")
+            logging.debug("self.app.activeproject.directions = 1")
 
             self.facing_enable_select.SetValue(self.choicelist_views[0])
 
@@ -154,7 +154,7 @@ class ControlFacing(wx.Panel):
                 self.app.frame.display.update()
 
         elif self.app.activeproject.directions() == 2:
-            logging.debug("tcui.controlFacing: update - self.app.activeproject.directions = 2")
+            logging.debug("self.app.activeproject.directions = 2")
 
             self.facing_enable_select.SetValue(self.choicelist_views[1])
 
@@ -176,7 +176,7 @@ class ControlFacing(wx.Panel):
                 self.app.frame.display.update()
 
         else:
-            logging.debug("tcui.controlFacing: update - self.app.activeproject.directions = 4")
+            logging.debug("self.app.activeproject.directions = 4")
 
             self.facing_enable_select.SetValue(self.choicelist_views[2])
 
@@ -194,13 +194,13 @@ class ControlFacing(wx.Panel):
 
     def OnToggle(self, e):
         """Changing the number of directions in the selection box"""
-        logging.info("tcui.controlFacing: OnToggle")
+        logging.info("Number of directions changed")
         self.app.activeproject.directions(config.choicelist_views[self.choicelist_views.index(self.facing_enable_select.GetValue())])
         self.update()
 
     def OnSouth(self, e):
         """Select South direction"""
-        logging.info("tcui.controlFacing: OnSouth")
+        logging.info("Select south direction")
         # If called from the label, ensure radio button is selected
         self.facing_select_south.SetValue(True)
         # Set active image to South
@@ -208,7 +208,7 @@ class ControlFacing(wx.Panel):
 
     def OnEast(self, e):
         """Select East direction"""
-        logging.info("tcui.controlFacing: OnEast")
+        logging.info("Select east direction")
         # If called from the label, ensure radio button is selected
         self.facing_select_east.SetValue(True)
         # Set active image to East
@@ -216,7 +216,7 @@ class ControlFacing(wx.Panel):
 
     def OnNorth(self, e):
         """Select North direction"""
-        logging.info("tcui.controlFacing: OnNorth")
+        logging.info("Select north direction")
         # If called from the label, ensure radio button is selected
         self.facing_select_north.SetValue(True)
         # Set active image to North
@@ -224,7 +224,7 @@ class ControlFacing(wx.Panel):
 
     def OnWest(self, e):
         """Select West direction"""
-        logging.info("tcui.controlFacing: OnWest")
+        logging.info("Select west direction")
         # If called from the label, ensure radio button is selected
         self.facing_select_west.SetValue(True)
         # Set active image to West

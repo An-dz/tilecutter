@@ -12,7 +12,7 @@ class MenuObject(object):
     """Class containing the main program menu"""
     def __init__(self, parent, app):
         """Create the menu"""
-        logging.info("tcui.MenuObject: __init__")
+        logging.info("Creating menu")
 
         self.app = app
         self.parent = parent
@@ -57,7 +57,7 @@ class MenuObject(object):
 
     def translate(self):
         """Update the text of all menu items to reflect a new translation"""
-        logging.info("tcui.MenuObject: translate")
+        logging.info("Translating Menu")
 
         # File menu
         self.menu.SetMenuLabel(0, gt("&File"))
@@ -100,14 +100,14 @@ class MenuObject(object):
 
     def gsc(self, text, default=None):
         """Return the keyboard shortcut associated with a menu item"""
-        logging.info("tcui.MenuObject: gsc")
+        logging.info("Keyboard shortcuts")
         # Filler function for now
         if default is not None:
             return "\t" + default
 
     def add_menu_item(self, menu, item_handler, enabled=True, item_id=None):
         """Appends a menu item into a menu button"""
-        logging.info("tcui.MenuObject: add_menu_item")
+        logging.info("Adding item")
         # Item text must be set to something, or wx thinks this is a stock menu item
         item_text = "--!--"
 
@@ -130,41 +130,41 @@ class MenuObject(object):
     #############################
     def OnNewProject(self, e):
         """Call creation of new project"""
-        logging.info("tcui.MenuObject: OnNewProject - Menu-File-> New Project")
+        logging.info("Menu-File-> New Project")
         # Call app's NewProject method
         self.app.OnNewProject()
 
     def OnOpenProject(self, e):
         """Call project open dialog"""
-        logging.info("tcui.MenuObject: OnOpenProject - Menu-File-> Open Project")
+        logging.info("Menu-File-> Open Project")
         # Call app's OpenProject method
         self.app.OnLoadProject()
 
     def OnSaveProject(self, e):
         """Call project saving"""
-        logging.info("tcui.MenuObject: OnSaveProject - Menu-File-> Save Project")
+        logging.info("Menu-File-> Save Project")
         # Call app's SaveProject method
         self.app.OnSaveProject(self.app.activeproject)
 
     def OnSaveProjectAs(self, e):
         """Call project saving dialog"""
-        logging.info("tcui.MenuObject: OnSaveProjectAs - Menu-File-> Save Project As...")
+        logging.info("Menu-File-> Save Project As...")
         # Call app's SaveProject method with saveas set to True
         self.app.OnSaveAsProject(self.app.activeproject)
 
     def OnCutProject(self, e):
         """Call image cutting"""
-        logging.info("tcui.MenuObject: OnCutProject - Menu-File-> Cut Project")
+        logging.info("Menu-File-> Cut Project")
         self.app.export_project(self.app.activeproject, pak_output=False)
 
     def OnExportProject(self, e):
         """Call .pak export"""
-        logging.info("tcui.MenuObject: OnExportProject - Menu-File-> Export Project")
+        logging.info("Menu-File-> Export Project")
         self.app.export_project(self.app.activeproject, pak_output=True)
 
     def OnExit(self, e):
         """Call program exit"""
-        logging.info("tcui.MenuObject: OnExit - Menu-File-> Exit Program")
+        logging.info("Menu-File-> Exit Program")
         # Call app's Exit method
         self.app.Exit()
 
@@ -173,7 +173,7 @@ class MenuObject(object):
     ##############################
     def OnDatEdit(self, e):
         """Open .dat editor dialog"""
-        logging.info("tcui.MenuObject: OnDatEdit - Menu-Tools-> Open .dat edit dialog")
+        logging.info("Menu-Tools-> Open .dat edit dialog")
         dlg = tcui.DialogDatFileEdit(self.parent, self.app)
         # Needed so that on mac this window comes back into foreground after switching to/from application
         self.app.SetTopWindow(dlg)
@@ -182,12 +182,12 @@ class MenuObject(object):
 
     def OnSmokeEdit(self, e):
         """"""
-        logging.info("tcui.MenuObject: OnSmokeEdit - Menu-Tools-> Open smoke edit dialog")
+        logging.info("Menu-Tools-> Open smoke edit dialog")
         return 1
 
     def OnSameForAll(self, e):
         """When 'load same image for all' button is clicked"""
-        logging.info("tcui.MenuObject: OnSameForAll - Load active image for all images")
+        logging.info("Load active image for all images")
 
         dlg = wx.MessageDialog(self.parent,
                                gt("This action will set all images in the project to be the same as this one. Do you wish to proceed?"),
@@ -197,21 +197,21 @@ class MenuObject(object):
         dlg.Destroy()
 
         if result == wx.ID_YES:
-            logging.debug("tcui.MenuObject: OnSameForAll - LoadImageForAll - Result YES")
+            logging.debug("LoadImageForAll - Result YES")
             self.app.activeproject.set_all_images(self.app.activeproject.active_image_path())
         else:
-            logging.debug("tcui.MenuObject: OnSameForAll - LoadImageForAll - Result NO")
+            logging.debug("LoadImageForAll - Result NO")
 
     def OnSelectLanguage(self, e):
         """Open language selection dialog"""
-        logging.info("tcui.MenuObject: OnSelectLanguage - Menu-Tools-> Open select language dialog")
+        logging.info("Menu-Tools-> Open select language dialog")
         dlg = tcui.DialogLanguage(self.parent, self.app)
         if dlg.ShowModal() == wx.ID_OK:
             dlg.Destroy()
 
     def OnPreferences(self, e):
         """Open the preferences dialog"""
-        logging.info("tcui.MenuObject: OnPreferences - Menu-Tools-> Open preferences dialog")
+        logging.info("Menu-Tools-> Open preferences dialog")
         dlg = tcui.DialogPreferences(self.parent, self.app)
         # Needed so that on mac this window comes back into foreground after switching to/from application
         self.app.SetTopWindow(dlg)
@@ -223,12 +223,12 @@ class MenuObject(object):
     #############################
     def OnHelp(self, e):
         """Open online help page"""
-        logging.info("tcui.MenuObject: OnHelp - Menu-Help-> Open online help")
+        logging.info("Menu-Help-> Open online help")
         wx.LaunchDefaultBrowser("https://github.com/An-dz/tilecutter")
 
     def OnAbout(self, e):
         """Open About dialog"""
-        logging.info("tcui.MenuObject: OnAbout - Menu-Help-> Open about dialog")
+        logging.info("Menu-Help-> Open about dialog")
         dlg = tcui.DialogAbout(self.parent, self.app, config.version)
         # Needed so that on mac this window comes back into foreground after switching to/from application
         self.app.SetTopWindow(dlg)

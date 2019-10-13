@@ -1,6 +1,6 @@
 # Config Management Utility
 
-import codecs, json, os, sys
+import logging, codecs, json, os, sys
 from environment import getenvvar
 
 
@@ -148,7 +148,7 @@ class Config(object):
             f.write(json.dumps(Config.config, ensure_ascii=False, sort_keys=True, indent=4))
             f.close()
         except IOError:
-            print("IOError working with file %s, likely this path doesn't exist or the user I am running as doesn't have permission to write to it" % self.conf_path)
+            logging.error("IOError working with file %s, likely this path doesn't exist or the user doesn't have permission to write to it" % self.conf_path)
             return False
 
         return True

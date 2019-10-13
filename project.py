@@ -123,7 +123,7 @@ class Project(object):
             self.props = self.defaults
         else:
             if "winter" in load["dims"]:
-                logging.debug("project: __init__ - old 'winter' value found replaced with 'seasons.snow'")
+                logging.debug("Old 'winter' value found replaced with 'seasons.snow'")
                 load["dims"]["seasons"] = {"snow": load["dims"].pop("winter")}
 
             # Loading project from potential props dict specified (needs validation)
@@ -142,35 +142,35 @@ class Project(object):
         props = {}
 
         for k, v in list(validators.items()):
-            logging.debug("project: load_dict - processing node with key value: %s" % k)
+            logging.debug("Processing node with key value: %s" % k)
             if k in loaded:
                 # If this is a key, validate value + set if valid
                 if callable(v):
-                    logging.debug("project: load_dict - callable object in validators dict, this is a node, running validation on data: %s" % loaded[k])
+                    logging.debug("Callable object in validators dict, this is a node, running validation on data: %s" % loaded[k])
                     if v(loaded[k], validate=True):
-                        logging.debug("project: load_dict - validation succeeds, using value: %s from input" % loaded[k])
+                        logging.debug("Validation succeeds, using value: %s from input" % loaded[k])
                         props[k] = loaded[k]
                     else:
-                        logging.warn("project: load_dict - validation failed, using value: %s from defaults" % defaults[k])
+                        logging.warn("Validation failed, using value: %s from defaults" % defaults[k])
                         props[k] = defaults[k]
                 # If this is a node call function to determine what to set
                 elif isinstance(v, type({})):
                     if isinstance(loaded[k], type({})):
-                        logging.debug("project: load_dict - dict-type object in both validators and input, recursing to process subset of keys: %s" % repr(loaded[k]))
+                        logging.debug("Dict-type object in both validators and input, recursing to process subset of keys: %s" % repr(loaded[k]))
                         props[k] = self.load_dict(loaded[k], v, defaults[k])
                     else:
                         # Validators defines this to be a dict, but the loaded data for this key isn't a dict - data must be invalid so use defaults
-                        logging.warn("project: load_dict - Validators defines this value to be a dict, but input data isn't, using defaults values from node: %s" % k)
+                        logging.warn("Validators defines this value to be a dict, but input data isn't, using defaults values from node: %s" % k)
                         props[k] = defaults[k]
                 else:
                     # This should not happen, panic
-                    logging.error("project: load_dict - ERROR: invalid state for load_dict decode, offending data is: %s (type: %s)" % (repr(v), type(v)))
+                    logging.error("Invalid state for load_dict decode, offending data is: %s (type: %s)" % (repr(v), type(v)))
                     raise ValueError
             else:
-                logging.warn("project: load_dict - Input data does not contain key: %s, using defaults for this node" % k)
+                logging.warn("Input data does not contain key: %s, using defaults for this node" % k)
                 props[k] = defaults[k]
 
-        logging.debug("project: load_dict - done processing this level, returning properties dict: %s" % repr(props))
+        logging.debug("Done processing this level, returning properties dict: %s" % repr(props))
         return props
 
     def init_image_array(self):
@@ -219,28 +219,28 @@ class Project(object):
                                                         fresh_image_array[d][s][f][l]["path"] = layer["path"]
                                                     else:
                                                         # non-fatal validation error, just use the default instead
-                                                        logging.warn("project: image_array - Validation failed for property 'path' with value: %s, using default instead" % layer["path"])
+                                                        logging.warn("Validation failed for property 'path' with value: %s, using default instead" % layer["path"])
 
                                                 if "offset" in layer:
                                                     if self.offset(d, s, f, l, layer["offset"], validate=True):
                                                         fresh_image_array[d][s][f][l]["offset"] = layer["path"]
                                                     else:
                                                         # non-fatal validation error, just use the default instead
-                                                        logging.warn("project: image_array - Validation failed for property 'offset' with value: %s, using default instead" % layer["offset"])
+                                                        logging.warn("Validation failed for property 'offset' with value: %s, using default instead" % layer["offset"])
                                             else:
-                                                logging.warn("project: image_array - Validation failed, type of potential layer was incorrect, should've been dict but was: %s" % type(layer))
+                                                logging.warn("Validation failed, type of potential layer was incorrect, should've been dict but was: %s" % type(layer))
                                                 return False
                                     else:
-                                        logging.warn("project: image_array - Validation failed, type or length of potential frame was incorrect, should've been array,2 but was: %s, %s" % (type(frame), len(frame)))
+                                        logging.warn("Validation failed, type or length of potential frame was incorrect, should've been array,2 but was: %s, %s" % (type(frame), len(frame)))
                                         return False
                             else:
-                                logging.warn("project: image_array - Validation failed, type or length of potential season was incorrect, should've been array,>1 but was: %s, %s" % (type(season), len(season)))
+                                logging.warn("Validation failed, type or length of potential season was incorrect, should've been array,>1 but was: %s, %s" % (type(season), len(season)))
                                 return False
                     else:
-                        logging.warn("project: image_array - Validation failed, type or length of potential direction was incorrect, should've been array,2 but was: %s, %s" % (type(direction), len(direction)))
+                        logging.warn("Validation failed, type or length of potential direction was incorrect, should've been array,2 but was: %s, %s" % (type(direction), len(direction)))
                         return False
             else:
-                logging.warn("project: image_array - Validation failed, type of potential image array was incorrect, should've been array but was: %s, %s" % type(value))
+                logging.warn("Validation failed, type of potential image array was incorrect, should've been array but was: %s, %s" % type(value))
                 return False
 
             # If nothing is invalid with the image_array set it and return True
@@ -271,7 +271,7 @@ class Project(object):
         else:
             save_location = self.test_path(save_location)
 
-        logging.debug("project: init_save_location - as: %s, datfile_location: %s, pngfile_location: %s, pakfile_location: %s" % (
+        logging.debug("as: %s, datfile_location: %s, pngfile_location: %s, pakfile_location: %s" % (
             self.save_location, self.datfile_location, self.pngfile_location, self.pakfile_location))
         return save_location
 
@@ -290,10 +290,10 @@ class Project(object):
         # When something in the project has changed, notify containing app to
         # allow for updating of UI
         if self.parent is not None:
-            logging.debug("project: on_change - Root on_change triggered, sending message to App")
+            logging.debug("Root on_change triggered, sending message to App")
             self.parent.project_has_changed()
         else:
-            logging.warn("project: on_change - Root on_change triggered but no parent specified, doing nothing")
+            logging.warn("Root on_change triggered but no parent specified, doing nothing")
 
     #################################################################
     # Functions related to checking whether the project has changed #
@@ -303,10 +303,10 @@ class Project(object):
         current = self.hash_props()
 
         if current == self.internals["hash"]:
-            logging.debug("project: has_changed - Check Project for changes - Project Unchanged")
+            logging.debug("Check Project for changes - Project Unchanged")
             return False
         else:
-            logging.debug("project: has_changed - Check Project for changes - Project Changed")
+            logging.debug("Check Project for changes - Project Changed")
             return True
 
     def hash_props(self):
@@ -327,11 +327,11 @@ class Project(object):
             if type(value) in [type(""), type("")]:
                 if not validate:
                     self.props["dat"]["dat_lump"] = value
-                    logging.info("project: dat_lump - properties set to %s" % self.props["dat"]["dat_lump"])
+                    logging.debug("properties set to %s" % self.props["dat"]["dat_lump"])
                     self.on_change()
                 return True
             else:
-                logging.warn("project: dat_lump - type of value (%s) outside of acceptable range" % str(value))
+                logging.warn("type of value (%s) outside of acceptable range" % str(value))
                 return False
         else:
             return self.props["dat"]["dat_lump"]
@@ -341,12 +341,14 @@ class Project(object):
     ########################################
     def active_image_path(self, value=None, validate=False):
         """Set or return the path of the active image"""
-        return self.image_path(self.internals["activeimage"]["direction"],
-                               self.internals["activeimage"]["season"],
-                               self.internals["activeimage"]["frame"],
-                               self.internals["activeimage"]["layer"],
-                               value,
-                               validate)
+        return self.image_path(
+            self.internals["activeimage"]["direction"],
+            self.internals["activeimage"]["season"],
+            self.internals["activeimage"]["frame"],
+            self.internals["activeimage"]["layer"],
+            value,
+            validate,
+        )
 
     def image_path(self, d, s, f, l, value=None, validate=False):
         """Set or return the path of the specified image"""
@@ -354,14 +356,14 @@ class Project(object):
             if type(value) in [type(""), type("")]:
                 if not validate:
                     self.props["images"][d][s][f][l]["path"] = value
-                    logging.debug("project: image_path - for image d:%s, s:%s, f:%s, l:%s set to %s" % (d, s, f, l, self.props["images"][d][s][f][l]["path"]))
+                    logging.debug("For image d:%s, s:%s, f:%s, l:%s set to %s" % (d, s, f, l, self.props["images"][d][s][f][l]["path"]))
                     # This will either load the image (if the path exists) or set a default image if it doesn't
                     self.reload_image(d, s, f, l)
                     self.on_change()
 
                 return True
             else:
-                logging.warn("project: image_path - type of value (%s) outside of acceptable range" % str(value))
+                logging.warn("Type of value (%s) outside of acceptable range" % str(value))
                 return False
         else:
             return self.props["images"][d][s][f][l]["path"]
@@ -373,10 +375,12 @@ class Project(object):
 
     def get_active_image(self):
         """Return a wxImage representation of the active image"""
-        return self.get_image(self.internals["activeimage"]["direction"],
-                              self.internals["activeimage"]["season"],
-                              self.internals["activeimage"]["frame"],
-                              self.internals["activeimage"]["layer"])
+        return self.get_image(
+            self.internals["activeimage"]["direction"],
+            self.internals["activeimage"]["season"],
+            self.internals["activeimage"]["frame"],
+            self.internals["activeimage"]["layer"],
+        )
 
     def get_bitmap(self, d, s, f, l):
         """Return a wxBitmap representation of the specified image"""
@@ -385,10 +389,12 @@ class Project(object):
 
     def get_active_bitmap(self):
         """Return a wxBitmap representation of the active image"""
-        return self.get_bitmap(self.internals["activeimage"]["direction"],
-                               self.internals["activeimage"]["season"],
-                               self.internals["activeimage"]["frame"],
-                               self.internals["activeimage"]["layer"])
+        return self.get_bitmap(
+            self.internals["activeimage"]["direction"],
+            self.internals["activeimage"]["season"],
+            self.internals["activeimage"]["frame"],
+            self.internals["activeimage"]["layer"],
+        )
 
     def set_all_images(self, path):
         """Set the path for all images to the same path"""
@@ -438,10 +444,12 @@ class Project(object):
 
     def reload_active_image(self):
         """Refresh the active image"""
-        return self.reload_image(self.internals["activeimage"]["direction"],
-                                 self.internals["activeimage"]["season"],
-                                 self.internals["activeimage"]["frame"],
-                                 self.internals["activeimage"]["layer"])
+        return self.reload_image(
+            self.internals["activeimage"]["direction"],
+            self.internals["activeimage"]["season"],
+            self.internals["activeimage"]["frame"],
+            self.internals["activeimage"]["layer"],
+        )
 
     def reload_image(self, d, s, f, l):
         """Refresh the specified image, inputs are: direction, season, frame, layer"""
@@ -457,12 +465,14 @@ class Project(object):
 
     def active_x_offset(self, value=None, validate=False):
         """Get or set the active image's x offset"""
-        return self.x_offset(self.internals["activeimage"]["direction"],
-                             self.internals["activeimage"]["season"],
-                             self.internals["activeimage"]["frame"],
-                             self.internals["activeimage"]["layer"],
-                             value,
-                             validate)
+        return self.x_offset(
+            self.internals["activeimage"]["direction"],
+            self.internals["activeimage"]["season"],
+            self.internals["activeimage"]["frame"],
+            self.internals["activeimage"]["layer"],
+            value,
+            validate,
+        )
 
     def x_offset(self, d, s, f, l, value=None, validate=False):
         """Directly set or get the X offset of the specified image"""
@@ -470,24 +480,26 @@ class Project(object):
             if value >= 0:
                 if not validate:
                     self.props["images"][d][s][f][l]["offset"][0] = value
-                    logging.debug("project: x_offset - X Offset for image d:%s, s:%s, f:%s, l:%s set to %i" % (d, s, f, l, self.props["images"][d][s][f][l]["offset"][0]))
+                    logging.debug("X Offset for image d:%s, s:%s, f:%s, l:%s set to %i" % (d, s, f, l, self.props["images"][d][s][f][l]["offset"][0]))
                     self.on_change()
 
                 return True
             else:
-                logging.warn("project: x_offset - Value (%s) outside of acceptable range" % str(value))
+                logging.warn("Value (%s) outside of acceptable range" % str(value))
                 return False
         else:
             return self.props["images"][d][s][f][l]["offset"][0]
 
     def active_y_offset(self, value=None, validate=False):
         """Get or set the active image's y offset"""
-        return self.y_offset(self.internals["activeimage"]["direction"],
-                             self.internals["activeimage"]["season"],
-                             self.internals["activeimage"]["frame"],
-                             self.internals["activeimage"]["layer"],
-                             value,
-                             validate)
+        return self.y_offset(
+            self.internals["activeimage"]["direction"],
+            self.internals["activeimage"]["season"],
+            self.internals["activeimage"]["frame"],
+            self.internals["activeimage"]["layer"],
+            value,
+            validate,
+        )
 
     def y_offset(self, d, s, f, l, value=None, validate=False):
         """Directly set or get the Y offset of the specified image"""
@@ -495,24 +507,26 @@ class Project(object):
             if value >= 0:
                 if not validate:
                     self.props["images"][d][s][f][l]["offset"][1] = value
-                    logging.debug("project: y_offset - Y Offset for image d:%s, s:%s, f:%s, l:%s set to %i" % (d, s, f, l, self.props["images"][d][s][f][l]["offset"][1]))
+                    logging.debug("Y Offset for image d:%s, s:%s, f:%s, l:%s set to %i" % (d, s, f, l, self.props["images"][d][s][f][l]["offset"][1]))
                     self.on_change()
 
                 return True
             else:
-                logging.warn("project: y_offset - Value (%s) outside of acceptable range" % str(value))
+                logging.warn("Value (%s) outside of acceptable range" % str(value))
                 return False
         else:
             return self.props["images"][d][s][f][l]["offset"][1]
 
     def active_offset(self, value=None, validate=False):
         """Set or get the full offset coordinates for the active image"""
-        return self.offset(self.internals["activeimage"]["direction"],
-                           self.internals["activeimage"]["season"],
-                           self.internals["activeimage"]["frame"],
-                           self.internals["activeimage"]["layer"],
-                           value,
-                           validate)
+        return self.offset(
+            self.internals["activeimage"]["direction"],
+            self.internals["activeimage"]["season"],
+            self.internals["activeimage"]["frame"],
+            self.internals["activeimage"]["layer"],
+            value,
+            validate,
+        )
 
     def offset(self, d, s, f, l, value=None, validate=False):
         """Set or get the full offset coordinates for the specified image"""
@@ -521,12 +535,12 @@ class Project(object):
             if self.x_offset(d, s, f, l, value[0], True) and self.y_offset(d, s, f, l, value[1], True):
                 if not validate:
                     self.props["images"][d][s][f][l]["offset"] = [value[0], value[1]]
-                    logging.debug("project: offset - Offset for image d:%s, s:%s, f:%s, l:%s set to %i" % (d, s, f, l, self.props["images"][d][s][f][l]["offset"][1]))
+                    logging.debug("Offset for image d:%s, s:%s, f:%s, l:%s set to %i" % (d, s, f, l, self.props["images"][d][s][f][l]["offset"][1]))
                     self.on_change()
 
                 return True
             else:
-                logging.warn("project: offset - Value (%s) outside of acceptable range" % str(value))
+                logging.warn("Value (%s) outside of acceptable range" % str(value))
                 return False
         else:
             return self.props["images"][d][s][f][l]["offset"]
@@ -540,12 +554,12 @@ class Project(object):
             if value in [0, 1, 2, 3]:
                 if not validate:
                     self.internals["activeimage"]["direction"] = value
-                    logging.debug("project: direction - Active image direction set to %i" % self.internals["activeimage"]["direction"])
+                    logging.debug("Active image direction set to %i" % self.internals["activeimage"]["direction"])
                     self.on_change()
 
                 return True
             else:
-                logging.warn("project: direction - Attempt to set active image direction failed - Value (%s) outside of acceptable range" % str(value))
+                logging.warn("Attempt to set active image direction failed - Value (%s) outside of acceptable range" % str(value))
                 return False
         else:
             return self.internals["activeimage"]["direction"]
@@ -556,12 +570,12 @@ class Project(object):
             if value in range(5):
                 if not validate:
                     self.internals["activeimage"]["season"] = value
-                    logging.debug("project: season - Active image season set to %i" % self.internals["activeimage"]["season"])
+                    logging.debug("Active image season set to %i" % self.internals["activeimage"]["season"])
                     self.on_change()
 
                 return True
             else:
-                logging.warn("project: season - Attempt to set active image season failed - Value (%s) outside of acceptable range" % str(value))
+                logging.warn("Attempt to set active image season failed - Value (%s) outside of acceptable range" % str(value))
                 return False
         else:
             return self.internals["activeimage"]["season"]
@@ -572,12 +586,12 @@ class Project(object):
             if value in range(self.props["dims"]["frames"]):
                 if not validate:
                     self.internals["activeimage"]["frame"] = value
-                    logging.debug("project: frame - Active image frame set to %i" % self.internals["activeimage"]["frame"])
+                    logging.debug("Active image frame set to %i" % self.internals["activeimage"]["frame"])
                     self.on_change()
 
                 return True
             else:
-                logging.warn("project: frame - Attempt to set active image frame failed - Value (%s) outside of acceptable range" % str(value))
+                logging.warn("Attempt to set active image frame failed - Value (%s) outside of acceptable range" % str(value))
                 return False
         else:
             return self.internals["activeimage"]["frame"]
@@ -588,12 +602,12 @@ class Project(object):
             if value in [0, 1]:
                 if not validate:
                     self.internals["activeimage"]["layer"] = value
-                    logging.debug("project: layer - Active image layer set to %i" % self.internals["activeimage"]["layer"])
+                    logging.debug("Active image layer set to %i" % self.internals["activeimage"]["layer"])
                     self.on_change()
 
                 return True
             else:
-                logging.warn("project: layer - Attempt to set active image layer failed - Value (%s) outside of acceptable range" % str(value))
+                logging.warn("Attempt to set active image layer failed - Value (%s) outside of acceptable range" % str(value))
                 return False
         else:
             return self.internals["activeimage"]["layer"]
@@ -624,12 +638,12 @@ class Project(object):
             if value in config.choicelist_dims:
                 if not validate:
                     self.props["dims"]["x"] = int(value)
-                    logging.debug("project: x - set to %i" % self.props["dims"]["x"])
+                    logging.debug("Set to %i" % self.props["dims"]["x"])
                     self.on_change()
 
                 return True
             else:
-                logging.warn("project: x - Attempt to set X dimension failed - Value (%s) outside of acceptable range" % str(value))
+                logging.warn("Attempt to set X dimension failed - Value (%s) outside of acceptable range" % str(value))
                 return False
         else:
             return self.props["dims"]["x"]
@@ -640,12 +654,12 @@ class Project(object):
             if value in config.choicelist_dims:
                 if not validate:
                     self.props["dims"]["y"] = int(value)
-                    logging.debug("project: y - set to %i" % self.props["dims"]["y"])
+                    logging.debug("Set to %i" % self.props["dims"]["y"])
                     self.on_change()
 
                 return True
             else:
-                logging.warn("project: y - Attempt to set Y dimension failed - Value (%s) outside of acceptable range" % str(value))
+                logging.warn("Attempt to set Y dimension failed - Value (%s) outside of acceptable range" % str(value))
                 return False
         else:
             return self.props["dims"]["y"]
@@ -656,12 +670,12 @@ class Project(object):
             if value in config.choicelist_dims_z:
                 if not validate:
                     self.props["dims"]["z"] = int(value)
-                    logging.debug("project: z - set to %i" % self.props["dims"]["z"])
+                    logging.debug("Set to %i" % self.props["dims"]["z"])
                     self.on_change()
 
                 return True
             else:
-                logging.warn("project: z - Attempt to set Z dimension failed - Value (%s) outside of acceptable range" % str(value))
+                logging.warn("Attempt to set Z dimension failed - Value (%s) outside of acceptable range" % str(value))
                 return False
         else:
             return self.props["dims"]["z"]
@@ -671,19 +685,19 @@ class Project(object):
             if value in [True, 1]:
                 if not validate:
                     self.props["transparency"] = True
-                    logging.debug("project: transparency - set to %s" % str(self.props["transparency"]))
+                    logging.debug("Set to %s" % str(self.props["transparency"]))
                     self.on_change()
 
                 return True
             elif value in [False, 0]:
                 if not validate:
                     self.props["transparency"] = False
-                    logging.debug("project: transparency - set to %s" % str(self.props["transparency"]))
+                    logging.debug("Set to %s" % str(self.props["transparency"]))
                     self.on_change()
 
                 return True
             else:
-                logging.warn("project: transparency - Attempt to set transparency failed - Value (%s) outside of acceptable range" % str(value))
+                logging.warn("Attempt to set transparency failed - Value (%s) outside of acceptable range" % str(value))
                 return False
         else:
             return self.props["transparency"]
@@ -694,12 +708,12 @@ class Project(object):
             if int(value) in range(16, 32766):
                 if not validate:
                     self.props["dims"]["paksize"] = int(value)
-                    logging.debug("project: paksize - set to %i" % self.props["dims"]["paksize"])
+                    logging.debug("Set to %i" % self.props["dims"]["paksize"])
                     self.on_change()
 
                 return True
             else:
-                logging.warn("project: paksize - Attempt to set Paksize failed - Value (%s) outside of acceptable range" % str(value))
+                logging.warn("Attempt to set Paksize failed - Value (%s) outside of acceptable range" % str(value))
                 return False
         else:
             return self.props["dims"]["paksize"]
@@ -710,19 +724,19 @@ class Project(object):
             if value in [True, 1]:
                 if not validate:
                     self.props["dims"]["seasons"][season] = 1
-                    logging.debug("project: seasons - %s set to %i" % (season, self.props["dims"]["seasons"][season]))
+                    logging.debug("%s set to %i" % (season, self.props["dims"]["seasons"][season]))
                     self.on_change()
 
                 return True
             elif value in [False, 0]:
                 if not validate:
                     self.props["dims"]["seasons"][season] = 0
-                    logging.debug("project: seasons - %s set to %i" % (season, self.props["dims"]["seasons"][season]))
+                    logging.debug("%s set to %i" % (season, self.props["dims"]["seasons"][season]))
                     self.on_change()
 
                 return True
             else:
-                logging.warn("project: seasons - Attempt to set %s failed - Value (%s) outside of acceptable range" % (str(value), season))
+                logging.warn("Attempt to set %s failed - Value (%s) outside of acceptable range" % (str(value), season))
                 return False
         else:
             return self.props["dims"]["seasons"][season]
@@ -733,19 +747,19 @@ class Project(object):
             if value in [True, 1]:
                 if not validate:
                     self.props["dims"]["frontimage"] = 1
-                    logging.debug("project: frontimage - set to %i" % self.props["dims"]["frontimage"])
+                    logging.debug("Set to %i" % self.props["dims"]["frontimage"])
                     self.on_change()
 
                 return True
             elif value in [False, 0]:
                 if not validate:
                     self.props["dims"]["frontimage"] = 0
-                    logging.debug("project: frontimage - set to %i" % self.props["dims"]["frontimage"])
+                    logging.debug("Set to %i" % self.props["dims"]["frontimage"])
                     self.on_change()
 
                 return True
             else:
-                logging.warn("project: frontimage - Attempt to set frontimage failed - Value (%s) outside of acceptable range" % str(value))
+                logging.warn("Attempt to set frontimage failed - Value (%s) outside of acceptable range" % str(value))
                 return False
         else:
             return self.props["dims"]["frontimage"]
@@ -756,12 +770,12 @@ class Project(object):
             if value == 1:
                 if not validate:
                     self.props["dims"]["frames"] = int(value)
-                    logging.debug("project: frames - set to %i" % self.props["dims"]["frames"])
+                    logging.debug("Set to %i" % self.props["dims"]["frames"])
                     self.on_change()
 
                 return True
             else:
-                logging.warn("project: frames - attempt to set frames failed - value (%s) outside of acceptable range" % str(value))
+                logging.warn("Attempt to set frames failed - value (%s) outside of acceptable range" % str(value))
                 return False
         else:
             return self.props["dims"]["frames"]
@@ -772,12 +786,12 @@ class Project(object):
             if value in config.choicelist_views:
                 if not validate:
                     self.props["dims"]["directions"] = int(value)
-                    logging.debug("project: directions - set to %i" % self.props["dims"]["directions"])
+                    logging.debug("Set to %i" % self.props["dims"]["directions"])
                     self.on_change()
 
                 return True
             else:
-                logging.warn("project: directions - attempt to set directions failed - value (%s) outside of acceptable range" % str(value))
+                logging.warn("Attempt to set directions failed - value (%s) outside of acceptable range" % str(value))
                 return False
         else:
             return self.props["dims"]["directions"]
@@ -791,12 +805,12 @@ class Project(object):
             if type(value) in [type(""), type("")]:
                 if not validate:
                     self.props["files"]["datfile_location"] = str(value)
-                    logging.debug("project: datfile_location - set to %s" % self.props["files"]["datfile_location"])
+                    logging.debug("Set to %s" % self.props["files"]["datfile_location"])
                     self.on_change()
 
                 return True
             else:
-                logging.warn("project: datfile_location - attempt to set datfile_location failed - type of value (%s) outside of acceptable range" % str(value))
+                logging.warn("Attempt to set datfile_location failed - type of value (%s) outside of acceptable range" % str(value))
                 return False
         else:
             return self.props["files"]["datfile_location"]
@@ -807,19 +821,19 @@ class Project(object):
             if value in [True, 1]:
                 if not validate:
                     self.props["files"]["datfile_write"] = True
-                    logging.debug("project: datfile_write - set to %s" % self.props["files"]["datfile_write"])
+                    logging.debug("Set to %s" % self.props["files"]["datfile_write"])
                     self.on_change()
 
                 return True
             elif value in [False, 0]:
                 if not validate:
                     self.props["files"]["datfile_write"] = False
-                    logging.debug("project: datfile_write - set to %s" % self.props["files"]["datfile_write"])
+                    logging.debug("Set to %s" % self.props["files"]["datfile_write"])
                     self.on_change()
 
                 return True
             else:
-                logging.warn("project: datfile_write - Attempt to set datfile_write failed - Value (%s) outside of acceptable range" % str(value))
+                logging.warn("Attempt to set datfile_write failed - Value (%s) outside of acceptable range" % str(value))
                 return False
         else:
             return self.props["files"]["datfile_write"]
@@ -830,12 +844,12 @@ class Project(object):
             if type(value) in [type(""), type("")]:
                 if not validate:
                     self.props["files"]["pngfile_location"] = str(value)
-                    logging.debug("project: pngfile_location - set to %s" % self.props["files"]["pngfile_location"])
+                    logging.debug("Set to %s" % self.props["files"]["pngfile_location"])
                     self.on_change()
 
                 return True
             else:
-                logging.warn("project: pngfile_location - Attempt to set pngfile_location failed - type of value (%s) outside of acceptable range" % str(value))
+                logging.warn("Attempt to set pngfile_location failed - type of value (%s) outside of acceptable range" % str(value))
                 return False
         else:
             return self.props["files"]["pngfile_location"]
@@ -846,12 +860,12 @@ class Project(object):
             if type(value) in [type(""), type("")]:
                 if not validate:
                     self.props["files"]["pakfile_location"] = str(value)
-                    logging.debug("project: pakfile_location - set to %s" % self.props["files"]["pakfile_location"])
+                    logging.debug("Set to %s" % self.props["files"]["pakfile_location"])
                     self.on_change()
 
                 return True
             else:
-                logging.warn("project: pakfile_location - Attempt to set pakfile_location failed - type of value (%s) outside of acceptable range" % str(value))
+                logging.warn("Attempt to set pakfile_location failed - type of value (%s) outside of acceptable range" % str(value))
                 return False
         else:
             return self.props["files"]["pakfile_location"]
@@ -866,12 +880,12 @@ class Project(object):
         if value is not None:
             if value in [True, 1]:
                 self.internals["files"]["saved"] = True
-                logging.debug("project: saved - set to %s" % self.internals["files"]["saved"])
+                logging.debug("Set to %s" % self.internals["files"]["saved"])
                 self.on_change()
                 return True
             elif value in [False, 0]:
                 self.internals["files"]["saved"] = False
-                logging.debug("project: saved - set to %s" % self.internals["files"]["saved"])
+                logging.debug("Set to %s" % self.internals["files"]["saved"])
                 self.on_change()
                 return True
             else:
@@ -885,11 +899,11 @@ class Project(object):
         if value is not None:
             if type(value) in [type(""), type("")]:
                 self.internals["files"]["save_location"] = str(value)
-                logging.debug("project: save_location - set to %s" % self.internals["files"]["save_location"])
+                logging.debug("Set to %s" % self.internals["files"]["save_location"])
                 self.on_change()
                 return True
             else:
-                logging.warn("project: save_location - Attempt to set project save_location status failed - type of value (%s) outside of acceptable range" % str(value))
+                logging.warn("Attempt to set project save_location status failed - type of value (%s) outside of acceptable range" % str(value))
                 return False
         else:
             return self.internals["files"]["save_location"]

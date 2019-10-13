@@ -11,7 +11,7 @@ class DialogAbout(wx.Dialog):
     """Dialog which displays information about the program"""
     def __init__(self, parent, app, version_number):
         """Intialise the dialog"""
-        logging.info("tcui.dialogAbout: __init__")
+        logging.info("Creating about dialog")
 
         self.app = app
         self.version_number = version_number
@@ -64,7 +64,7 @@ class DialogAbout(wx.Dialog):
 
     def translate(self):
         """Update the text of all controls to reflect a new translation"""
-        logging.info("tcui.dialogAbout: translate")
+        logging.info("Translate UI")
 
         self.SetLabel(gt("About TileCutter"))
         self.title_text.SetLabel(gt("TileCutter"))
@@ -83,5 +83,5 @@ class DialogAbout(wx.Dialog):
 
     def OnClose(self, e):
         """On click of the close button"""
-        logging.info("tcui.dialogAbout: OnClose")
+        logging.info("Closing dialog")
         self.EndModal(wx.ID_OK)

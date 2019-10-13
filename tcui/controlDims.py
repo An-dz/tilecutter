@@ -11,7 +11,7 @@ config = config.Config()
 class ControlDims(wx.Panel):
     """Box containing image dimensions controls (x,y,z)"""
     def __init__(self, parent, app):
-        logging.info("tcui.controlDims: __init__")
+        logging.info("Create dimension controls")
 
         wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
         self.app = app
@@ -71,7 +71,7 @@ class ControlDims(wx.Panel):
 
     def translate(self):
         """Update the text of all controls to reflect a new translation"""
-        logging.info("tcui.controlDims: translate")
+        logging.info("Translate UI")
 
         self.label.SetLabel(gt("Dimensions:"))
         self.dims_p_label.SetLabel(gt("Paksize"))
@@ -127,7 +127,7 @@ class ControlDims(wx.Panel):
 
     def update(self):
         """Set the values of the controls in this group to the values in the project"""
-        logging.info("tcui.controlDims: update")
+        logging.info("Update controls")
         self.dims_p_select.SetValue(str(self.app.activeproject.paksize()))
         self.dims_z_select.SetSelection(config.choicelist_dims_z.index( self.app.activeproject.z()))
         self.dims_x_select.SetSelection(config.choicelist_dims.index(   self.app.activeproject.x()))
@@ -135,25 +135,25 @@ class ControlDims(wx.Panel):
 
     def OnPaksizeSelect(self, e):
         """Change value of the paksize"""
-        logging.info("tcui.controlDims: OnPaksizeSelect")
+        logging.info("Changed Paksize")
         if self.app.activeproject.paksize() != int(self.dims_p_select.GetValue()):
             self.app.activeproject.paksize(self.dims_p_select.GetValue())
             self.app.frame.display.update()
 
     def OnZdimsSelect(self, e):
         """Change value of the Z dims"""
-        logging.info("tcui.controlDims: OnZdimsSelect")
+        logging.info("Changed Z direction")
         self.app.activeproject.z(config.choicelist_dims_z[self.choicelist_dims_z.index(self.dims_z_select.GetValue())])
         self.app.frame.display.update()
 
     def OnXdimsSelect(self, e):
         """Change value of the X dims"""
-        logging.info("tcui.controlDims: OnXdimsSelect")
+        logging.info("Changed X direction")
         self.app.activeproject.x(config.choicelist_dims[self.choicelist_dims.index(self.dims_x_select.GetValue())])
         self.app.frame.display.update()
 
     def OnYdimsSelect(self, e):
         """Change value of the Y dims"""
-        logging.info("tcui.controlDims: OnYdimsSelect")
+        logging.info("Changed Y direction")
         self.app.activeproject.y(config.choicelist_dims[self.choicelist_dims.index(self.dims_y_select.GetValue())])
         self.app.frame.display.update()

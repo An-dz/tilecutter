@@ -84,13 +84,13 @@ class ProjectImage(object):
         """Set or return the path of this image as entered"""
         if path is not None:
             self.value_path = path
-            logging.info("value_path set to: '%s'" % self.value_path)
+            logging.debug("value_path set to: '%s'" % self.value_path)
             abspath = paths.join_paths(self.parent.parent.parent.savefile(), self.value_path)
 
             if (paths.is_input_file(abspath) and os.path.exists(abspath)) or path == "":
                 self.value_valid_path = path
                 self.reload_image()
-                logging.info("Valid image path set to '%s', new cached image will be loaded" % str(self.value_valid_path))
+                logging.debug("Valid image path set to '%s', new cached image will be loaded" % str(self.value_valid_path))
                 self.on_change()
 
         else:
@@ -292,22 +292,22 @@ class Project(object):
         if direction is not None and direction != self.active.direction:
             self.active.direction = direction
             changed = True
-            logging.info("Active Image direction changed to: %s" % str(self.active.direction))
+            logging.debug("Active Image direction changed to: %s" % str(self.active.direction))
 
         if season is not None and season != self.active.season:
             self.active.season = season
             changed = True
-            logging.info("Active Image season changed to: %s" % str(self.active.season))
+            logging.debug("Active Image season changed to: %s" % str(self.active.season))
 
         if frame is not None and frame != self.active.frame:
             self.active.frame = frame
             changed = True
-            logging.info("Active Image frame changed to: %s" % str(self.active.frame))
+            logging.debug("Active Image frame changed to: %s" % str(self.active.frame))
 
         if layer is not None and layer != self.active.layer:
             self.active.layer = layer
             changed = True
-            logging.info("Active Image layer changed to: %s" % str(self.active.layer))
+            logging.debug("Active Image layer changed to: %s" % str(self.active.layer))
 
         if changed is True:
             self.active.update_image()

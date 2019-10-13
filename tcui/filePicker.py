@@ -12,12 +12,12 @@ config = config.Config()
 class FilePicker(object):
     """Methods for text boxes displaying paths"""
     def __init__(self, parent):
-        logging.info("tcui.filePicker: __init__")
+        logging.info("Create file picker")
         self.parent = parent
 
     def file_picker_dialog(self, path1, path2=None, dialog_text="", dialog_files_allowed="", dialog_flags=None):
         """File picker dialog with additional methods"""
-        logging.info("tcui.filePicker: file_picker_dialog")
+        logging.info("Show dialog")
 
         if path2 is None:
             path2 = ""
@@ -56,7 +56,7 @@ class FilePicker(object):
         pickerdialog = wx.FileDialog(self.parent, dialog_text, a, b, dialog_files_allowed, dialog_flags)
 
         if pickerdialog.ShowModal() == wx.ID_OK:
-            logging.debug("tcui.filePicker: file_picker_dialog - File picker dialog, ID_OK, Directory is: %s, Filename is: %s" % (pickerdialog.GetDirectory(), pickerdialog.GetFilename()))
+            logging.debug("File picker dialog, ID_OK, Directory is: %s, Filename is: %s" % (pickerdialog.GetDirectory(), pickerdialog.GetFilename()))
 
             # This needs to calculate a relative path between the location of the output png and the location of the output dat
             drivesplit = os.path.splitdrive(pickerdialog.GetDirectory())
@@ -98,8 +98,8 @@ class FilePicker(object):
 
     def highlightText(self, box, p1, p2=None):
         """Update the highlighting in a text entry box"""
-        logging.info("tcui.filePicker: highlightText")
-        logging.debug("highlightText, p1: %s, p2: %s" % (p1, p2))
+        logging.info("Highlight text")
+        logging.debug("p1: %s, p2: %s" % (p1, p2))
 
         # Path value, optionally relative to a second path
         a = self.split_path(p1, p2)
@@ -129,7 +129,7 @@ class FilePicker(object):
         """Split a path into an array, index[0] being the first path section, index[len-1] being the last
         Optionally takes a second path which is joined with the first for existence checks, to allow for
         checking existence of relative paths"""
-        logging.info("tcui.filePicker: split_path")
+        logging.info("Split path")
 
         if os.path.split(p1)[1] == "":
             # Check to make sure there isn't a trailing slash
@@ -143,7 +143,7 @@ class FilePicker(object):
 
         while os.path.split(p1)[1] != "":
             n = os.path.split(p1)
-            # Add at front, text,   offset,             length,     exists or not,      File or Directory?
+            # Add at front, text, offset, length, exists or not, File or Directory?
             logging.debug("path1: %s, path2: %s" % (p1, p2))
             logging.debug("exists? %s, %s" % (self.join_paths(p2, p1), os.path.exists(self.join_paths(p2, p1))))
             a.insert(0, [n[1], len(p1) - len(n[1]), len(n[1]), os.path.exists(self.join_paths(p2, p1))])
@@ -153,7 +153,7 @@ class FilePicker(object):
 
     def join_paths(self, p1, p2):
         """Join p2 to p1, accounting for end cases (is directory, is file etc.)"""
-        logging.info("tcui.filePicker: join_paths")
+        logging.info("Join paths")
 
         if p1 is not None:
             # Need to check the end component
@@ -170,9 +170,8 @@ class FilePicker(object):
         return os.path.join(p1, p2)
 
     def existing_path(self, p):
-        """Take a path and return the largest section of this path that exists
-        on the filesystem"""
-        logging.info("tcui.filePicker: existing_path")
+        """Take a path and return the largest section of this path that exists on the filesystem"""
+        logging.info("Get existing path")
 
         if os.path.split(p)[1] == "":
             # Check to make sure there isn't a trailing slash
@@ -190,7 +189,7 @@ class FilePicker(object):
 
     def compare_paths(self, p1, p2):
         """Compare two absolute paths, returning either a relative path from p1 to p2, or p1 if no relative path exists"""
-        logging.info("tcui.filePicker: compare_paths")
+        logging.info("Check relative or absolute path")
 
         # Check that p2 is not an empty string, or None, and that drive letters match
         if p2 is None or p2 == "" or os.path.splitdrive(p1)[0] != os.path.splitdrive(p2)[0]:

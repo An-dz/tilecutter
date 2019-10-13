@@ -16,7 +16,7 @@ class ViewMain(wx.Frame):
     """Main frame window inside which all else is put"""
 
     def __init__(self, parent, app, _id, title):
-        logging.info("tcui.viewMain: __init__")
+        logging.info("Creating main frame")
         wx.Frame.__init__(self, parent, wx.ID_ANY, title, (-1, -1), (-1, -1), style=wx.DEFAULT_FRAME_STYLE)
         self.app = app
 
@@ -139,32 +139,32 @@ class ViewMain(wx.Frame):
 
     def get_active_image_path(self, val=None):
         """Return activeproject's active image path"""
-        logging.info("tcui.viewMain: get_active_image_path")
+        logging.info("Get image path")
         return self.app.activeproject.active_image_path(val)
 
     def get_active_savefile_path(self, val=None):
         """Return activeproject's save path"""
-        logging.info("tcui.viewMain: get_active_savefile_path")
+        logging.info("Get save path")
         return self.app.activeproject.save_location(val)
 
     def get_active_datfile_path(self, val=None):
         """Return activeproject's datfile path"""
-        logging.info("tcui.viewMain: get_active_datfile_path")
+        logging.info("Get dat path")
         return self.app.activeproject.datfile_location(val)
 
     def get_active_pngfile_path(self, val=None):
         """Return activeproject's pngfile path"""
-        logging.info("tcui.viewMain: get_active_pngfile_path")
+        logging.info("Get png path")
         return self.app.activeproject.pngfile_location(val)
 
     def get_active_pakfile_path(self, val=None):
         """Return activeproject's pakfile path"""
-        logging.info("tcui.viewMain: get_active_pakfile_path")
+        logging.info("Get pak path")
         return self.app.activeproject.pakfile_location(val)
 
     def translate(self):
         """Master translate function for the viewMain object"""
-        logging.info("tcui.viewMain: translate")
+        logging.info("Translate UI")
 
         self.Freeze()
         self.cut_button.SetLabel(gt("Cut image"))
@@ -198,18 +198,18 @@ class ViewMain(wx.Frame):
             prev_panel_size  = self.panel.GetSize().Get()
             prev_window_size = self.GetSize().Get()
 
-        logging.debug("tcui.viewMain: translate - previous panel size: %s, previous window size: %s" % (prev_panel_size, prev_window_size))
+        logging.debug("previous panel size: %s, previous window size: %s" % (prev_panel_size, prev_window_size))
 
         # Find minimum size of panel
         self.panel.Fit()
-        logging.debug("tcui.viewMain: translate - minimum panel size is: %s" % (str(self.panel.GetBestSize().Get())))
+        logging.debug("minimum panel size is: %s" % (str(self.panel.GetBestSize().Get())))
 
         # If horizontal or vertical size is smaller than it was before set the size to that value
         new_panel_size = (max(prev_panel_size[0], self.panel.GetBestSize().Get()[0]), max(prev_panel_size[1], self.panel.GetBestSize().Get()[1]))
         # New window size will be the new panel size plus the difference between the previous window size and panel size
         new_window_size = (prev_window_size[0] - prev_panel_size[0] + new_panel_size[0],
                            prev_window_size[1] - prev_panel_size[1] + new_panel_size[1])
-        logging.debug("tcui.viewMain: translate - new panel size is: %s, new window size is: %s" % (new_panel_size, new_window_size))
+        logging.debug("new panel size is: %s, new window size is: %s" % (new_panel_size, new_window_size))
 
         # Set minimum panel size to the minimum allowable height and 1.4* ratio width of that height (or the minimum width if this is larger)
         self.panel.SetMinSize(wx.Size(max(self.panel.GetBestSize().Get()[1] * 1.4, self.panel.GetBestSize().Get()[0]), self.panel.GetBestSize().Get()[1]))
@@ -225,17 +225,17 @@ class ViewMain(wx.Frame):
 
     def set_title(self):
         # Set title text of window
-        logging.info("tcui.viewMain: set_title")
+        logging.info("Set new title text")
         self.SetTitle(self.app.get_title_text() % _gt("TileCutter"))
 
     def set_status_text(self, message, field=0):
         """Set the status bar text field specified to the message specified"""
-        logging.info("tcui.viewMain: set_status_text - setting field: %s to string: %s" % (field, message))
+        logging.info("setting field: %s to string: %s" % (field, message))
         self.statusbar.SetStatusText(message, field)
 
     def update(self):
         """Update frame and all its children to reflect values in the active project"""
-        logging.info("tcui.viewMain: update")
+        logging.info("Update UI")
         self.Freeze()
         self.export_dat_toggle.SetValue(config.write_dat)
         self.control_seasons.update()
@@ -249,7 +249,7 @@ class ViewMain(wx.Frame):
 
     def OnToggleDatExport(self, e):
         """Toggle whether .dat file info should be exported, or just the cut image"""
-        logging.info("tcui.viewMain: OnToggleDatExport")
+        logging.info("Toggle dat exporting")
         if config.write_dat != self.export_dat_toggle.GetValue():
             config.write_dat = self.export_dat_toggle.GetValue()
-            logging.debug("tcui.viewMain: OnToggleDatExport - Set config.write_dat to %s" % config.write_dat)
+            logging.debug("Set config.write_dat to %s" % config.write_dat)
