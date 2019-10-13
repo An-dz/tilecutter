@@ -20,7 +20,7 @@ elif config.debug_level == 1:
 elif config.debug_level == 0:
     loglevel = logging.WARN
 
-logging.basicConfig(level=loglevel, filename=config.logfile, filemode="w")
+logging.basicConfig(level=loglevel, filename=config.logfile, filemode="w", format="%(levelname)s\t\t%(message)s")
 
 try:
     import wx
