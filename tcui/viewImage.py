@@ -6,7 +6,8 @@ import wx
 import config, tcui
 config = config.Config()
 
-class viewImage(wx.Panel):
+
+class ViewImage(wx.Panel):
     """Window onto which bitmaps may be drawn, background colour is set by bgcolor
     Also contains the image path entry box and associated controls"""
     bmp = []
@@ -23,12 +24,12 @@ class viewImage(wx.Panel):
         # Required for wx.AutoBufferedPaintDC to work
         self.scrolledwindow.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
 
-        self.control_imagepath = tcui.controlImageFile(self, app)
+        self.control_imagepath = tcui.ControlImageFile(self, app)
 
         # Add all items to panel's sizer
         self.sizer = wx.BoxSizer(wx.VERTICAL)
-        self.sizer.Add(self.control_imagepath, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND|wx.ALL, 4)
-        self.sizer.Add(self.scrolledwindow,    1, wx.EXPAND,                                   0)
+        self.sizer.Add(self.control_imagepath, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.EXPAND | wx.ALL, 4)
+        self.sizer.Add(self.scrolledwindow,    1, wx.EXPAND,                                       0)
 
         self.SetSizer(self.sizer)
 
@@ -49,8 +50,8 @@ class viewImage(wx.Panel):
 
         # Need to make intelligent buffer bitmap sizing work!
         self.buffer = wx.Bitmap(4000, 2500)
-        self.lastisopos = (-1,-1)
-        self.isopos     = (-1,-1)
+        self.lastisopos = (-1, -1)
+        self.isopos     = (-1, -1)
 
         self.lastpath = ""  # Stores the last path entered, to check for differences
         self.translate()    # Load the initial translation
@@ -89,8 +90,8 @@ class viewImage(wx.Panel):
     def refresh_if_valid(self):
         """Called when child in path entry box text changes
         Only updates the displayed image if a new valid file has been entered"""
-        ## logging.debug("valid: %s, path: %s" % (self.app.activeproject.active_image().valid_path(), self.app.activeproject.activeImage().path()))
-        ## if self.app.activeproject.activeImage().valid_path() == self.app.activeproject.activeImage().path():
+        ## logging.debug("valid: %s, path: %s" % (self.app.activeproject.active_image().valid_path(), self.app.activeproject.active_image().path()))
+        ## if self.app.activeproject.active_image().valid_path() == self.app.activeproject.active_image().path():
         ##     # If valid_path and path are same, then refresh screen
         ##     self.Refresh()
         # Always refresh the screen to show either blank/noimage graphic or the valid graphic
@@ -145,7 +146,7 @@ class viewImage(wx.Panel):
         # Height - will be either height of bitmap, or calculated height of mask (whichever is greater)
         # Width, same thing
         # -ve offset values for mask should count as positive for this calculation!
-        self.scrolledwindow.SetVirtualSize((max(bitmap.GetWidth(),mask_width_off), max(bitmap.GetHeight(),mask_height_off)))
+        self.scrolledwindow.SetVirtualSize((max(bitmap.GetWidth(), mask_width_off), max(bitmap.GetHeight(), mask_height_off)))
 
         ## if self.IsDoubleBuffered():
         ##     dc = pdc
@@ -153,7 +154,7 @@ class viewImage(wx.Panel):
         ##     #cdc = wx.ClientDC(self)
         ##     dc = wx.BufferedDC(pdc, self.buffer)
 
-        self.scrolledwindow.DoPrepareDC(dc)            
+        self.scrolledwindow.DoPrepareDC(dc)
 
         # Setup default brushes
         dc.SetBackground(wx.Brush(self.bgcolor))
@@ -185,7 +186,7 @@ class viewImage(wx.Panel):
         # Draw x-dimension lines, top bits first
         for xx in range(1, x + 1):
             # Find screen position for this tile
-            pos = self.tileToScreen((xx, 1, 1), (x, y, z), (mask_offset_x, mask_offset_y), p, bitmap.GetHeight() + bmp_offset_y)
+            pos = self.tile_to_screen((xx, 1, 1), (x, y, z), (mask_offset_x, mask_offset_y), p, bitmap.GetHeight() + bmp_offset_y)
 
             if xx == x:
                 # Draw vertical line all the way from the bottom of the tile to the top
@@ -197,11 +198,11 @@ class viewImage(wx.Panel):
             # Draw this tile's horizontal line section
             dc.DrawLine(    pos[0],         pos[1] - (p * z),      pos[0] + p2,     pos[1] - (p * z))
             # Draw this tile's diagonal line section (bottom-right for x, bottom-left for y
-            pos = self.tileToScreen((xx, y, 1), (x, y, z), (mask_offset_x, mask_offset_y), p, bitmap.GetHeight() + bmp_offset_y)
+            pos = self.tile_to_screen((xx, y, 1), (x, y, z), (mask_offset_x, mask_offset_y), p, bitmap.GetHeight() + bmp_offset_y)
             dc.DrawLine(    pos[0] + p - 1, pos[1] - p4,           pos[0] + p2 - 1, pos[1])
 
         for yy in range(1, y + 1):
-            pos = self.tileToScreen((1, yy, 1), (x, y, z), (mask_offset_x, mask_offset_y), p, bitmap.GetHeight() + bmp_offset_y)
+            pos = self.tile_to_screen((1, yy, 1), (x, y, z), (mask_offset_x, mask_offset_y), p, bitmap.GetHeight() + bmp_offset_y)
 
             if yy == y:
                 # -1's in the x values correct for line-drawing oddness here (line needs to be drawn at position 64, not 65 (1+psize)
@@ -211,19 +212,19 @@ class viewImage(wx.Panel):
 
             dc.DrawLine(    pos[0] + p - 1, pos[1] - (p * z),      pos[0] + p2 - 1, pos[1] - (p * z))
             # Then the bottom ones
-            pos = self.tileToScreen((x, yy, 1), (x, y, z), (mask_offset_x, mask_offset_y), p, bitmap.GetHeight() + bmp_offset_y)
+            pos = self.tile_to_screen((x, yy, 1), (x, y, z), (mask_offset_x, mask_offset_y), p, bitmap.GetHeight() + bmp_offset_y)
             dc.DrawLine(    pos[0],         pos[1] - p4,           pos[0] + p2,     pos[1])
 
         logging.info("tcui.viewImage: refresh_screen - Done")
 
     # Take tile coords and convert into screen coords
     # This function is replicated in tc, and references to it should be made there!
-    def tileToScreen(self, pos, dims, off, p, screen_height=None):
+    def tile_to_screen(self, pos, dims, off, p, screen_height=None):
         """Take tile coords and convert to screen coords
         by default converts into bottom-left screen coords,
         but with height attribute supplied converts to top-left
         returns the bottom-left position of the tile on the screen"""
-        logging.info("tcui.viewImage: tileToScreen")
+        logging.info("tcui.viewImage: tile_to_screen")
 
         offx, offy = off
 
@@ -235,7 +236,7 @@ class viewImage(wx.Panel):
         xx = ((ypos  - xpos) + (xdims -    1)) * (p / 2) + offx
         yy = ((xdims - xpos) + (ydims - ypos)) * (p / 4) + ((zpos - 1) * p) + offy
 
-        if screen_height != None:
+        if screen_height is not None:
             yy = screen_height - yy
 
         return (xx, yy)

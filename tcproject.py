@@ -8,12 +8,12 @@ from environment import getenvvar
 config = config.Config()
 paths = Paths()
 
+
 # project[view][season][frame][image][xdim][ydim][zdim]
 # view=NSEW, 0,1,2,3 - array - controlled by global enable
 # season=summer/winter, 0,1 - array - controlled by global bool enable
 # frame=0,++ - array - controlled by global number of frames variable
 # image=back/front, 0,1 - array - controlled by global bool enable
-
 class ProjectImage(object):
     """An individual image object, consisting of a cached image, path to that image and offset dimensions"""
 
@@ -32,40 +32,40 @@ class ProjectImage(object):
         self.value_path = ""
         # Last valid/real path entered
         self.value_valid_path = ""
-        self.reloadImage()
+        self.reload_image()
         self.offset = [0, 0]
         self.cutimageset = None
 
     def __getitem__(self, key):
         return self.cutimageset[key]
 
-    def cutImage(self, cutting_function, dims, p):
+    def cut_image(self, cutting_function, dims, p):
         """Generates an array of cut images based on this image
         using the cutting routine"""
-        self.reloadImage()
+        self.reload_image()
         self.cutimageset = cutting_function(self.bitmap(), dims, self.offset, p)
 
     def image(self):
         """Return a wxImage representation of the cached image"""
-        if self.value_image == None:
-            self.reloadImage()
+        if self.value_image is None:
+            self.reload_image()
 
         return self.value_image
 
     def bitmap(self):
         """Return a wxBitmap representation of the cached image"""
-        if self.value_bitmap == None:
-            self.reloadImage()
+        if self.value_bitmap is None:
+            self.reload_image()
 
         return self.value_bitmap
 
-    def delImage(self):
+    def del_image(self):
         """Delete stored images, to enable pickling"""
         self.value_image = None
         self.value_bitmap = None
         self.cutimageset = None
 
-    def reloadImage(self):
+    def reload_image(self):
         """Refresh the cached image"""
         if self.value_valid_path == "":
             self.value_image = wx.Image(1, 1)
@@ -82,15 +82,15 @@ class ProjectImage(object):
 
     def path(self, path=None):
         """Set or return the path of this image as entered"""
-        if path != None:
+        if path is not None:
             self.value_path = path
-            logging.info("value_path set to: \"%s\"" % self.value_path)
+            logging.info("value_path set to: '%s'" % self.value_path)
             abspath = paths.join_paths(self.parent.parent.parent.savefile(), self.value_path)
 
             if (paths.is_input_file(abspath) and os.path.exists(abspath)) or path == "":
                 self.value_valid_path = path
-                self.reloadImage()
-                logging.info("Valid image path set to \"%s\", new cached image will be loaded" % str(self.value_valid_path))
+                self.reload_image()
+                logging.info("Valid image path set to '%s', new cached image will be loaded" % str(self.value_valid_path))
                 self.on_change()
 
         else:
@@ -103,6 +103,7 @@ class ProjectImage(object):
     def on_change(self):
         # When something in the project has changed
         self.parent.on_change()
+
 
 class ProjectFrame(object):
     """Contains a single frame of the project, with a front and back image"""
@@ -123,6 +124,7 @@ class ProjectFrame(object):
     def on_change(self):
         # When something in the project has changed
         self.parent.on_change()
+
 
 class ProjectFrameset(object):
     """Contains a sequence of ProjectFrame objects for each animation frame of this direction/season combination"""
@@ -146,6 +148,7 @@ class ProjectFrameset(object):
         # When something in the project has changed
         self.parent.on_change()
 
+
 class Project(object):
     """Model containing all information about a project."""
 
@@ -158,7 +161,7 @@ class Project(object):
         # [0][0]->Summer, [0][1]->Winter
         self.images = []
 
-        for a in range(4):
+        for _a in range(4):
             b = []
             b.append(ProjectFrameset(self, 0))
             b.append(ProjectFrameset(self, 1))
@@ -179,10 +182,10 @@ class Project(object):
     def __getitem__(self, key):
         return self.images[key]
 
-    def temp_dat_properties(self, set=None):
+    def temp_dat_properties(self, value=None):
         """References a string containing arbitrary dat properties for the project"""
-        if set != None:
-            self.val_temp_dat = set
+        if value is not None:
+            self.val_temp_dat = value
             logging.debug("TEMP dat properties set to %s" % self.val_temp_dat)
             self.on_change()
             return 0
@@ -199,31 +202,31 @@ class Project(object):
 
         self.on_change()
 
-    def cutImages(self, cutting_function):
+    def cut_images(self, cutting_function):
         """Produce cut imagesets for all images in this project"""
         # Can make this work conditionally based on which images are enabled later
         for d in range(len(self.images)):
             for s in range(len(self.images[d])):
                 for f in range(len(self.images[d][s])):
                     for i in range(len(self.images[d][s][f])):
-                        self.images[d][s][f][i].cutImage(cutting_function, (self.x(), self.y(), self.z(), d), self.paksize())
+                        self.images[d][s][f][i].cut_image(cutting_function, (self.x(), self.y(), self.z(), d), self.paksize())
 
-    def delImages(self):
+    def del_images(self):
         """Delete all image data representations, ready for pickling"""
         for d in range(len(self.images)):
             for s in range(len(self.images[d])):
                 for f in range(len(self.images[d][s])):
                     for i in range(len(self.images[d][s][f])):
-                        self.images[d][s][f][i].delImage()
+                        self.images[d][s][f][i].del_image()
 
     def prep_serialise(self):
         """Prepare this object for serialisation"""
         # Remove images as we cannot pickle these and do not want to
-        self.delImages()
+        self.del_images()
         # Return parent reference so it can be added back by post_serialise
         parent = self.parent
         self.del_parent()
-        return [parent,]
+        return [parent]
 
     def post_serialise(self, params):
         """After serialisation re-add parameters removed by prep_serialise"""
@@ -246,7 +249,7 @@ class Project(object):
         if x == 0:
             self.active.image.offset[0] = 0
             changed = True
-        elif x != None:
+        elif x is not None:
             self.active.image.offset[0] += x
 
             if not config.negative_offset_allowed:
@@ -258,7 +261,7 @@ class Project(object):
         if y == 0:
             self.active.image.offset[1] = 0
             changed = True
-        elif y != None:
+        elif y is not None:
             self.active.image.offset[1] += y
 
             if not config.negative_offset_allowed:
@@ -267,7 +270,7 @@ class Project(object):
 
             changed = True
 
-        if changed == True:
+        if changed is True:
             logging.debug("Active Image offset changed to: %s" % str(self.active.image.offset))
             self.on_change()
 
@@ -280,175 +283,175 @@ class Project(object):
 
     def active_image_path(self, path=None):
         """Set or return the path of the active image"""
-        return self.activeImage().path(path)
+        return self.active_image().path(path)
 
-    def activeImage(self, direction=None, season=None, frame=None, layer=None):
+    def active_image(self, direction=None, season=None, frame=None, layer=None):
         """Set or return the currently active image"""
         # If parameters have been changed at all, update
         changed = False
-        if direction != None and direction != self.active.direction:
+        if direction is not None and direction != self.active.direction:
             self.active.direction = direction
             changed = True
             logging.info("Active Image direction changed to: %s" % str(self.active.direction))
 
-        if season != None and season != self.active.season:
+        if season is not None and season != self.active.season:
             self.active.season = season
             changed = True
             logging.info("Active Image season changed to: %s" % str(self.active.season))
 
-        if frame != None and frame != self.active.frame:
+        if frame is not None and frame != self.active.frame:
             self.active.frame = frame
             changed = True
             logging.info("Active Image frame changed to: %s" % str(self.active.frame))
 
-        if layer != None and layer != self.active.layer:
+        if layer is not None and layer != self.active.layer:
             self.active.layer = layer
             changed = True
             logging.info("Active Image layer changed to: %s" % str(self.active.layer))
 
-        if changed == True:
-            self.active.UpdateImage()
+        if changed is True:
+            self.active.update_image()
         else:
             return self.active.image
 
-    def x(self, set=None):
+    def x(self, value=None):
         """Set or return X dimension"""
-        if set != None:
-            if set in config.choicelist_dims:
-                self.dims.x = int(set)
+        if value is not None:
+            if value in config.choicelist_dims:
+                self.dims.x = int(value)
                 logging.info("X dimension set to %i" % self.dims.x)
                 self.on_change()
                 return 0
             else:
-                logging.warn("Attempt to set X dimension failed - Value (%s) outside of acceptable range" % str(set))
+                logging.warn("Attempt to set X dimension failed - Value (%s) outside of acceptable range" % str(value))
                 return 1
         else:
             return self.dims.x
 
-    def y(self, set=None):
+    def y(self, value=None):
         """Set or return Y dimension"""
-        if set != None:
-            if set in config.choicelist_dims:
-                self.dims.y = int(set)
+        if value is not None:
+            if value in config.choicelist_dims:
+                self.dims.y = int(value)
                 logging.info("Y dimension set to %i" % self.dims.y)
                 self.on_change()
                 return 0
             else:
-                logging.warn("Attempt to set Y dimension failed - Value (%s) outside of acceptable range" % str(set))
+                logging.warn("Attempt to set Y dimension failed - Value (%s) outside of acceptable range" % str(value))
                 return 1
         else:
             return self.dims.y
 
-    def z(self, set=None):
+    def z(self, value=None):
         """Set or return Z dimension"""
-        if set != None:
-            if set in config.choicelist_dims_z:
-                self.dims.z = int(set)
+        if value is not None:
+            if value in config.choicelist_dims_z:
+                self.dims.z = int(value)
                 logging.info("Z dimension set to %i" % self.dims.z)
                 self.on_change()
                 return 0
             else:
-                logging.warn("Attempt to set Z dimension failed - Value (%s) outside of acceptable range" % str(set))
+                logging.warn("Attempt to set Z dimension failed - Value (%s) outside of acceptable range" % str(value))
                 return 1
         else:
             return self.dims.z
 
-    def paksize(self, set=None):
+    def paksize(self, value=None):
         """Set or return paksize"""
-        if set != None:
-            if int(set) in range(16, 32766):
-                self.dims.paksize = int(set)
+        if value is not None:
+            if int(value) in range(16, 32766):
+                self.dims.paksize = int(value)
                 logging.info("Paksize set to %i" % self.dims.paksize)
                 self.on_change()
                 return 0
             else:
-                logging.warn("Attempt to set Paksize failed - Value (%s) outside of acceptable range" % str(set))
+                logging.warn("Attempt to set Paksize failed - Value (%s) outside of acceptable range" % str(value))
                 return 1
         else:
             return self.dims.paksize
 
-    def winter(self, set=None):
+    def winter(self, value=None):
         """Set or return if Winter image is enabled"""
-        if set != None:
-            if set == 1 or set == True:
+        if value is not None:
+            if value == 1 or value is True:
                 self.dims.winter = 1
                 logging.info("WinterViewEnable set to %i" % self.dims.winter)
                 self.on_change()
                 return 0
-            elif set == 0 or set == False:
+            elif value == 0 or value is False:
                 self.dims.winter = 0
                 logging.info("WinterViewEnable set to %i" % self.dims.winter)
                 self.on_change()
                 return 0
             else:
-                logging.warn("Attempt to set WinterViewEnable failed - Value (%s) outside of acceptable range" % str(set))
+                logging.warn("Attempt to set WinterViewEnable failed - Value (%s) outside of acceptable range" % str(value))
                 return 1
         else:
             return self.dims.winter
 
-    def frontimage(self, set=None):
+    def frontimage(self, value=None):
         """Set or return if Front image is enabled"""
-        if set != None:
-            if set == 1 or set == True:
+        if value is not None:
+            if value == 1 or value is True:
                 self.dims.frontimage = 1
                 logging.info("FrontImageEnable set to %i" % self.dims.frontimage)
                 self.on_change()
                 return 0
-            elif set == 0 or set == False:
+            elif value == 0 or value is False:
                 self.dims.frontimage = 0
                 logging.info("FrontImageEnable set to %i" % self.dims.frontimage)
                 self.on_change()
                 return 0
             else:
-                logging.warn("Attempt to set FrontImageEnable failed - Value (%s) outside of acceptable range" % str(set))
+                logging.warn("Attempt to set FrontImageEnable failed - Value (%s) outside of acceptable range" % str(value))
                 return 1
         else:
             return self.dims.frontimage
 
-    def views(self, set=None):
+    def views(self, value=None):
         """Set or return number of views (1, 2 or 4)"""
-        if set != None:
-            if set in config.choicelist_views:
-                self.dims.views = int(set)
+        if value is not None:
+            if value in config.choicelist_views:
+                self.dims.views = int(value)
                 logging.info("Views set to %i" % self.dims.views)
                 self.on_change()
                 return 0
             else:
-                logging.warn("Attempt to set Views failed - Value (%s) outside of acceptable range" % str(set))
+                logging.warn("Attempt to set Views failed - Value (%s) outside of acceptable range" % str(value))
                 return 1
         return self.dims.views
 
-    def datfile(self, set=None):
+    def datfile(self, value=None):
         """Set or return (relative) path to dat file"""
-        if set != None:
-            self.files.datfile_location = str(set)
+        if value is not None:
+            self.files.datfile_location = str(value)
             self.on_change()
         else:
             return self.files.datfile_location
 
-    def writedat(self, set=None):
+    def writedat(self, value=None):
         """Set or return if dat file should be written"""
-        if set in [True, 1]:
+        if value in [True, 1]:
             self.files.writedat = True
             self.on_change()
-        elif set in [False, 0]:
+        elif value in [False, 0]:
             self.files.writedat = False
             self.on_change()
         else:
             return self.files.writedat
 
-    def pngfile(self, set=None):
+    def pngfile(self, value=None):
         """Set or return (relative) path to png file"""
-        if set != None:
-            self.files.pngfile_location = str(set)
+        if value is not None:
+            self.files.pngfile_location = str(value)
             self.on_change()
         else:
             return self.files.pngfile_location
 
-    def pakfile(self, set=None):
+    def pakfile(self, value=None):
         """Set or return (relative) path to pak file"""
-        if set != None:
-            self.files.pakfile_location = str(set)
+        if value is not None:
+            self.files.pakfile_location = str(value)
             self.on_change()
         else:
             return self.files.pakfile_location
@@ -457,24 +460,24 @@ class Project(object):
         """Return True if project has a save location, False otherwise"""
         return self.files.saved
 
-    def saved(self, set=None):
+    def saved(self, value=None):
         """Set or return whether a save path has been set for this project"""
-        if set != None:
-            if set in [True, 1]:
+        if value is not None:
+            if value in [True, 1]:
                 self.files.saved = True
                 self.on_change()
-            elif set in [False, 0]:
+            elif value in [False, 0]:
                 self.files.saved = False
                 self.on_change()
             else:
-                logging.warn("Attempt to set project saved status failed - Value (%s) outside of acceptable range" % str(set))
+                logging.warn("Attempt to set project saved status failed - Value (%s) outside of acceptable range" % str(value))
         else:
             return self.files.saved
 
-    def savefile(self, set=None):
+    def savefile(self, value=None):
         """Set or return (absolute) path to project save file location"""
-        if set != None:
-            self.files.save_location = str(set)
+        if value is not None:
+            self.files.save_location = str(value)
             self.on_change()
         else:
             return self.files.save_location
@@ -484,6 +487,7 @@ class Project(object):
     # Should allow for array like behaviour to access images,
     # e.g. blah = Project(), blah[0][0][0][0] = south, summer, frame 1, backimage
     # and: blah[0][0][0][0].setPath("") will set that path
+
 
 class ProjectFiles(object):
     """Information relating to file paths"""
@@ -528,7 +532,7 @@ class ProjectFiles(object):
         except UnicodeDecodeError:
             logging.error("Unicode Decode Error")
             logging.error("save_location: %s, datfile_location: %s, pngfile_location: %s, pakfile_location: %s" % (
-                         self.save_location, self.datfile_location, self.pngfile_location, self.pakfile_location))
+                self.save_location, self.datfile_location, self.pngfile_location, self.pakfile_location))
 
     def test_path(self, path):
         """Test a file for existence, if it exists add a number and try again"""
@@ -539,7 +543,8 @@ class ProjectFiles(object):
                     return os.path.join(path, "new_project%s.tcp" % i)
                 i += 1
         else:
-            return os.path.join(path, "new_project.tcp") 
+            return os.path.join(path, "new_project.tcp")
+
 
 class ActiveImage(object):
     """Details of the active image"""
@@ -550,10 +555,11 @@ class ActiveImage(object):
         self.season = 0         # 0 Summer/All, 1 Winter
         self.frame = 0          # Index
         self.layer = 0          # 0 BackImage, 1 FrontImage
-        self.UpdateImage()      # And set the image this refers to
+        self.update_image()      # And set the image this refers to
 
-    def UpdateImage(self):
+    def update_image(self):
         self.image = self.parent.images[self.direction][self.season][self.frame][self.layer]
+
 
 class ProjectDims(object):
     """Dimensions of the project, X, Y, Z, paksize, also whether winter/frontimage are enabled

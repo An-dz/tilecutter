@@ -11,9 +11,11 @@ _gt = gt.loop
 config = config.Config()
 config.save()
 
-class viewMain(wx.Frame):
+
+class ViewMain(wx.Frame):
     """Main frame window inside which all else is put"""
-    def __init__(self, parent, app, id, title):
+
+    def __init__(self, parent, app, _id, title):
         logging.info("tcui.viewMain: __init__")
         wx.Frame.__init__(self, parent, wx.ID_ANY, title, (-1, -1), (-1, -1), style=wx.DEFAULT_FRAME_STYLE)
         self.app = app
@@ -27,7 +29,7 @@ class viewMain(wx.Frame):
         self.SetIcons(self.icons)
 
         # Create the menus
-        self.menubar = tcui.menuObject(self, app)
+        self.menubar = tcui.MenuObject(self, app)
         self.SetMenuBar(self.menubar.menu)
 
         # Create the status bar
@@ -50,46 +52,46 @@ class viewMain(wx.Frame):
 
         # LEFT SIDE CONTROLS
         # Season controls
-        self.control_seasons = tcui.controlSeason(self.panel, app)
-        self.s_panel_left.Add(self.control_seasons, 0, wx.EXPAND|wx.LEFT|wx.RIGHT, 3)
+        self.control_seasons = tcui.ControlSeason(self.panel, app)
+        self.s_panel_left.Add(self.control_seasons, 0, wx.EXPAND | wx.LEFT | wx.RIGHT, 3)
         self.s_panel_left.Add((0, 2))
-        self.s_panel_left.Add(wx.StaticLine(self.panel, style=wx.LI_HORIZONTAL), 0, wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND)
+        self.s_panel_left.Add(wx.StaticLine(self.panel, style=wx.LI_HORIZONTAL), 0, wx.ALIGN_CENTER_HORIZONTAL | wx.EXPAND)
         self.s_panel_left.Add((0, 2))
 
         # Image controls
-        self.control_images = tcui.controlImage(self.panel, app)
-        self.s_panel_left.Add(self.control_images, 0, wx.EXPAND|wx.LEFT|wx.RIGHT, 3)
+        self.control_images = tcui.ControlImage(self.panel, app)
+        self.s_panel_left.Add(self.control_images, 0, wx.EXPAND | wx.LEFT | wx.RIGHT, 3)
         self.s_panel_left.Add((0, 2))
-        self.s_panel_left.Add(wx.StaticLine(self.panel, style=wx.LI_HORIZONTAL), 0, wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND)
+        self.s_panel_left.Add(wx.StaticLine(self.panel, style=wx.LI_HORIZONTAL), 0, wx.ALIGN_CENTER_HORIZONTAL | wx.EXPAND)
         self.s_panel_left.Add((0, 2))
 
         # Facing controls
-        self.control_facing = tcui.controlFacing(self.panel, app)
-        self.s_panel_left.Add(self.control_facing, 0, wx.EXPAND|wx.LEFT|wx.RIGHT, 3)
+        self.control_facing = tcui.ControlFacing(self.panel, app)
+        self.s_panel_left.Add(self.control_facing, 0, wx.EXPAND | wx.LEFT | wx.RIGHT, 3)
         self.s_panel_left.Add((0, 2))
-        self.s_panel_left.Add(wx.StaticLine(self.panel, style=wx.LI_HORIZONTAL), 0, wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND)
+        self.s_panel_left.Add(wx.StaticLine(self.panel, style=wx.LI_HORIZONTAL), 0, wx.ALIGN_CENTER_HORIZONTAL | wx.EXPAND)
         self.s_panel_left.Add((0, 2))
 
         # Dimension controls
-        self.control_dims = tcui.controlDims(self.panel, app)
-        self.s_panel_left.Add(self.control_dims, 0, wx.EXPAND|wx.LEFT|wx.RIGHT, 3)
+        self.control_dims = tcui.ControlDims(self.panel, app)
+        self.s_panel_left.Add(self.control_dims, 0, wx.EXPAND | wx.LEFT | wx.RIGHT, 3)
         self.s_panel_left.Add((0, 2))
-        self.s_panel_left.Add(wx.StaticLine(self.panel, style=wx.LI_HORIZONTAL), 0, wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND)
+        self.s_panel_left.Add(wx.StaticLine(self.panel, style=wx.LI_HORIZONTAL), 0, wx.ALIGN_CENTER_HORIZONTAL | wx.EXPAND)
         self.s_panel_left.Add((0, 2))
 
         # Offset/mask controls
-        self.control_offset = tcui.controlOffset(self.panel, app)
-        self.s_panel_left.Add(self.control_offset, 0, wx.EXPAND|wx.LEFT|wx.RIGHT, 3)
+        self.control_offset = tcui.ControlOffset(self.panel, app)
+        self.s_panel_left.Add(self.control_offset, 0, wx.EXPAND | wx.LEFT | wx.RIGHT, 3)
         self.s_panel_left.Add((0, 2))
-        self.s_panel_left.Add(wx.StaticLine(self.panel, style=wx.LI_HORIZONTAL), 0, wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND)
+        self.s_panel_left.Add(wx.StaticLine(self.panel, style=wx.LI_HORIZONTAL), 0, wx.ALIGN_CENTER_HORIZONTAL | wx.EXPAND)
         self.s_panel_left.Add((0, 2))
 
         # Create Image display window and image path entry control, which adds itself to the sizer
-        self.display = tcui.viewImage(self, app, config.transparent)
+        self.display = tcui.ViewImage(self, app, config.transparent)
         self.s_panel_right.Add(self.display, 1, wx.EXPAND)
 
         # Save, Dat, Image and Pak output paths
-        self.control_paths = tcui.controlFiles(self.panel, app)
+        self.control_paths = tcui.ControlFiles(self.panel, app)
 
         # CUT/EXPORT BUTTONS
         # Export .dat checkbox
@@ -108,14 +110,14 @@ class viewMain(wx.Frame):
         self.s_panel_rb_inner       = wx.BoxSizer(wx.VERTICAL)
         self.s_panel_export_buttons = wx.BoxSizer(wx.HORIZONTAL)
         # Bar containing cut, export buttons etc.
-        self.s_panel_export_buttons.Add(self.export_dat_toggle, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 4)
-        self.s_panel_export_buttons.Add(self.cut_button,        0, wx.ALL,                          4)
-        self.s_panel_export_buttons.Add(self.export_button,     0, wx.ALL,                          4)
+        self.s_panel_export_buttons.Add(self.export_dat_toggle, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 4)
+        self.s_panel_export_buttons.Add(self.cut_button,        0, wx.ALL,                            4)
+        self.s_panel_export_buttons.Add(self.export_button,     0, wx.ALL,                            4)
 
         # Add export buttons, horizontal line and path bars to vertical sizer
-        self.s_panel_rb_inner.Add(self.s_panel_export_buttons,                                                0, wx.ALIGN_RIGHT,    0)
-        self.s_panel_rb_inner.Add(wx.StaticLine(self.panel, wx.ID_ANY, (-1, -1), (-1, -1), wx.LI_HORIZONTAL), 0, wx.EXPAND|wx.LEFT, 2)
-        self.s_panel_rb_inner.Add(self.control_paths,                                                         0, wx.EXPAND|wx.ALL,  4)
+        self.s_panel_rb_inner.Add(self.s_panel_export_buttons,                                                0, wx.ALIGN_RIGHT,      0)
+        self.s_panel_rb_inner.Add(wx.StaticLine(self.panel, wx.ID_ANY, (-1, -1), (-1, -1), wx.LI_HORIZONTAL), 0, wx.EXPAND | wx.LEFT, 2)
+        self.s_panel_rb_inner.Add(self.control_paths,                                                         0, wx.EXPAND | wx.ALL,  4)
 
         # Add that vertical sizer to a horizontal one, with a vertical line on the left
         self.s_panel_rb.Add(wx.StaticLine(self.panel, wx.ID_ANY, (-1, -1), (-1, -1), wx.LI_VERTICAL), 0, wx.EXPAND, 2)
@@ -126,9 +128,9 @@ class viewMain(wx.Frame):
         # SIZERS
         # Add the remaining sizers to each other
         # Left and right panels added
-        self.s_panel.Add(self.s_panel_left,  0, wx.EXPAND|wx.RIGHT, 1)
-        self.s_panel.Add(self.s_panel_right, 1, wx.EXPAND,          0)
-        self.sizer.Add(  self.s_panel,       1, wx.EXPAND,          0)
+        self.s_panel.Add(self.s_panel_left,  0, wx.EXPAND | wx.RIGHT, 1)
+        self.s_panel.Add(self.s_panel_right, 1, wx.EXPAND,            0)
+        self.sizer.Add(  self.s_panel,       1, wx.EXPAND,            0)
         # Layout sizers
         self.panel.SetSizer(self.sizer)
         self.panel.SetSize((0, 0))
@@ -205,14 +207,14 @@ class viewMain(wx.Frame):
         # If horizontal or vertical size is smaller than it was before set the size to that value
         new_panel_size = (max(prev_panel_size[0], self.panel.GetBestSize().Get()[0]), max(prev_panel_size[1], self.panel.GetBestSize().Get()[1]))
         # New window size will be the new panel size plus the difference between the previous window size and panel size
-        new_window_size = (prev_window_size[0] - prev_panel_size[0] + new_panel_size[0], 
+        new_window_size = (prev_window_size[0] - prev_panel_size[0] + new_panel_size[0],
                            prev_window_size[1] - prev_panel_size[1] + new_panel_size[1])
         logging.debug("tcui.viewMain: translate - new panel size is: %s, new window size is: %s" % (new_panel_size, new_window_size))
 
         # Set minimum panel size to the minimum allowable height and 1.4* ratio width of that height (or the minimum width if this is larger)
         self.panel.SetMinSize(wx.Size(max(self.panel.GetBestSize().Get()[1] * 1.4, self.panel.GetBestSize().Get()[0]), self.panel.GetBestSize().Get()[1]))
         # Set minimum window size to minimum panel size plus the difference in the previous sizes
-        self.SetMinSize(wx.Size(prev_window_size[0] - prev_panel_size[0] + max(self.panel.GetBestSize().Get()[1] * 1.4, self.panel.GetBestSize().Get()[0]), 
+        self.SetMinSize(wx.Size(prev_window_size[0] - prev_panel_size[0] + max(self.panel.GetBestSize().Get()[1] * 1.4, self.panel.GetBestSize().Get()[0]),
                                 prev_window_size[1] - prev_panel_size[1] + self.panel.GetBestSize().Get()[1]))
 
         # Finally set size to the calculated new size, which is the larger of the new minimum or pre-existing

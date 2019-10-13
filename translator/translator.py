@@ -5,15 +5,12 @@ import config
 config = config.Config()
 config.save()
 
-##def gt(text):
-##    lator = Translator()
-##    return lator.gt(text)
-
 # Translator is an object which contains a list of all the available translations
 # as well as storing the currently active translation
 
 # translation is an object containing all the information relating to
 # an individual translation set
+
 
 class Translator(object):
     """Contains all available translations as well as the active translation"""
@@ -27,10 +24,10 @@ class Translator(object):
         """Load translation files"""
         if Translator.language_list is None:
             # Obtain directory listing of available languages
-            list = os.listdir(Translator.PATH_TO_TRANSLATIONS)
+            languages = os.listdir(Translator.PATH_TO_TRANSLATIONS)
             language_file_list = []
 
-            for i in list:
+            for i in languages:
                 split = os.path.splitext(i)
                 if split[1] == Translator.TRANSLATION_FILE_EXTENSION:
                     language_file_list.append(Translator.PATH_TO_TRANSLATIONS + os.path.sep + i)
@@ -41,13 +38,13 @@ class Translator(object):
             Translator.language_longnames_list = []
 
             for i in range(len(language_file_list)):
-                Translator.language_list.append(translation(language_file_list[i]))
+                Translator.language_list.append(Translation(language_file_list[i]))
                 Translator.language_names_list.append(Translator.language_list[i].name())
                 Translator.language_longnames_list.append(Translator.language_list[i].longname())
 
             # Make dicts
-            Translator.longnametoname = self.arraysToDict(Translator.language_longnames_list, Translator.language_names_list)
-            Translator.nametotranslation = self.arraysToDict(Translator.language_names_list, Translator.language_list)
+            Translator.longnametoname = self.arrays_to_dict(Translator.language_longnames_list, Translator.language_names_list)
+            Translator.nametotranslation = self.arrays_to_dict(Translator.language_names_list, Translator.language_list)
 
             # Activate translation based on user preferences
             # If preference does not exist, use English instead
@@ -58,11 +55,11 @@ class Translator(object):
                 active = "English"
                 logging.info("Using default language - Setting active translation to %s" % active)
 
-            self.setActiveTranslation(active)
+            self.set_active_translation(active)
 
-    def __call__(self, vars):
+    def __call__(self, args):
         """Used so we can do Translator() and call gt()"""
-        return self.gt(vars)
+        return self.gt(args)
 
     def loop(self, text):
         """Just return the provided value, used for _gt() functionality"""
@@ -81,7 +78,7 @@ class Translator(object):
             # If there is no translation for this item use the default program string
             return text
 
-    def translateIntArray(self, intlist):
+    def translate_int_array(self, intlist):
         """Takes an array of int values and translates them"""
         stringlist = []
 
@@ -90,7 +87,7 @@ class Translator(object):
 
         return stringlist
 
-    def arraysToDict(self, keys, values):
+    def arrays_to_dict(self, keys, values):
         """Convert two arrays into a dict (assuming keys[x] relates to values[x])"""
         newdict = {}
         newdict.fromkeys(keys)
@@ -100,21 +97,23 @@ class Translator(object):
 
         return newdict
 
-    def longnameToName(self, longname):
+    def longname_to_name(self, longname):
         """Converts a long translation name to the short version"""
         return Translator.longnametoname[longname]
 
-    def setActiveTranslation(self, name):
+    def set_active_translation(self, name):
         """Set which translation should be used"""
         Translator.active = Translator.nametotranslation[name]
         # Save this preference for the user
         config.default_language = name
 
+
 class TranslationLoadError(Exception):
     """Error class for exceptions raised by translation parser"""
     pass
 
-class translation:
+
+class Translation:
     """An individual translation file object"""
 
     def __init__(self, filename):
@@ -135,7 +134,7 @@ class translation:
         dicts = re.findall("(?={).+?(?<=})", block, re.DOTALL)
 
         if len(dicts) > 1:
-            logging.warn("Found more than one dict-like structure (e.g. pair of \"{}\") in file: \"%s\" - assuming config is the first one" % filename)
+            logging.warn("Found more than one dict-like structure (e.g. pair of '{}') in file: '%s' - assuming config is the first one" % filename)
 
         configstring = dicts[0]
 
@@ -217,35 +216,35 @@ class translation:
 
     def name(self, value=None):
         """Return or set the name of this translation"""
-        if value != None:
+        if value is not None:
             self.value_name = value
         else:
             return self.value_name
 
     def longname(self, value=None):
         """Return or set the translated name"""
-        if value != None:
+        if value is not None:
             self.value_longname = value
         else:
             return self.value_longname
 
     def language_code(self, value=None):
         """Return or set the country/language code"""
-        if value != None:
+        if value is not None:
             self.value_language_code = value
         else:
             return self.language_code
 
     def created_by(self, value=None):
         """Return or set the created by string"""
-        if value != None:
+        if value is not None:
             self.value_created_by = value
         else:
             return self.value_created_by
 
     def created_date(self, value=None):
         """Return or set the created on value"""
-        if value != None:
+        if value is not None:
             self.value_created_date = value
         else:
             return self.value_created_date

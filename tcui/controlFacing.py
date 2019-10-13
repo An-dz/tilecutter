@@ -7,7 +7,8 @@ import config, translator
 gt = translator.Translator()
 config = config.Config()
 
-class controlFacing(wx.Panel):
+
+class ControlFacing(wx.Panel):
     """Box containing direction facing controls"""
     def __init__(self, parent, app):
         logging.info("tcui.controlFacing: __init__")
@@ -62,18 +63,18 @@ class controlFacing(wx.Panel):
         self.s_facing_select_west.Add(self.facing_select_west, 0)
 
         self.facing_enable_label = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_CENTER_HORIZONTAL)
-        self.facing_enable_select =  wx.ComboBox(self, wx.ID_ANY, "", (-1, -1), (70, -1), style=wx.CB_READONLY)
+        self.facing_enable_select  = wx.ComboBox(self, wx.ID_ANY, "", (-1, -1), (70, -1), style=wx.CB_READONLY)
 
         # Add to sizers
-        self.s_facing_flex.Add(self.s_facing_select_west,  0, wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM)
+        self.s_facing_flex.Add(self.s_facing_select_west,  0, wx.ALIGN_RIGHT | wx.ALIGN_BOTTOM)
         self.s_facing_flex.Add(self.facing_tile_top,       0, wx.ALIGN_BOTTOM)
-        self.s_facing_flex.Add(self.s_facing_select_north, 0, wx.ALIGN_LEFT|wx.ALIGN_BOTTOM)
+        self.s_facing_flex.Add(self.s_facing_select_north, 0, wx.ALIGN_LEFT | wx.ALIGN_BOTTOM)
         self.s_facing_flex.Add(self.facing_tile_left,      0, wx.ALIGN_RIGHT)
         self.s_facing_flex.Add(self.facing_tile_middle,    0, wx.ALIGN_CENTER)
         self.s_facing_flex.Add(self.facing_tile_right,     0, wx.ALIGN_LEFT)
-        self.s_facing_flex.Add(self.s_facing_select_south, 0, wx.ALIGN_RIGHT|wx.ALIGN_TOP)
+        self.s_facing_flex.Add(self.s_facing_select_south, 0, wx.ALIGN_RIGHT | wx.ALIGN_TOP)
         self.s_facing_flex.Add(self.facing_tile_bottom,    0, wx.ALIGN_TOP)
-        self.s_facing_flex.Add(self.s_facing_select_east,  0, wx.ALIGN_LEFT|wx.ALIGN_TOP)
+        self.s_facing_flex.Add(self.s_facing_select_east,  0, wx.ALIGN_LEFT | wx.ALIGN_TOP)
 
         # Add to default sizer with header and line
         self.sizer.Add((0, 2))
@@ -117,7 +118,7 @@ class controlFacing(wx.Panel):
         self.facing_enable_select.SetToolTip(gt("tt_facing_enable_select"))
 
         # Translate the choicelist values for paksize
-        self.choicelist_views = gt.translateIntArray(config.choicelist_views)
+        self.choicelist_views = gt.translate_int_array(config.choicelist_views)
         self.facing_enable_select.Clear()
         self.facing_enable_select.Append(self.choicelist_views)
 
@@ -145,7 +146,7 @@ class controlFacing(wx.Panel):
             self.facing_select_west.Disable()
             self.facing_select_west_label.Disable()
 
-            if self.facing_select_east.GetValue() == True or self.facing_select_north.GetValue() == True or self.facing_select_west.GetValue() == True:
+            if self.facing_select_east.GetValue() is True or self.facing_select_north.GetValue() is True or self.facing_select_west.GetValue() is True:
                 self.facing_select_south.SetValue(1)
                 # Modify active image to only available option
                 self.app.activeproject.active_image(direction=0)
@@ -167,7 +168,7 @@ class controlFacing(wx.Panel):
             self.facing_select_west.Disable()
             self.facing_select_west_label.Disable()
 
-            if self.facing_select_north.GetValue() == True or self.facing_select_west.GetValue() == True:
+            if self.facing_select_north.GetValue() is True or self.facing_select_west.GetValue() is True:
                 self.facing_select_east.SetValue(1)
                 # Modify active image to available option
                 self.app.activeproject.active_image(direction=1)

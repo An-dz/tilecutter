@@ -7,7 +7,8 @@ import config, tcui, translator
 config = config.Config()
 gt = translator.Translator()
 
-class dialogPreferences(wx.Dialog):
+
+class DialogPreferences(wx.Dialog):
     """Dialog for setting program preferences"""
     def __init__(self, parent, app):
         """Initialise the dialog and populate lists"""
@@ -15,7 +16,7 @@ class dialogPreferences(wx.Dialog):
 
         self.app = app
         wx.Dialog.__init__(self, parent, wx.ID_ANY, "", (-1, -1), (-1, -1))
-        self.ftbox = tcui.filePicker(parent)
+        self.ftbox = tcui.FilePicker(parent)
 
         # Overall panel sizer
         self.sizer   = wx.BoxSizer(wx.HORIZONTAL)
@@ -46,7 +47,7 @@ class dialogPreferences(wx.Dialog):
 
         # Add close button at the bottom
         self.close_button     = wx.Button(    self, wx.ID_OK,  "", (-1, -1), (-1, -1), wx.ALIGN_RIGHT)
-        self.buttons.Add(self.close_button, 0 ,wx.ALIGN_RIGHT, 0)
+        self.buttons.Add(self.close_button, 0, wx.ALIGN_RIGHT, 0)
 
         # And finally add that, the language picker and the other static text to the panel sizer
         self.v_sizer.Add((0, 10))
@@ -110,15 +111,17 @@ class dialogPreferences(wx.Dialog):
 
         # Translate the choicelist values for paksize
         self.paksize_label.SetLabel(gt("Default paksize for new projects:"))
-        self.choicelist_paksize = gt.translateIntArray(config.choicelist_paksize)
+        self.choicelist_paksize = gt.translate_int_array(config.choicelist_paksize)
         self.paksize_select.Clear()
         self.paksize_select.Append(self.choicelist_paksize)
 
         # Translate the choicelist values for logging level
         self.loglevel_label.SetLabel(gt("Logging verbosity level:"))
-        self.choicelist_loglevel = [gt("0 - logging disabled"),
-                                    gt("1 - normal logging"),
-                                    gt("2 - verbose logging"),]
+        self.choicelist_loglevel = [
+            gt("0 - logging disabled"),
+            gt("1 - normal logging"),
+            gt("2 - verbose logging"),
+        ]
         self.loglevel_select.Clear()
         self.loglevel_select.Append(self.choicelist_loglevel)
 
@@ -166,11 +169,13 @@ class dialogPreferences(wx.Dialog):
     def OnBrowseMakeobj(self, e):
         """Triggered when the browse button is clicked for the makeobj path"""
         logging.info("tcui.dialogPreferences: OnBrowseMakeobj")
-        value = self.ftbox.filePickerDialog(config.path_to_makeobj, 
-                                            None, 
-                                            gt("Select a makeobj binary to use"),
-                                            "", 
-                                            wx.FD_OPEN|wx.FD_FILE_MUST_EXIST)
+        value = self.ftbox.file_picker_dialog(
+            config.path_to_makeobj,
+            None,
+            gt("Select a makeobj binary to use"),
+            "",
+            wx.FD_OPEN | wx.FD_FILE_MUST_EXIST,
+        )
         logging.debug("tcui.dialogPreferences: OnBrowseMakeobj - Path selected by user is: %s" % value)
         config.path_to_makeobj = value
         self.makeobj_box.SetValue(value)

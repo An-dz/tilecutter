@@ -6,7 +6,8 @@ import wx
 import translator
 gt = translator.Translator()
 
-class dialogDatFileEdit(wx.Dialog):
+
+class DialogDatFileEdit(wx.Dialog):
     """Dialog for editing dat file parameters"""
     def __init__(self, parent, app):
         """Intialise the dialog"""
@@ -23,7 +24,7 @@ class dialogDatFileEdit(wx.Dialog):
 
         self.description = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_CENTER)
 
-        self.text_input = wx.TextCtrl(self, wx.ID_ANY, value="", style=wx.BORDER_SUNKEN|wx.TE_MULTILINE)
+        self.text_input = wx.TextCtrl(self, wx.ID_ANY, value="", style=wx.BORDER_SUNKEN | wx.TE_MULTILINE)
         self.text_input.Bind(wx.EVT_TEXT, self.OnTextChange, self.text_input)
 
         # Add close button at the bottom
@@ -32,7 +33,7 @@ class dialogDatFileEdit(wx.Dialog):
         self.v_sizer.Add((0,  5))
         self.v_sizer.Add(self.description, 0, wx.ALIGN_LEFT)
         self.v_sizer.Add((0,  5))
-        self.v_sizer.Add(self.text_input,  1, wx.EXPAND|wx.ALIGN_CENTER_HORIZONTAL)
+        self.v_sizer.Add(self.text_input,  1, wx.EXPAND | wx.ALIGN_CENTER_HORIZONTAL)
         self.v_sizer.Add((0, 10))
         self.v_sizer.Add(self.buttons,     0, wx.ALIGN_RIGHT)
         self.v_sizer.Add((0, 10))

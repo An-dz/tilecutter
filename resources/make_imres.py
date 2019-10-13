@@ -8,21 +8,20 @@ import wx.tools.img2py, os
 OUTPUT_FILE = ".." + os.path.sep + "imres.py"
 
 # All .png files in the current directory will be compiled
-list = os.listdir(".")
+image_list = os.listdir(".")
 file_list = []
 
 file = open(OUTPUT_FILE, "w")
 file.write("")
 appen = False
 
-for i in list:
+for i in image_list:
     split = os.path.splitext(i)
     if split[1] == ".png":
         file_list.append(i)
         # Remove the trailing & redundant string "-icon" from the filenames
-        name = split[0].replace("-icon","")
+        name = split[0].replace("-icon", "")
         # Convert any "-" in filename to "_"
-        name = name.replace("-","_")
+        name = name.replace("-", "_")
         wx.tools.img2py.img2py(i, OUTPUT_FILE, append=appen, imgName=name, icon=True, catalog=True)
         appen = True
-

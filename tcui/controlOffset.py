@@ -6,7 +6,8 @@ import wx, imres
 import translator
 gt = translator.Translator()
 
-class controlOffset(wx.Panel):
+
+class ControlOffset(wx.Panel):
     """Box containing image offset controls"""
     def __init__(self, parent, app):
         logging.info("tcui.controlOffset: __init__")
@@ -116,41 +117,57 @@ class controlOffset(wx.Panel):
         """Move mask up and left"""
         logging.debug("tcui.controlOffset: OnUpLeft")
         if self.offset_selector.GetValue():
-            self.app.activeproject.active_offset([max(0, self.app.activeproject.active_x_offset() - 2), 
-                                                  self.app.activeproject.active_y_offset() + 1])
+            self.app.activeproject.active_offset([
+                max(0, self.app.activeproject.active_x_offset() - 2),
+                self.app.activeproject.active_y_offset() + 1,
+            ])
         else:
-            self.app.activeproject.active_offset([max(0, self.app.activeproject.active_x_offset() - self.app.activeproject.paksize() / 2), 
-                                                  self.app.activeproject.active_y_offset() + self.app.activeproject.paksize() / 4])
+            self.app.activeproject.active_offset([
+                max(0, self.app.activeproject.active_x_offset() - self.app.activeproject.paksize() / 2),
+                self.app.activeproject.active_y_offset() + self.app.activeproject.paksize() / 4,
+            ])
 
     def OnUpRight(self, e):
         """Move mask up and right"""
         logging.debug("tcui.controlOffset: OnUpRight")
         if self.offset_selector.GetValue():
-            self.app.activeproject.active_offset([self.app.activeproject.active_x_offset() + 2, 
-                                                  self.app.activeproject.active_y_offset() + 1])
+            self.app.activeproject.active_offset([
+                self.app.activeproject.active_x_offset() + 2,
+                self.app.activeproject.active_y_offset() + 1,
+            ])
         else:
-            self.app.activeproject.active_offset([self.app.activeproject.active_x_offset() + self.app.activeproject.paksize() / 2, 
-                                                  self.app.activeproject.active_y_offset() + self.app.activeproject.paksize() / 4])
+            self.app.activeproject.active_offset([
+                self.app.activeproject.active_x_offset() + self.app.activeproject.paksize() / 2,
+                self.app.activeproject.active_y_offset() + self.app.activeproject.paksize() / 4,
+            ])
 
     def OnDownLeft(self, e):
         """Move mask down and left"""
         logging.debug("tcui.controlOffset: OnDownLeft")
         if self.offset_selector.GetValue():
-            self.app.activeproject.active_offset([max(0, self.app.activeproject.active_x_offset() - 2), 
-                                                  max(0, self.app.activeproject.active_y_offset() - 1)])
+            self.app.activeproject.active_offset([
+                max(0, self.app.activeproject.active_x_offset() - 2),
+                max(0, self.app.activeproject.active_y_offset() - 1),
+            ])
         else:
-            self.app.activeproject.active_offset([max(0, self.app.activeproject.active_x_offset() - self.app.activeproject.paksize() / 2), 
-                                                  max(0, self.app.activeproject.active_y_offset() - self.app.activeproject.paksize() / 4)])
+            self.app.activeproject.active_offset([
+                max(0, self.app.activeproject.active_x_offset() - self.app.activeproject.paksize() / 2),
+                max(0, self.app.activeproject.active_y_offset() - self.app.activeproject.paksize() / 4),
+            ])
 
     def OnDownRight(self, e):
         """Move mask down and right"""
         logging.debug("tcui.controlOffset: OnDownRight")
         if self.offset_selector.GetValue():
-            self.app.activeproject.active_offset([self.app.activeproject.active_x_offset() + 2, 
-                                                  max(0, self.app.activeproject.active_y_offset() - 1)])
+            self.app.activeproject.active_offset([
+                self.app.activeproject.active_x_offset() + 2,
+                max(0, self.app.activeproject.active_y_offset() - 1),
+            ])
         else:
-            self.app.activeproject.active_offset([self.app.activeproject.active_x_offset() + self.app.activeproject.paksize() / 2, 
-                                                  max(0, self.app.activeproject.active_y_offset() - self.app.activeproject.paksize() / 4)])
+            self.app.activeproject.active_offset([
+                self.app.activeproject.active_x_offset() + self.app.activeproject.paksize() / 2,
+                max(0, self.app.activeproject.active_y_offset() - self.app.activeproject.paksize() / 4),
+            ])
 
     def OnUp(self, e):
         """Move mask up"""

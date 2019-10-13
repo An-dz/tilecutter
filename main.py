@@ -37,8 +37,8 @@ except ImportError:
 
 import project, tc, tcui, translator
 # Classes to read/write TileCutter files
-from tcp import tcp_writer
-from tcp import tcp_reader
+from tcp import TcpWriter
+from tcp import TcpReader
 
 # Utility functions
 gt = translator.Translator()
@@ -51,6 +51,7 @@ logging.info("main: configuration loaded from file: %s" % config.conf_path)
 logging.debug(str(config))
 
 wx.Log.SetLogLevel(wx.LOG_Error)
+
 
 #########################################
 # Main class, controls most of the code #
@@ -80,7 +81,7 @@ class App(wx.App):
         if self.gui:
             logging.info("App: OnInit - Create + Show main frame")
             # Create and show main frame
-            self.frame = tcui.viewMain(None, self, wx.ID_ANY, "TileCutter")
+            self.frame = tcui.ViewMain(None, self, wx.ID_ANY, "TileCutter")
             self.SetTopWindow(self.frame)
 
             logging.info("App: OnInit - Bind Quit Event")
@@ -122,7 +123,7 @@ class App(wx.App):
     def BringWindowToFront(self):
         try: # it's possible for this event to come when the frame is closed
             self.GetTopWindow().Raise()
-        except:
+        except Exception:
             pass
 
     def MacOpenFile(self, filename):
@@ -194,7 +195,7 @@ class App(wx.App):
         # Then feed project into outputting routine
         # Will need a way to report back progress to a progress bar/indicator
         ret = tc.export_writer(project, pak_output, return_dat, write_dat)
-        if self.gui and ret != True:
+        if self.gui and ret is not True:
             # Pop up a modal dialog box to display the .dat file info
             pass
 
@@ -202,7 +203,7 @@ class App(wx.App):
     def dialog_save_changes(self, project):
         """Prompts user to save file, return wx.ID_YES, wx.ID_NO or wx.ID_CANCEL"""
         logging.info("App: dialog_save_changes")
-        dlg = wx.MessageDialog(self.frame, gt("Save changes before proceeding?"), gt("Current project has changed"), style=wx.YES_NO|wx.CANCEL|wx.YES_DEFAULT|wx.ICON_QUESTION)
+        dlg = wx.MessageDialog(self.frame, gt("Save changes before proceeding?"), gt("Current project has changed"), style=wx.YES_NO | wx.CANCEL | wx.YES_DEFAULT | wx.ICON_QUESTION)
         result = dlg.ShowModal()
         dlg.Destroy()
 
@@ -218,15 +219,14 @@ class App(wx.App):
         """Prompts user to select a location to save project to, returns True if location picked,
         False if cancelled. Sets project's save location to result file"""
         logging.info("App: dialog_save_location - Grabbing save path from dialog")
-        filesAllowed = "TileCutter Project files (*.tcp)|*.tcp"
-        dialogFlags = wx.FD_SAVE|wx.FD_OVERWRITE_PROMPT
+        files_allowed = "TileCutter Project files (*.tcp)|*.tcp"
+        dialog_flags = wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT
         path = os.path.split(project.save_location())[0]
         filename = os.path.split(project.save_location())[1]
-        dlg = wx.FileDialog(self.frame, gt("Choose a location to save to..."), path, filename, filesAllowed, dialogFlags)
+        dlg = wx.FileDialog(self.frame, gt("Choose a location to save to..."), path, filename, files_allowed, dialog_flags)
         result = dlg.ShowModal()
 
         if result == wx.ID_OK:
-            #project.save_location(os.path.join(dlg.GetDirectory(), dlg.GetFilename()))
             project.save_location(dlg.GetPath())
             config.last_save_path = dlg.GetDirectory()
             logging.debug("App: dialog_save_location - New save_location for project is: %s" % project.save_location())
@@ -241,17 +241,16 @@ class App(wx.App):
     def dialog_load(self):
         """Prompts user to select a location to load a project file from, returns filename or wx.ID_CANCEL"""
         logging.info("App: dialog_load - Opening Load Dialog to allow location picking")
-        filesAllowed = "TileCutter Project files (*.tcp)|*.tcp"
-        dialogFlags = wx.FD_OPEN|wx.FD_FILE_MUST_EXIST
+        files_allowed = "TileCutter Project files (*.tcp)|*.tcp"
+        dialog_flags = wx.FD_OPEN | wx.FD_FILE_MUST_EXIST
         # This probably needs to be more robust
         path = os.path.split(self.activeproject.save_location())[0]
         file = os.path.split(self.activeproject.save_location())[1]
-        dlg = wx.FileDialog(self.frame, gt("Choose a project file to open..."), path, file, filesAllowed, dialogFlags)
+        dlg = wx.FileDialog(self.frame, gt("Choose a project file to open..."), path, file, files_allowed, dialog_flags)
         result = dlg.ShowModal()
 
         if result == wx.ID_OK:
             logging.debug("App: dialog_load - directory: %s, filename: %s" % (dlg.GetDirectory(), dlg.GetFilename()))
-            #load_location = os.path.join(dlg.GetDirectory(), dlg.GetFilename())
             load_location = dlg.GetPath()
             dlg.Destroy()
             logging.debug("App: dialog_load - User picked location: %s" % load_location)
@@ -268,7 +267,7 @@ class App(wx.App):
         logging.info("App: save_project - Save project out to disk")
 
         # Create new writer
-        t_writer = tcp_writer(self.activeproject.save_location(), "json")
+        t_writer = TcpWriter(self.activeproject.save_location(), "json")
 
         # Write out project
         ret = t_writer.write(project)
@@ -290,7 +289,7 @@ class App(wx.App):
             logging.error("App: save_project - ERROR: save_project - Saving failed!")
             if self.gui:
                 self.set_status_text(gt("ERROR: Failed to save project!"), 0)
-                dlg = wx.MessageDialog(None, "Error saving file, please see log file for details", "Error", wx.OK|wx.ICON_ERROR)
+                dlg = wx.MessageDialog(None, "Error saving file, please see log file for details", "Error", wx.OK | wx.ICON_ERROR)
                 dlg.ShowModal()
             return False
 
@@ -298,16 +297,16 @@ class App(wx.App):
         """Load a project based on a file location"""
         logging.info("App: load_project - Load project from file: %s" % location)
 
-        t_reader = tcp_reader(location)
+        t_reader = TcpReader(location)
 
         # Load project, passing reference to self which will be set as project's parent in its post_serialisation method
-        project = t_reader.load([self,])
+        project = t_reader.load([self])
 
-        if project == False:
+        if project is False:
             logging.error("App: load_project - ERROR: load_project - Loading failed!")
             if self.gui:
                 self.set_status_text(gt("ERROR: Failed to load project!"), 0)
-                dlg = wx.MessageDialog(None, "Error loading file, please see log file for details", "Error", wx.OK|wx.ICON_ERROR)
+                dlg = wx.MessageDialog(None, "Error loading file, please see log file for details", "Error", wx.OK | wx.ICON_ERROR)
                 dlg.ShowModal()
             # Project loading has failed, abort
             return False
@@ -367,7 +366,7 @@ class App(wx.App):
             # else ret is wx.ID_NO, so we don't want to save but can continue
         if loadpath is None:                                        # Check if a load path was passed into this function
             loadpath = self.dialog_load()                           # If not prompt for file to load
-        if loadpath != wx.ID_CANCEL and loadpath != False:          # If user picked a file and didn't cancel the dialog
+        if loadpath != wx.ID_CANCEL and loadpath is not False:      # If user picked a file and didn't cancel the dialog
             logging.debug("App: OnLoadProject - Load dialog returned a path: %s" % loadpath)
             return self.load_project(loadpath)                      # Load the project (returns project object or False depending on success)
         else:                                                       # Otherwise
@@ -420,6 +419,7 @@ class App(wx.App):
         self.frame.Destroy()
         logging.info("App: OnQuit - End")
 
+
 ##################################################
 # Starting function, this is the first thing run #
 ##################################################
@@ -440,75 +440,85 @@ def run():
     parser = OptionParser(usage=usage)
     parser.set_defaults(pak_output=False, dat_output=True, cli=False)
 
-    parser.add_option("-c",
-                      action="store_true",
-                      dest="cli",
-                      help="run program in CLI mode (must be specified or program will run in GUI mode and load the first file specified on the command line)"
-                     )
+    parser.add_option(
+        "-c",
+        action="store_true",
+        dest="cli",
+        help="run program in CLI mode (must be specified or program will run in GUI mode and load the first file specified on the command line)",
+    )
 
-    parser.add_option("-i",
-                      dest="png_directory",
-                      help="override .png file output location to DIRECTORY",
-                      metavar="DIRECTORY"
-                     )
-    parser.add_option("-I",
-                      dest="png_filename",
-                      help="override .png file output name to FILENAME",
-                      metavar="FILENAME"
-                     )
+    parser.add_option(
+        "-i",
+        dest="png_directory",
+        help="override .png file output location to DIRECTORY",
+        metavar="DIRECTORY",
+    )
+    parser.add_option(
+        "-I",
+        dest="png_filename",
+        help="override .png file output name to FILENAME",
+        metavar="FILENAME",
+    )
 
-    parser.add_option("-n",
-                      action="store_false",
-                      dest="dat_output",
-                      help="disable .dat file output (if -m specified, dat info will be output to tempfile)"
-                     )
-    parser.add_option("-d",
-                      dest="dat_directory",
-                      help="override .dat file output location to DIRECTORY",
-                      metavar="DIRECTORY"
-                     )
-    parser.add_option("-D",
-                      dest="dat_filename",
-                      help="override .dat file output name to FILENAME",
-                      metavar="FILENAME"
-                     )
+    parser.add_option(
+        "-n",
+        action="store_false",
+        dest="dat_output",
+        help="disable .dat file output (if -m specified, dat info will be output to tempfile)",
+    )
+    parser.add_option(
+        "-d",
+        dest="dat_directory",
+        help="override .dat file output location to DIRECTORY",
+        metavar="DIRECTORY",
+    )
+    parser.add_option(
+        "-D",
+        dest="dat_filename",
+        help="override .dat file output name to FILENAME",
+        metavar="FILENAME",
+    )
 
-    parser.add_option("-m",
-                      action="store_true",
-                      dest="pak_output",
-                      help="enable .pak file output (requires Makeobj)"
-                     )
-    # parser.add_option("-M",
-        #               dest="makeobj_directory",
-        #               help="override object specific makeobj with PATH",
-        #               metavar="PATH"
-        #              )
-    parser.add_option("-p",
-                      dest="pak_directory",
-                      help="override .pak file output location to DIRECTORY",
-                      metavar="DIRECTORY"
-                     )
-    parser.add_option("-P",
-                      dest="pak_filename",
-                      help="override .pak file output name to FILENAME",
-                      metavar="FILENAME"
-                     )
+    parser.add_option(
+        "-m",
+        action="store_true",
+        dest="pak_output",
+        help="enable .pak file output (requires Makeobj)",
+    )
+    # parser.add_option(
+    #     "-M",
+    #     dest="makeobj_directory",
+    #     help="override object specific makeobj with PATH",
+    #     metavar="PATH",
+    # )
+    parser.add_option(
+        "-p",
+        dest="pak_directory",
+        help="override .pak file output location to DIRECTORY",
+        metavar="DIRECTORY",
+    )
+    parser.add_option(
+        "-P",
+        dest="pak_filename",
+        help="override .pak file output name to FILENAME",
+        metavar="FILENAME",
+    )
 
-    parser.add_option("-v",
-                      action="store_true",
-                      dest="verbose",
-                      help="enable verbose output"
-                     )
-    parser.add_option("-q",
-                      action="store_false",
-                      dest="verbose",
-                      help="suppress stdout"
-                     )
+    parser.add_option(
+        "-v",
+        action="store_true",
+        dest="verbose",
+        help="enable verbose output",
+    )
+    parser.add_option(
+        "-q",
+        action="store_false",
+        dest="verbose",
+        help="suppress stdout",
+    )
 
     # options are the defined options, args are the list of files to process
     options, args = parser.parse_args()
-
-    start_directory = os.getcwd()
 
     # Use of command line argument "-c" disables GUI and uses command line parsing instead
     if options.cli:
@@ -600,6 +610,7 @@ def run():
         # Launch into application's main loop
         app.MainLoop()
         app.Destroy()
+
 
 #####################
 # Run main function #

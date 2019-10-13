@@ -7,7 +7,8 @@ import config, translator
 gt = translator.Translator()
 config = config.Config()
 
-class controlDims(wx.Panel):
+
+class ControlDims(wx.Panel):
     """Box containing image dimensions controls (x,y,z)"""
     def __init__(self, parent, app):
         logging.info("tcui.controlDims: __init__")
@@ -88,21 +89,21 @@ class controlDims(wx.Panel):
         # each other to determine the values to set
 
         # Translate the choicelist values for paksize
-        self.choicelist_packsize = gt.translateIntArray(config.choicelist_paksize)
+        self.choicelist_packsize = gt.translate_int_array(config.choicelist_paksize)
         self.dims_p_select.Clear()
         self.dims_p_select.Append(self.choicelist_packsize)
         # And set value to value in the project
         self.dims_p_select.SetSelection(config.choicelist_paksize.index(self.app.activeproject.paksize()))
 
         # Translate the choicelist values for z dims
-        self.choicelist_dims_z = gt.translateIntArray(config.choicelist_dims_z)
+        self.choicelist_dims_z = gt.translate_int_array(config.choicelist_dims_z)
         self.dims_z_select.Clear()
         self.dims_z_select.Append(self.choicelist_dims_z)
         # And set value to value in the project
         self.dims_z_select.SetSelection(config.choicelist_dims_z.index(self.app.activeproject.z()))
 
         # Translate the choicelist values for x and y dims
-        self.choicelist_dims = gt.translateIntArray(config.choicelist_dims)
+        self.choicelist_dims = gt.translate_int_array(config.choicelist_dims)
         self.dims_x_select.Clear()
         self.dims_y_select.Clear()
         self.dims_x_select.Append(self.choicelist_dims)
@@ -117,10 +118,10 @@ class controlDims(wx.Panel):
                             self.dims_x_select.GetBestSize()[0],
                             self.dims_y_select.GetBestSize()[0],
                             60)
-        self.dims_p_select.SetMinSize((biggest_width,-1))
-        self.dims_z_select.SetMinSize((biggest_width,-1))
-        self.dims_x_select.SetMinSize((biggest_width,-1))
-        self.dims_y_select.SetMinSize((biggest_width,-1))
+        self.dims_p_select.SetMinSize((biggest_width, -1))
+        self.dims_z_select.SetMinSize((biggest_width, -1))
+        self.dims_x_select.SetMinSize((biggest_width, -1))
+        self.dims_y_select.SetMinSize((biggest_width, -1))
 
         self.Fit()
 

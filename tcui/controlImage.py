@@ -6,7 +6,8 @@ import wx, imres
 import translator
 gt = translator.Translator()
 
-class controlImage(wx.Panel):
+
+class ControlImage(wx.Panel):
     """Box containing Front/Back image and Transparency controls"""
     def __init__(self, parent, app):
         logging.info("tcui.controlImage: __init__")
@@ -31,15 +32,15 @@ class controlImage(wx.Panel):
         self.images_enable_transparency =     wx.CheckBox(self, wx.ID_ANY, "", (-1, -1), (-1, -1))
 
         # Add to sizers
-        self.s_images_flex.Add(self.images_select_back_im,  0, wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL)
+        self.s_images_flex.Add(self.images_select_back_im,  0, wx.ALIGN_LEFT | wx.ALIGN_CENTER_VERTICAL)
         self.s_images_flex.Add((4, 0))
-        self.s_images_flex.Add(self.images_select_back,     0, wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL)
+        self.s_images_flex.Add(self.images_select_back,     0, wx.ALIGN_LEFT | wx.ALIGN_CENTER_VERTICAL)
         self.s_images_flex.Add((0, 2))
         self.s_images_flex.Add((0, 2))
         self.s_images_flex.Add((0, 2))
-        self.s_images_flex.Add(self.images_select_front_im, 0, wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL)
+        self.s_images_flex.Add(self.images_select_front_im, 0, wx.ALIGN_LEFT | wx.ALIGN_CENTER_VERTICAL)
         self.s_images_flex.Add((4, 0))
-        self.s_images_flex.Add(self.images_select_front,    0, wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL)
+        self.s_images_flex.Add(self.images_select_front,    0, wx.ALIGN_LEFT | wx.ALIGN_CENTER_VERTICAL)
 
         # Add to default sizer with header and line
         self.sizer.Add((0, 2))
@@ -87,7 +88,7 @@ class controlImage(wx.Panel):
             self.images_enable_front.SetValue(0)
 
             # If currently have frontimage selected, switch to backimage
-            if self.images_select_front.GetValue() == True:
+            if self.images_select_front.GetValue() is True:
                 # Update model
                 self.app.activeproject.active_image(layer=0)
                 self.images_select_back.SetValue(1)

@@ -3,14 +3,14 @@
 import codecs, json, os, sys
 from environment import getenvvar
 
-# Tuples probably need to be converted to arrays here
 
+# Tuples probably need to be converted to arrays here
 class Config(object):
     """Program configuration object"""
     # The first time this object is instantiated, config is populated
     config = {}
 
-    # If a tc.config or tilecutter.config file exists in the program directory use that to load config from 
+    # If a tc.config or tilecutter.config file exists in the program directory use that to load config from
     # (to permit setting of global config, or for backwards compatibility with existing installs)
     if os.path.isfile("tc.config"):
         main_path = os.path.abspath(".")
@@ -129,7 +129,7 @@ class Config(object):
     def __setitem__(self, key, value):
         """Set method by dict access e.g. x['y'] = z"""
         # Again, internals are immutable
-        if name in Config.internals:
+        if key in Config.internals:
             pass
         elif key in Config.defaults:
             Config.config[key] = value
@@ -148,7 +148,7 @@ class Config(object):
             f.write(json.dumps(Config.config, ensure_ascii=False, sort_keys=True, indent=4))
             f.close()
         except IOError:
-            debug("IOError working with file %s, likely this path doesn't exist or the user I am running as doesn't have permission to write to it" % self.conf_path)
+            print("IOError working with file %s, likely this path doesn't exist or the user I am running as doesn't have permission to write to it" % self.conf_path)
             return False
 
         return True

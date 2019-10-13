@@ -6,7 +6,8 @@ import wx, imres
 import translator
 gt = translator.Translator()
 
-class controlSeason(wx.Panel):
+
+class ControlSeason(wx.Panel):
     """Box containing season image controls"""
     season_names = ["summer", "snow", "autumn", "winter", "spring"]
     season_title = ["Summer", "Snow", "Autumn", "Winter", "Spring"]
@@ -35,11 +36,11 @@ class controlSeason(wx.Panel):
             self.seasons_enable[season] =     wx.CheckBox(self, wx.ID_ANY, "", (-1, -1), (-1, -1))
 
             # Add to sizers
-            self.s_seasons_flex.Add(self.seasons_images[season], 0, wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL)
+            self.s_seasons_flex.Add(self.seasons_images[season], 0, wx.ALIGN_LEFT | wx.ALIGN_CENTER_VERTICAL)
             self.s_seasons_flex.Add((5, 0))
-            self.s_seasons_flex.Add(self.seasons_enable[season], 0, wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL)
+            self.s_seasons_flex.Add(self.seasons_enable[season], 0, wx.ALIGN_LEFT | wx.ALIGN_CENTER_VERTICAL)
             self.s_seasons_flex.Add((5, 0))
-            self.s_seasons_flex.Add(self.seasons_select[season], 0, wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL)
+            self.s_seasons_flex.Add(self.seasons_select[season], 0, wx.ALIGN_LEFT | wx.ALIGN_CENTER_VERTICAL)
 
             # Bind functions
             self.seasons_enable[season].Bind(wx.EVT_CHECKBOX,    self.OnToggle(season), self.seasons_enable[season])
@@ -83,7 +84,7 @@ class controlSeason(wx.Panel):
             self.seasons_select[i].Enable(enabled)
 
             # if season was disabled but is the currently selected image, switch to summer image
-            if not enabled and self.seasons_select[i].GetValue() == True:
+            if not enabled and self.seasons_select[i].GetValue() is True:
                 self.seasons_select[0].SetValue(True)
                 self.app.activeproject.active_image(season=0)
                 # As active season changed, need to redraw display

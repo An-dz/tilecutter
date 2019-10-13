@@ -6,7 +6,8 @@ import wx, imres
 import translator
 gt = translator.Translator()
 
-class dialogAbout(wx.Dialog):
+
+class DialogAbout(wx.Dialog):
     """Dialog which displays information about the program"""
     def __init__(self, parent, app, version_number):
         """Intialise the dialog"""

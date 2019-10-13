@@ -7,7 +7,8 @@ import tcui, translator, config
 gt = translator.Translator()
 config = config.Config()
 
-class menuObject(object):
+
+class MenuObject(object):
     """Class containing the main program menu"""
     def __init__(self, parent, app):
         """Create the menu"""
@@ -19,33 +20,33 @@ class menuObject(object):
 
         # File menu
         self.fileMenu = wx.Menu()
-        self.menu_file_new    = self.addMenuItem(self.fileMenu, self.OnNewProject)
-        self.menu_file_open   = self.addMenuItem(self.fileMenu, self.OnOpenProject)
+        self.menu_file_new    = self.add_menu_item(self.fileMenu, self.OnNewProject)
+        self.menu_file_open   = self.add_menu_item(self.fileMenu, self.OnOpenProject)
         self.fileMenu.AppendSeparator()
-        self.menu_file_save   = self.addMenuItem(self.fileMenu, self.OnSaveProject)
-        self.menu_file_saveas = self.addMenuItem(self.fileMenu, self.OnSaveProjectAs)
+        self.menu_file_save   = self.add_menu_item(self.fileMenu, self.OnSaveProject)
+        self.menu_file_saveas = self.add_menu_item(self.fileMenu, self.OnSaveProjectAs)
         self.fileMenu.AppendSeparator()
-        self.menu_file_cut    = self.addMenuItem(self.fileMenu, self.OnCutProject)
-        self.menu_file_export = self.addMenuItem(self.fileMenu, self.OnExportProject)
+        self.menu_file_cut    = self.add_menu_item(self.fileMenu, self.OnCutProject)
+        self.menu_file_export = self.add_menu_item(self.fileMenu, self.OnExportProject)
         self.fileMenu.AppendSeparator()
-        self.menu_file_exit   = self.addMenuItem(self.fileMenu, self.OnExit, id=wx.ID_EXIT)
+        self.menu_file_exit   = self.add_menu_item(self.fileMenu, self.OnExit, item_id=wx.ID_EXIT)
 
         # Tools menu
         self.toolsMenu = wx.Menu()
-        self.menu_tools_dat        = self.addMenuItem(self.toolsMenu, self.OnDatEdit)
-        self.menu_tools_smoke      = self.addMenuItem(self.toolsMenu, self.OnSmokeEdit, False)
+        self.menu_tools_dat        = self.add_menu_item(self.toolsMenu, self.OnDatEdit)
+        self.menu_tools_smoke      = self.add_menu_item(self.toolsMenu, self.OnSmokeEdit, False)
         self.toolsMenu.AppendSeparator()
-        self.menu_tools_sameforall = self.addMenuItem(self.toolsMenu, self.OnSameForAll)
+        self.menu_tools_sameforall = self.add_menu_item(self.toolsMenu, self.OnSameForAll)
         self.toolsMenu.AppendSeparator()
-        self.menu_tools_language   = self.addMenuItem(self.toolsMenu, self.OnSelectLanguage)
-        self.menu_tools_prefs      = self.addMenuItem(self.toolsMenu, self.OnPreferences, id=wx.ID_PREFERENCES)
+        self.menu_tools_language   = self.add_menu_item(self.toolsMenu, self.OnSelectLanguage)
+        self.menu_tools_prefs      = self.add_menu_item(self.toolsMenu, self.OnPreferences, item_id=wx.ID_PREFERENCES)
 
         # Help menu
         self.helpMenu = wx.Menu()
-        self.menu_help_help  = self.addMenuItem(self.helpMenu, self.OnHelp, id=wx.ID_HELP)
+        self.menu_help_help  = self.add_menu_item(self.helpMenu, self.OnHelp, item_id=wx.ID_HELP)
         # Need to fix this so that separator doesn't appear on mac
         self.helpMenu.AppendSeparator()
-        self.menu_help_about = self.addMenuItem(self.helpMenu, self.OnAbout, id=wx.ID_ABOUT)
+        self.menu_help_about = self.add_menu_item(self.helpMenu, self.OnAbout, item_id=wx.ID_ABOUT)
 
         self.menu.Append(self.fileMenu, "tc.file")
         self.menu.Append(self.toolsMenu, "tc.tools")
@@ -101,28 +102,28 @@ class menuObject(object):
         """Return the keyboard shortcut associated with a menu item"""
         logging.info("tcui.MenuObject: gsc")
         # Filler function for now
-        if default != None:
+        if default is not None:
             return "\t" + default
 
-    def addMenuItem(self, menu, itemHandler, enabled=True, id=None):
+    def add_menu_item(self, menu, item_handler, enabled=True, item_id=None):
         """Appends a menu item into a menu button"""
-        logging.info("tcui.MenuObject: addMenuItem")
+        logging.info("tcui.MenuObject: add_menu_item")
         # Item text must be set to something, or wx thinks this is a stock menu item
-        itemText = "--!--"
+        item_text = "--!--"
 
-        if id == None:
-            menuItem = wx.MenuItem(menu, wx.ID_ANY, itemText)
-            menuId = menuItem.GetId()
+        if item_id is None:
+            menu_item = wx.MenuItem(menu, wx.ID_ANY, item_text)
+            menu_id = menu_item.GetId()
         else:
-            menuId = id
+            menu_id = item_id
             # Stock menu item based on a specified id
-            menuItem = wx.MenuItem(menu, menuId)
+            menu_item = wx.MenuItem(menu, menu_id)
 
-        menu.Append(menuItem)
+        menu.Append(menu_item)
         # Bind event to parent frame
-        self.parent.Bind(wx.EVT_MENU, itemHandler, id=menuId)
-        menu.Enable(menuId, enabled)
-        return menuItem
+        self.parent.Bind(wx.EVT_MENU, item_handler, id=menu_id)
+        menu.Enable(menu_id, enabled)
+        return menu_item
 
     #############################
     # File menu event functions #
@@ -173,7 +174,7 @@ class menuObject(object):
     def OnDatEdit(self, e):
         """Open .dat editor dialog"""
         logging.info("tcui.MenuObject: OnDatEdit - Menu-Tools-> Open .dat edit dialog")
-        dlg = tcui.dialogDatFileEdit(self.parent, self.app)
+        dlg = tcui.DialogDatFileEdit(self.parent, self.app)
         # Needed so that on mac this window comes back into foreground after switching to/from application
         self.app.SetTopWindow(dlg)
         if dlg.ShowModal() == wx.ID_OK:
@@ -191,7 +192,7 @@ class menuObject(object):
         dlg = wx.MessageDialog(self.parent,
                                gt("This action will set all images in the project to be the same as this one. Do you wish to proceed?"),
                                gt("Load same image for all"),
-                               style=wx.YES_NO|wx.YES_DEFAULT|wx.ICON_QUESTION)
+                               style=wx.YES_NO | wx.YES_DEFAULT | wx.ICON_QUESTION)
         result = dlg.ShowModal()
         dlg.Destroy()
 
@@ -204,14 +205,14 @@ class menuObject(object):
     def OnSelectLanguage(self, e):
         """Open language selection dialog"""
         logging.info("tcui.MenuObject: OnSelectLanguage - Menu-Tools-> Open select language dialog")
-        dlg = tcui.dialogLanguage(self.parent, self.app)
+        dlg = tcui.DialogLanguage(self.parent, self.app)
         if dlg.ShowModal() == wx.ID_OK:
             dlg.Destroy()
 
     def OnPreferences(self, e):
         """Open the preferences dialog"""
         logging.info("tcui.MenuObject: OnPreferences - Menu-Tools-> Open preferences dialog")
-        dlg = tcui.dialogPreferences(self.parent, self.app)
+        dlg = tcui.DialogPreferences(self.parent, self.app)
         # Needed so that on mac this window comes back into foreground after switching to/from application
         self.app.SetTopWindow(dlg)
         if dlg.ShowModal() == wx.ID_OK:
@@ -228,7 +229,7 @@ class menuObject(object):
     def OnAbout(self, e):
         """Open About dialog"""
         logging.info("tcui.MenuObject: OnAbout - Menu-Help-> Open about dialog")
-        dlg = tcui.dialogAbout(self.parent, self.app, config.version)
+        dlg = tcui.DialogAbout(self.parent, self.app, config.version)
         # Needed so that on mac this window comes back into foreground after switching to/from application
         self.app.SetTopWindow(dlg)
         if dlg.ShowModal() == wx.ID_OK:

@@ -6,14 +6,15 @@ import wx
 import tcui, translator
 gt = translator.Translator()
 
-class controlImageFile(wx.Panel):
+
+class ControlImageFile(wx.Panel):
     """Box containig the Image location controls"""
     def __init__(self, parent, app):
         """parent, ref to app"""
         logging.info("tcui.controlImageFile: __init__")
 
         wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
-        self.ftbox = tcui.filePicker(parent)
+        self.ftbox = tcui.FilePicker(parent)
         self.app = app
         self.parent = parent
 
@@ -21,14 +22,14 @@ class controlImageFile(wx.Panel):
 
         # Create UI elements
         self.path_label      = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
-        self.path_box        = wx.TextCtrl(  self, wx.ID_ANY, value="", style=wx.TE_RICH|wx.BORDER_SUNKEN)
+        self.path_box        = wx.TextCtrl(  self, wx.ID_ANY, value="", style=wx.TE_RICH | wx.BORDER_SUNKEN)
         self.path_filebrowse = wx.Button(    self, wx.ID_ANY, label="")
         self.path_reloadfile = wx.Button(    self, wx.ID_ANY)
 
         # Add to sizer (which must be a wx.FlexGridSizer)
         self.sizer.Add(self.path_label,      0, wx.ALIGN_CENTER_VERTICAL)
         self.sizer.Add((5, 0))
-        self.sizer.Add(self.path_box,        0, wx.EXPAND|wx.ALIGN_CENTER_VERTICAL|wx.TE_READONLY)
+        self.sizer.Add(self.path_box,        0, wx.EXPAND | wx.ALIGN_CENTER_VERTICAL | wx.TE_READONLY)
         self.sizer.Add((5, 0))
         self.sizer.Add(self.path_filebrowse, 0, wx.ALIGN_CENTER_VERTICAL)
         self.sizer.Add((5, 0))
@@ -74,11 +75,13 @@ class controlImageFile(wx.Panel):
     def OnBrowse(self, e):
         """Triggered when the browse button is clicked"""
         logging.info("tcui.controlImageFile: OnBrowse")
-        value = self.ftbox.filePickerDialog(self.app.activeproject.active_image_path(), 
-                                            self.app.activeproject.save_location(), 
-                                            gt("Choose an image file to open..."),
-                                            "PNG files (*.png)|*.png", 
-                                            wx.FD_OPEN|wx.FD_FILE_MUST_EXIST)
+        value = self.ftbox.file_picker_dialog(
+            self.app.activeproject.active_image_path(),
+            self.app.activeproject.save_location(),
+            gt("Choose an image file to open..."),
+            "PNG files (*.png)|*.png",
+            wx.FD_OPEN | wx.FD_FILE_MUST_EXIST,
+        )
         logging.debug("tcui.controlImageFile: OnBrowse - Path selected by user is: %s" % value)
         self.path_box.SetValue(value)
 

@@ -5,6 +5,7 @@ import wx
 import config
 config = config.Config()
 
+
 class TCMasks:
     """Generates and contains cutting masks for various paksizes"""
     # Whenever a TCMask is made, it checks if that paksize of masks has been generated
@@ -19,6 +20,7 @@ class TCMasks:
 
         self.mask = TCMasks.masksets[paksize]
 
+
 class TCMaskSet:
     """A set of cutting masks, 1bit bitmaps"""
 
@@ -28,7 +30,6 @@ class TCMaskSet:
         a = self.init_new_mask(p)
         self.fill_left(a)
         self.fill_right(a)
-        #a.SaveFile("mask_-1.png", wx.BITMAP_TYPE_PNG)
         self.masks[-1] = wx.Bitmap(a, 1)
 
         # 0 -> Tile only
@@ -36,44 +37,37 @@ class TCMaskSet:
         self.fill_bottom_triangles(a)
         self.fill_top_left(a)
         self.fill_top_right(a)
-        #a.SaveFile("mask_00.png", wx.BITMAP_TYPE_PNG)
         self.masks[0] = wx.Bitmap(a, 1)
 
         # 1 -> Tile and top-right
         a = self.init_new_mask(p)
         self.fill_bottom_triangles(a)
         self.fill_top_left(a)
-        #a.SaveFile("mask_01.png", wx.BITMAP_TYPE_PNG)
         self.masks[1] = wx.Bitmap(a, 1)
 
         # 2 -> Tile and top-left
         a = self.init_new_mask(p)
         self.fill_bottom_triangles(a)
         self.fill_top_right(a)
-        #a.SaveFile("mask_02.png", wx.BITMAP_TYPE_PNG)
         self.masks[2] = wx.Bitmap(a, 1)
 
         # 3 -> Tile and all top
         a = self.init_new_mask(p)
         self.fill_bottom_triangles(a)
-        #a.SaveFile("mask_03.png", wx.BITMAP_TYPE_PNG)
         self.masks[3] = wx.Bitmap(a, 1)
 
         # 4 -> Right side only
         a = self.init_new_mask(p)
         self.fill_left(a)
-        #a.SaveFile("mask_04.png", wx.BITMAP_TYPE_PNG)
         self.masks[4] = wx.Bitmap(a, 1)
 
         # 5 -> Left side only
         a = self.init_new_mask(p)
         self.fill_right(a)
-        #a.SaveFile("mask_05.png", wx.BITMAP_TYPE_PNG)
         self.masks[5] = wx.Bitmap(a, 1)
 
         # 6 -> Everything (no mask)
         a = self.init_new_mask(p)
-        #a.SaveFile("mask_06.png", wx.BITMAP_TYPE_PNG)
         self.masks[6] = wx.Bitmap(a, 1)
 
     def init_new_mask(self, paksize):
@@ -93,13 +87,13 @@ class TCMaskSet:
         fourth = paksize >> 2
 
         for y in range(0, fourth):
-            doubleY = y << 1
-            for x in range(0, doubleY):
+            y_double = y << 1
+            for x in range(0, y_double):
                 mask.SetRGB(x, half + fourth + y, 0, 0, 0)
 
         for y in range(0, fourth):
-            yLeft = paksize - (y << 1)
-            for x in range(yLeft, paksize):
+            y_left = paksize - (y << 1)
+            for x in range(y_left, paksize):
                 mask.SetRGB(x, half + fourth + y, 0, 0, 0)
 
         return mask
@@ -133,8 +127,8 @@ class TCMaskSet:
         fourth = paksize >> 2
 
         for y in range(0, fourth):
-            doubleY = y << 1
-            for x in range(0, doubleY):
+            y_double = y << 1
+            for x in range(0, y_double):
                 mask.SetRGB(x, half + fourth - y, 0, 0, 0)
 
         for y in range(0, half + 1):
@@ -150,8 +144,8 @@ class TCMaskSet:
         fourth = paksize >> 2
 
         for y in range(0, fourth):
-            yLeft = paksize - (y << 1)
-            for x in range(yLeft, paksize):
+            y_left = paksize - (y << 1)
+            for x in range(y_left, paksize):
                 mask.SetRGB(x, half + fourth - y, 0, 0, 0)
 
         for y in range(0, half + 1):
@@ -162,6 +156,7 @@ class TCMaskSet:
 
     def __getitem__(self, key):
         return wx.Mask(self.masks[key])
+
 
 # Take tile coords and convert into screen coords
 def tile_to_screen(pos, dims, off, p, screen_height=None):
@@ -181,10 +176,11 @@ def tile_to_screen(pos, dims, off, p, screen_height=None):
     # Gives top-left position of subsection
     yy = ((xdims - xpos) + (ydims - ypos)) * (p / 4) + (zpos * p) + offy + (p / 2)
 
-    if screen_height != None:
+    if screen_height is not None:
         yy = screen_height - yy
 
     return (xx, yy)
+
 
 class Makeobj:
     """Interface class to Makeobj"""
@@ -217,14 +213,15 @@ class Makeobj:
 
         logging.info("Makeobj output complete")
 
+
 class Paths(object):
     """Advanced path manipulation functions"""
-    # splitPath     breaks a string up into path components
-    # joinPaths     joins two paths together, taking end components (filenames etc.) into account
-    # existingPath  returns the largest section of a path which exists on the filesystem
-    # comparePaths  produces a relative path from two absolute ones
+    # split_path     breaks a string up into path components
+    # join_paths     joins two paths together, taking end components (filenames etc.) into account
+    # existing_path  returns the largest section of a path which exists on the filesystem
+    # compare_paths  produces a relative path from two absolute ones
 
-    def splitPath(self, p1, p2=None):
+    def split_path(self, p1, p2=None):
         """Split a path into an array, index[0] being the first path section, index[len-1] being the last
         Optionally takes a second path which is joined with the first for existence checks, to allow for
         checking existence of relative paths"""
@@ -234,15 +231,20 @@ class Paths(object):
                 p1 = os.path.split(p1)[0]
 
         a = []
-        if p2 == None:
+        if p2 is None:
             p2 = ""
 
         while os.path.split(p1)[1] != "":
             n = os.path.split(p1)
             # Add at front, text,   offset,             length,     exists or not,      File or Directory?
-            ## logging.debug(u"path1: %s, path2: %s" % (p1, p2))
-            ## logging.debug(u"exists? %s, %s" % (self.joinPaths(p2, p1), os.path.exists(self.joinPaths(p2, p1))))
-            a.insert(0, [n[1], len(p1) - len(n[1]), len(n[1]), os.path.exists(self.joinPaths(p2, p1))])#, existsAsType(p)])
+            logging.debug("path1: %s, path2: %s" % (p1, p2))
+            logging.debug("exists? %s, %s" % (self.join_paths(p2, p1), os.path.exists(self.join_paths(p2, p1))))
+            a.insert(0, [
+                n[1],
+                len(p1) - len(n[1]),
+                len(n[1]),
+                os.path.exists(self.join_paths(p2, p1)),
+            ])
             p1 = n[0]
 
         return a
@@ -261,11 +263,7 @@ class Paths(object):
         else:
             return os.path.join(p3, "")
 
-    def joinPaths(self, p1, p2):
-        """Join p2 to p1, accounting for end cases (is directory, is file etc.)"""
-        return self.join_paths(p1, p2)
-
-    def existingPath(self, p):
+    def existing_path(self, p):
         """Take a path and return the largest section of this path that exists
         on the filesystem"""
         if os.path.split(p)[1] == "":
@@ -288,11 +286,11 @@ class Paths(object):
     def compare_paths(self, p1, p2):
         """Return either a relative path from p1 to p2, or p1 if no relative path exists"""
         # Check that p2 is not an empty string, or None, and that drive letters match
-        if p2 == None or p2 == "" or os.path.splitdrive(p1)[0] != os.path.splitdrive(p2)[0]:
+        if p2 is None or p2 == "" or os.path.splitdrive(p1)[0] != os.path.splitdrive(p2)[0]:
             return p1
 
-        p1s = self.splitPath(os.path.normpath(p1))
-        p2s = self.splitPath(os.path.normpath(p2))
+        p1s = self.split_path(os.path.normpath(p1))
+        p2s = self.split_path(os.path.normpath(p2))
         k = 0
 
         while p1s[k][0] == p2s[k][0]:
@@ -303,7 +301,7 @@ class Paths(object):
         p3 = ""
         # If p2's last component is a file, need to subtract one more to give correct path
         e = 1
-        for a in range(len(p2s) - k - e):
+        for _a in range(len(p2s) - k - e):
             p3 = os.path.join(p3, "..")
 
         # Then just add on all of the remaining parts of p1s past the sections which match
@@ -312,13 +310,10 @@ class Paths(object):
 
         return p3
 
-    def comparePaths(self, p1, p2):
-        """Compare two absolute paths, returning either a relative path from p1 to p2, or p1 if no relative path exists"""
-        return self.compare_paths(p1, p2)
-
     def win_to_unix(self, path):
         """Convert windows style path blah\\meh to unix style blah/meh"""
         return path.replace("\\", "/")
+
 
 def export_writer(project, pak_output=False, return_dat=False, write_dat=True):
     """Write a project's dat and png files"""
@@ -359,7 +354,7 @@ def export_writer(project, pak_output=False, return_dat=False, write_dat=True):
     zdims = project.z()
     layers = project.frontimage() + 1 # +1 as this value is stored as an 0 or 1, we need 1 or 2
     views = project.directions()
-    seasons = 1 + project.seasons(season="snow"); # +1 for summer, +1 if has snow
+    seasons = 1 + project.seasons(season="snow") # +1 for summer, +1 if has snow
     seasons_img = [0, 1] # image indexes in project
     autumn = project.seasons(season="autumn")
     winter = project.seasons(season="winter")
@@ -367,7 +362,7 @@ def export_writer(project, pak_output=False, return_dat=False, write_dat=True):
     if autumn == 1 or winter == 1 or spring == 1:
         # +3 if has any other season
         seasons += 3
-        seasons_img = [0, 2*autumn, 3*winter, 4*spring, 1]
+        seasons_img = [0, 2 * autumn, 3 * winter, 4 * spring, 1]
 
     logging.info("e_w: Outputting using paksize: %s" % p)
     logging.info("e_w: Outputting %s front/backimages" % layers)
@@ -380,7 +375,7 @@ def export_writer(project, pak_output=False, return_dat=False, write_dat=True):
     totalimages = dims * layers * views * seasons
     side = int(math.ceil(math.sqrt(totalimages)))
 
-    logging.info("e_w: Outputting %s images total, output size %sx%sp (%sx%spx)" % (totalimages, side, side, side*p, side*p))
+    logging.info("e_w: Outputting %s images total, output size %sx%sp (%sx%spx)" % (totalimages, side, side, side * p, side * p))
 
     # A list can now be produced of all images to be output
     # project[view][season][frame][layer][xdim][ydim][zdim] = [bitmap, (xposout, yposout)]
@@ -403,18 +398,18 @@ def export_writer(project, pak_output=False, return_dat=False, write_dat=True):
                             for z in range(zdims):
                                 # No need to write out middle bits of higher levels
                                 if (z > 0 and (x == 0 or y == 0)) or z == 0:
-                                    output_list.append([project.get_cut_image(d, seasons_img[s], f, l, x, y, z), {"d":d, "s":s, "f":f, "l":l, "x":x, "y":y, "z":z}, None])
+                                    output_list.append([project.get_cut_image(d, seasons_img[s], f, l, x, y, z), {"d": d, "s": s, "f": f, "l": l, "x": x, "y": y, "z": z}, None])
 
     # Now that a list of component images has been generated, output these in sequence
     x = 0
     y = 0
 
     # Init output bitmap and dc for drawing into it
-    output = wx.Image(side*p, side*p)
+    output = wx.Image(side * p, side * p)
     if project.transparency():
         output.InitAlpha()
-        for xa in range(0, side*p):
-            for ya in range(0, side*p):
+        for xa in range(0, side * p):
+            for ya in range(0, side * p):
                 output.SetAlpha(xa, ya, 0)
 
     output_bitmap = wx.Bitmap(output)
@@ -426,7 +421,7 @@ def export_writer(project, pak_output=False, return_dat=False, write_dat=True):
 
     if not project.transparency():
         gc.SetBrush(wx.Brush(config.transparent, wx.SOLID))
-        gc.DrawRectangle(0, 0, side*p, side*p)
+        gc.DrawRectangle(0, 0, side * p, side * p)
 
     for k in output_list:
         # a bug in wxWidget kills the transparency inside the mask
@@ -434,7 +429,7 @@ def export_writer(project, pak_output=False, return_dat=False, write_dat=True):
         k[0].ConvertToImage().SaveFile(buf, wx.BITMAP_TYPE_PNG)
         buf.seek(0)
         cut_image = wx.Bitmap(wx.Image(buf, wx.BITMAP_TYPE_PNG))
-        gc.DrawBitmap(cut_image, x*p, y*p, p, p)
+        gc.DrawBitmap(cut_image, x * p, y * p, p, p)
         outdc.SelectObject(wx.NullBitmap)
         gc.Flush()
         # Makeobj references the image array by row,column, e.g. y,x, so switch these
@@ -520,6 +515,7 @@ def export_writer(project, pak_output=False, return_dat=False, write_dat=True):
         return dat_text
     else:
         return True
+
 
 def export_cutter(bitmap, dims, offset, p, transparency):
     """Takes a bitmap and dimensions, and returns an array of masked bitmaps"""

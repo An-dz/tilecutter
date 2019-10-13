@@ -6,14 +6,15 @@ import wx
 import tcui, translator
 gt = translator.Translator()
 
-class controlFiles(wx.Panel):
+
+class ControlFiles(wx.Panel):
     """Box containing the project files locations"""
     def __init__(self, parent, app):
         """parent, ref to app"""
         logging.info("tcui.controlFiles: __init__")
 
         wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
-        self.ftbox = tcui.filePicker(parent)
+        self.ftbox = tcui.FilePicker(parent)
         self.app = app
         self.parent = parent
 
@@ -23,46 +24,46 @@ class controlFiles(wx.Panel):
 
         # Create UI elements for save location
         self.save_path_label      = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
-        self.save_path_box        = wx.TextCtrl(self,   wx.ID_ANY, value="", style=wx.TE_RICH|wx.BORDER_SUNKEN)#|wx.TE_MULTILINE)#, style=wx.TE_READONLY)
+        self.save_path_box        = wx.TextCtrl(self,   wx.ID_ANY, value="", style=wx.TE_RICH | wx.BORDER_SUNKEN)
         self.save_path_filebrowse = wx.Button(self,     wx.ID_ANY, label="")
 
         # Create UI elements for dat location
         self.dat_path_label       = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
-        self.dat_path_box         = wx.TextCtrl(  self, wx.ID_ANY, value="", style=wx.TE_RICH|wx.BORDER_SUNKEN)#|wx.TE_MULTILINE)#, style=wx.TE_READONLY)
+        self.dat_path_box         = wx.TextCtrl(  self, wx.ID_ANY, value="", style=wx.TE_RICH | wx.BORDER_SUNKEN)
         self.dat_path_filebrowse  = wx.Button(    self, wx.ID_ANY, label="")
 
         # Create UI elements for png location
         self.png_path_label       = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
-        self.png_path_box         = wx.TextCtrl(  self, wx.ID_ANY, value="", style=wx.TE_RICH|wx.BORDER_SUNKEN)#|wx.TE_MULTILINE)#, style=wx.TE_READONLY)
+        self.png_path_box         = wx.TextCtrl(  self, wx.ID_ANY, value="", style=wx.TE_RICH | wx.BORDER_SUNKEN)
         self.png_path_filebrowse  = wx.Button(    self, wx.ID_ANY, label="")
 
         # Create UI elements for pak location
         self.pak_path_label       = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
-        self.pak_path_box         = wx.TextCtrl(  self, wx.ID_ANY, value="", style=wx.TE_RICH|wx.BORDER_SUNKEN)#|wx.TE_MULTILINE)#, style=wx.TE_READONLY)
+        self.pak_path_box         = wx.TextCtrl(  self, wx.ID_ANY, value="", style=wx.TE_RICH | wx.BORDER_SUNKEN)
         self.pak_path_filebrowse  = wx.Button(    self, wx.ID_ANY, label="")
 
         # Add to sizer
         self.sizer.Add(self.save_path_label,      0, wx.ALIGN_CENTER_VERTICAL)
         self.sizer.Add((5, 0))
-        self.sizer.Add(self.save_path_box,        0, wx.EXPAND|wx.ALIGN_CENTER_VERTICAL|wx.TE_READONLY)
+        self.sizer.Add(self.save_path_box,        0, wx.EXPAND | wx.ALIGN_CENTER_VERTICAL | wx.TE_READONLY)
         self.sizer.Add((5, 0))
         self.sizer.Add(self.save_path_filebrowse, 0, wx.ALIGN_CENTER_VERTICAL)
 
         self.sizer.Add(self.dat_path_label,       0, wx.ALIGN_CENTER_VERTICAL)
         self.sizer.Add((5, 0))
-        self.sizer.Add(self.dat_path_box,         0, wx.EXPAND|wx.ALIGN_CENTER_VERTICAL|wx.TE_READONLY)
+        self.sizer.Add(self.dat_path_box,         0, wx.EXPAND | wx.ALIGN_CENTER_VERTICAL | wx.TE_READONLY)
         self.sizer.Add((5, 0))
         self.sizer.Add(self.dat_path_filebrowse,  0, wx.ALIGN_CENTER_VERTICAL)
 
         self.sizer.Add(self.png_path_label,       0, wx.ALIGN_CENTER_VERTICAL)
         self.sizer.Add((5, 0))
-        self.sizer.Add(self.png_path_box,         0, wx.EXPAND|wx.ALIGN_CENTER_VERTICAL|wx.TE_READONLY)
+        self.sizer.Add(self.png_path_box,         0, wx.EXPAND | wx.ALIGN_CENTER_VERTICAL | wx.TE_READONLY)
         self.sizer.Add((5, 0))
         self.sizer.Add(self.png_path_filebrowse,  0, wx.ALIGN_CENTER_VERTICAL)
 
         self.sizer.Add(self.pak_path_label,       0, wx.ALIGN_CENTER_VERTICAL)
         self.sizer.Add((5, 0))
-        self.sizer.Add(self.pak_path_box,         0, wx.EXPAND|wx.ALIGN_CENTER_VERTICAL|wx.TE_READONLY)
+        self.sizer.Add(self.pak_path_box,         0, wx.EXPAND | wx.ALIGN_CENTER_VERTICAL | wx.TE_READONLY)
         self.sizer.Add((5, 0))
         self.sizer.Add(self.pak_path_filebrowse,  0, wx.ALIGN_CENTER_VERTICAL)
 
@@ -171,43 +172,51 @@ class controlFiles(wx.Panel):
     def OnSaveBrowse(self, e):
         """Triggered when the save browse button is clicked"""
         logging.info("tcui.controlFiles: OnSaveBrowse")
-        value = self.ftbox.filePickerDialog(self.app.activeproject.save_location(), 
-                                            "", 
-                                            gt("Choose a location to save project..."),
-                                            "TCP files (*.tcp)|*.tcp", 
-                                            wx.FD_SAVE|wx.FD_OVERWRITE_PROMPT)
+        value = self.ftbox.file_picker_dialog(
+            self.app.activeproject.save_location(),
+            "",
+            gt("Choose a location to save project..."),
+            "TCP files (*.tcp)|*.tcp",
+            wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT,
+        )
         logging.debug("tcui.controlFiles: OnSaveBrowse - Path selected by user is: %s" % value)
         self.save_path_box.SetValue(value)
 
     def OnDatBrowse(self, e):
         """Triggered when the dat browse button is clicked"""
         logging.info("tcui.controlFiles: OnDatBrowse")
-        value = self.ftbox.filePickerDialog(self.app.activeproject.datfile_location(), 
-                                            self.app.activeproject.save_location(), 
-                                            gt("Choose a location to save .dat file..."),
-                                            "DAT files (*.dat)|*.dat", 
-                                            wx.FD_SAVE|wx.FD_OVERWRITE_PROMPT)
+        value = self.ftbox.file_picker_dialog(
+            self.app.activeproject.datfile_location(),
+            self.app.activeproject.save_location(),
+            gt("Choose a location to save .dat file..."),
+            "DAT files (*.dat)|*.dat",
+            wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT,
+        )
         logging.debug("tcui.controlFiles: OnDatBrowse - Path selected by user is: %s" % value)
         self.dat_path_box.SetValue(value)
 
     def OnPngBrowse(self, e):
         """Triggered when the png browse button is clicked"""
         logging.info("tcui.controlFiles: OnPngBrowse")
-        value = self.ftbox.filePickerDialog(self.app.activeproject.pngfile_location(), 
-                                            self.app.activeproject.save_location(), 
-                                            gt("Choose a location to save .png file..."),
-                                            "PNG files (*.png)|*.png", 
-                                            wx.FD_SAVE|wx.FD_OVERWRITE_PROMPT)
+        value = self.ftbox.file_picker_dialog(
+            self.app.activeproject.pngfile_location(),
+            self.app.activeproject.save_location(),
+            gt("Choose a location to save .png file..."),
+            "PNG files (*.png)|*.png",
+            wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT,
+        )
         logging.debug("tcui.controlFiles: OnPngBrowse - Path selected by user is: %s" % value)
         self.png_path_box.SetValue(value)
 
     def OnPakBrowse(self, e):
         """Triggered when the pak browse button is clicked"""
         logging.info("tcui.controlFiles: OnPakBrowse")
-        value = self.ftbox.filePickerDialog(self.app.activeproject.pakfile_location(), 
-                                            self.app.activeproject.save_location(), 
-                                            gt("Choose a location to export .pak file..."),
-                                            "PAK files (*.pak)|*.pak", 
-                                            wx.FD_SAVE|wx.FD_OVERWRITE_PROMPT)
+        value = self.ftbox.file_picker_dialog(
+            self.app.activeproject.pakfile_location(),
+            self.app.activeproject.save_location(),
+            gt("Choose a location to export .pak file..."),
+            "PAK files (*.pak)|*.pak",
+            wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT,
+        )
         logging.debug("tcui.controlFiles: OnPakBrowse - Path selected by user is: %s" % value)
         self.pak_path_box.SetValue(value)
