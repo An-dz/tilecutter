@@ -47,7 +47,7 @@ class DialogPreferences(wx.Dialog):
 
         # Add close button at the bottom
         self.close_button     = wx.Button(    self, wx.ID_OK,  "", (-1, -1), (-1, -1), wx.ALIGN_RIGHT)
-        self.buttons.Add(self.close_button, 0, wx.ALIGN_RIGHT, 0)
+        self.buttons.Add(self.close_button, 0, 0, 0)
 
         # And finally add that, the language picker and the other static text to the panel sizer
         self.v_sizer.Add((0, 10))

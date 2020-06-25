@@ -136,6 +136,7 @@ class ControlDims(wx.Panel):
     def OnPaksizeSelect(self, e):
         """Change value of the paksize"""
         logging.info("Changed Paksize")
+        print(self.dims_p_select.GetValue())
         if self.app.activeproject.paksize() != int(self.dims_p_select.GetValue()):
             self.app.activeproject.paksize(self.dims_p_select.GetValue())
             self.app.frame.display.update()

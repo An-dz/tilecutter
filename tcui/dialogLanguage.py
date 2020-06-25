@@ -46,7 +46,7 @@ class DialogLanguage(wx.Dialog):
         # Add close button at the bottom
         self.close_button = wx.Button(self, wx.ID_OK, "", (-1, -1), (-1, -1), wx.ALIGN_RIGHT)
         self.buttons = wx.BoxSizer(wx.HORIZONTAL)
-        self.buttons.Add(self.close_button, 0, wx.ALIGN_RIGHT, 0)
+        self.buttons.Add(self.close_button, 0, 0, 0)
 
         # Then add bitmap and texts to the static box sizer
         self.s_dialog_box.Add(self.s_dialog_box_right, 1, wx.ALIGN_CENTER_VERTICAL | wx.LEFT, 10)

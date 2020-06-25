@@ -33,7 +33,7 @@ class DialogDatFileEdit(wx.Dialog):
         self.v_sizer.Add((0,  5))
         self.v_sizer.Add(self.description, 0, wx.ALIGN_LEFT)
         self.v_sizer.Add((0,  5))
-        self.v_sizer.Add(self.text_input,  1, wx.EXPAND | wx.ALIGN_CENTER_HORIZONTAL)
+        self.v_sizer.Add(self.text_input,  1, wx.EXPAND)
         self.v_sizer.Add((0, 10))
         self.v_sizer.Add(self.buttons,     0, wx.ALIGN_RIGHT)
         self.v_sizer.Add((0, 10))

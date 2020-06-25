@@ -28,8 +28,8 @@ class ViewImage(wx.Panel):
 
         # Add all items to panel's sizer
         self.sizer = wx.BoxSizer(wx.VERTICAL)
-        self.sizer.Add(self.control_imagepath, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.EXPAND | wx.ALL, 4)
-        self.sizer.Add(self.scrolledwindow,    1, wx.EXPAND,                                       0)
+        self.sizer.Add(self.control_imagepath, 0, wx.EXPAND | wx.ALL, 4)
+        self.sizer.Add(self.scrolledwindow,    1, wx.EXPAND,          0)
 
         self.SetSizer(self.sizer)
 

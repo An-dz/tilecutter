@@ -55,35 +55,35 @@ class ViewMain(wx.Frame):
         self.control_seasons = tcui.ControlSeason(self.panel, app)
         self.s_panel_left.Add(self.control_seasons, 0, wx.EXPAND | wx.LEFT | wx.RIGHT, 3)
         self.s_panel_left.Add((0, 2))
-        self.s_panel_left.Add(wx.StaticLine(self.panel, style=wx.LI_HORIZONTAL), 0, wx.ALIGN_CENTER_HORIZONTAL | wx.EXPAND)
+        self.s_panel_left.Add(wx.StaticLine(self.panel, style=wx.LI_HORIZONTAL), 0, wx.EXPAND)
         self.s_panel_left.Add((0, 2))
 
         # Image controls
         self.control_images = tcui.ControlImage(self.panel, app)
         self.s_panel_left.Add(self.control_images, 0, wx.EXPAND | wx.LEFT | wx.RIGHT, 3)
         self.s_panel_left.Add((0, 2))
-        self.s_panel_left.Add(wx.StaticLine(self.panel, style=wx.LI_HORIZONTAL), 0, wx.ALIGN_CENTER_HORIZONTAL | wx.EXPAND)
+        self.s_panel_left.Add(wx.StaticLine(self.panel, style=wx.LI_HORIZONTAL), 0, wx.EXPAND)
         self.s_panel_left.Add((0, 2))
 
         # Facing controls
         self.control_facing = tcui.ControlFacing(self.panel, app)
         self.s_panel_left.Add(self.control_facing, 0, wx.EXPAND | wx.LEFT | wx.RIGHT, 3)
         self.s_panel_left.Add((0, 2))
-        self.s_panel_left.Add(wx.StaticLine(self.panel, style=wx.LI_HORIZONTAL), 0, wx.ALIGN_CENTER_HORIZONTAL | wx.EXPAND)
+        self.s_panel_left.Add(wx.StaticLine(self.panel, style=wx.LI_HORIZONTAL), 0, wx.EXPAND)
         self.s_panel_left.Add((0, 2))
 
         # Dimension controls
         self.control_dims = tcui.ControlDims(self.panel, app)
         self.s_panel_left.Add(self.control_dims, 0, wx.EXPAND | wx.LEFT | wx.RIGHT, 3)
         self.s_panel_left.Add((0, 2))
-        self.s_panel_left.Add(wx.StaticLine(self.panel, style=wx.LI_HORIZONTAL), 0, wx.ALIGN_CENTER_HORIZONTAL | wx.EXPAND)
+        self.s_panel_left.Add(wx.StaticLine(self.panel, style=wx.LI_HORIZONTAL), 0, wx.EXPAND)
         self.s_panel_left.Add((0, 2))
 
         # Offset/mask controls
         self.control_offset = tcui.ControlOffset(self.panel, app)
         self.s_panel_left.Add(self.control_offset, 0, wx.EXPAND | wx.LEFT | wx.RIGHT, 3)
         self.s_panel_left.Add((0, 2))
-        self.s_panel_left.Add(wx.StaticLine(self.panel, style=wx.LI_HORIZONTAL), 0, wx.ALIGN_CENTER_HORIZONTAL | wx.EXPAND)
+        self.s_panel_left.Add(wx.StaticLine(self.panel, style=wx.LI_HORIZONTAL), 0, wx.EXPAND)
         self.s_panel_left.Add((0, 2))
 
         # Create Image display window and image path entry control, which adds itself to the sizer
