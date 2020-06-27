@@ -131,6 +131,7 @@ class Project(object):
 
         # Set initial hash value to indicate that the project is unchanged (either having just been loaded in, or being brand new)
         self.update_hash()
+        self.reload_active_image()
 
     def __getitem__(self, key):
         return self.props["images"][key]
@@ -370,7 +371,6 @@ class Project(object):
 
     def get_image(self, d, s, f, l):
         """Return a wxImage representation of the specified image"""
-        self.reload_image(d, s, f, l)
         return self.internals["images"][d][s][f][l]["imagedata"]
 
     def get_active_image(self):
@@ -384,7 +384,6 @@ class Project(object):
 
     def get_bitmap(self, d, s, f, l):
         """Return a wxBitmap representation of the specified image"""
-        self.reload_image(d, s, f, l)
         return self.internals["images"][d][s][f][l]["bitmapdata"]
 
     def get_active_bitmap(self):
