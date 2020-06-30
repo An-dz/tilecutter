@@ -104,7 +104,12 @@ class ViewImage(wx.Panel):
         logging.info("Update view")
 
         # Redraw the active image in the window, with mask etc.
-        bitmap = self.app.activeproject.get_active_bitmap()
+        if self.parent.night_mode_select.GetValue() is True:
+            bitmap = self.app.activeproject.get_active_night_bitmap()
+        elif self.parent.special_colour_select.GetValue() is True:
+            bitmap = self.app.activeproject.get_active_special_colour_bitmap()
+        else:
+            bitmap = self.app.activeproject.get_active_bitmap()
         transparency = self.app.activeproject.transparency()
 
         # Setup image properties for mask generation

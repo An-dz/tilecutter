@@ -1,6 +1,7 @@
 # TileCutter Project Module
 
 import logging, os, sys
+import numpy
 import wx
 import config
 from environment import getenvvar
@@ -131,10 +132,74 @@ class Project(object):
 
         # Set initial hash value to indicate that the project is unchanged (either having just been loaded in, or being brand new)
         self.update_hash()
+        self.colourConversionTables()
         self.reload_active_image()
 
     def __getitem__(self, key):
         return self.props["images"][key]
+
+    def colourConversionTables(self):
+        night = 4
+        light_level = 0
+        self.RG_night_multiplier = (0.75 ** night) * ((light_level + 8.0) / 8.0)
+        self.B_night_multiplier  = (0.83 ** night) * ((light_level + 8.0) / 8.0)
+
+        self.special_colours = {
+            # Dark windows, lit yellowish at night
+            0x57656F: (0xD3, 0xC3, 0x80),
+            # Lighter windows, lit blueish at night
+            0x7F9BF1: (0x80, 0xC3, 0xD3),
+            # Yellow light
+            0xFFFF53: (0xFF, 0xFF, 0x53),
+            # Red light
+            0xFF211D: (0xFF, 0x21, 0x1D),
+            # Green light
+            0x01DD01: (0x01, 0xDD, 0x01),
+            # Non-darkening grey 1 (menus)
+            0x6B6B6B: (0x6B, 0x6B, 0x6B),
+            # Non-darkening grey 2 (menus)
+            0x9B9B9B: (0x9B, 0x9B, 0x9B),
+            # non-darkening grey 3 (menus)
+            0xB3B3B3: (0xB3, 0xB3, 0xB3),
+            # Non-darkening grey 4 (menus)
+            0xC9C9C9: (0xC9, 0xC9, 0xC9),
+            # Non-darkening grey 5 (menus)
+            0xDFDFDF: (0xDF, 0xDF, 0xDF),
+            # Nearly white light at day, yellowish light at night
+            0xE3E3FF: (0xFF, 0xFF, 0xE3),
+            # Windows, lit yellow
+            0xC1B1D1: (0xD3, 0xC3, 0x80),
+            # Windows, lit yellow
+            0x4D4D4D: (0xD3, 0xC3, 0x80),
+            # purple light for signals
+            0xE100E1: (0xE1, 0x00, 0xE1),
+            # blue light
+            0x0101FF: (0x01, 0x01, 0xFF),
+        }
+
+        self.player_colours = {
+            # primary player colour
+            0x244B67: (0x24, 0x4B, 0x67),
+            0x395E7C: (0x24, 0x4B, 0x67),
+            0x4C7191: (0x24, 0x4B, 0x67),
+            0x6084A7: (0x24, 0x4B, 0x67),
+            0x7497BD: (0x24, 0x4B, 0x67),
+            0x88ABD3: (0x24, 0x4B, 0x67),
+            0x9CBEE9: (0x24, 0x4B, 0x67),
+            0xB0D2FF: (0x24, 0x4B, 0x67),
+            # secondary player colour
+            0x7B5803: (0x7B, 0x58, 0x03),
+            0x8E6F04: (0x7B, 0x58, 0x03),
+            0xA18605: (0x7B, 0x58, 0x03),
+            0xB49D07: (0x7B, 0x58, 0x03),
+            0xC6B408: (0x7B, 0x58, 0x03),
+            0xD9CB0A: (0x7B, 0x58, 0x03),
+            0xECE20B: (0x7B, 0x58, 0x03),
+            0xFFF90D: (0x7B, 0x58, 0x03),
+        }
+
+        for key, _value in self.special_colours.items():
+            self.player_colours[key] = (0xFF, 0x00, 0x00)
 
     def load_dict(self, loaded, validators, defaults):
         """Load a dict of stuff from config, may be called recursively"""
@@ -340,6 +405,55 @@ class Project(object):
     ########################################
     # These functions deal with image data #
     ########################################
+    @staticmethod
+    def transform_night(x, a):
+        a *= x
+        return a.clip(0, 255).astype(numpy.uint8)
+
+    @staticmethod
+    def transform_special(x, a):
+        a = x + ((255 - x) // a)
+        return a.clip(0, 255).astype(numpy.uint8)
+
+    @staticmethod
+    def transform_map(imgbuf, width, height, specials, R_factor, G_factor, B_factor, transform):
+        # Convert to array
+        img_array = numpy.ndarray((width, height, 4), dtype=numpy.uint8, buffer=imgbuf)
+        # Extract channels
+        R = img_array.T[0]
+        G = img_array.T[1]
+        B = img_array.T[2]
+        A = img_array.T[3]
+
+        # Find Special colors
+        # First, calculate a unique hash
+        colour_hashes = (2**16 * R | 2**8 * G | B)
+
+        # Find inidices of special colors
+        special_indices = []
+        for special_colour, new_colour in specials.items():
+            val_arr = numpy.array(list(new_colour))
+
+            special_indices.append(
+                {
+                    'mask': numpy.where(numpy.isin(colour_hashes, special_colour, True)),
+                    'value': val_arr
+                }
+            )
+
+        # Apply transform to whole image
+        R = transform(R, R_factor)
+        G = transform(G, G_factor)
+        B = transform(B, B_factor)
+
+        # Replace values where special colors were found
+        for idx in special_indices:
+            R[idx['mask']] = idx['value'][0]
+            G[idx['mask']] = idx['value'][1]
+            B[idx['mask']] = idx['value'][2]
+
+        return numpy.array([R,G,B,A]).T.tobytes()
+
     def active_image_path(self, value=None, validate=False):
         """Set or return the path of the active image"""
         return self.image_path(
@@ -395,6 +509,82 @@ class Project(object):
             self.internals["activeimage"]["layer"],
         )
 
+    def get_night_bitmap(self, d, s, f, l):
+        """Return a wxBitmap representation of the specified image in night mode"""
+        nightbitmap = self.internals["images"][d][s][f][l].get("nightbitmap")
+
+        if nightbitmap is not None:
+            return nightbitmap
+
+        bitmap = self.get_bitmap(d, s, f, l)
+        imgbuf = bytearray(bitmap.GetWidth() * bitmap.GetHeight() * 4)
+        bitmap.CopyToBuffer(imgbuf, wx.BitmapBufferFormat_RGBA)
+
+        imgbuf = self.transform_map(
+            imgbuf,
+            bitmap.GetWidth(),
+            bitmap.GetHeight(),
+            self.special_colours,
+            self.RG_night_multiplier,
+            self.RG_night_multiplier,
+            self.B_night_multiplier,
+            self.transform_night,
+        )
+
+        nightbitmap = wx.Bitmap.FromBufferRGBA(bitmap.GetWidth(), bitmap.GetHeight(), imgbuf)
+        self.internals["images"][d][s][f][l]["nightbitmap"] = nightbitmap
+
+        return nightbitmap
+
+    def get_active_night_bitmap(self):
+        """Return a wxBitmap representation of the active image in night mode"""
+        return self.get_night_bitmap(
+            self.internals["activeimage"]["direction"],
+            self.internals["activeimage"]["season"],
+            self.internals["activeimage"]["frame"],
+            self.internals["activeimage"]["layer"],
+        )
+
+    def get_special_colour_bitmap(self, d, s, f, l):
+        """Return a wxBitmap representation of the specified image with special colours in contrast"""
+        specialbitmap = self.internals["images"][d][s][f][l].get("specialbitmap")
+
+        if specialbitmap is not None:
+            return specialbitmap
+
+        bitmap = self.get_bitmap(d, s, f, l)
+        imgbuf = bytearray(bitmap.GetWidth() * bitmap.GetHeight() * 4)
+        bitmap.CopyToBuffer(imgbuf, wx.BitmapBufferFormat_RGBA)
+
+        imgbuf = self.transform_map(
+            imgbuf,
+            bitmap.GetWidth(),
+            bitmap.GetHeight(),
+            self.player_colours,
+            1.25,
+            1.25,
+            1.25,
+            self.transform_special,
+        )
+
+        specialbitmap = wx.Bitmap.FromBufferRGBA(bitmap.GetWidth(), bitmap.GetHeight(), imgbuf)
+        self.internals["images"][d][s][f][l]["specialbitmap"] = specialbitmap
+
+        return specialbitmap
+
+    def get_active_special_colour_bitmap(self):
+        """Return a wxBitmap representation of the active image with special colours in contrast"""
+        return self.get_special_colour_bitmap(
+            self.internals["activeimage"]["direction"],
+            self.internals["activeimage"]["season"],
+            self.internals["activeimage"]["frame"],
+            self.internals["activeimage"]["layer"],
+        )
+
+    def remove_special_bitmaps(self, d, s, f, l):
+        self.internals["images"][d][s][f][l]["nightbitmap"] = None
+        self.internals["images"][d][s][f][l]["specialbitmap"] = None
+
     def set_all_images(self, path):
         """Set the path for all images to the same path"""
         for d in range(len(self.props["images"])):
@@ -439,16 +629,17 @@ class Project(object):
             for s in range(len(self.props["images"][d])):
                 for f in range(len(self.props["images"][d][s])):
                     for l in range(len(self.props["images"][d][s][f])):
+                        self.remove_special_bitmaps(d, s, f, l)
                         self.reload_image(d, s, f, l)
 
     def reload_active_image(self):
         """Refresh the active image"""
-        return self.reload_image(
-            self.internals["activeimage"]["direction"],
-            self.internals["activeimage"]["season"],
-            self.internals["activeimage"]["frame"],
-            self.internals["activeimage"]["layer"],
-        )
+        d = self.internals["activeimage"]["direction"]
+        s = self.internals["activeimage"]["season"]
+        f = self.internals["activeimage"]["frame"]
+        l = self.internals["activeimage"]["layer"]
+        self.remove_special_bitmaps(d, s, f, l)
+        return self.reload_image(d, s, f, l)
 
     def reload_image(self, d, s, f, l):
         """Refresh the specified image, inputs are: direction, season, frame, layer"""

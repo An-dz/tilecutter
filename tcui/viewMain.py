@@ -93,6 +93,18 @@ class ViewMain(wx.Frame):
         # Save, Dat, Image and Pak output paths
         self.control_paths = tcui.ControlFiles(self.panel, app)
 
+        # Normal mode
+        self.day_mode_select       = wx.RadioButton(self.panel, wx.ID_ANY, "", (-1, -1), (-1, -1))
+        self.day_mode_select.Bind(      wx.EVT_RADIOBUTTON, self.OnSelectSpecialColour, self.day_mode_select)
+        # Night mode
+        self.night_mode_select     = wx.RadioButton(self.panel, wx.ID_ANY, "", (-1, -1), (-1, -1))
+        self.night_mode_select.Bind(    wx.EVT_RADIOBUTTON, self.OnSelectSpecialColour, self.night_mode_select)
+        # Special colour finder
+        self.special_colour_select = wx.RadioButton(self.panel, wx.ID_ANY, "", (-1, -1), (-1, -1))
+        self.special_colour_select.Bind(wx.EVT_RADIOBUTTON, self.OnSelectSpecialColour, self.special_colour_select)
+
+        self.day_mode_select.SetValue(True)
+
         # CUT/EXPORT BUTTONS
         # Export .dat checkbox
         self.export_dat_toggle = wx.CheckBox(self.panel, wx.ID_ANY, "", (-1, -1), (-1, -1))
@@ -110,9 +122,12 @@ class ViewMain(wx.Frame):
         self.s_panel_rb_inner       = wx.BoxSizer(wx.VERTICAL)
         self.s_panel_export_buttons = wx.BoxSizer(wx.HORIZONTAL)
         # Bar containing cut, export buttons etc.
-        self.s_panel_export_buttons.Add(self.export_dat_toggle, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 4)
-        self.s_panel_export_buttons.Add(self.cut_button,        0, wx.ALL,                            4)
-        self.s_panel_export_buttons.Add(self.export_button,     0, wx.ALL,                            4)
+        self.s_panel_export_buttons.Add(self.day_mode_select,       0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 4)
+        self.s_panel_export_buttons.Add(self.night_mode_select,     0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 4)
+        self.s_panel_export_buttons.Add(self.special_colour_select, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 4)
+        self.s_panel_export_buttons.Add(self.export_dat_toggle,     0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 4)
+        self.s_panel_export_buttons.Add(self.cut_button,            0, wx.ALL,                            4)
+        self.s_panel_export_buttons.Add(self.export_button,         0, wx.ALL,                            4)
 
         # Add export buttons, horizontal line and path bars to vertical sizer
         self.s_panel_rb_inner.Add(self.s_panel_export_buttons,                                                0, wx.ALIGN_RIGHT,      0)
@@ -170,6 +185,9 @@ class ViewMain(wx.Frame):
         self.cut_button.SetLabel(gt("Cut image"))
         self.export_button.SetLabel(gt("Compile pak"))
         self.export_dat_toggle.SetLabel(gt("Write out .dat file"))
+        self.day_mode_select.SetLabel(gt("Day mode"))
+        self.night_mode_select.SetLabel(gt("Night mode"))
+        self.special_colour_select.SetLabel(gt("Special colours"))
         # And translate the window's title string
         # And translate the display window
         self.display.translate()
@@ -253,3 +271,8 @@ class ViewMain(wx.Frame):
         if config.write_dat != self.export_dat_toggle.GetValue():
             config.write_dat = self.export_dat_toggle.GetValue()
             logging.debug("Set config.write_dat to %s" % config.write_dat)
+
+    def OnSelectSpecialColour(self, e):
+        """Toggle special colour checkbox"""
+        logging.info("Check night mode")
+        self.app.activeproject.on_change()
