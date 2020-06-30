@@ -96,13 +96,14 @@ class FilePicker(object):
 
     # .png display as relative path
 
-    def highlightText(self, box, p1, p2=None):
+    @staticmethod
+    def highlightText(box, p1, p2=None):
         """Update the highlighting in a text entry box"""
         logging.info("Highlight text")
         logging.debug("p1: %s, p2: %s" % (p1, p2))
 
         # Path value, optionally relative to a second path
-        a = self.split_path(p1, p2)
+        a = FilePicker.split_path(p1, p2)
         logging.debug(str(a))
 
         # Set entire length of the box to default colour
@@ -125,7 +126,8 @@ class FilePicker(object):
     # existing_path  returns the largest section of a path which exists on the filesystem
     # compare_paths  produces a relative path from two absolute ones
 
-    def split_path(self, p1, p2=None):
+    @staticmethod
+    def split_path(p1, p2=None):
         """Split a path into an array, index[0] being the first path section, index[len-1] being the last
         Optionally takes a second path which is joined with the first for existence checks, to allow for
         checking existence of relative paths"""
@@ -145,13 +147,14 @@ class FilePicker(object):
             n = os.path.split(p1)
             # Add at front, text, offset, length, exists or not, File or Directory?
             logging.debug("path1: %s, path2: %s" % (p1, p2))
-            logging.debug("exists? %s, %s" % (self.join_paths(p2, p1), os.path.exists(self.join_paths(p2, p1))))
-            a.insert(0, [n[1], len(p1) - len(n[1]), len(n[1]), os.path.exists(self.join_paths(p2, p1))])
+            logging.debug("exists? %s, %s" % (FilePicker.join_paths(p2, p1), os.path.exists(FilePicker.join_paths(p2, p1))))
+            a.insert(0, [n[1], len(p1) - len(n[1]), len(n[1]), os.path.exists(FilePicker.join_paths(p2, p1))])
             p1 = n[0]
 
         return a
 
-    def join_paths(self, p1, p2):
+    @staticmethod
+    def join_paths(p1, p2):
         """Join p2 to p1, accounting for end cases (is directory, is file etc.)"""
         logging.info("Join paths")
 
@@ -169,7 +172,8 @@ class FilePicker(object):
 
         return os.path.join(p1, p2)
 
-    def existing_path(self, p):
+    @staticmethod
+    def existing_path(p):
         """Take a path and return the largest section of this path that exists on the filesystem"""
         logging.info("Get existing path")
 
@@ -187,7 +191,8 @@ class FilePicker(object):
 
         return p
 
-    def compare_paths(self, p1, p2):
+    @staticmethod
+    def compare_paths(p1, p2):
         """Compare two absolute paths, returning either a relative path from p1 to p2, or p1 if no relative path exists"""
         logging.info("Check relative or absolute path")
 
@@ -195,8 +200,8 @@ class FilePicker(object):
         if p2 is None or p2 == "" or os.path.splitdrive(p1)[0] != os.path.splitdrive(p2)[0]:
             return p1
 
-        p1s = self.split_path(os.path.normpath(p1))
-        p2s = self.split_path(os.path.normpath(p2))
+        p1s = FilePicker.split_path(os.path.normpath(p1))
+        p2s = FilePicker.split_path(os.path.normpath(p2))
         k = 0
 
         while p1s[k][0] == p2s[k][0]:

@@ -60,7 +60,8 @@ class TcpWriter(object):
 
         return True
 
-    def pickle_object(self, obj, picklemode=2):
+    @staticmethod
+    def pickle_object(obj, picklemode=2):
         """"""
         logging.info("pickle_object, picklemode: %s" % picklemode)
         params = obj.prep_serialise()
@@ -119,7 +120,8 @@ class TcpReader(object):
 
         return obj
 
-    def convert_tcproject(self, tcproj):
+    @staticmethod
+    def convert_tcproject(tcproj):
         """Convert an old-style tcproject object into a new style project one"""
         logging.info("Upgrading project format")
         # tcproj represents a tcproject object
@@ -170,7 +172,8 @@ class TcpReader(object):
         logging.debug("projdict to feed into new project is: %s" % repr(projdict))
         return projdict
 
-    def unpickle_object(self, pickle_str, params=None):
+    @staticmethod
+    def unpickle_object(pickle_str, params=None):
         """Unpickle an object from the pickled string pickle_str, optionally call post_serialise with params"""
         logging.warn("pickle-style .tcp projects are considered a legacy format!")
         obj = pickle.loads(pickle_str)

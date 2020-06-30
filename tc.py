@@ -70,7 +70,8 @@ class TCMaskSet:
         a = self.init_new_mask(p)
         self.masks[6] = wx.Bitmap(a, 1)
 
-    def init_new_mask(self, paksize):
+    @staticmethod
+    def init_new_mask(paksize):
         """Create a blank new cutting mask"""
         mask = wx.Image(paksize, paksize)
 
@@ -80,7 +81,8 @@ class TCMaskSet:
 
         return mask
 
-    def fill_bottom_triangles(self, mask):
+    @staticmethod
+    def fill_bottom_triangles(mask):
         """Fill in the bottom left and right triangles for a cutting mask"""
         paksize = mask.GetWidth()
         half = paksize >> 1
@@ -98,7 +100,8 @@ class TCMaskSet:
 
         return mask
 
-    def fill_left(self, mask):
+    @staticmethod
+    def fill_left(mask):
         """Fill in the entire left half"""
         paksize = mask.GetWidth()
         half = paksize >> 1
@@ -109,7 +112,8 @@ class TCMaskSet:
 
         return mask
 
-    def fill_right(self, mask):
+    @staticmethod
+    def fill_right(mask):
         """Fill in the entire right half"""
         paksize = mask.GetWidth()
         half = paksize >> 1
@@ -120,7 +124,8 @@ class TCMaskSet:
 
         return mask
 
-    def fill_top_left(self, mask):
+    @staticmethod
+    def fill_top_left(mask):
         """Fill top-left section of a cutting mask"""
         paksize = mask.GetWidth()
         half = paksize >> 1
@@ -137,7 +142,8 @@ class TCMaskSet:
 
         return mask
 
-    def fill_top_right(self, mask):
+    @staticmethod
+    def fill_top_right(mask):
         """Fill top-right section of a cutting mask"""
         paksize = mask.GetWidth()
         half = paksize >> 1
@@ -221,7 +227,8 @@ class Paths(object):
     # existing_path  returns the largest section of a path which exists on the filesystem
     # compare_paths  produces a relative path from two absolute ones
 
-    def split_path(self, p1, p2=None):
+    @staticmethod
+    def split_path(p1, p2=None):
         """Split a path into an array, index[0] being the first path section, index[len-1] being the last
         Optionally takes a second path which is joined with the first for existence checks, to allow for
         checking existence of relative paths"""
@@ -238,18 +245,19 @@ class Paths(object):
             n = os.path.split(p1)
             # Add at front, text,   offset,             length,     exists or not,      File or Directory?
             logging.debug("path1: %s, path2: %s" % (p1, p2))
-            logging.debug("exists? %s, %s" % (self.join_paths(p2, p1), os.path.exists(self.join_paths(p2, p1))))
+            logging.debug("exists? %s, %s" % (Paths.join_paths(p2, p1), os.path.exists(Paths.join_paths(p2, p1))))
             a.insert(0, [
                 n[1],
                 len(p1) - len(n[1]),
                 len(n[1]),
-                os.path.exists(self.join_paths(p2, p1)),
+                os.path.exists(Paths.join_paths(p2, p1)),
             ])
             p1 = n[0]
 
         return a
 
-    def join_paths(self, p1, p2):
+    @staticmethod
+    def join_paths(p1, p2):
         """Join two paths together accounting for end cases on first path"""
         # If path is a file, or end section of path is file-like (e.g. has an extension)
         if os.path.isfile(p1) or os.path.splitext(p1)[1] != "" and not os.path.isdir(p1):
@@ -263,7 +271,8 @@ class Paths(object):
         else:
             return os.path.join(p3, "")
 
-    def existing_path(self, p):
+    @staticmethod
+    def existing_path(p):
         """Take a path and return the largest section of this path that exists
         on the filesystem"""
         if os.path.split(p)[1] == "":
@@ -276,21 +285,23 @@ class Paths(object):
 
         return p
 
-    def is_input_file(self, path):
+    @staticmethod
+    def is_input_file(path):
         """Checks if file's extension is in the list of allowed input extensions"""
         if os.path.splitext(path)[1] in config.valid_image_extensions:
             return True
         else:
             return False
 
-    def compare_paths(self, p1, p2):
+    @staticmethod
+    def compare_paths(p1, p2):
         """Return either a relative path from p1 to p2, or p1 if no relative path exists"""
         # Check that p2 is not an empty string, or None, and that drive letters match
         if p2 is None or p2 == "" or os.path.splitdrive(p1)[0] != os.path.splitdrive(p2)[0]:
             return p1
 
-        p1s = self.split_path(os.path.normpath(p1))
-        p2s = self.split_path(os.path.normpath(p2))
+        p1s = Paths.split_path(os.path.normpath(p1))
+        p2s = Paths.split_path(os.path.normpath(p2))
         k = 0
 
         while p1s[k][0] == p2s[k][0]:
@@ -310,7 +321,8 @@ class Paths(object):
 
         return p3
 
-    def win_to_unix(self, path):
+    @staticmethod
+    def win_to_unix(path):
         """Convert windows style path blah\\meh to unix style blah/meh"""
         return path.replace("\\", "/")
 

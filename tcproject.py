@@ -534,7 +534,8 @@ class ProjectFiles(object):
             logging.error("save_location: %s, datfile_location: %s, pngfile_location: %s, pakfile_location: %s" % (
                 self.save_location, self.datfile_location, self.pngfile_location, self.pakfile_location))
 
-    def test_path(self, path):
+    @staticmethod
+    def test_path(path):
         """Test a file for existence, if it exists add a number and try again"""
         if os.path.exists(os.path.join(path, "new_project.tcp")):
             i = 1

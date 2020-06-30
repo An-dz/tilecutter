@@ -224,7 +224,8 @@ class ViewImage(wx.Panel):
 
     # Take tile coords and convert into screen coords
     # This function is replicated in tc, and references to it should be made there!
-    def tile_to_screen(self, pos, dims, off, p, screen_height=None):
+    @staticmethod
+    def tile_to_screen(pos, dims, off, p, screen_height=None):
         """Take tile coords and convert to screen coords
         by default converts into bottom-left screen coords,
         but with height attribute supplied converts to top-left

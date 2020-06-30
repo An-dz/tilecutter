@@ -98,7 +98,8 @@ class MenuObject(object):
         self.menu_help_about.SetItemLabel(gt("&About TileCutter") + self.gsc("", ""))
         self.menu_help_about.SetHelp(gt("tt_menu_help_about"))
 
-    def gsc(self, text, default=None):
+    @staticmethod
+    def gsc(text, default=None):
         """Return the keyboard shortcut associated with a menu item"""
         logging.info("Keyboard shortcuts")
         # Filler function for now
@@ -221,7 +222,8 @@ class MenuObject(object):
     #############################
     # Help menu event functions #
     #############################
-    def OnHelp(self, e):
+    @staticmethod
+    def OnHelp(e):
         """Open online help page"""
         logging.info("Menu-Help-> Open online help")
         wx.LaunchDefaultBrowser("https://github.com/An-dz/tilecutter")

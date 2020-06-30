@@ -201,7 +201,8 @@ class Project(object):
         for key, _value in self.special_colours.items():
             self.player_colours[key] = (0xFF, 0x00, 0x00)
 
-    def load_dict(self, loaded, validators, defaults):
+    @staticmethod
+    def load_dict(loaded, validators, defaults):
         """Load a dict of stuff from config, may be called recursively"""
         # This function will alter the current project's representation through the standard access methods
         # It also keeps track of all changes and will eventually return a dict which will match the internal state of the project
@@ -223,7 +224,7 @@ class Project(object):
                 elif isinstance(v, type({})):
                     if isinstance(loaded[k], type({})):
                         logging.debug("Dict-type object in both validators and input, recursing to process subset of keys: %s" % repr(loaded[k]))
-                        props[k] = self.load_dict(loaded[k], v, defaults[k])
+                        props[k] = Project.load_dict(loaded[k], v, defaults[k])
                     else:
                         # Validators defines this to be a dict, but the loaded data for this key isn't a dict - data must be invalid so use defaults
                         logging.warn("Validators defines this value to be a dict, but input data isn't, using defaults values from node: %s" % k)
@@ -239,7 +240,8 @@ class Project(object):
         logging.debug("Done processing this level, returning properties dict: %s" % repr(props))
         return props
 
-    def init_image_array(self):
+    @staticmethod
+    def init_image_array():
         """Init a default/empty image array"""
         # project[view][season][frame][image][xdim][ydim][zdim]
         viewarray = []
@@ -341,7 +343,8 @@ class Project(object):
             self.save_location, self.datfile_location, self.pngfile_location, self.pakfile_location))
         return save_location
 
-    def test_path(self, path):
+    @staticmethod
+    def test_path(path):
         """Used in project initialisation - Test a file for existence, if it exists add a number and try again"""
         if os.path.exists(os.path.join(path, "new_project.tcp")):
             i = 1
