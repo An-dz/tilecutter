@@ -26,14 +26,14 @@ class ControlSeason(wx.Panel):
         self.label = wx.StaticText(self, wx.ID_ANY, "", (-1, -1), (-1, -1), wx.ALIGN_LEFT)
 
         # Add items
-        self.seasons_images = [0, 1, 2, 3, 4]
-        self.seasons_select = [0, 1, 2, 3, 4]
-        self.seasons_enable = [0, 1, 2, 3, 4]
+        self.seasons_images = []
+        self.seasons_select = []
+        self.seasons_enable = []
 
         for season in range(5):
-            self.seasons_images[season] = wx.StaticBitmap(self, wx.ID_ANY, imres.catalog["ImageSeasons" + self.season_title[season]].GetBitmap())
-            self.seasons_select[season] =  wx.RadioButton(self, wx.ID_ANY, "", (-1, -1), (-1, -1))
-            self.seasons_enable[season] =     wx.CheckBox(self, wx.ID_ANY, "", (-1, -1), (-1, -1))
+            self.seasons_images.append(wx.StaticBitmap(self, wx.ID_ANY, imres.catalog["ImageSeasons" + self.season_title[season]].GetBitmap()))
+            self.seasons_select.append( wx.RadioButton(self, wx.ID_ANY, "", (-1, -1), (-1, -1)))
+            self.seasons_enable.append(    wx.CheckBox(self, wx.ID_ANY, "", (-1, -1), (-1, -1)))
 
             # Add to sizers
             self.s_seasons_flex.Add(self.seasons_images[season], 0, wx.ALIGN_LEFT | wx.ALIGN_CENTER_VERTICAL)
