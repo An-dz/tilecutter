@@ -1,242 +1,206 @@
-#!/usr/bin/env python
-# coding: UTF-8
-#
-# TileCutter - Distribution build tools
-#
-
-# Copyright © 2008-2012 Timothy Baldock. All Rights Reserved.
-#
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+# Created by: python.exe -m py2exe tilecutter.py -W mysetup.py
 
 from distutils.core import setup
-#from setuptools import setup
-import sys, os, os.path
-import zipfile
+import py2exe
 
+# project import
 import config
 config = config.Config()
 
-version = str(config.version)
 
-### this manifest enables the standard Windows XP-looking theme
-##manifest = """
-##<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-##<assembly xmlns="urn:schemas-microsoft-com:asm.v1"
-##manifestVersion="1.0">
-##<assemblyIdentity
-##    version="0.64.1.0"
-##    processorArchitecture="x86"
-##    name="Controls"
-##    type="win32"
-##/>
-##<description>Picalo</description>
-##<dependency>
-##    <dependentAssembly>
-##        <assemblyIdentity
-##            type="win32"
-##            name="Microsoft.Windows.Common-Controls"
-##            version="6.0.0.0"
-##            processorArchitecture="X86"
-##            publicKeyToken="6595b64144ccf1df"
-##            language="*"
-##        />
-##    </dependentAssembly>
-##</dependency>
-##</assembly>
-##"""
-##
-# returns a list of all the files in a directory tree
-def walk_dir(dirname):
-    files = []
-    ret = (dirname, files)
-    for name in os.listdir(dirname):
-        fullname = os.path.join(dirname, name)
-        if os.path.isdir(fullname) and os.path.split(fullname)[1] != ".svn":
-            ret.extend(walk_dir(fullname))
-        else:
-            if os.path.split(fullname)[1] != ".svn":
-                files.append(fullname)
-    return ret
-  
+class Target(object):
+    """
+    Target is the baseclass for all executables that are created.
+    It defines properties that are shared by all of them.
+    """
+    def __init__(self, **kw):
+        self.__dict__.update(kw)
 
-# Generic options
-options = {
-    "name":             "TileCutter",
-    "version":          version,
-    "description":      "Simutrans Building Editor",
-    "long_description": "",
-    "author":           "Timothy Baldock",
-    "author_email":     "timothy@baldock.me",
-    "url":              "http://timothy.baldock.me/tilecutter",
-    "zipfile":          "python\\library.zip",
-    "data_files":       [
-                         ("", ["licence.txt", "test.png"]),
-                         walk_dir("languages"),
-                         ]
+        # The 'version' attribute MUST be defined, otherwise no versioninfo will be built:
+        self.version = config.version
+
+        self.product_name = "TileCutter"
+        self.file_description = "Simutrans Building Editor"
+        self.product_version = config.version
+        self.copyright = "Copyright © 2018-2020 André Zanghelini. Copyright © 2008-2015 Timothy Baldock."
+        self.legal_copyright = "Copyright © 2018-2020 André Zanghelini. All Rights Reserved. Copyright © 2008-2015 Timothy Baldock. All Rights Reserved."
+        # self.company_name = "Company Name"
+        # self.legal_trademark = ""
+        # self.comments = ""
+        # self.internal_name = ""
+
+        # self.private_build = "foo"
+        # self.special_build = "bar"
+
+    def copy(self):
+        return Target(**self.__dict__)
+
+    def __setitem__(self, name, value):
+        self.__dict__[name] = value
+
+
+RT_BITMAP = 2
+RT_MANIFEST = 24
+
+# A manifest which specifies the executionlevel
+# and windows common-controls library version 6
+manifest_template = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
+    <assemblyIdentity
+        version="5.0.0.0"
+        processorArchitecture="*"
+        name="%(prog)s"
+        type="win32"
+    />
+    <description>%(prog)s</description>
+    <trustInfo xmlns="urn:schemas-microsoft-com:asm.v3">
+        <security>
+            <requestedPrivileges>
+                <requestedExecutionLevel
+                    level="%(level)s"
+                    uiAccess="false">
+                </requestedExecutionLevel>
+            </requestedPrivileges>
+        </security>
+    </trustInfo>
+    <dependency>
+        <dependentAssembly>
+            <assemblyIdentity
+                type="win32"
+                name="Microsoft.Windows.Common-Controls"
+                version="6.0.0.0"
+                processorArchitecture="*"
+                publicKeyToken="6595b64144ccf1df"
+                language="*"
+            />
+        </dependentAssembly>
+    </dependency>
+</assembly>
+"""
+
+tilecutter = Target(
+    # path of the main script
+    script = "tilecutter.py",
+
+    # Allows to specify the basename of the executable, if different from 'tilecutter'
+    dest_base = "TileCutter",
+
+    # Icon resources:[(resource_id, path to .ico file), ...]
+    icon_resources = [(1, r"graphics/tilecutter.ico"), (42, r"graphics/tcp.ico")],
+    # bitmap_resources = [(1, "resources")],
+    other_resources = [
+        (RT_MANIFEST, 1, (manifest_template % {"prog": "tilecutter", "level": "asInvoker"}).encode("utf-8")),
+        # for bitmap resources, the first 14 bytes must be skipped when reading the file:
+        # (RT_BITMAP, 1, open("bitmap.bmp", "rb").read()[14:]),
+    ],
+)
+
+# ``zipfile`` and ``bundle_files`` options explained:
+# ===================================================
+#
+# zipfile is the Python runtime library for your exe/dll-files; it
+# contains in a ziparchive the modules needed as compiled bytecode.
+#
+# If 'zipfile=None' is used, the runtime library is appended to the
+# exe/dll-files (which will then grow quite large), otherwise the
+# zipfile option should be set to a pathname relative to the exe/dll
+# files, and a library-file shared by all executables will be created.
+#
+# The py2exe runtime *can* use extension module by directly importing
+# the from a zip-archive - without the need to unpack them to the file
+# system.  The bundle_files option specifies where the extension modules,
+# the python dll itself, and other needed dlls are put.
+#
+# bundle_files == 3:
+#     Extension modules, the Python dll and other needed dlls are
+#     copied into the directory where the zipfile or the exe/dll files
+#     are created, and loaded in the normal way.
+#
+# bundle_files == 2:
+#     Extension modules are put into the library ziparchive and loaded
+#     from it directly.
+#     The Python dll and any other needed dlls are copied into the
+#     directory where the zipfile or the exe/dll files are created,
+#     and loaded in the normal way.
+#
+# bundle_files == 1:
+#     Extension modules and the Python dll are put into the zipfile or
+#     the exe/dll files, and everything is loaded without unpacking to
+#     the file system.  This does not work for some dlls, so use with
+#     caution.
+#
+# bundle_files == 0:
+#     Extension modules, the Python dll, and other needed dlls are put
+#     into the zipfile or the exe/dll files, and everything is loaded
+#     without unpacking to the file system.  This does not work for
+#     some dlls, so use with caution.
+
+py2exe_options = {
+    # see above
+    "bundle_files": 1,
+    # optimization level [string or int (0, 1, or 2)]
+    "optimize": 2,
+    # create a compressed zipfile
+    # uncompressed may or may not have a faster startup
+    "compressed": False,
+    # directory where to build the final files
+    "dist_dir": "dist",
+    # comma-separated list of modules to exclude
+    "excludes": ["wx.lib.colourutils", "calendar", "difflib", "distutils", "doctest", "inspect", "pdb", "unittest"],
+    # comma-separated list of DLLs to exclude
+    "dll_excludes": ["VCRUNTIME140.dll"],
+
+    # comma-separated list of packages to include with subpackages
+    # "packages": [],
+    # if true, use unbuffered binary stdout and stderr
+    # "unbuffered": False,
+    # list of gen_py generated typelibs to include
+    # "typelibs": [],
+    # do not automatically include encodings and codecs
+    # "ascii": False,
+    # do not place Python bytecode files in an archive, put them directly in the file system
+    # "skip-archive": False,
+    # create and show a module cross reference
+    # "xref": False,
+    # comma-separated list of modules to include
+    # "includes": [],
+    # comma-separated list of modules to ignore if they are not found
+    # "ignores": "dotblas gnosis.xml.pickle.parsers._cexpat mx.DateTime".split(),
 }
 
-# Pre-setup actions (py2exe, py2app & source preparation)
+# Some options can be overridden by command line options...
+setup(
+    name = "TileCutter",
+    version = config.version,
+    author = "André Zanghelini, Timothy Baldock",
+    maintainer = "André Zanghelini",
+    license = "BSD-3 like",
+    url = "https://github.com/An-dz/tilecutter",
+    description = "Simutrans Building Editor",
+    long_description = "Cut an image into the correct sizes to be used by Simutrans",
+    # console based executables
+    # console=[],
 
+    # windows subsystem executables (no console)
+    windows = [tilecutter],
 
+    # py2exe options
+    zipfile = None,
+    options = {"py2exe": py2exe_options},
 
-# Source distribution specific
-if len(sys.argv) >= 2 and sys.argv[1] == "source":
-    print("Running source distribution")
-    try:
-        import shutil
-    except ImportError:
-        print("Could not import shutil module. Aborting source distribution creation")
-        sys.exit(1)
-
-    dist_dir = os.path.join("..", "dist", "src_dist_%s" % version)
-    dist_zip = os.path.join("..", "dist", "TileCutter_src_%s.zip" % version) 
-
-    for recdir in ["translator", "languages", "tcui"]:
-        print("Copying contents of: %s/" % recdir)
-        shutil.copytree(recdir, os.path.join(dist_dir, recdir), ignore=shutil.ignore_patterns(".svn", "tmp*", "*.pyc", "*.py~", "*.tab~"))
-
-    for distfile in ["config.py", "imres.py", "licence.txt", "environment.py", "logger.py", "tcp.py", "tc.py", "project.py", "tcproject.py", "test.png", "tilecutter.py", "tilecutter.pyw", "main.py"]:
-        print("Copying file: %s" % distfile)
-        shutil.copy(distfile, dist_dir)
-
-    # After building this, run post-setup actions (e.g. creating distribution packages etc.)
-    # Produce .zip file
-    print("Adding distribution files to .zip...")
-    zip = zipfile.ZipFile(dist_zip, "w", zipfile.ZIP_DEFLATED)
-    for root, dirs, files in os.walk(dist_dir):
-        for name in files:
-            fn = os.path.join(root, name) 
-            rel_fn = os.path.relpath(os.path.join(root, name), dist_dir) 
-            print("  Adding \"%s\" to zip as \"%s\"" % (fn, rel_fn))
-            zip.write(fn, rel_fn)
-    zip.close()
-
-
-# Windows specific
-if len(sys.argv) >= 2 and sys.argv[1] == "py2exe":
-    print("Running py2exe distribution")
-    try:
-        import py2exe
-    except ImportError:
-        print("Could not import py2exe. Aborting windows exe output")
-        sys.exit(1)
-
-    dist_dir = os.path.join("..", "dist", "win_dist_%s" % version)
-    dist_zip = os.path.join("..", "dist", "TileCutter_win_%s.zip" % version)
-    dist_msi = os.path.join("..", "dist", "TileCutter_win_%s.msi" % version)
-
-    options["windows"] = [
-        {
-        "script":"tilecutter.py",
-        "windows":"tilecutter.py",
-        "icon_resources": [(1, "graphics/tilecutter.ico"),(42, "graphics/tcp.ico")],
-        "copyright": "2008-2012 Timothy Baldock. All Rights Reserved.",
-        },
-    ]
-#    options["data_files"] += [("", ["../dist/msvcp71.dll"]]
-    options["options"] = {
-        # Bundling of .dlls into the zip results in massively bigger package?!
-        # Option 1 creates corrupt zip, option 2 adds dlls and makes them uncompressible
-        "py2exe": {"dist_dir": dist_dir,
-            "bundle_files": 3,
-            "excludes": ["difflib", "doctest", "calendar", "pdb", "inspect",
-                        "Tkconstants", "Tkinter", "tcl"],
-            "dll_excludes": ["w9xpopen.exe",],
-        },
-    }
-
-    # run the setup
-    setup(**options)
-
-    # After building this, run post-setup actions (e.g. creating distribution packages etc.)
-    # Produce .zip file
-    print("Adding distribution files to .zip...")
-    zip = zipfile.ZipFile(dist_zip, "w", zipfile.ZIP_DEFLATED)
-    for root, dirs, files in os.walk(dist_dir):
-        for name in files:
-            fn = os.path.join(root, name) 
-            rel_fn = os.path.relpath(os.path.join(root, name), dist_dir) 
-            print("  Adding \"%s\" to zip as \"%s\"" % (fn, rel_fn))
-            zip.write(fn, rel_fn)
-    zip.close()
-
-    # Next, create MSI distribution
-
-
-# OSX specific
-if len(sys.argv) >= 2 and sys.argv[1] == "py2app":
-    print("Running py2app distribution")
-    try:
-        import py2app
-    except ImportError:
-        print("Could not import py2app.   Mac bundle could not be built.")
-        sys.exit(1)
-
-    dist_dir = os.path.join("..", "dist", "osx_dist_%s" % version)
-    dist_dmg = os.path.join("..", "dist", "TileCutter_osx_%s.dmg" % version) 
-
-    # See: http://developer.apple.com/library/mac/#documentation/FileManagement/Conceptual/understanding_utis/understand_utis_conc/understand_utis_conc.html
-    # http://stackoverflow.com/questions/1771601/registering-an-icon-for-my-applications-document-type
-    
-
-    # Bindings to allow drag+drop of project files onto icon
-    # Also registers filetype with OSX
-    plist = {
-                "CFBundleIdentifier": "uk.me.entropy.tilecutter",
-                "CFBundleGetInfoString": "Simutrans Building Editor",
-                "NSHumanReadableCopyright": "Copyright © 2008-2012 Timothy Baldock. All Rights Reserved.",
-                "CFBundleDocumentTypes": [
-                    {
-                        "CFBundleTypeName": "TileCutter Project Document", 
-                        "CFBundleTypeRole": "Editor", 
-                        "CFBundleTypeExtensions": ["tcp",],
-                        "LSItemContentTypes": ["uk.me.entropy.tcp",],
-                        "CFBundleTypeIconFile": "tcp.icns",
-                    },
-                ],
-                "UTExportedTypeDeclarations": [
-                    {
-                        "UTTypeIdentifier": "uk.me.entropy.tcp", 
-                        "UTTypeReferenceURL": "http://entropy.me.uk/tilecutter/docs/tcpformat/",
-                        "UTTypeDescription": "TileCutter Project File",
-                        "UTTypeIconFile": "tcp.icns",
-                        "UTTypeConformsTo": ["public.data",],
-                        "UTTypeTagSpecification": {
-                            "com.apple.ostype": "TCPF",
-                            "public.filename-extension": ["tcp",],
-                            "public.mimetype": "application/x-tilecutter-project",
-                        },
-                    },
-                ],
-            }
-
-    # mac-specific options
-    options["app"] = ["tilecutter.py"]
-    options["options"] = {
-        "py2app": {
-            "arch": "i386",
-            "dist_dir": dist_dir,
-            "argv_emulation": True,
-            "iconfile": "graphics/tilecutter.icns",
-            "packages": [],
-            "excludes": ["difflib", "doctest", "calendar", "pdb", "inspect",
-                        "Tkconstants", "Tkinter", "tcl"],
-            "site_packages": True,
-            "resources": ["graphics/tcp.icns",],
-            "plist": plist,
-            }
-    }
-    options["setup_requires"] = ["py2app"]
-    # run the setup
-    setup(**options)
-
-    # See: http://digital-sushi.org/entry/how-to-create-a-disk-image-installer-for-apple-mac-os-x/
-
-    # Next run shell commands to interact with the .dmg package
-    # Copy .dmg from location in source control to dist directory
-    # Convert to sparseimage
-    # Remove .dmg from dist
-    # Mount sparseimage
-    # Copy application bundle into sparseimage (to replace placeholder)
-    # Unmount sparseimage
-    # Convert to .dmg + compress
-
+    # distclass = "",
+    # script_name = "",
+    # script_args = "",
+    # options = "",
+    # author_email = "",
+    # maintainer_email = "",
+    # keywords = "",
+    # platforms = "",
+    # classifiers = "",
+    # download_url = "",
+    # requires = "",
+    # provides = "",
+    # obsoletes = "",
+)
