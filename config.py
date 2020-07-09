@@ -64,7 +64,7 @@ class Config(object):
         "default_language": "English",
     }
     internals = {
-        "version": "1.1.2",
+        "version": "1.2.0",
         "TCPversion": "1.1",
         "choicelist_paksize": [16, 32, 48, 64, 80, 96, 112, 128, 144, 160, 176, 192, 208, 224, 240, 256, 320, 512],
         "choicelist_views":   [1, 2, 4],
