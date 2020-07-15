@@ -10,3 +10,4 @@ It can output source files (`.dat` and `.png`), a compiled `.pak` file (by integ
 
 - [Python 3](https://www.python.org/)
 - [wxPython 4](https://wxpython.org/)
+- [NumPy](https://numpy.org/)
