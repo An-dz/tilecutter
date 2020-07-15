@@ -924,6 +924,7 @@ class Project(object):
                 if not validate:
                     self.props["dims"]["seasons"][season] = 1
                     logging.debug("%s set to %i" % (season, self.props["dims"]["seasons"][season]))
+                    self.reload_all_images()
                     self.on_change()
 
                 return True
@@ -947,6 +948,7 @@ class Project(object):
                 if not validate:
                     self.props["dims"]["frontimage"] = 1
                     logging.debug("Set to %i" % self.props["dims"]["frontimage"])
+                    self.reload_all_images()
                     self.on_change()
 
                 return True
@@ -986,6 +988,7 @@ class Project(object):
                 if not validate:
                     self.props["dims"]["directions"] = int(value)
                     logging.debug("Set to %i" % self.props["dims"]["directions"])
+                    self.reload_all_images()
                     self.on_change()
 
                 return True
