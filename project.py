@@ -1,11 +1,17 @@
 # TileCutter Project Module
 
 import logging, os, sys
-import numpy
 import wx
 import config
 from environment import getenvvar
 from tc import Paths
+
+try:
+    import numpy
+except ImportError:
+    logging.critical("numpy not installed, please install the module and try again!")
+    sys.exit(1)
+
 config = config.Config()
 paths = Paths()
 
