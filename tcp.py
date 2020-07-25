@@ -101,6 +101,11 @@ class TcpReader(object):
                 logging.debug("JSON load successful, attempting to load in object")
                 # Init new project using loaded data from dict
                 obj = project.Project(params[0], load=loadobj["data"], save_location=self.filename, saved=True)
+
+                version = map(int, loadobj["version"].split("."))
+                main, _, _ = version
+                if main < 1:
+                    obj.transparency(False)
             else:
                 # This isn't a well-formed json tcp file, abort
                 logging.error("JSON file is not well-formed, type incorrect, aborting load")
