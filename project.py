@@ -278,7 +278,7 @@ class Project(object):
             if isinstance(value, type([])) and len(value) == 4:
                 for d, direction in enumerate(value):
                     # Each direction should be a list containing 5 seasons
-                    if isinstance(direction, type([])) and len(direction) == 5:
+                    if isinstance(direction, type([])) and (len(direction) == 5 or len(direction) == 2):
                         for s, season in enumerate(direction):
                             # Each season should contain a variable number of frames (greater than 1) of type list
                             if isinstance(season, type([])) and len(season) >= 1:
