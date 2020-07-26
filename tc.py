@@ -30,45 +30,45 @@ class TCMaskSet:
         a = self.init_new_mask(p)
         self.fill_left(a)
         self.fill_right(a)
-        self.masks[-1] = wx.Bitmap(a, 1)
+        self.masks[-1] = wx.Mask(wx.Bitmap(a), wx.Colour(255, 255, 255))
 
         # 0 -> Tile only
         a = self.init_new_mask(p)
         self.fill_bottom_triangles(a)
         self.fill_top_left(a)
         self.fill_top_right(a)
-        self.masks[0] = wx.Bitmap(a, 1)
+        self.masks[0] = wx.Mask(wx.Bitmap(a), wx.Colour(255, 255, 255))
 
         # 1 -> Tile and top-right
         a = self.init_new_mask(p)
         self.fill_bottom_triangles(a)
         self.fill_top_left(a)
-        self.masks[1] = wx.Bitmap(a, 1)
+        self.masks[1] = wx.Mask(wx.Bitmap(a), wx.Colour(255, 255, 255))
 
         # 2 -> Tile and top-left
         a = self.init_new_mask(p)
         self.fill_bottom_triangles(a)
         self.fill_top_right(a)
-        self.masks[2] = wx.Bitmap(a, 1)
+        self.masks[2] = wx.Mask(wx.Bitmap(a), wx.Colour(255, 255, 255))
 
         # 3 -> Tile and all top
         a = self.init_new_mask(p)
         self.fill_bottom_triangles(a)
-        self.masks[3] = wx.Bitmap(a, 1)
+        self.masks[3] = wx.Mask(wx.Bitmap(a), wx.Colour(255, 255, 255))
 
         # 4 -> Right side only
         a = self.init_new_mask(p)
         self.fill_left(a)
-        self.masks[4] = wx.Bitmap(a, 1)
+        self.masks[4] = wx.Mask(wx.Bitmap(a), wx.Colour(255, 255, 255))
 
         # 5 -> Left side only
         a = self.init_new_mask(p)
         self.fill_right(a)
-        self.masks[5] = wx.Bitmap(a, 1)
+        self.masks[5] = wx.Mask(wx.Bitmap(a), wx.Colour(255, 255, 255))
 
         # 6 -> Everything (no mask)
         a = self.init_new_mask(p)
-        self.masks[6] = wx.Bitmap(a, 1)
+        self.masks[6] = wx.Mask(wx.Bitmap(a), wx.Colour(255, 255, 255))
 
     @staticmethod
     def init_new_mask(paksize):
