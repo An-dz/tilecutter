@@ -123,8 +123,8 @@ class ViewImage(wx.Panel):
 
         z = self.app.activeproject.z()
         p = self.app.activeproject.paksize()
-        p2 = p / 2
-        p4 = p / 4
+        p2 = int(p / 2)
+        p4 = int(p / 4)
         mask_offset_x, mask_offset_y = self.app.activeproject.active_offset()
         mask_width  = (x + y) * p2
         mask_height = (x + y) * p4 + p2 + (z - 1) * p
@@ -239,8 +239,8 @@ class ViewImage(wx.Panel):
 
         xpos,  ypos,  zpos  = pos
         xdims, ydims, zdims = dims
-        xx = ((ypos  - xpos) + (xdims -    1)) * (p / 2) + offx
-        yy = ((xdims - xpos) + (ydims - ypos)) * (p / 4) + ((zpos - 1) * p) + offy
+        xx = ((ypos  - xpos) + (xdims -    1)) * int(p / 2) + offx
+        yy = ((xdims - xpos) + (ydims - ypos)) * int(p / 4) + ((zpos - 1) * p) + offy
 
         if screen_height is not None:
             yy = screen_height - yy

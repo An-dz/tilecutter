@@ -178,9 +178,9 @@ def tile_to_screen(pos, dims, off, p, screen_height=None):
     xpos,  ypos,  zpos  = pos  # x, y and z position
     xdims, ydims, zdims = dims # Total size of x, y and z
 
-    xx = (xdims - 1 - xpos + ypos) * (p / 2) + offx
+    xx = (xdims - 1 - xpos + ypos) * int(p / 2) + offx
     # Gives top-left position of subsection
-    yy = ((xdims - xpos) + (ydims - ypos)) * (p / 4) + (zpos * p) + offy + (p / 2)
+    yy = ((xdims - xpos) + (ydims - ypos)) * int(p / 4) + (zpos * p) + offy + int(p / 2)
 
     if screen_height is not None:
         yy = screen_height - yy
@@ -590,6 +590,8 @@ def export_cutter(bitmap, dims, offset, p, transparency):
     gc.DrawBitmap(bitmap, 0, max_height - bitmap.GetHeight(), bitmap.GetWidth(), bitmap.GetHeight())
     outdc.SelectObject(wx.NullBitmap)
     gc.Flush()
+
+    print(dims)
 
     for x in range(dims[0]):
         yarray = []
