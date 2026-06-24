@@ -436,7 +436,7 @@ class Project(object):
 
         # Find Special colors
         # First, calculate a unique hash
-        colour_hashes = (2**16 * R | 2**8 * G | B)
+        colour_hashes = (R.astype(int) * 2**16 | G.astype(int) * 2**8 | B.astype(int))
 
         # Find inidices of special colors
         special_indices = []

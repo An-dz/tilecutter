@@ -230,9 +230,9 @@ class ViewMain(wx.Frame):
         logging.debug("new panel size is: %s, new window size is: %s" % (new_panel_size, new_window_size))
 
         # Set minimum panel size to the minimum allowable height and 1.4* ratio width of that height (or the minimum width if this is larger)
-        self.panel.SetMinSize(wx.Size(max(self.panel.GetBestSize().Get()[1] * 1.4, self.panel.GetBestSize().Get()[0]), self.panel.GetBestSize().Get()[1]))
+        self.panel.SetMinSize(wx.Size(max(int(self.panel.GetBestSize().Get()[1] * 1.4), self.panel.GetBestSize().Get()[0]), self.panel.GetBestSize().Get()[1]))
         # Set minimum window size to minimum panel size plus the difference in the previous sizes
-        self.SetMinSize(wx.Size(prev_window_size[0] - prev_panel_size[0] + max(self.panel.GetBestSize().Get()[1] * 1.4, self.panel.GetBestSize().Get()[0]),
+        self.SetMinSize(wx.Size(prev_window_size[0] - prev_panel_size[0] + max(int(self.panel.GetBestSize().Get()[1] * 1.4), self.panel.GetBestSize().Get()[0]),
                                 prev_window_size[1] - prev_panel_size[1] + self.panel.GetBestSize().Get()[1]))
 
         # Finally set size to the calculated new size, which is the larger of the new minimum or pre-existing

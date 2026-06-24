@@ -58,7 +58,7 @@ class DialogDatFileEdit(wx.Dialog):
         self.Fit()
 
         # Set height of panel to be calculated size or 0.7* width
-        self.SetSize(wx.Size(max(self.GetBestSize().Get()[0], self.min_width), max(self.GetBestSize().Get()[0] * 0.7, self.min_width * 0.7, self.GetBestSize().Get()[1])))
+        self.SetSize(wx.Size(max(self.GetBestSize().Get()[0], self.min_width), int(max(self.GetBestSize().Get()[0] * 0.7, self.min_width * 0.7, self.GetBestSize().Get()[1]))))
 
         self.CentreOnParent()
         self.Refresh()
